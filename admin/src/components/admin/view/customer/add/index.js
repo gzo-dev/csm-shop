@@ -101,12 +101,6 @@ const View = () => {
         </li>
         <li className="breadcrumb-item active">Customer</li>
       </ol>
-      {
-        isAddPopupOpen ? 
-        <Button onClick={()=> handleCloseAddPopup()} type={"primary"} color={"primary"}>Collapse</Button> : 
-        <Button onClick={()=> handleOpenAddPopup()} type={"primary"} color={"primary"}>Add Customer</Button>  
-
-      }
       <div className="row justify-content-between">
         <div className="col-lg-3 col-md-4">
           <div className="bulk-section mt-30">
@@ -206,7 +200,7 @@ const View = () => {
           </div>
         </div>
       </div>
-
+                    
       {/* Popup Thêm Customer */}
       {isAddPopupOpen && (
         <div className="add-customer-popup">
@@ -283,21 +277,18 @@ const View = () => {
               />
             </div>
             <div className="form-group">
-              <Button
-                color={"primary"}
+              <button
                 className="btn btn-primary btn-block"
                 onClick={handleAddCustomer}
               >
                 Add
-              </Button>
-              <Button
-              color={"primary"}
-              
+              </button>
+              <button
                 className="btn btn-danger btn-block"
                 onClick={handleCloseAddPopup}
               >
                 Cancel
-              </Button>
+              </button>
             </div>
           </div>
         </div>

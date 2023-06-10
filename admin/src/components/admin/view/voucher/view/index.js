@@ -66,7 +66,7 @@ const View = () => {
     <div className="container-fluid">
       <div className="row">
         <div className="col-lg-5 col-md-9 col-lg-6">
-          <h2 className="mt-30 page-title">Payment List</h2>
+          <h2 className="mt-30 page-title">Voucher List</h2>
         </div>
         <div className="col-lg-5 col-md-3 col-lg-6 back-btn">
           <Button variant="contained" onClick={handleBack}>
@@ -76,7 +76,7 @@ const View = () => {
       </div>
       <ol className="breadcrumb mb-30">
         <li className="breadcrumb-item">Dashboard</li>
-        <li className="breadcrumb-item active">payment</li>
+        <li className="breadcrumb-item active">voucher</li>
       </ol>
       <div className="row justify-content-between">
         <div className="col-lg-3 col-md-4">
@@ -109,7 +109,7 @@ const View = () => {
           {isLoaded ? <Loader /> : ""}
           <div className="card card-static-2 mt-30 mb-30">
             <div className="card-title-2">
-              <h4>All User</h4>
+              <h4>All Voucher</h4>
             </div>
             <div className="card-body-table">
               <div className="table-responsive">
@@ -120,12 +120,10 @@ const View = () => {
                         <input type="checkbox" className="check-all" />
                       </th>
                       <th style={{ width: 60 }}>ID</th>
-                      <th>Date</th>
-                      <th>Customer</th>
-                      <th>OrderId</th>
-                      <th>Transaction Amount</th>
-                      <th>Payment Type</th>
-                      <th>Payment Status</th>
+                      <th>Name</th>
+                      <th>Date start</th>
+                      <th>Date end</th>
+                      <th>Value</th>
                     </tr>
                   </thead>
                   <tbody>

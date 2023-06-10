@@ -23,25 +23,34 @@ export default class Create extends Component {
         this.props.history.goBack();
     }
     handleSubmit = async () => {
-        this.setState({ isLoaded: true })
-
-        const { password, confirmPassword } = this.state;
-        // perform all neccassary validations
-        if (password !== confirmPassword) {
-            alert("Passwords don't match");
-        } else {
-            let {  firstName, lastName, phone, email, address, password, status, role } = this.state;
-            let data = { firstName: firstName, lastName: lastName, phoneNo: phone, address: address, password: password, email: email, verify: status, role: role }
-            // make API call
-            let user = await GetUserLogin.getUserRegister(data);
-            if (user) {
-                this.setState({ isLoaded: false })
-                this.props.history.goBack();
-                NotificationManager.success("Create successfull", 'Message');
+        try {
+            this.setState({ isLoaded: true })
+    
+            const { password, confirmPassword } = this.state;
+            // perform all neccassary validations
+            if (password !== confirmPassword) {
+                alert("Passwords don't match");
+                this.setState({isLoaded: false})
             } else {
-                NotificationManager.error("Check Input field!", 'Input');
-            }
+                let {  firstName, lastName, phone, email, address, password, status, role } = this.state;
+                let data = { firstName: firstName, lastName: lastName, phoneNo: phone, address: address, password: password, email: email, verify: status, role: role }
+                // make API call
+                let user = await GetUserLogin.getUserRegister(data);
+                if (user) {
+                    this.setState({ isLoaded: false })
+                    this.props.history.goBack();
+                    NotificationManager.success("Create successfull", 'Message');
+                } else {
+                    NotificationManager.error("Check Input field!", 'Input');
+                    this.setState({idLoaded: false})
+                }
+    
+            }            
+        } catch (error) {
+            console.log(error)
+            NotificationManager.error("Email is exist in system!", 'Input');
 
+            this.setState({isLoaded: false})
         }
     }
     render() {

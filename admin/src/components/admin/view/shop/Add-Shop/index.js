@@ -189,7 +189,7 @@ export default class Createshop extends Component {
                         </Grid>
                         <Grid item xs={4}>
                             <div className="form-group">
-                                <label className="form-label">IFSC Code*</label>
+                                <label className="form-label">Bank Code*</label>
                                 <div className="card card-editor">
                                     <div className="content-editor">
                                         <input className="form-control" type="text" placeholder="Enter IFSC Code" name="IFSC" value={this.state.IFSC} onChange={(e) => this.handleChange(e)} />
@@ -217,7 +217,7 @@ export default class Createshop extends Component {
                                 </div>
                             </div>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={4} style={{display: "none"}}>
                             <div className="form-group">
                                 <label className="form-label">Branch Name *</label>
                                 <div className="card card-editor">
@@ -227,7 +227,7 @@ export default class Createshop extends Component {
                                 </div>
                             </div>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={4} style={{display: "none"}}>
                             <div className="form-group">
                                 <label className="form-label">Adhar Card *</label>
                                 <div className="card card-editor">
@@ -237,7 +237,7 @@ export default class Createshop extends Component {
                                 </div>
                             </div>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={4} style={{display: "none"}}>
                             <div className="form-group">
                                 <label className="form-label">PAN No *</label>
                                 <div className="card card-editor">
@@ -247,7 +247,7 @@ export default class Createshop extends Component {
                                 </div>
                             </div>
                         </Grid>
-                        <Grid item xs={4}>
+                        <Grid item xs={4} style={{display: "none"}}>
                             <div className="form-group">
                                 <label className="form-label">GST No*</label>
                                 <div className="card card-editor">

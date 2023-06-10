@@ -273,7 +273,7 @@ export default class Newproduct extends Component {
                         />
                       </div>
                     </div>
-                    <div className="col-lg-2 col-md-2">
+                    <div className="col-lg-2 col-md-2" style={{display: "none"}}>
                       <div className="form-group">
                         <label className="form-label">Unit Size*</label>
                         <input
@@ -316,7 +316,7 @@ export default class Newproduct extends Component {
                     </div>
                     <div className="col-lg-2 col-md-2">
                       <div className="form-group">
-                        <label className="form-label">Buyer Price*</label>
+                        <label className="form-label">Code*</label>
                         <input
                           type="number"
                           className="form-control"
@@ -340,7 +340,7 @@ export default class Newproduct extends Component {
                     </div>
                     <div className="col-lg-1 col-md-1">
                       <div className="form-group">
-                        <label className="form-label">Quantity*</label>
+                        <label className="form-label">Amount*</label>
                         <input
                           type="number"
                           className="form-control"
@@ -350,7 +350,7 @@ export default class Newproduct extends Component {
                         />
                       </div>
                     </div>
-                    <div className="col-lg-1 col-md-1">
+                    <div className="col-lg-1 col-md-1" style={{display: "none"}}>
                       <div className="form-group">
                         <label className="form-label">Discount(%)*</label>
                         <input
@@ -362,7 +362,7 @@ export default class Newproduct extends Component {
                         />
                       </div>
                     </div>
-                    <div className="col-lg-1 col-md-1">
+                    <div className="col-lg-1 col-md-1" style={{display: "none"}}>
                       <div className="form-group">
                         <label className="form-label">Discount Price*</label>
                         <input
@@ -375,7 +375,7 @@ export default class Newproduct extends Component {
                         />
                       </div>
                     </div>
-                    <div className="col-lg-1 col-md-1">
+                    <div className="col-lg-1 col-md-1" style={{display: "none"}}>
                       <div className="form-group">
                         <label className="form-label">Total *</label>
                         <input
@@ -388,7 +388,7 @@ export default class Newproduct extends Component {
                         />
                       </div>
                     </div>
-                    <div className="col-lg-2 col-md-2">
+                    <div className="col-lg-2 col-md-2" style={{display: "none"}}>
                       <div className="form-group">
                         <label className="form-label">Grand Total *</label>
                         <input

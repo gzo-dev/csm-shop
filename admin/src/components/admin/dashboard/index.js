@@ -93,11 +93,11 @@ export default class Home extends Component {
                             <div className="col-xl-3 col-md-6">
                                 <div className="dashboard-report-card purple">
                                     <div className="card-content">
-                                        <span className="card-title">Order Shipping</span>
+                                        <span className="card-title">Order Shipping 0</span>
                                         {
                                             statusList ? statusList.map((row, index) => (
                                                 <span className="card-count" key={index} style={row.status === "shipping" ? { display: 'block' } : { display: 'none' }}>{row.total}</span>
-                                            )) : ''
+                                            )) : 0
                                         }
                                     </div>
                                     <div className="card-media">
@@ -108,7 +108,7 @@ export default class Home extends Component {
                             <div className="col-xl-3 col-md-6">
                                 <div className="dashboard-report-card red">
                                     <div className="card-content">
-                                        <span className="card-title">Order Cancel</span>
+                                        <span className="card-title">Order Cancel 0</span>
                                         {
                                             statusList ? statusList.map((row, index) => (
                                                 <span className="card-count" key={index} style={row.status === "cancel" ? { display: 'block' } : { display: 'none' }}>{row.total}</span>
@@ -123,7 +123,7 @@ export default class Home extends Component {
                             <div className="col-xl-3 col-md-6">
                                 <div className="dashboard-report-card info">
                                     <div className="card-content">
-                                        <span className="card-title">Order Process</span>
+                                        <span className="card-title">Order Process 0</span>
                                         {
                                             statusList ? statusList.map((row, index) => (
                                                 <span className="card-count" key={index} style={row.status === "processing" ? { display: 'block' } : { display: 'none' }}>{row.total}</span>
@@ -138,7 +138,7 @@ export default class Home extends Component {
                             <div className="col-xl-3 col-md-6">
                                 <div className="dashboard-report-card success">
                                     <div className="card-content">
-                                        <span className="card-title">Order Delivered</span>
+                                        <span className="card-title">Order Delivered 0</span>
                                         {
                                             statusList ? statusList.map((row, index) => (
                                                 <span className="card-count" key={index} style={row.status === "delieverd" ? { display: 'block' } : { display: 'none' }}>{row.total}</span>

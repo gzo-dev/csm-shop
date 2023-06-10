@@ -13,6 +13,7 @@ import Customer from './view/customer';
 import User from './view/user';
 import Payment from './view/payment';
 import VendorProduct from './view/shop/product';
+import Voucher from './view/voucher';
 
 
 export default class rootRoutes extends Component {
@@ -35,6 +36,7 @@ export default class rootRoutes extends Component {
             <Route path={`${match.path}/user`} component={User} />
             <Route path={`${match.path}/payment`} component={Payment} />
             <Route path={`${match.path}/vendor`} component={VendorProduct} />
+            <Route path={`${match.path}/voucher`} component={Voucher} />
 
           </Switch>
         </div>
