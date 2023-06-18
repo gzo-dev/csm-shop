@@ -41,14 +41,14 @@ export default {
     async addUser(req, res, next) {
         const { firstName, lastName, phone, email, address, password } = req.body;
         var passwordHash = bcrypt.hashSync(password);
-        var token = generateOtp();
-        var otp = verifyOtp(token);
+        // var token = generateOtp();
+        // var otp = verifyOtp(token);
         db.customer.findOne({ where: { email: email }, paranoid: false })
             .then(find => {
                 if (find) {
                     return res.status(409).json("Email is already in use");
                 }
-                return db.customer.create({
+                 db.customer.create({
                     firstName: firstName,
                     lastName: lastName,
                     email: email,
@@ -56,15 +56,7 @@ export default {
                     address: address,
                     password: passwordHash
                 })
-
-            })
-            .then(user => {
-                if (user) {
-                    mailer.sendEmployeePassword(email, token);
-                    return res.status(200).json({ success: true, key: otp, msg: "New Registration added and password has been sent to " + email + " ." });
-                }
-                else
-                    res.status(500).json({ 'success': false });
+                return res.status(200).json({"success": true})
             })
             .catch(err => {
                 console.log(err)
@@ -93,13 +85,16 @@ export default {
     async login(req, res, next) {
         const {email, password }= req.body
         var date = new Date();
-        var token = JWTSign(req.user, date);
-        res.cookie('XSRF-token', token, {
-            expire: new Date().setMinutes(date.getMinutes() + 30),
-            httpOnly: true, secure: config.app.secure
-        });
-        
-        return res.status(200).json({ success: true ,token});
+        const findUser= await db.customer.findOne({where: {email, password}})
+        if(findUser) {
+            console.log(findUser.dataValues)
+            const token= JWT.sign({uid: findUser.dataValues.id}, process.env.JWT_SECRET)
+            return res.status(200).json({ success: true, token });
+        }
+        else {
+            return res.status(200).json({ success: false });
+
+        }
     },
 
     async rootUserCheck(req, res) {

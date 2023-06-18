@@ -316,7 +316,7 @@ export default class Newproduct extends Component {
                     </div>
                     <div className="col-lg-2 col-md-2">
                       <div className="form-group">
-                        <label className="form-label">Code*</label>
+                        <label className="form-label">Cost*</label>
                         <input
                           type="number"
                           className="form-control"

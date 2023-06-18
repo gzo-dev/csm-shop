@@ -2,15 +2,12 @@ import React, { useState, useEffect } from "react";
 import {
   Typography,
   Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   TextField,
 } from "@material-ui/core";
 import { GetCustomerDetails } from "../../../../services";
 import { NotificationManager } from "react-notifications";
 import swal from "sweetalert";
+import Axios from "axios";
 
 const View = () => {
   const [getList, setGetList] = useState([]);
@@ -74,11 +71,19 @@ const View = () => {
     }));
   };
 
-  const handleAddCustomer = () => {
+  const handleAddCustomer = async () => {
     // Xử lý thêm khách hàng vào cơ sở dữ liệu ở đây
     // ...
 
     // Đóng popup và làm mới danh sách khách hàng
+    const res= await Axios({
+      url: "http://localhost:4000/api/customer/register",
+      method: "post",
+      data: {
+        ...newCustomer
+      }
+    })
+    const result= await res.data
     setIsAddPopupOpen(false);
     getCustomer();
   };
@@ -209,6 +214,7 @@ const View = () => {
 
       {/* Popup Thêm Customer */}
       {isAddPopupOpen && (
+        
         <div className="add-customer-popup">
           <div className="add-customer-content">
             <h2>Add Customer</h2>

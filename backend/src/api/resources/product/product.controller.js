@@ -317,35 +317,36 @@ export default {
     },
 
     async multiplePhotoUpload(req, res, next) {
-        let attachmentEntries = [];
-        var productId = req.body.productId;
-        for (var i = 0; i < req.files.length; i++) {
-            attachmentEntries.push({
-                productId: productId,
-                name: req.files[i].filename,
-                mime: req.files[i].mimetype,
-                imgUrl: req.files[i].location,
-            })
-        }
+        // let attachmentEntries = [];
+        // var productId = req.body.productId;
+        // for (var i = 0; i < req.files.length; i++) {
+        //     attachmentEntries.push({
+        //         productId: productId,
+        //         name: req.files[i].filename,
+        //         mime: req.files[i].mimetype,
+        //         imgUrl: req.files[i].location,
+        //     })
+        // }
 
-        db.product.findOne({
-            where: { id: productId },
-        }).then(r => {
-            if (r) {
-                // return queue.create('img-upload', {
-                //     productId: productId,
-                //     productName: r.item_name,
-                //     attachmentEntries: attachmentEntries,
-                // }).save();
-            }
-            throw new RequestError('ProductId is not found')
-        }).then(r => {
-            res.status(200).json({ success: r });
-        })
-            .catch(function (error) {
-                console.log(error);
-                res.status(500).json({ 'errors': ['Error insert photo'] });
-            });
+        // db.product.findOne({
+        //     where: { id: productId },
+        // }).then(r => {
+        //     if (r) {
+        //         // return queue.create('img-upload', {
+        //         //     productId: productId,
+        //         //     productName: r.item_name,
+        //         //     attachmentEntries: attachmentEntries,
+        //         // }).save();
+        //     }
+        //     throw new RequestError('ProductId is not found')
+        // }).then(r => {
+        //     res.status(200).json({ success: r });
+        // })
+        //     .catch(function (error) {
+        //         console.log(error);
+        //         res.status(500).json({ 'errors': ['Error insert photo'] });
+        //     });
+        return res.status(200).json(req.file)
     },
 
     async getAllPhoto(req, res, next) {
