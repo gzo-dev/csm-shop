@@ -38,7 +38,7 @@ export default class Edit extends Component {
             let user = await GetUserLogin.getUserUpdate(data);
             if (user) {
                 this.setState({ isLoaded: false })
-                this.props.history.goBack();
+                this.props.history.goBack();                
                 NotificationManager.success("Update success", 'Message');
             } else {
                 NotificationManager.error("Check field", 'Input');

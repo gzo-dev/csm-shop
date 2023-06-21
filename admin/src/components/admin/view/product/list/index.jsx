@@ -201,13 +201,13 @@ export default class List extends Component {
                         <th>Category</th>
                         <th>Brand</th>
                         <th>Unit</th>
-                        <th>BuyerPrice</th>
-                        <th>Seller Price</th>
+                        <th>Cost</th>
+                        <th>Seller</th>
                         {/* <th>Qty</th>
                                                 <th>Discount(%)</th> */}
-                        <th>Discount</th>
-                        <th>Total</th>
-                        <th>Net Price</th>
+                        {/* <th>Discount</th> */}
+                        {/* <th>Total</th> */}
+                        {/* <th>Net Price</th> */}
                         <th>Status</th>
                         <th>Action</th>
                       </tr>
@@ -234,9 +234,9 @@ export default class List extends Component {
                               <td>${row.price}</td>
                               {/* <td>${row.qty}</td>
                                                         <td>{row.discountPer}%</td> */}
-                              <td>${row.discount}</td>
+                              {/* <td>${row.discount}</td>
                               <td>${row.total}</td>
-                              <td>${row.netPrice}</td>
+                              <td>${row.netPrice}</td> */}
                               <td>
                                 {row.status === "active" ? (
                                   <span className="badge-item badge-status-success">
