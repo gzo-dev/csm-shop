@@ -53,7 +53,7 @@ export default {
                     res.status(200).json({ 'success': true });
                 })
                 .catch(function (err) {
-                    console.log(error);
+                    console.log(err);   
                     res.status(500).json({ 'errors': ['Error adding cart'] });
                 });
         }

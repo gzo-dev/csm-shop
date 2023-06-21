@@ -87,13 +87,11 @@ export default {
         var date = new Date();
         const findUser= await db.customer.findOne({where: {email, password}})
         if(findUser) {
-            console.log(findUser.dataValues)
-            const token= JWT.sign({uid: findUser.dataValues.id}, process.env.JWT_SECRET)
+            const token= JWT.sign({uid: findUser.dataValues.id, id: findUser.dataValues.id}, process.env.JWT_SECRET)
             return res.status(200).json({ success: true, token });
         }
         else {
             return res.status(200).json({ success: false });
-
         }
     },
 
