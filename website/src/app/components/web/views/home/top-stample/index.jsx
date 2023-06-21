@@ -55,7 +55,7 @@ export default class Topstample extends Component {
                                 <a className="float-right text-secondary" >View All</a>
                             </h5>
                         </div>
-                        <Slider {...settings}>
+                        {/* <Slider {...settings}>
                             <div className="item">
                                 <div className="product">
                                     <a href="single.html">
@@ -170,7 +170,7 @@ export default class Topstample extends Component {
                                     </a>
                                 </div>
                             </div>
-                        </Slider>
+                        </Slider> */}
                     </div>
                 </section>
                 {/* End New item slider */}

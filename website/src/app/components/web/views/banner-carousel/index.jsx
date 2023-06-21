@@ -17,16 +17,16 @@ export default class Bannerslider extends Component {
 
         return (
             <div>
-                <Category />
+                {/* <Category /> */}
                 <Slider {...settings}>
                     <div className="owl-item">
-                        <img src="img/banners/offer-1.jpg" alt="supermarket" />
-                    </div >
-                    <div className="owl-item">
-                        <img src="img/banners/offer-2.jpg" alt="supermarket" />
+                        <img src="https://f9-zpc.zdn.vn/8938671365555282785/ba56367463f9b2a7ebe8.jpg" alt="supermarket" />
                     </div>
                     <div className="owl-item">
-                        <img src="img/banners/offer-3.jpg" alt="supermarket" />
+                        <img src="https://f2-zpc.zdn.vn/3368511878183810319/b5bd219f7412a54cfc03.jpg" alt="supermarket" />
+                    </div>
+                    <div className="owl-item">
+                        <img src="https://f9-zpc.zdn.vn/4275139286401155915/d56d474f12c2c39c9ad3.jpg" alt="supermarket" />
                     </div>
                 </Slider>
             </div>
