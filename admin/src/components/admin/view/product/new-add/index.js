@@ -273,7 +273,7 @@ export default class Newproduct extends Component {
                         />
                       </div>
                     </div>
-                    <div className="col-lg-2 col-md-2" style={{display: "none"}}>
+                    <div className="col-lg-2 col-md-2">
                       <div className="form-group">
                         <label className="form-label">Unit Size*</label>
                         <input
@@ -433,7 +433,7 @@ export default class Newproduct extends Component {
                         variant="contained"
                         onClick={() => this.handleCheckPrice()}
                       >
-                        Checkprice
+                        Preview
                       </Button>
                     </div>
                     <div

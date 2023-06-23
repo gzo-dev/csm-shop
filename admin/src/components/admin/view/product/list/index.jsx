@@ -202,7 +202,7 @@ export default class List extends Component {
                         <th>Brand</th>
                         <th>Unit</th>
                         <th>Cost</th>
-                        <th>Seller</th>
+                        <th>Buyer</th>
                         {/* <th>Qty</th>
                                                 <th>Discount(%)</th> */}
                         {/* <th>Discount</th> */}

@@ -238,30 +238,30 @@ export default class Edit extends Component {
                                                 <input type="number" className="form-control" name="qty" value={this.state.qty} onChange={(e) => this.handleChange(e)} />
                                             </div>
                                         </div>
-                                        <div className="col-lg-1 col-md-1">
+                                        {/* <div className="col-lg-1 col-md-1">
                                             <div className="form-group">
                                                 <label className="form-label">Discount(%)*</label>
                                                 <input type="number" className="form-control" name="discountPer" value={this.state.discountPer} onChange={(e) => this.handleChange(e)} />
                                             </div>
-                                        </div>
-                                        <div className="col-lg-1 col-md-1">
+                                        </div> */}
+                                        {/* <div className="col-lg-1 col-md-1">
                                             <div className="form-group">
                                                 <label className="form-label">Discount Price*</label>
                                                 <input type="number" className="form-control" disabled name="discount" value={this.state.discount} onChange={(e) => this.handleChange(e)} />
                                             </div>
-                                        </div>
-                                        <div className="col-lg-1 col-md-1">
+                                        </div> */}
+                                        {/* <div className="col-lg-1 col-md-1">
                                             <div className="form-group">
                                                 <label className="form-label">Total *</label>
                                                 <input type="number" className="form-control" disabled name="total" value={this.state.total} onChange={(e) => this.handleChange(e)} />
                                             </div>
-                                        </div>
-                                        <div className="col-lg-1 col-md-1">
+                                        </div> */}
+                                        {/* <div className="col-lg-1 col-md-1">
                                             <div className="form-group">
                                                 <label className="form-label">Grand Total *</label>
                                                 <input type="number" className="form-control" disabled name="grand_total" value={this.state.grand_total} onChange={(e) => this.handleChange(e)} />
                                             </div>
-                                        </div>
+                                        </div> */}
                                     </div>
 
                                     <div className="row" style={{ paddingTop: '2rem' }}>
@@ -279,7 +279,7 @@ export default class Edit extends Component {
                                     </div>
                                     <div className="button_price">
                                         <div className="form-group">
-                                            <Button className="checkprice" variant="contained" onClick={() => this.handleCheckPrice()} >Checkprice</Button>
+                                            <Button className="checkprice" variant="contained" onClick={() => this.handleCheckPrice()} >Preview</Button>
                                         </div>
                                         <div className="form-group" style={this.state.toggle ? { display: 'block' } : { display: 'none' }}>
                                             <button className="save-btn hover-btn" type="submit" onClick={this.handleSubmit}>
