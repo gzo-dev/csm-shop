@@ -332,7 +332,7 @@ class Checkout extends Component {
                                           htmlFor="card1"
                                           className="radio-label_1"
                                         >
-                                          Pay With Card
+                                          Pay With Momo
                                         </label>
                                       </div>
                                     </li>

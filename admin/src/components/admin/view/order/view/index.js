@@ -52,7 +52,7 @@ export default class View extends Component {
                           </div>
                         </div>
                         <div className="col-lg-6 col-sm-6">
-                          {self.Addresses.map((data, index) => (
+                          {/* {self.Addresses.map((data, index) => (
                             <div className="ordr-date right-text" key={index}>
                               <b>Order Date :</b>
                               <br />#{data.shipping},<br />
@@ -61,7 +61,7 @@ export default class View extends Component {
                               {data.discrict},<br />
                               {data.states},<br />
                             </div>
-                          ))}
+                          ))} */}
                         </div>
                         <div className="col-lg-12">
                           <div className="card card-static-2 mb-30 mt-30">
@@ -97,7 +97,7 @@ export default class View extends Component {
                                     </tr>
                                   </thead>
                                   <tbody>
-                                    {self.Addresses.map((prop) => {
+                                    {/* {self.Addresses.map((prop) => {
                                       return prop.Carts.map((p, index) => (
                                         <tr key={index}>
                                           <td>{p.id}</td>
@@ -120,7 +120,7 @@ export default class View extends Component {
                                           </td>
                                         </tr>
                                       ));
-                                    })}
+                                    })} */}
                                   </tbody>
                                 </table>
                               </div>

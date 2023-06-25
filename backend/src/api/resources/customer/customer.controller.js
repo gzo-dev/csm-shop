@@ -84,11 +84,13 @@ export default {
 
     async login(req, res, next) {
         const {email, password }= req.body
-        var date = new Date();
-        const findUser= await db.customer.findOne({where: {email, password}})
+        // var date = new Date();
+        const findUser= await db.customer.findOne({where: {email}})
+        console.log("email", email)
+        console.log("findUser", findUser)
         if(findUser) {
             const token= JWT.sign({uid: findUser.dataValues.id, id: findUser.dataValues.id}, process.env.JWT_SECRET)
-            return res.status(200).json({ success: true, token });
+            return res.status(200).json({ success: true, token, findUser });
         }
         else {
             return res.status(200).json({ success: false });

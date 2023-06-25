@@ -15,6 +15,7 @@ const getUserLogin = async (data) => {
             NotificationManager.error(result.data.error);
             return null;
         }
+        Cookies.set("udata", result?.data)
         return result.data;
     } catch (error) {
         console.log(error);

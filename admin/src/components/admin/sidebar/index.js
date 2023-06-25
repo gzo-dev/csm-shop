@@ -250,6 +250,12 @@ export default class Sidebar extends Component {
                 </div>
                 Voucher
               </Link>
+              <Link className="nav-link" to="/admin/contact/list">
+                <div className="sb-nav-link-icon">
+                  <i className="fas fa-gift" />
+                </div>
+                Contact
+              </Link>
             </div>
           </div>
         </nav>

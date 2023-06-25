@@ -9,10 +9,13 @@ import RichTextEditor from "../../../../RichTextEditor";
 import Loader from "../../../../loader";
 import { NotificationManager } from "react-notifications";
 import swal from "sweetalert";
+import { ToastContainer, toast } from "react-toastify";
+
 export default class Newproduct extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      files: [],
       getList: [],
       getsublist: [],
       selectedCategory: "",
@@ -91,7 +94,8 @@ export default class Newproduct extends Component {
     this.caculationTable();
     this.setState({ toggle: !this.state.toggle });
   }
-  handleSubmit = (event) => {
+  
+  handleSubmit = (event, listImage) => {
     event.preventDefault();
     this.setState({ isLoaded: true });
     const {
@@ -133,6 +137,7 @@ export default class Newproduct extends Component {
     formData.append("discount", discount);
     formData.append("total", total);
     formData.append("netPrice", grand_total);
+    formData.append("image", listImage)
     const config = {
       headers: {
         "content-type": "multipart/form-data",
@@ -152,6 +157,48 @@ export default class Newproduct extends Component {
           this.props.history.push("/admin/product/list");
         } else {
           NotificationManager.error("Please! Check input field", "Input Field");
+        }
+      }
+    });
+    
+  };
+  fileSelectedHandler = (e) => {
+    this.setState({ files: e.target.files });
+  };
+
+  handleSubmitMoreImage = async (event) => {
+    event.preventDefault();
+    this.setState({ isLoaded: true });
+    const formData = new FormData();
+    formData.append("productId", "-1");
+    for (const file of this.state.files) {
+      formData.append("file", file);
+    }
+    const config = {
+      headers: {
+        "content-type": "multipart/form-data",
+      },
+    };
+
+    swal({
+      title: "Are you sure?",
+      text: "You want to add Images",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then(async (success) => {
+      if (success) {
+        let list = await GetProductDetails.getUploadProductImage(
+          formData,
+          config
+        );
+        if (list) {
+          toast.success("successfully added");
+          this.getProductList();
+          this.setState({ isLoaded: false });
+          // window.location.href = "/admin/product/more-photo";
+        } else {
+          toast.error("error");
         }
       }
     });
@@ -297,6 +344,20 @@ export default class Newproduct extends Component {
                         />
                       </div>
                     </div>
+                    {/* new */}
+                    <div className="col-lg-4 col-md-4">
+                      <div className="form-group">
+                        <label className="form-label">Product image*</label>
+                        <input
+                          className="form-control"
+                          type="file"
+                          multiple
+                          name="files"
+                          onChange={this.fileSelectedHandler}
+                        />
+                      </div>
+                    </div>
+                    {/*  */}
                   </div>
                   <div className="row" style={{ paddingTop: "2rem" }}>
                     <div className="col-lg-2 col-md-2">
@@ -447,7 +508,10 @@ export default class Newproduct extends Component {
                       <button
                         className="save-btn hover-btn"
                         type="submit"
-                        onClick={this.handleSubmit}
+                        onClick={async (e)=> {
+                          const result= await this.handleSubmitMoreImage(e)
+                          this.handleSubmit(e, result)
+                        }}
                       >
                         Add New Product
                       </button>

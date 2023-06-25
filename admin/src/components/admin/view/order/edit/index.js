@@ -85,7 +85,7 @@ export default class Edit extends Component {
                           </div>
                         </div>
                         <div className="col-lg-6 col-sm-6">
-                          {self.row.Addresses.map((data, index) => (
+                          {/* {self.row.Addresses.map((data, index) => (
                             <div className="ordr-date right-text" key={index}>
                               <b>Order Date :</b>
                               <br />#{data.shipping},<br />
@@ -94,7 +94,7 @@ export default class Edit extends Component {
                               {data.discrict},<br />
                               {data.states},<br />
                             </div>
-                          ))}
+                          ))} */}
                         </div>
                         <div className="col-lg-12">
                           <div className="card card-static-2 mb-30 mt-30">
@@ -130,7 +130,7 @@ export default class Edit extends Component {
                                     </tr>
                                   </thead>
                                   <tbody>
-                                    {self.row.Addresses.map((prop) => {
+                                    {/* {self.row.Addresses.map((prop) => {
                                       return prop.Carts.map((p, index) => (
                                         <tr key={index}>
                                           <td>{p.id}</td>
@@ -143,17 +143,17 @@ export default class Edit extends Component {
                                           </td>
                                           <td>{p.name}</td>
                                           <td className="text-center">
-                                            &#8377;{p.price}
+                                            ${p.price}
                                           </td>
                                           <td className="text-center">
                                             {p.qty}
                                           </td>
                                           <td className="text-center">
-                                            &#8377;{p.total}
+                                            ${p.total}
                                           </td>
                                         </tr>
                                       ));
-                                    })}
+                                    })} */}
                                   </tbody>
                                 </table>
                               </div>
@@ -167,7 +167,7 @@ export default class Edit extends Component {
                               Sub Total
                             </div>
                             <div className="order-total-right-text">
-                              &#8377;{self.row.grandtotal}
+                              ${self.row.grandtotal}
                             </div>
                           </div>
                           <div className="order-total-dt">
@@ -175,7 +175,7 @@ export default class Edit extends Component {
                               Delivery Fees
                             </div>
                             <div className="order-total-right-text">
-                              &#8377;Free
+                              $Free
                             </div>
                           </div>
                           <div className="order-total-dt">
@@ -183,7 +183,7 @@ export default class Edit extends Component {
                               Total Amount
                             </div>
                             <div className="order-total-right-text fsz-18">
-                              &#8377;{self.row.grandtotal}
+                              ${self.row.grandtotal}
                             </div>
                           </div>
                         </div>

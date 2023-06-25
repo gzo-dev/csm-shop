@@ -345,7 +345,7 @@ export default {
 
             }
         }).then(r => {
-            res.status(200).json({ success: r });
+            res.status(200).json({ success: true, data: req.files });
         })
             .catch(function (error) {
                 console.log(error);

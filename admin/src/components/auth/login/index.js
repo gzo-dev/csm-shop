@@ -27,7 +27,7 @@ export default class Signin extends Component {
         if(user){
              GetUserLogin.authenticate(user, () => {
                 this.setState({ redirectToReferrer: true, isloaded: false })
-                window.location.reload()
+                // window.location.reload()
             })
         
         }else{
