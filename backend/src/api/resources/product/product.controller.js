@@ -34,7 +34,7 @@ export default {
 
     async addProduct(req, res, next) {
         try {
-            const { categoryId, subCategoryId, childCategoryId, name, slug, brand, status, unitSize, sortDesc, desc, buyerPrice, price, qty, discount, discountPer, total, netPrice } = req.body;
+            const { categoryId, subCategoryId, childCategoryId, name, slug, brand, status, unitSize, sortDesc, desc, buyerPrice, price, qty, discount, discountPer, total, netPrice, image } = req.body;
             db.product.findOne({
                 where: { name: name }
             })
@@ -61,9 +61,11 @@ export default {
                             photo: req.file ? req.file.path : '',
                         })
                     }
-                    return res.status(409).json('Already exist product');
+                    return res.status(409).json({message: 'Already exist product'});
                 })
                 .then(product => {
+                   JSON.parse(image)?.map(item=> db.productphoto.create({...item, imgUrl: item?.path, productId: product.dataValues.id}))
+                    console.log("product", product.dataValues.id)
                     res.status(200).json({ 'success': true, msg: "Successfully inserted product" });
                 })
                 .catch(function (err) {

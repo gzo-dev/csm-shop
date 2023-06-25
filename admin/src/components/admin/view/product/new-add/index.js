@@ -94,8 +94,9 @@ export default class Newproduct extends Component {
     this.caculationTable();
     this.setState({ toggle: !this.state.toggle });
   }
-  
+
   handleSubmit = (event, listImage) => {
+    console.log(listImage)
     event.preventDefault();
     this.setState({ isLoaded: true });
     const {
@@ -137,7 +138,7 @@ export default class Newproduct extends Component {
     formData.append("discount", discount);
     formData.append("total", total);
     formData.append("netPrice", grand_total);
-    formData.append("image", listImage)
+    formData.append("image", JSON.stringify(listImage));
     const config = {
       headers: {
         "content-type": "multipart/form-data",
@@ -160,14 +161,12 @@ export default class Newproduct extends Component {
         }
       }
     });
-    
   };
   fileSelectedHandler = (e) => {
     this.setState({ files: e.target.files });
   };
 
   handleSubmitMoreImage = async (event) => {
-    event.preventDefault();
     this.setState({ isLoaded: true });
     const formData = new FormData();
     formData.append("productId", "-1");
@@ -180,29 +179,18 @@ export default class Newproduct extends Component {
       },
     };
 
-    swal({
-      title: "Are you sure?",
-      text: "You want to add Images",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    }).then(async (success) => {
-      if (success) {
-        let list = await GetProductDetails.getUploadProductImage(
-          formData,
-          config
-        );
-        if (list) {
-          toast.success("successfully added");
-          this.getProductList();
-          this.setState({ isLoaded: false });
-          // window.location.href = "/admin/product/more-photo";
-        } else {
-          toast.error("error");
-        }
-      }
-    });
+    let list = await GetProductDetails.getUploadProductImage(formData, config);
+    if (list) {
+      this.setState({ isLoaded: false });
+      toast.success("successfully added");
+      return list;
+      // window.location.href = "/admin/product/more-photo";
+    } else {
+      toast.error("error");
+      return [];
+    }
   };
+
   render() {
     const { getList, getsublist, isLoaded } = this.state;
     return (
@@ -411,7 +399,10 @@ export default class Newproduct extends Component {
                         />
                       </div>
                     </div>
-                    <div className="col-lg-1 col-md-1" style={{display: "none"}}>
+                    <div
+                      className="col-lg-1 col-md-1"
+                      style={{ display: "none" }}
+                    >
                       <div className="form-group">
                         <label className="form-label">Discount(%)*</label>
                         <input
@@ -423,7 +414,10 @@ export default class Newproduct extends Component {
                         />
                       </div>
                     </div>
-                    <div className="col-lg-1 col-md-1" style={{display: "none"}}>
+                    <div
+                      className="col-lg-1 col-md-1"
+                      style={{ display: "none" }}
+                    >
                       <div className="form-group">
                         <label className="form-label">Discount Price*</label>
                         <input
@@ -436,7 +430,10 @@ export default class Newproduct extends Component {
                         />
                       </div>
                     </div>
-                    <div className="col-lg-1 col-md-1" style={{display: "none"}}>
+                    <div
+                      className="col-lg-1 col-md-1"
+                      style={{ display: "none" }}
+                    >
                       <div className="form-group">
                         <label className="form-label">Total *</label>
                         <input
@@ -449,7 +446,10 @@ export default class Newproduct extends Component {
                         />
                       </div>
                     </div>
-                    <div className="col-lg-2 col-md-2" style={{display: "none"}}>
+                    <div
+                      className="col-lg-2 col-md-2"
+                      style={{ display: "none" }}
+                    >
                       <div className="form-group">
                         <label className="form-label">Grand Total *</label>
                         <input
@@ -508,9 +508,11 @@ export default class Newproduct extends Component {
                       <button
                         className="save-btn hover-btn"
                         type="submit"
-                        onClick={async (e)=> {
-                          const result= await this.handleSubmitMoreImage(e)
-                          this.handleSubmit(e, result)
+                        onClick={async (e) => {
+                          const result = await this.handleSubmitMoreImage(e);
+                          setTimeout(() => {
+                            this.handleSubmit(e, result.data);
+                          }, 5000);
                         }}
                       >
                         Add New Product
