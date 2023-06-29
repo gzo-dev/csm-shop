@@ -89,14 +89,11 @@ export default class List extends Component {
                       <i className="uil uil-box" />
                       My Orders
                     </a>
-                    <a href="/account/rewards" className="user-item">
-                      <i className="uil uil-gift" />
-                      My Rewards
-                    </a>
-                    <a href="/account/wishlist" className="user-item">
+                    {/* Select Status: */}
+                    {/* <a href="/account/wishlist" className="user-item">
                       <i className="uil uil-heart" />
                       Shopping Wishlist
-                    </a>
+                    </a> */}
                     <a href="/account/address" className="user-item">
                       <i className="uil uil-location-point" />
                       My Address

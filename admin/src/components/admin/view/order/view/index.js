@@ -110,13 +110,13 @@ export default class View extends Component {
                                           </td>
                                           <td>{p.name}</td>
                                           <td className="text-center">
-                                            &#8377;{p.price}
+                                            VND{p.price}
                                           </td>
                                           <td className="text-center">
                                             {p.qty}
                                           </td>
                                           <td className="text-center">
-                                            &#8377;{p.total}
+                                            VND{p.total}
                                           </td>
                                         </tr>
                                       ));
@@ -134,7 +134,7 @@ export default class View extends Component {
                               Sub Total
                             </div>
                             <div className="order-total-right-text">
-                              &#8377;{self.grandtotal}
+                              VND{self.grandtotal}
                             </div>
                           </div>
                           <div className="order-total-dt">
@@ -142,7 +142,7 @@ export default class View extends Component {
                               Delivery Fees
                             </div>
                             <div className="order-total-right-text">
-                              &#8377;Free
+                              VNDFree
                             </div>
                           </div>
                           <div className="order-total-dt">
@@ -150,7 +150,7 @@ export default class View extends Component {
                               Total Amount
                             </div>
                             <div className="order-total-right-text fsz-18">
-                              &#8377;{self.grandtotal}
+                              VND{self.grandtotal}
                             </div>
                           </div>
                         </div>

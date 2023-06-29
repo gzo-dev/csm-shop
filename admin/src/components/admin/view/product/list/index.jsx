@@ -202,7 +202,7 @@ export default class List extends Component {
                         <th>Brand</th>
                         <th>Unit</th>
                         <th>Cost</th>
-                        <th>Buyer</th>
+                        <th>Price</th>
                         {/* <th>Qty</th>
                                                 <th>Discount(%)</th> */}
                         {/* <th>Discount</th> */}
@@ -230,8 +230,8 @@ export default class List extends Component {
                               </td>
                               <td>{row.brand}</td>
                               <td>{row.unitSize}</td>
-                              <td>${row.buyerPrice}</td>
-                              <td>${row.price}</td>
+                              <td>VND{row.buyerPrice}</td>
+                              <td>VND{row.price}</td>
                               {/* <td>${row.qty}</td>
                                                         <td>{row.discountPer}%</td> */}
                               {/* <td>${row.discount}</td>

@@ -99,7 +99,7 @@ class Singleproduct extends Component {
                     </h6>
                     <div className="pdp-product__old-price">
                       <span className="space__right--2-unit">Product MRP:</span>
-                      <span className="regular-price">${product.price}</span>
+                      <span className="regular-price">VND{product.price}</span>
                     </div>
 
                     <div className="pdp-product__new-price">
@@ -107,7 +107,7 @@ class Singleproduct extends Component {
                         Selling price:
                       </span>
                       <span className="pdp-product__price--new">
-                        ${product.netPrice}
+                        VND{product.netPrice}
                       </span>
                       <div className="pdp-product__tax-disclaimer">
                         (Inclusive of all taxes)

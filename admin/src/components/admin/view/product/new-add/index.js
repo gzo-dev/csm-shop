@@ -9,7 +9,9 @@ import RichTextEditor from "../../../../RichTextEditor";
 import Loader from "../../../../loader";
 import { NotificationManager } from "react-notifications";
 import swal from "sweetalert";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
+import { Fragment } from "react";
+// import {AiFillCloseCircle } from "react-icons"
 
 export default class Newproduct extends Component {
   constructor(props) {
@@ -22,7 +24,7 @@ export default class Newproduct extends Component {
       selectedSubCategory: "",
       selectedChildCategory: "",
       blockhide: false,
-      toggle: false,
+      toggle: true,
       isLoaded: false,
       name: "",
       slug: "",
@@ -39,6 +41,7 @@ export default class Newproduct extends Component {
       discountPer: 0,
       total: 0,
       grand_total: 0,
+      previewImage: [],
     };
   }
   handleBack() {
@@ -46,6 +49,11 @@ export default class Newproduct extends Component {
   }
   handleChange(e) {
     this.setState({ [e.target.name]: e.target.value });
+    if (e.target.name === "name") {
+      this.setState({
+        slug: e.target.value.toLowerCase().replaceAll(" ", "-"),
+      });
+    }
   }
   onFileChange = (event) => {
     this.setState({ image: event.target.files[0] });
@@ -96,7 +104,7 @@ export default class Newproduct extends Component {
   }
 
   handleSubmit = (event, listImage) => {
-    console.log(listImage)
+    console.log(listImage);
     event.preventDefault();
     this.setState({ isLoaded: true });
     const {
@@ -162,8 +170,16 @@ export default class Newproduct extends Component {
       }
     });
   };
+
   fileSelectedHandler = (e) => {
     this.setState({ files: e.target.files });
+    const arr = [];
+    Object.values(e.target.files).map((item) => console.log(item));
+
+    Object.values(e.target.files).map((item) =>
+      arr.push({ preview: URL.createObjectURL(item), id: item.lastModified })
+    );
+    this.setState({ previewImage: arr });
   };
 
   handleSubmitMoreImage = async (event) => {
@@ -199,11 +215,12 @@ export default class Newproduct extends Component {
           <div className="col-lg-5 col-md-9 col-lg-6">
             <h2 className="mt-30 page-title">Products</h2>
           </div>
-          <div className="col-lg-5 col-md-3 col-lg-6 back-btn">
+          <div className="col-lg-5 col-md-3 col-lg-6 back-btn mb-3">
             <Button variant="contained" onClick={(e) => this.handleBack()}>
               <i className="fas fa-arrow-left" /> Back
             </Button>
           </div>
+          <br />
         </div>
         <ol className="breadcrumb mb-30">
           <li className="breadcrumb-item">
@@ -284,19 +301,6 @@ export default class Newproduct extends Component {
                     </div>
                     <div className="col-lg-2 col-md-2">
                       <div className="form-group">
-                        <label className="form-label">Slug*</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          placeholder="Product Name"
-                          name="slug"
-                          value={this.state.slug}
-                          onChange={(e) => this.handleChange(e)}
-                        />
-                      </div>
-                    </div>
-                    <div className="col-lg-2 col-md-2">
-                      <div className="form-group">
                         <label className="form-label">Brand*</label>
                         <input
                           type="text"
@@ -311,14 +315,51 @@ export default class Newproduct extends Component {
                     <div className="col-lg-2 col-md-2">
                       <div className="form-group">
                         <label className="form-label">Unit Size*</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          placeholder="size"
-                          name="unit"
-                          value={this.state.unit}
-                          onChange={(e) => this.handleChange(e)}
-                        />
+                        {["short", "Short"].includes(getsublist[0]) &&
+                          ["short", "Short"].includes(getsublist[0].name) ===
+                            true && (
+                            <select
+                              value={this.state.unit}
+                              className="form-control"
+                              placeholder="size"
+                              onChange={(e) => this.handleChange(e)}
+                              name="unit"
+                            >
+                              <option value="1">1</option>
+                              <option value="2">2</option>
+                              <option value="3">3</option>
+                            </select>
+                          )}
+                        {["shirt", "Shirt"].includes(this.state.unit) ===
+                          true && (
+                          <select
+                            value={this.state.unit}
+                            className="form-control"
+                            placeholder="size"
+                            onChange={(e) => this.handleChange(e)}
+                            name="unit"
+                          >
+                            <option value="X">X</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="XXL">XXL</option>
+                            <option value="3XL">3XL</option>
+                          </select>
+                        )}
+                        {["short", "Short"].includes(this.state.unit) ===
+                          false &&
+                          ["shirt", "Shirt"].includes(this.state.unit) ===
+                            false && (
+                            <input
+                              type="text"
+                              className="form-control"
+                              placeholder="size"
+                              name="unit"
+                              value={this.state.unit}
+                              onChange={(e) => this.handleChange(e)}
+                            />
+                          )}
                       </div>
                     </div>
                     <div className="col-lg-2 col-md-2">
@@ -343,6 +384,51 @@ export default class Newproduct extends Component {
                           name="files"
                           onChange={this.fileSelectedHandler}
                         />
+                        <br />
+                        <div
+                          className={
+                            "d-flex align-items-center g-10 mr-2 flex-wrap mb-3"
+                          }
+                        >
+                          {this.state.previewImage.length > 0 &&
+                            this.state.previewImage.map((item, key) => (
+                              <div style={{ position: "relative" }}>
+                                <img
+                                  key={key}
+                                  src={item.preview}
+                                  className={"mr-3 mb-3"}
+                                  style={{
+                                    width: 130,
+                                    height: 130,
+                                    borderRadius: 10,
+                                    objectFit: "cover",
+                                  }}
+                                />
+                                <button
+                                  onClick={() => {
+                                    this.setState({
+                                      previewImage:
+                                        this.state.previewImage.filter(
+                                          (item2) => item2.id != item.id
+                                        ),
+                                    });
+                                    this.setState({
+                                      files: [...this.state.files].filter(
+                                        (item2) => item2.lastModified != item.id
+                                      ),
+                                    });
+                                  }}
+                                  style={{
+                                    position: "absolute",
+                                    right: 0,
+                                    top: 0,
+                                  }}
+                                >
+                                  X
+                                </button>
+                              </div>
+                            ))}
+                        </div>
                       </div>
                     </div>
                     {/*  */}
@@ -377,7 +463,7 @@ export default class Newproduct extends Component {
                     </div>
                     <div className="col-lg-2 col-md-2">
                       <div className="form-group">
-                        <label className="form-label">Seller Price*</label>
+                        <label className="form-label">Price*</label>
                         <input
                           type="number"
                           className="form-control"
@@ -488,7 +574,7 @@ export default class Newproduct extends Component {
                     </div>
                   </div>
                   <div className="button_price">
-                    <div className="form-group">
+                    {/* <div className="form-group">
                       <Button
                         className="checkprice"
                         variant="contained"
@@ -496,7 +582,7 @@ export default class Newproduct extends Component {
                       >
                         Preview
                       </Button>
-                    </div>
+                    </div> */}
                     <div
                       className="form-group"
                       style={

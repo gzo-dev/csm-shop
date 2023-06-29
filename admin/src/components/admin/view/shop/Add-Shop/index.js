@@ -86,12 +86,12 @@ export default class Createshop extends Component {
                                 <input className="form-control" type="email" placeholder="Enter Email Address" name="email" value={this.state.email} onChange={(e) => this.handleChange(e)} />
                             </div>
                         </Grid>
-                        <Grid item xs={4}>
+                        {/* <Grid item xs={4}>
                             <div className="form-group">
                                 <label className="form-label">password*</label>
                                 <input className="form-control" type="password" placeholder="Enter password" name="password" value={this.state.password} onChange={(e) => this.handleChange(e)} />
                             </div>
-                        </Grid>
+                        </Grid> */}
                         <Grid item xs={4}>
                             <div className="form-group">
                                 <label className="form-label">Phone Number*</label>
@@ -123,18 +123,18 @@ export default class Createshop extends Component {
                                 <input type="text" className="form-control" placeholder="store name" name="storename" value={this.state.storename} onChange={(e) => this.handleChange(e)} />
                             </div>
                         </Grid>
-                        <Grid item xs={4}>
+                        {/* <Grid item xs={4}>
                             <div className="form-group">
                                 <label className="form-label">Location*</label>
                                 <Searchlocationlist onSelectCategory={this.handleChangeLocation} />
                             </div>
-                        </Grid>
-                        <Grid item xs={4}>
+                        </Grid> */}
+                        {/* <Grid item xs={4}>
                             <div className="form-group">
                                 <label className="form-label">Area*</label>
                                 <Arealist state={getAreaList} onSelectArea={this.handleChangeArea} />
                             </div>
-                        </Grid>
+                        </Grid> */}
                         <Grid item xs={4}>
                             <div className="form-group">
                                 <label className="form-label"> Status*</label>

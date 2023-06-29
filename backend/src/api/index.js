@@ -7,6 +7,7 @@ import { locationRouter } from './resources/location'
 import { customerRouter } from './resources/customer';
 import { orderRouter } from './resources/order';
 import { paymentRouter } from './resources/payment';
+import { contactRouter } from './resources/contact';
 
  
 export const restRouter = express.Router();
@@ -19,9 +20,4 @@ restRouter.use('/supplier', vendorRouter);
 restRouter.use('/category', categoryRouter);
 restRouter.use('/order', orderRouter);
 restRouter.use('/payment', paymentRouter);
-
-
-
-
-
-
+restRouter.use('/contact', contactRouter);

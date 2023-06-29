@@ -6,6 +6,7 @@ import upload from '../../../awsbucket';
 
 
 export const productRouter = express.Router();
+productRouter.route("/photo").get(productController.getPhotoProduct)
 productRouter.route('/add').post(upload.single('photo'), productController.addProduct);
 productRouter.route('/getAllproduct').get( productController.index);
 productRouter.route('/getAllproductList').get( productController.getAllProductList);

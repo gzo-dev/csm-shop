@@ -404,20 +404,20 @@ class Checkout extends Component {
                   <div className="total-checkout-group">
                     <div className="cart-total-dil">
                       <h4>Sub Total</h4>
-                      <span>${subTotal}</span>
+                      <span>VND{subTotal}</span>
                     </div>
                     <div className="cart-total-dil pt-3">
                       <h4>Delivery Charges</h4>
-                      <span>${deliveryCharge}</span>
+                      <span>VND{deliveryCharge}</span>
                     </div>
                   </div>
                   <div className="cart-total-dil saving-total ">
                     <h4>Total Saving</h4>
-                    <span>${discount}</span>
+                    <span>VND{discount}</span>
                   </div>
                   <div className="main-total-cart">
                     <h2>Total</h2>
-                    <span>${grandTotal}</span>
+                    <span>VND{grandTotal}</span>
                   </div>
                 </div>
               </div>

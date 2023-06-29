@@ -142,7 +142,7 @@ const DeliveryDetails = (props) => {
           <div className="col-sm-6">
             <div className="form-group">
               <label className="control-label">
-                State <span className="required">*</span>
+                Email <span className="required">*</span>
               </label>
               <input
                 type="text"

@@ -31,7 +31,18 @@ var deleteFileFromS3 = (async (imgUrl) => {
 export default {
 
     /* Add user api start here................................*/
+    async getPhotoProduct(req, res) {
+        const {productId }= req.query
+        db.productphoto.findAll({
+            where: {
+                productId
+            }
+        })
+        .then(product=> {
+            return res.status(200).json({ok: true, data: product})
 
+        })
+    },
     async addProduct(req, res, next) {
         try {
             const { categoryId, subCategoryId, childCategoryId, name, slug, brand, status, unitSize, sortDesc, desc, buyerPrice, price, qty, discount, discountPer, total, netPrice, image } = req.body;
@@ -64,7 +75,7 @@ export default {
                     return res.status(409).json({message: 'Already exist product'});
                 })
                 .then(product => {
-                   JSON.parse(image)?.map(item=> db.productphoto.create({...item, imgUrl: item?.path, productId: product.dataValues.id}))
+                   JSON.parse(image)?.map(item=> db.productphoto.create({imgUrl: item?.path, productId: product.dataValues.id}))
                     console.log("product", product.dataValues.id)
                     res.status(200).json({ 'success': true, msg: "Successfully inserted product" });
                 })
@@ -373,6 +384,7 @@ export default {
             throw new RequestError('Error');
         }
     },
+
     async deleteSliderPhoto(req, res, next) {
         db.productphoto.findOne({ where: { id: parseInt(req.query.id) } })
             .then(product => {
