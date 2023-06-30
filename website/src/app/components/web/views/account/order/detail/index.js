@@ -205,11 +205,6 @@ export default class Details extends Component {
                                 className="bs-wizard"
                                 style={{ borderBottom: 0 }}
                               >
-                                {/* <div className={list.status==="processing"?"bs-wizard-step":"bs-wizard-step complete"}>
-                                                                <div className="text-center bs-wizard-stepnum">Placed</div>
-                                                                <div className="progress"><div className="progress-bar" /></div>
-                                                                <a href="#" className="bs-wizard-dot" />
-                                                            </div> */}
                                 <div
                                   className={
                                     list.status === "processing"

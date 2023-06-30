@@ -183,7 +183,10 @@ const Navigation = ({ history }) => {
                     )}
                   </li>
                   <li className="list-inline-item cart-btn">
-                    <Cartsidebar />
+                    {
+                      sessionStorage.getItem("_sid") && 
+                      <Cartsidebar />
+                    }
                   </li>
                 </ul>
               </div>

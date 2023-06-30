@@ -71,7 +71,7 @@ export default class Allshop extends Component {
                         <a href="/admin/shop/create" className="add-btn hover-btn">Add New</a>
                     </div>
                     <div className="col-lg-3 col-md-4">
-                        <div className="bulk-section mt-30">
+                        {/* <div className="bulk-section mt-30">
                             <div className="input-group">
                                 <select id="action" name="action" className="form-control">
                                     <option selected>Bulk Actions</option>
@@ -83,7 +83,7 @@ export default class Allshop extends Component {
                                     <button className="status-btn hover-btn" type="submit">Apply</button>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                     <div className="col-lg-5 col-md-6">
                         <div className="bulk-section mt-30">

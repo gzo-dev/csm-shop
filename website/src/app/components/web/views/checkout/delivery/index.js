@@ -8,14 +8,13 @@ const DeliveryDetails = (props) => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [district, setDistrict] = useState(1);
-  const [city, setCity] = useState(1);
   const [area, setArea] = useState('');
   const [states, setStates] = useState('');
   const [address, setAddress] = useState('');
   const [listCity, setListCity]= useState([])
   const [listDistrict, setListDistrict]= useState([])
   const [listWard, setListWard]= useState([])
- 
+  const {city, setCity }= props
   useEffect(()=> {
     (async ()=> {
         const result= await axios({
