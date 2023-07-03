@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     photo: DataTypes.STRING,
     sortDesc: DataTypes.TEXT,
     desc: DataTypes.TEXT,
+    
 
   }, {});
   product.associate = function(models) {

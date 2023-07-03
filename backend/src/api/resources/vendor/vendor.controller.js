@@ -3,7 +3,6 @@ import {v4 } from "uuid"
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 export default {
-
     /* Add user api start here................................*/
 
     async index(req, res, next) {

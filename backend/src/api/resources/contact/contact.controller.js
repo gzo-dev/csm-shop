@@ -9,6 +9,7 @@ export default {
 
         return res.status(200).json({ok: true})
     },
+
     async delete_contact(req, res) {
         const {contactId }= req.body
         db.contact.destroy({
@@ -18,10 +19,19 @@ export default {
         })
         return res.status(200).json({ok: true})
     },
+
     async reply_contact(req, res) {
-        const {email, content}= req.body
+        const {email, content, contactId, replyText}= req.body
         mailer.replyContact(email, content)
         .then(()=> {
+            db.contact.update({
+                status: "processed", 
+                reply_text: replyText
+            },{
+                where: {id: contactId}
+            }, 
+            
+            )
             return res.status(200).json({ok: true})
         })
         .catch(e=> {

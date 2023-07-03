@@ -85,7 +85,7 @@ export default {
     async login(req, res, next) {
         const {email, password }= req.body
         // var date = new Date();
-        const findUser= await db.customer.findOne({where: {email}})
+        const findUser= await db.customer.findOne({where: {email, password: bcrypt.hashSync(password)}})
         console.log("email", email)
         console.log("findUser", findUser)
         if(findUser) {

@@ -3,13 +3,14 @@ import { ADD_TO_CART, REMOVE_FROM_CART, INCREASE_QUANTITY, DECREASE_QUANTITY } f
 export const addToCart = (product) => (dispatch, getState) => {
   const cartItems = getState().cart.cartItems.slice();
   let alreadyExists = false;
+  console.log("product", product)
   cartItems.forEach((x) => {
     if (x.id === product.id) {
       alreadyExists = true;
     }
   });
   if (!alreadyExists) {
-    cartItems.push({ ...product });
+    cartItems.push({ ...product, qty: 1 });
   }
   dispatch({
     type: ADD_TO_CART,

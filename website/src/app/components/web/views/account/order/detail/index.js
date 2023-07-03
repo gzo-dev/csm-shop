@@ -52,13 +52,13 @@ export default class Details extends Component {
                     <img src="/img/avatar/img-5.jpg" alt />
                     <div className="img-add">
                       <input type="file" id="file" />
-                      <label htmlFor="file">
+                      {/* <label htmlFor="file">
                         <i className="uil uil-camera-plus" />
-                      </label>
+                      </label> */}
                     </div>
                   </div>
                   <h4>{user.firstName}</h4>
-                  <p>+977 {user.phone}</p>
+                  <p>+84 {user.phone}</p>
                   {/* <div className="earn-points"><img src="images/Dollar.svg" alt />Points : <span>20</span></div> */}
                 </div>
               </div>
@@ -85,10 +85,10 @@ export default class Details extends Component {
                     </a>
                     {/* <a href="/account/rewards" className="user-item"><i className="uil uil-gift" />My Rewards</a> */}
                     {/* <a href="/account/wishlist" className="user-item"><i className="uil uil-heart" />Shopping Wishlist</a> */}
-                    <a href="/account/address" className="user-item">
+                    {/* <a href="/account/address" className="user-item">
                       <i className="uil uil-location-point" />
                       My Address
-                    </a>
+                    </a> */}
                     <a className="user-item" onClick={this.handleLogout}>
                       <i className="uil uil-exit" />
                       Logout

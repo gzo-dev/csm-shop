@@ -73,7 +73,7 @@ export default class View extends Component {
         </ol>
         <div className="row justify-content-between">
           <div className="col-lg-3 col-md-4">
-            <div className="bulk-section mt-30">
+            {/* <div className="bulk-section mt-30">
               <div className="input-group">
                 <select id="action" name="action" className="form-control">
                   <option selected>Bulk Actions</option>
@@ -87,7 +87,7 @@ export default class View extends Component {
                   </button>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="col-lg-5 col-md-3 col-lg-6 back-btn">
             <Button
@@ -109,9 +109,6 @@ export default class View extends Component {
                   <table className="table ucp-table table-hover">
                     <thead>
                       <tr>
-                        <th style={{ width: 60 }}>
-                          <input type="checkbox" className="check-all" />
-                        </th>
                         <th style={{ width: 60 }}>ID</th>
                         <th>First Name</th>
                         <th>First Name</th>
@@ -124,14 +121,6 @@ export default class View extends Component {
                     <tbody>
                       {getList.map((row, index) => (
                         <tr key={index}>
-                          <td>
-                            <input
-                              type="checkbox"
-                              className="check-item"
-                              name="ids[]"
-                              defaultValue={7}
-                            />
-                          </td>
                           <td>{++index}</td>
                           <td>{row.firstName}</td>
                           <td>{row.lastName}</td>

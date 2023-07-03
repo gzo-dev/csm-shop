@@ -155,9 +155,6 @@ const View = () => {
                 <table className="table ucp-table table-hover">
                   <thead>
                     <tr>
-                      <th style={{ width: 60 }}>
-                        <input type="checkbox" className="check-all" />
-                      </th>
                       <th style={{ width: 60 }}>ID</th>
                       <th>First Name</th>
                       <th>Last Name</th>
@@ -169,14 +166,6 @@ const View = () => {
                   <tbody>
                     {getList.map((row, index) => (
                       <tr key={index}>
-                        <td>
-                          <input
-                            type="checkbox"
-                            className="check-item"
-                            name="ids[]"
-                            defaultValue={7}
-                          />
-                        </td>
                         <td>{++index}</td>
                         <td>{row.firstName}</td>
                         <td>{row.lastName}</td>

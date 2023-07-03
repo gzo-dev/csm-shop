@@ -9,6 +9,7 @@ import Axios from "axios";
 import { API_URL } from "../../../../../config1";
 import ReplyContact from "./reply_contact";
 import delete_contact from "../../../../../api/delete_contact";
+import ViewReply from "./view_replied_contact";
 
 const View = () => {
   const history = useHistory();
@@ -130,36 +131,43 @@ const View = () => {
                 <table className="table ucp-table table-hover">
                   <thead>
                     <tr>
-                      <th style={{ width: 60 }}>
+                      {/* <th style={{ width: 60 }}>
                         <input type="checkbox" className="check-all" />
-                      </th>
+                      </th> */}
                       <th style={{ width: 60 }}>ID</th>
                       <th>Customer name</th>
                       <th>Date send</th>
                       <th>Content</th>
                       <th>Email</th>
+                      <th>Status</th>
                       <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     {getList.map((row, index) => (
                       <tr key={index}>
-                        <td>
+                        {/* <td>
                           <input
                             type="checkbox"
                             className="check-item"
                             name="ids[]"
                             defaultValue={7}
                           />
-                        </td>
+                        </td> */}
                         <td>{++index}</td>
                         <td>{row.name}</td>
                         <td>{row.createdAt}</td>
                         <td>{row.content}</td>
                         <td>{row.email}</td>
+                        <td>{row.status}</td>
                         <td className="action-btns">
-                          <ReplyContact {...row} />
+                          {
+                            row.status=== "processed" ? <ViewReply {...row} />
+                            :
+                            <ReplyContact {...row} /> 
+                          }
                           <Link
+                            title={"Delete"}
                             className="edit-btn"
                             onClick={()=> {
                               swal("Thông báo", "Bạn có muốn xóa không ?", {buttons: {

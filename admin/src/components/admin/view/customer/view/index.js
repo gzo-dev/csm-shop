@@ -109,12 +109,12 @@ const View = () => {
       {
         isAddPopupOpen ? 
         <Button onClick={()=> handleCloseAddPopup()} type={"primary"} color={"primary"}>Collapse</Button> : 
-        <Button onClick={()=> handleOpenAddPopup()} type={"primary"} color={"primary"}>Add Customer</Button>  
+        <Button  onClick={()=> handleOpenAddPopup()} type={"primary"} color={"primary"}>Add Customer</Button>  
 
       }
       <div className="row justify-content-between">
         <div className="col-lg-3 col-md-4">
-          <div className="bulk-section mt-30">
+          {/* <div className="bulk-section mt-30">
             <div className="input-group">
               <select id="action" name="action" className="form-control">
                 <option selected>Bulk Actions</option>
@@ -128,10 +128,10 @@ const View = () => {
                 </button>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
         <div className="col-lg-5 col-md-6">
-          <div className="bulk-section mt-30">
+          {/* <div className="bulk-section mt-30">
             <div className="search-by-name-input">
               <input
                 type="text"
@@ -154,7 +154,7 @@ const View = () => {
                 </button>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
         <div className="col-lg-12 col-md-12">
           <div className="card card-static-2 mt-30 mb-30">
@@ -166,9 +166,6 @@ const View = () => {
                 <table className="table ucp-table table-hover">
                   <thead>
                     <tr>
-                      <th style={{ width: 60 }}>
-                        <input type="checkbox" className="check-all" />
-                      </th>
                       <th style={{ width: 60 }}>ID</th>
                       <th>First Name</th>
                       <th>Last Name</th>
@@ -180,14 +177,6 @@ const View = () => {
                   <tbody>
                     {getList.map((row, index) => (
                       <tr key={index}>
-                        <td>
-                          <input
-                            type="checkbox"
-                            className="check-item"
-                            name="ids[]"
-                            defaultValue={7}
-                          />
-                        </td>
                         <td>{++index}</td>
                         <td>{row.firstName}</td>
                         <td>{row.lastName}</td>

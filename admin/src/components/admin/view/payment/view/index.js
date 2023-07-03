@@ -14,7 +14,7 @@ const View = () => {
   useEffect(() => {
     const fetchData = async () => {
       setIsLoaded(true);
-      await getCustomer();
+      await getPaymentList();
     };
     fetchData();
   }, []);
@@ -23,7 +23,7 @@ const View = () => {
     history.goBack();
   };
 
-  const getCustomer = async () => {
+  const getPaymentList = async () => {
     let list = await GetPaymentDetails.getAllPaymentList();
     if (list) {
       setGetList(list.data);
@@ -80,7 +80,7 @@ const View = () => {
       </ol>
       <div className="row justify-content-between">
         <div className="col-lg-3 col-md-4">
-          <div className="bulk-section mt-30">
+          {/* <div className="bulk-section mt-30">
             <div className="input-group">
               <select id="action" name="action" className="form-control">
                 <option selected>Bulk Actions</option>
@@ -94,7 +94,7 @@ const View = () => {
                 </button>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
         <div className="col-lg-5 col-md-3 col-lg-6 back-btn" style={{display: "none"}}>
           <Button
@@ -109,7 +109,7 @@ const View = () => {
           {isLoaded ? <Loader /> : ""}
           <div className="card card-static-2 mt-30 mb-30">
             <div className="card-title-2">
-              <h4>All User</h4>
+              <h4>All Payment</h4>
             </div>
             <div className="card-body-table">
               <div className="table-responsive">

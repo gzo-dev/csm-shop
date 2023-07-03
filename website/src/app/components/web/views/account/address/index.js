@@ -52,9 +52,9 @@ export default class Address extends Component {
                     <img src="/img/avatar/img-5.jpg" alt />
                     <div className="img-add">
                       <input type="file" id="file" />
-                      <label htmlFor="file">
+                      {/* <label htmlFor="file">
                         <i className="uil uil-camera-plus" />
-                      </label>
+                      </label> */}
                     </div>
                   </div>
                   <h4>{user.firstName}</h4>

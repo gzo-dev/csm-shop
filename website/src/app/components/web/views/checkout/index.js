@@ -10,6 +10,7 @@ import {
 import Deliverydetails from "./delivery";
 import Loader from "../../../../loader";
 import axios from "axios";
+import AddVoucher from "./add-voucher/AddVoucher";
 
 const Checkout = (props) => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -21,9 +22,26 @@ const Checkout = (props) => {
   const [customer, setCustomer] = useState("");
   const [paymentmethod, setPaymentMethod] = useState("");
   const [deliveryAddress, setDeliveryAddress] = useState("");
+  const [dataVoucher, setDataVoucher] = useState();
   const [city, setCity] = useState(1);
+  const [isVoucherApply, setIsVoucherApply]= useState(false)
+
   useEffect(()=> {
-    console.log(city)
+    if(isVoucherApply=== true) {
+      let finalGrandTotal= grandTotal
+      if(parseInt(grandTotal) - parseInt(dataVoucher.discount) < 0) {
+        finalGrandTotal= 0
+        setGrandTotal(finalGrandTotal)
+      }
+      else {
+        setGrandTotal(parseInt(grandTotal) - parseInt(dataVoucher.discount))
+      }
+    }
+    else if(isVoucherApply=== false) {
+      calculateTotals()
+    }
+  }, [isVoucherApply])
+  useEffect(()=> {
     if(city == 1 ) {
       setDeliveryCharge(0)
     }
@@ -43,19 +61,6 @@ const Checkout = (props) => {
       }
     };
 
-    
-
-    const calculateTotals = () => {
-      let cart = props.cartItems;
-      let subTotal = cart.reduce((sum, i) => (sum += i.qty * i.netPrice), 0);
-      let discount = cart.reduce((sum, i) => (sum += i.discount), 0);
-      let grandTotal = subTotal + discount + deliveryCharge;
-
-      setSubTotal(subTotal);
-      setDiscount(discount);
-      setGrandTotal(grandTotal);
-    };
-
     fetchCustomerData();
     calculateTotals();
   }, [props.cartItems, deliveryCharge]);
@@ -67,6 +72,16 @@ const Checkout = (props) => {
   const handleDeliveryAddress = (value) => {
     setDeliveryAddress(value);
   };
+  const calculateTotals = () => {
+    let cart = props.cartItems;
+    let subTotal = cart.reduce((sum, i) => (sum += i.qty * i.netPrice), 0);
+    let discount = cart.reduce((sum, i) => (sum += i.discount), 0);
+    let grandTotal = subTotal + discount + deliveryCharge;
+
+    setSubTotal(subTotal);
+    setDiscount(discount);
+    setGrandTotal(grandTotal);
+  };
 
   const handlePlaceOrder = async (event) => {
     event.preventDefault();
@@ -77,6 +92,7 @@ const Checkout = (props) => {
       deliveryAddress: deliveryAddress,
       product: props.cartItems,
       grandTotal,
+      voucherId: dataVoucher ? dataVoucher.voucherId : 0
     };
 
     if (data) {
@@ -107,6 +123,30 @@ const Checkout = (props) => {
     });
     const result = await res.data;
     window.location.href = result?.payUrl;
+    const data = {
+      customerId: customer.id,
+      paymentmethod: paymentmethod,
+      orderId: Math.floor(Math.random() * Math.floor(Math.random() * Date.now())),
+      deliveryAddress: deliveryAddress,
+      product: props.cartItems,
+      grandTotal,
+      voucherId: dataVoucher ? dataVoucher.voucherId : 0
+    };
+
+    if (data) {
+      let order = await GetOrderDetails.getOrderCreateByUser(JSON.stringify(data));
+      if (order) {
+        // NotificationManager.success("Successfully Ordered", "Order");
+        setTimeout(async function () {
+          CartHelper.emptyCart();
+        }, 1000);
+      } else {
+        NotificationManager.error("Order is declined", "Order");
+        setTimeout(async function () {
+          window.location.href = "/failed";
+        }, 1000);
+      }
+    }
   };
 
   const loadScript = (src) => {
@@ -122,6 +162,10 @@ const Checkout = (props) => {
       document.body.appendChild(script);
     });
   };
+
+  useEffect(()=> {
+    loadScript()
+  }, [])
 
   const { cartItems } = props;
 
@@ -170,6 +214,7 @@ const Checkout = (props) => {
                       </h5>
                     </div>
                   </div>
+                  {/*  */}
                   <div className="card checkout-step-two">
                     <div className="card-header" id="headingTwo">
                       <h5 className="mb-0">
@@ -198,7 +243,8 @@ const Checkout = (props) => {
                       />
                     </div>
                   </div>
-                  <div className="card">
+                  {/*  */}
+                  <div className="card checkout-step-three">
                     <div className="card-header" id="headingThree">
                       <h5 className="mb-0">
                         <button
@@ -209,7 +255,31 @@ const Checkout = (props) => {
                           aria-expanded="false"
                           aria-controls="collapseThree"
                         >
-                          <span className="number">3</span> Payment
+                          <span className="number">3</span> Add voucher
+                        </button>
+                      </h5>
+                    </div>
+                    <div
+                      id="collapseThree"
+                      className="collapse"
+                      aria-labelledby="collapseThree"
+                      data-parent="#accordionExample"
+                    >
+                      <AddVoucher dataVoucher={dataVoucher} setDataVoucher={setDataVoucher} isVoucherApply={isVoucherApply} setIsVoucherApply={setIsVoucherApply} />
+                    </div>
+                  </div>
+                  <div className="card">
+                    <div className="card-header" id="headingThree">
+                      <h5 className="mb-0">
+                        <button
+                          className="btn btn-link collapsed"
+                          type="button"
+                          data-toggle="collapse"
+                          data-target="#collapseFour"
+                          aria-expanded="false"
+                          aria-controls="collapseFour"
+                        >
+                          <span className="number">4</span> Payment
                         </button>
                       </h5>
                     </div>
@@ -245,7 +315,10 @@ const Checkout = (props) => {
                                   <li>
                                     <div
                                       className="radio-item_1"
-                                      onClick={handlePaymentSystem}
+                                      onClick={()=> {
+                                        setPaymentMethod("Online payment")
+                                        handlePaymentSystem()
+                                      }}
                                     >
                                       {/* <input value="card" name="paymentmethod" type="button" onClick={this.handleRadioChange} /> */}
                                       <label

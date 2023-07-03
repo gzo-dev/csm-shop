@@ -6,15 +6,11 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import { TextField } from "@material-ui/core";
-import { useState } from "react";
 import {Link } from "react-router-dom"
-import reply_contact from "../../../../../api/reply_contact";
-import swal from "sweetalert";
 
-export default function ReplyContact(props) {
-  const {id }= props
+export default function ViewReply(props) {
+  const {id, reply_text }= props
   const [open, setOpen] = React.useState(false);
-  const [reply, setReply] = useState("");
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -25,8 +21,8 @@ export default function ReplyContact(props) {
 
   return (
     <div>
-      <Link onClick={handleClickOpen} className="edit-btn" title={"Reply"}>
-        <i className="fas fa-reply" />
+      <Link onClick={handleClickOpen} className="edit-btn" title={"View reply message"}>
+        <i className="fas fa-eye" />
       </Link>
       <Dialog
         open={open}
@@ -34,43 +30,26 @@ export default function ReplyContact(props) {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Reply contact"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{"Replied"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             <TextField
-              value={reply}
-              onChange={(e) => setReply(e.target.value)}
+              disabled
+              value={reply_text}
+            //   onChange={(e) => setReply(e.target.value)}
               style={{
                 width: 500,
                 height: 40,
                 marginTop: 12,
                 marginBottom: 12,
               }}
-              placeholder={"Reply contact"}
+              placeholder={"Replied"}
             />
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Close
-          </Button>
-          <Button
-            onClick={async ()=> {
-                const result= await reply_contact(props.email, props.content, id, reply)
-                if(result.ok=== true) {
-                    swal("Thông báo", "Phản hồi thành công", "success")
-                    .then(()=> handleClose())
-                }
-                else {
-                    swal("Thông báo", "Phản hồi thất bại", "error")
-
-                }
-            }}
-            color="primary"
-            variant={"contained"}
-            autoFocus
-          >
-            Send
           </Button>
         </DialogActions>
       </Dialog>

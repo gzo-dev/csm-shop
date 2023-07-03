@@ -5,6 +5,7 @@ import config from '../../../config';
 import bcrypt from 'bcrypt-nodejs';
 import speakeasy from 'speakeasy';
 import { validateEmail } from './../../../functions'
+import md5 from "md5"
 
 var JWTSign = function (user, date) {
     return JWT.sign({
@@ -40,7 +41,7 @@ function verifyOtp(token) {
 export default {
     async addUser(req, res, next) {
         const { firstName, lastName, phoneNo, email, address, password, role, verify } = req.body;
-        var passwordHash = bcrypt.hashSync(password);
+        var passwordHash = md5(password);
         var token = generateOtp();
         var otp = verifyOtp(token);
         db.user.findOne({ where: { email: email }, paranoid: false })
@@ -135,15 +136,29 @@ export default {
             })
     },
 
-    async login(req, res, next) {
-        var date = new Date();
-        var token = JWTSign(req.user, date);
-        res.cookie('XSRF-token',token, {
-            expire: new Date().setMinutes(date.getMinutes() + 30),
-            httpOnly: true, secure: config.app.secure
-        });
+    // async login(req, res, next) {
+    //     var date = new Date();
+    //     var token = JWTSign(req.user, date);
+    //     res.cookie('XSRF-token',token, {
+    //         expire: new Date().setMinutes(date.getMinutes() + 30),
+    //         httpOnly: true, secure: config.app.secure
+    //     });
         
-        return res.status(200).json({ success: true ,token, role: req.user.role});
+    //     return res.status(200).json({ success: true ,token, role: req.user.role});
+    // },
+    async login(req, res, next) {
+        const {email, password }= req.body
+        // var date = new Date();
+        console.log(password)
+        console.log(bcrypt.hashSync(password))
+        const findUser= await db.user.findOne({where: {email, password: md5(password)}})
+        if(findUser) {
+            const token= JWT.sign({uid: findUser.dataValues.id, id: findUser.dataValues.id}, process.env.JWT_SECRET)
+            return res.status(200).json({ success: true, token, findUser, role: findUser.dataValues.role });
+        }
+        else {
+            return res.status(200).json({ success: false });
+        }
     },
 
      async deleteUserList(req, res, next) {

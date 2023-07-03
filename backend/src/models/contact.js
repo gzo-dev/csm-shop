@@ -5,6 +5,8 @@ module.exports = (sequelize, DataTypes) => {
     date_send: DataTypes.STRING,
     content: DataTypes.STRING,
     email: DataTypes.STRING,
+    status: DataTypes.STRING,
+    reply_text: DataTypes.STRING
   }, {});
   return contact;
 };

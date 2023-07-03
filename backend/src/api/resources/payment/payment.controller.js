@@ -3,7 +3,6 @@ import Razorpay from 'razorpay'
 
 export default {
 
-    /* Add user api start here................................*/
     async orderDetails(req, res, next) {
         const instance = new Razorpay({
             key_id:  'rzp_live_VHO6uZelazZ0VR',

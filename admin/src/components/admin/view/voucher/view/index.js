@@ -5,11 +5,16 @@ import { GetPaymentDetails } from "../../../../services";
 import { NotificationManager } from "react-notifications";
 import Loader from "../../../../loader";
 import swal from "sweetalert";
+import AddVoucher from './AddVoucher';
+import get_list_voucher from '../../../../../api/get_list_voucher';
+import moment from 'moment';
+import delete_voucher from '../../../../../api/delete_voucher';
 
 const View = () => {
   const history = useHistory();
   const [getList, setGetList] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [change, setChange]= useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -17,14 +22,14 @@ const View = () => {
       await getCustomer();
     };
     fetchData();
-  }, []);
+  }, [change]);
 
   const handleBack = () => {
     history.goBack();
   };
 
   const getCustomer = async () => {
-    let list = await GetPaymentDetails.getAllPaymentList();
+    let list = await get_list_voucher();
     if (list) {
       setGetList(list.data);
       setIsLoaded(false);
@@ -80,7 +85,7 @@ const View = () => {
       </ol>
       <div className="row justify-content-between">
         <div className="col-lg-3 col-md-4">
-          <div className="bulk-section mt-30">
+          {/* <div className="bulk-section mt-30">
             <div className="input-group">
               <select id="action" name="action" className="form-control">
                 <option selected>Bulk Actions</option>
@@ -94,16 +99,10 @@ const View = () => {
                 </button>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
-        <div className="col-lg-5 col-md-3 col-lg-6 back-btn" style={{display: "none"}}>
-          <Button
-            variant="contained"
-            className="status-btn hover-btn"
-            onClick={handleAddNewUser}
-          >
-            Add New User
-          </Button>
+        <div className="col-lg-5 col-md-3 col-lg-6 back-btn">
+          <AddVoucher setChange={setChange} />
         </div>
         <div className="col-lg-12 col-md-12">
           {isLoaded ? <Loader /> : ""}
@@ -116,45 +115,43 @@ const View = () => {
                 <table className="table ucp-table table-hover">
                   <thead>
                     <tr>
-                      <th style={{ width: 60 }}>
-                        <input type="checkbox" className="check-all" />
-                      </th>
                       <th style={{ width: 60 }}>ID</th>
-                      <th>Name</th>
-                      <th>Date start</th>
-                      <th>Date end</th>
-                      <th>Value</th>
+                      <th>Code</th>
+                      <th>Expire</th>
+                      <th>Discount</th>
+                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     {getList.map((row, index) => (
                       <tr key={index}>
-                        <td>
-                          <input
-                            type="checkbox"
-                            className="check-item"
-                            name="ids[]"
-                            defaultValue={7}
-                          />
-                        </td>
                         <td>{++index}</td>
-                        <td>{row.createdAt}</td>
+                        <td>{row.code}</td>
                         <td>
-                          {row.customer
-                            ? row.customer.firstName +
-                              " " +
-                              row.customer.lastName
-                            : ""}
+                          {moment(row.expire).format("DD-MM-YYYY HH:mm")}
                         </td>
-                        <td>{row.orderCreationId}</td>
-                        <td>{row.amount}</td>
-                        <td>{row.method}</td>
+                        <td>VND{row.discount}</td>
                         <td>
-                          {row.status === "captured" ? (
-                            <span className="text-success">success</span>
-                          ) : (
-                            <span className="text-danger">failed</span>
-                          )}
+                          <div onClick={()=> {
+                            swal("Thông báo", "Bạn có muốn xóa voucher này không ? ", {buttons: {
+                              ok: "Ok",
+                              cancel: "Cancel"
+                            }})
+                            .then(async value=> {
+                              if(value=== "ok") {
+                                const result= await delete_voucher(row.id)
+                                if(result.ok=== true) {
+                                  swal("Thông báo", "Xóa thành công", "success")
+                                  .then(()=> setGetList(getList.filter(item=> item.id != row.id)))
+                                }
+                                else {
+                                  swal("Thông báo", "Xóa thất bại", "error")
+                                }
+                              }
+                            })
+                          }} title={"Delete"}>
+                            <i className="fas fa-trash-alt" />
+                          </div>
                         </td>
                       </tr>
                     ))}

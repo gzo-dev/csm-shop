@@ -37,9 +37,9 @@ export default class Wishlist extends Component {
                     <img src="images/avatar/img-5.jpg" alt />
                     <div className="img-add">
                       <input type="file" id="file" />
-                      <label htmlFor="file">
+                      {/* <label htmlFor="file">
                         <i className="uil uil-camera-plus" />
-                      </label>
+                      </label> */}
                     </div>
                   </div>
                   <h4>Johe Doe</h4>
@@ -78,10 +78,10 @@ export default class Wishlist extends Component {
                     </a>
                     {/* <a href="/account/rewards" className="user-item"><i className="uil uil-gift" />My Rewards</a> */}
                     {/* <a href="/account/wishlist" className="user-item active"><i className="uil uil-heart" />Shopping Wishlist</a> */}
-                    <a href="/account/address" className="user-item">
+                    {/* <a href="/account/address" className="user-item">
                       <i className="uil uil-location-point" />
                       My Address
-                    </a>
+                    </a> */}
                     <a className="user-item" onClick={this.handleLogout}>
                       <i className="uil uil-exit" />
                       Logout

@@ -195,7 +195,7 @@ const Home = () => {
                 </div> */}
                 <div className="card-title-2">
                   <h4>Recent Orders</h4>
-                  <button className="view-btn hover-btn">View All</button>
+                  {/* <button className="view-btn hover-btn">View All</button> */}
                 </div>
                 <div className="card-body-table">
                   <div className="table-responsive">
@@ -206,7 +206,7 @@ const Home = () => {
                           <th style={{ width: 130 }}>Order ID</th>
                           <th style={{ width: 130 }}>Payment Method</th>
                           <th style={{ width: 200 }}>Order Date</th>
-                          {/* <th style={{ width: 200 }}>Delivery Date</th> */}
+                          <th style={{ width: 200 }}>Delivery Date</th>
                           <th style={{ width: 130 }}>Status</th>
                           <th style={{ width: 130 }}>Total</th>
                           <th style={{ width: 100 }}>Action</th>
@@ -229,7 +229,7 @@ const Home = () => {
                                   <Moment format=" h:mm:ss a">{row.createdAt}</Moment>
                                 </span>
                               </td>
-                              {/* <td>
+                              <td>
                                 {row.deliverydate ? (
                                   <span className="delivery-time">
                                     <Moment format="MMMM Do YYYY">{row.deliverydate}</Moment>
@@ -237,7 +237,7 @@ const Home = () => {
                                 ) : (
                                   ''
                                 )}
-                              </td> */}
+                              </td>
                               <td>
                                 {row.status === 'processing' ? (
                                   <span className="badge-item badge-primary">{row.status}</span>

@@ -4,7 +4,7 @@ export default {
 
     async index(req, res, next) {
         try {
-            const { customerId, paymentmethod, orderId, deliveryAddress, product, grandTotal } = req.body;
+            const { customerId, paymentmethod, orderId, deliveryAddress, product, grandTotal, voucherId } = req.body;
             db.customer.findOne({ where: { id: customerId } })
                 .then(p => {
                     if (p) {
@@ -12,7 +12,8 @@ export default {
                             custId: customerId,
                             number: orderId,
                             grandtotal: grandTotal,
-                            paymentmethod: paymentmethod
+                            paymentmethod: paymentmethod,
+                            voucherId
                         })
                     }
                     return res.status(500).json({ 'errors': ['User is not found'] });

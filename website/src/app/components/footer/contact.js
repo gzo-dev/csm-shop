@@ -48,7 +48,7 @@ export default function ContactPopup() {
             Close
           </Button>
           <Button onClick={async ()=> {
-            const result= await submit_contact({email, name, content, date_send: new Date()})
+            const result= await submit_contact({email, name, content, date_send: new Date(), status: "unprocessing"})
             console.log("result", result)
             if(result.ok=== true) {
                 swal("Thông báo", "Đã gửi thành công", "success")

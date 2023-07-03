@@ -12,6 +12,7 @@ const CartSidebar = ({ cartItems, incrementToCart, decreaseToCart, removeFromCar
   const handleHide = () => {
     setToggle(!toggle);
   };
+  // console.log(cartItems)
 
   return (
     <div>
@@ -79,7 +80,7 @@ const CartSidebar = ({ cartItems, incrementToCart, decreaseToCart, removeFromCar
                   </div>
                   <div className="cart-item-price">
                     VND{row.qty * row.netPrice}
-                    <span>VND{row.netPrice}</span>
+                    {/* <span>VND{row.netPrice}</span> */}
                   </div>
                 </div>
               </div>
@@ -106,26 +107,28 @@ const CartSidebar = ({ cartItems, incrementToCart, decreaseToCart, removeFromCar
               </strong>
             </h6>
           </div>
-          <a href="/checkout">
-            <button
-              className="btn btn-secondary btn-lg btn-block text-left"
-              type="button"
-            >
-              <span className="float-left">
-                <i className="mdi mdi-cart-outline" /> Proceed to Checkout{" "}
-              </span>
-              <span className="float-right">
-                <strong>
-                  VND
-                  {cartItems.reduce(
-                    (sum, i) => (sum += i.qty * i.netPrice),
-                    0
-                  )}
-                </strong>{" "}
-                <span className="mdi mdi-chevron-right" />
-              </span>
-            </button>
-          </a>
+          {
+            <a href="/checkout" style={{opacity: cartItems.length > 0 ? 1 : 0}}>
+              <button
+                className="btn btn-secondary btn-lg btn-block text-left"
+                type="button"
+              >
+                <span className="float-left">
+                  <i className="mdi mdi-cart-outline" /> Proceed to Checkout{" "}
+                </span>
+                <span className="float-right">
+                  <strong>
+                    VND
+                    {cartItems.reduce(
+                      (sum, i) => (sum += i.qty * i.netPrice),
+                      0
+                    )}
+                  </strong>{" "}
+                  <span className="mdi mdi-chevron-right" />
+                </span>
+              </button>
+            </a>
+          }
         </div>
       </div>
     </div>
