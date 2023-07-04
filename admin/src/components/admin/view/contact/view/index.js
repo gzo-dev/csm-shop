@@ -139,6 +139,7 @@ const View = () => {
                       <th>Date send</th>
                       <th>Content</th>
                       <th>Email</th>
+                      <th>Phone</th>
                       <th>Status</th>
                       <th>Action</th>
                     </tr>
@@ -159,6 +160,7 @@ const View = () => {
                         <td>{row.createdAt}</td>
                         <td>{row.content}</td>
                         <td>{row.email}</td>
+                        <td>{row.phone || "No data"}</td>
                         <td>{row.status}</td>
                         <td className="action-btns">
                           {
