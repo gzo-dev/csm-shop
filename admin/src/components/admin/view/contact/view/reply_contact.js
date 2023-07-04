@@ -12,7 +12,7 @@ import reply_contact from "../../../../../api/reply_contact";
 import swal from "sweetalert";
 
 export default function ReplyContact(props) {
-  const {id }= props
+  const {id, setChange }= props
   const [open, setOpen] = React.useState(false);
   const [reply, setReply] = useState("");
   const handleClickOpen = () => {
@@ -59,6 +59,7 @@ export default function ReplyContact(props) {
                 const result= await reply_contact(props.email, props.content, id, reply)
                 if(result.ok=== true) {
                     swal("Thông báo", "Phản hồi thành công", "success")
+                    .then(()=> setChange(prev=> !prev))
                     .then(()=> handleClose())
                 }
                 else {

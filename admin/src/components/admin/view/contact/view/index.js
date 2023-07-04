@@ -164,7 +164,7 @@ const View = () => {
                           {
                             row.status=== "processed" ? <ViewReply {...row} />
                             :
-                            <ReplyContact {...row} /> 
+                            <ReplyContact {...row} setChange={setChange} /> 
                           }
                           <Link
                             title={"Delete"}
