@@ -173,7 +173,7 @@ button.close {
 /*end cart*/
 .shop-detail-left .slick-dots{
     position: absolute;
-    bottom: -96px;
+    /* bottom: -96px; */
     display: block;
     width: 100%;
     padding: 0;

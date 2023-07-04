@@ -14,12 +14,13 @@ const DeliveryDetails = (props) => {
   const [listCity, setListCity]= useState([])
   const [listDistrict, setListDistrict]= useState([])
   const [listWard, setListWard]= useState([])
+
   const {city, setCity }= props
   useEffect(()=> {
     (async ()=> {
         const result= await axios({
-            url: "https://provinces.open-api.vn/api/", 
-            method: "get"
+          url: "https://provinces.open-api.vn/api/", 
+          method: "get"
         })
         setListCity(result.data)
     })()
@@ -42,6 +43,7 @@ const DeliveryDetails = (props) => {
         setListWard(result.data)
     })()
   }, [city, district])
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     switch (name) {
@@ -165,7 +167,7 @@ const DeliveryDetails = (props) => {
                 onChange={handleChange}
               >
                 {
-                    listDistrict?.[0]?.districts?.map((item, key)=> <option key={key} value={item.code}>{item?.name}</option>)
+                  listDistrict?.[0]?.districts?.map((item, key)=> <option key={key} value={item.code}>{item?.name}</option>)
                 }
               </select>
             </div>

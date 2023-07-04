@@ -3,11 +3,28 @@ import { Button } from "@material-ui/core";
 import { GetOrderDetails } from "../../../../services";
 import { NotificationManager } from "react-notifications";
 import Moment from "react-moment";
+import get_detail_voucher from "../../../../../api/get_detail_voucher";
 
 const Edit = (props) => {
   const [status, setStatus] = useState(props.location.state.row.status);
   const [deliveryDate, setDeliveryDate] = useState("");
-  const [self, setSelf] = useState({ Addresses: [], Carts: [] });
+  const [self, setSelf] = useState({
+    row: { Addresses: [], Carts: [], voucherId: 0 },
+  });
+  const [dataVoucher, setDataVoucher] = useState({
+    data: { discount: 0 },
+    ok: false,
+  });
+
+  useEffect(() => {
+    (async () => {
+      const voucherId = self.row.voucherId || 0;
+      if(voucherId != 0) {
+        const result = await get_detail_voucher(voucherId);
+        setDataVoucher(result);
+      }
+    })();
+  }, [self.row]);
 
   const handleBack = () => {
     props.history.goBack();
@@ -94,7 +111,7 @@ const Edit = (props) => {
                       <div className="col-lg-6 col-sm-6">
                         {self.row.Addresses.map((data, index) => (
                           <div className="ordr-date right-text" key={index}>
-                            <b>Order Date :</b>
+                            {/* <b>Order Date :</b> */}
                             <br />#{data.shipping},<br />
                             {data.area},<br />
                             {data.city},<br />
@@ -137,30 +154,26 @@ const Edit = (props) => {
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  {
-                                    self.row.Carts.map((p, index) => (
-                                      <tr key={index}>
-                                        <td>{p.id}</td>
-                                        <td>
-                                          <img
-                                            src={p.photo}
-                                            alt="cartimage"
-                                            style={{ height: "50px" }}
-                                          />
-                                        </td>
-                                        <td>{p.name}</td>
-                                        <td className="text-center">
-                                          VND{p.price}
-                                        </td>
-                                        <td className="text-center">
-                                          {p.qty}
-                                        </td>
-                                        <td className="text-center">
-                                          VND{p.total}
-                                        </td>
-                                      </tr>
-                                    ))
-                                  }
+                                  {self.row.Carts.map((p, index) => (
+                                    <tr key={index}>
+                                      <td>{p.id}</td>
+                                      <td>
+                                        <img
+                                          src={p.photo}
+                                          alt="cartimage"
+                                          style={{ height: "50px" }}
+                                        />
+                                      </td>
+                                      <td>{p.name}</td>
+                                      <td className="text-center">
+                                        VND{p.price}
+                                      </td>
+                                      <td className="text-center">{p.qty}</td>
+                                      <td className="text-center">
+                                        VND{p.total}
+                                      </td>
+                                    </tr>
+                                  ))}
                                 </tbody>
                               </table>
                             </div>
@@ -170,9 +183,7 @@ const Edit = (props) => {
                       <div className="col-lg-7" />
                       <div className="col-lg-5">
                         <div className="order-total-dt">
-                          <div className="order-total-left-text">
-                            Sub Total
-                          </div>
+                          <div className="order-total-left-text">Sub Total</div>
                           <div className="order-total-right-text">
                             VND{self.row.grandtotal}
                           </div>
@@ -181,8 +192,18 @@ const Edit = (props) => {
                           <div className="order-total-left-text">
                             Delivery Fees
                           </div>
-                          <div className="order-total-right-text">VND0</div>
+                          <div className="order-total-right-text">VND{self.row.deliveryFee}</div>
                         </div>
+                        {self.row.voucherId != 0 && (
+                          <div className="order-total-dt">
+                            <div className="order-total-left-text">
+                              Discount
+                            </div>
+                            <div className="order-total-right-text">
+                              VND{(dataVoucher.data.discount)}
+                            </div>
+                          </div>
+                        )}
                         <div className="order-total-dt">
                           <div className="order-total-left-text fsz-18">
                             Total Amount

@@ -198,13 +198,13 @@ export default class List extends Component {
                         <th style={{ width: 60 }}>Id</th>
                         <th style={{ width: 100 }}>Image</th>
                         <th>Name</th>
-                        <th>Category</th>
+                        <th>Sub</th>
                         <th>Brand</th>
                         <th>Unit</th>
                         <th>Cost</th>
                         <th>Price</th>
-                        {/* <th>Qty</th>
-                                                <th>Discount(%)</th> */}
+                        {/* <th>Qty</th> */}
+                        <th>Discount(%)</th>
                         {/* <th>Discount</th> */}
                         {/* <th>Total</th> */}
                         {/* <th>Net Price</th> */}
@@ -232,8 +232,8 @@ export default class List extends Component {
                               <td>{row.unitSize}</td>
                               <td>VND{row.buyerPrice}</td>
                               <td>VND{row.price}</td>
-                              {/* <td>${row.qty}</td>
-                                                        <td>{row.discountPer}%</td> */}
+                              {/* <td>${row.qty}</td> */}
+                              <td>{row.discountPer}%</td>
                               {/* <td>${row.discount}</td>
                               <td>${row.total}</td>
                               <td>${row.netPrice}</td> */}

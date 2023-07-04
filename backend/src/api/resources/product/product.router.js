@@ -24,6 +24,7 @@ productRouter.route('/slider-photo/delete').delete( productController.deleteSlid
 
 //Category by product
 productRouter.route('/getAllGroceryStaple').get( productController.getAllGrocerryStaples);
+productRouter.route('/suggest').get( productController.getProductSuggest);
 productRouter.route('/list/:slug').get( productController.getAllProductBySlug);
 productRouter.route('/getAllByCategory').post( productController.GetAllByCategory);
 productRouter.route('/getallProductbySubChildCat').post( productController.getProductSubChildCat);

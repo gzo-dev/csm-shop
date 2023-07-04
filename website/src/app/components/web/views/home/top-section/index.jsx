@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import GroceryStampleDetails from "../../../../services/GroceryStampleDetails";
 import { addToCart } from "../../../../../store/actions/cartActions";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import "./index.css";
 
 const Topsavers = ({ addToCart }) => {
   const [productlist, setProductList] = useState([]);
@@ -74,7 +75,7 @@ const Topsavers = ({ addToCart }) => {
           <div className="section-header">
             <span>For You</span>
             <h5 className="heading-design-h5">
-              Grocery & Staples
+              Sale
               {/* <span className="badge badge-primary">20% OFF</span> */}
               <Link
                 to={{
@@ -92,7 +93,7 @@ const Topsavers = ({ addToCart }) => {
                 <CircularProgress color="secondary" />
               </div>
             ) : (
-              list?.map((row, index) => (
+              productlist?.map((row, index) => (
                 <div key={index} className="item">
                   <div className="product">
                     <Link
@@ -131,9 +132,14 @@ const Topsavers = ({ addToCart }) => {
                         <i className="mdi mdi-cart-outline" /> Add To Cart
                       </button>
                       <p className="offer-price mb-0">
-                        ${row.price} <i className="mdi mdi-tag-outline" />
-                        <br />
-                        <span className="regular-price">${row.netPrice}</span>
+                        VND{row.price - Math.floor(row.price * row.discountPer / 100)} <i className="mdi mdi-tag-outline" />
+                        {
+                          row.discountPer > 0 && 
+                          <>
+                            <br />
+                            <span className="regular-price">VND{row.price}</span>
+                          </>
+                        }
                       </p>
                     </div>
                   </div>

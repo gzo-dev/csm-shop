@@ -49,10 +49,10 @@ export default class Wishlist extends Component {
                       <i className="uil uil-edit" />
                     </a>
                   </p>
-                  <div className="earn-points">
+                  {/* <div className="earn-points">
                     <img src="images/Dollar.svg" alt />
                     Points : <span>20</span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

@@ -79,8 +79,11 @@ const CartSidebar = ({ cartItems, incrementToCart, decreaseToCart, removeFromCar
                     </button>
                   </div>
                   <div className="cart-item-price">
-                    VND{row.qty * row.netPrice}
-                    {/* <span>VND{row.netPrice}</span> */}
+                    VND{row.qty * (row.price - Math.floor(row.price * row.discountPer / 100))}
+                    {row.discountPer > 0 
+                       &&
+                    <span>VND{row.price}</span>
+                    }
                   </div>
                 </div>
               </div>
@@ -93,7 +96,7 @@ const CartSidebar = ({ cartItems, incrementToCart, decreaseToCart, removeFromCar
               Sub Total{" "}
               <strong className="float-right">
                 VND
-                {cartItems.reduce((sum, i) => (sum += i.qty * i.netPrice), 0)}
+                {cartItems.reduce((sum, i) => (sum += i.qty * (i.price - Math.floor(i.price * i.discountPer / 100))), 0)}
               </strong>
             </p>
             {/* <p>
@@ -103,7 +106,7 @@ const CartSidebar = ({ cartItems, incrementToCart, decreaseToCart, removeFromCar
             <h6>
               Your total savings{" "}
               <strong className="float-right text-danger">
-                VND{cartItems.reduce((sum, i) => (sum += i.qty * i.netPrice), 0)}
+                VND{cartItems.reduce((sum, i) => (sum += i.qty * (i.price - Math.floor(i.price * i.discountPer / 100))), 0)}
               </strong>
             </h6>
           </div>
@@ -120,7 +123,7 @@ const CartSidebar = ({ cartItems, incrementToCart, decreaseToCart, removeFromCar
                   <strong>
                     VND
                     {cartItems.reduce(
-                      (sum, i) => (sum += i.qty * i.netPrice),
+                      (sum, i) => (sum += i.qty * (i.price - Math.floor(i.price * i.discountPer / 100))),
                       0
                     )}
                   </strong>{" "}

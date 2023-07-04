@@ -19,7 +19,7 @@ export default class Newproduct extends Component {
     this.state = {
       files: [],
       getList: [],
-      getsublist: [],
+      getsublist: [{name: ""}],
       selectedCategory: "",
       selectedSubCategory: "",
       selectedChildCategory: "",
@@ -42,8 +42,41 @@ export default class Newproduct extends Component {
       total: 0,
       grand_total: 0,
       previewImage: [],
+      typeUnit: 0
     };
   }
+  componentDidMount() {
+    if(["short", "Short"].includes(this.state.getsublist[0].name)== true) {
+      this.setState({typeUnit: 1})
+    }  
+    else if(["shirt", "Shirt"].includes(this.state.getsublist[0].name) === true) {
+      this.setState({typeUnit: 2})
+    } 
+    else if(["short", "Short"].includes(this.state.getsublist[0].name) ===
+    false ||
+    ["shirt", "Shirt"].includes(this.state.getsublist[0].name) ===
+      false) {
+        this.setState({typeUnit: 3})
+      }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.getsublist[0].name != this.state.getsublist[0].name) {
+      if(["short", "Short"].includes(this.state.getsublist[0].name)== true) {
+        this.setState({typeUnit: 1})
+      }  
+      else if(["shirt", "Shirt"].includes(this.state.getsublist[0].name) === true) {
+        this.setState({typeUnit: 2})
+      } 
+      else if(["short", "Short"].includes(this.state.getsublist[0].name) ===
+      false ||
+      ["shirt", "Shirt"].includes(this.state.getsublist[0].name) ===
+        false) {
+          this.setState({typeUnit: 3})
+        }
+    }
+  }
+
   handleBack() {
     this.props.history.goBack();
   }
@@ -207,6 +240,7 @@ export default class Newproduct extends Component {
     }
   };
 
+
   render() {
     const { getList, getsublist, isLoaded } = this.state;
     return (
@@ -315,9 +349,7 @@ export default class Newproduct extends Component {
                     <div className="col-lg-2 col-md-2">
                       <div className="form-group">
                         <label className="form-label">Unit Size*</label>
-                        {["short", "Short"].includes(getsublist[0]) &&
-                          ["short", "Short"].includes(getsublist[0].name) ===
-                            true && (
+                        {this.state.typeUnit== 1 && (
                             <select
                               value={this.state.unit}
                               className="form-control"
@@ -330,8 +362,7 @@ export default class Newproduct extends Component {
                               <option value="3">3</option>
                             </select>
                           )}
-                        {["shirt", "Shirt"].includes(this.state.unit) ===
-                          true && (
+                        {this.state.typeUnit== 2 && (
                           <select
                             value={this.state.unit}
                             className="form-control"
@@ -347,10 +378,7 @@ export default class Newproduct extends Component {
                             <option value="3XL">3XL</option>
                           </select>
                         )}
-                        {["short", "Short"].includes(this.state.unit) ===
-                          false &&
-                          ["shirt", "Shirt"].includes(this.state.unit) ===
-                            false && (
+                        {this.state.typeUnit== 3 && (
                             <input
                               type="text"
                               className="form-control"
@@ -487,7 +515,7 @@ export default class Newproduct extends Component {
                     </div>
                     <div
                       className="col-lg-1 col-md-1"
-                      style={{ display: "none" }}
+                      style={{  }}
                     >
                       <div className="form-group">
                         <label className="form-label">Discount(%)*</label>

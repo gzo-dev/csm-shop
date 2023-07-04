@@ -57,10 +57,10 @@ export default class View extends Component {
                   </div>
                   <h4>{user.firstName}</h4>
                   <p>+84 {user.phone}</p>
-                  <div className="earn-points">
+                  {/* <div className="earn-points">
                     <img src="images/Dollar.svg" alt />
                     Points : <span>20</span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

@@ -50,7 +50,7 @@ const Navigation = ({ history }) => {
             <div className="row">
               <div className="col-lg-12 text-center">
                 <Link to="/" className="mb-0 text-white">
-                  20% cashback for new users | Code:{" "}
+                  Voucher discount 50000VND for new users | Code:{" "}
                   <strong>
                     <span className="text-light">
                       OGOFERS13 <span className="mdi mdi-tag-faces" />

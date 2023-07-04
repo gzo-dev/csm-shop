@@ -4,7 +4,7 @@ export default {
 
     async index(req, res, next) {
         try {
-            const { customerId, paymentmethod, orderId, deliveryAddress, product, grandTotal, voucherId } = req.body;
+            const { customerId, paymentmethod, orderId, deliveryAddress, product, grandTotal, voucherId, deliveryCharge } = req.body;
             db.customer.findOne({ where: { id: customerId } })
                 .then(p => {
                     if (p) {
@@ -13,7 +13,8 @@ export default {
                             number: orderId,
                             grandtotal: grandTotal,
                             paymentmethod: paymentmethod,
-                            voucherId
+                            voucherId, 
+                            deliveryFee: deliveryCharge
                         })
                     }
                     return res.status(500).json({ 'errors': ['User is not found'] });
@@ -126,7 +127,7 @@ export default {
             db.Order.findAll({
                 where: { custId: req.body.id },
                 order: [['createdAt', 'DESC']],
-                include: [{ model: db.Address, include: [{ model: db.Cart }] }],
+                include: [{ model: db.Address, include: [{ model: db.Cart, include: [{model: db.product}] }] }],
             })
                 .then(list => {
                     res.status(200).json({ 'success': true, order: list });

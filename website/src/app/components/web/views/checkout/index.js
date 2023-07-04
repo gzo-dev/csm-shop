@@ -11,12 +11,13 @@ import Deliverydetails from "./delivery";
 import Loader from "../../../../loader";
 import axios from "axios";
 import AddVoucher from "./add-voucher/AddVoucher";
+import swal from "sweetalert";
 
 const Checkout = (props) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [subTotal, setSubTotal] = useState("");
   const [discount, setDiscount] = useState("");
-  const [deliveryCharge, setDeliveryCharge] = useState(0);
+  const [deliveryCharge, setDeliveryCharge] = useState();
   const [grandTotal, setGrandTotal] = useState("");
   const [email, setEmail] = useState("");
   const [customer, setCustomer] = useState("");
@@ -74,7 +75,7 @@ const Checkout = (props) => {
   };
   const calculateTotals = () => {
     let cart = props.cartItems;
-    let subTotal = cart.reduce((sum, i) => (sum += i.qty * i.netPrice), 0);
+    let subTotal = cart.reduce((sum, i) => (sum += i.qty * (i.price - Math.floor(i.price * i.discountPer / 100))), 0);
     let discount = cart.reduce((sum, i) => (sum += i.discount), 0);
     let grandTotal = subTotal + discount + deliveryCharge;
 
@@ -92,7 +93,8 @@ const Checkout = (props) => {
       deliveryAddress: deliveryAddress,
       product: props.cartItems,
       grandTotal,
-      voucherId: dataVoucher ? dataVoucher.voucherId : 0
+      voucherId: dataVoucher ? dataVoucher.id : 0,
+      deliveryCharge
     };
 
     if (data) {
@@ -112,42 +114,86 @@ const Checkout = (props) => {
   };
 
   const handlePaymentSystem = async () => {
+    if(parseInt(grandTotal) <= 1000) {
+      return swal("Thông báo", "Số tiền quá ít để thanh toán, Vui lòng thêm sản phẩm để thanh toán", "error")
+    }
     const res = await axios({
       url: "https://itchy-dirndl-frog.cyclic.app/payment-momo",
       method: "POST",
       data: {
         amount: grandTotal,
         platform: "web",
-        url_web: window.location.origin + "/order/success",
+        url_web: window.location.origin + "/checkout",
       },
     });
     const result = await res.data;
     window.location.href = result?.payUrl;
-    const data = {
-      customerId: customer.id,
-      paymentmethod: paymentmethod,
-      orderId: Math.floor(Math.random() * Math.floor(Math.random() * Date.now())),
-      deliveryAddress: deliveryAddress,
-      product: props.cartItems,
-      grandTotal,
-      voucherId: dataVoucher ? dataVoucher.voucherId : 0
-    };
-
-    if (data) {
-      let order = await GetOrderDetails.getOrderCreateByUser(JSON.stringify(data));
-      if (order) {
-        // NotificationManager.success("Successfully Ordered", "Order");
-        setTimeout(async function () {
-          CartHelper.emptyCart();
-        }, 1000);
-      } else {
-        NotificationManager.error("Order is declined", "Order");
-        setTimeout(async function () {
-          window.location.href = "/failed";
-        }, 1000);
-      }
-    }
+    
   };
+
+  useEffect(()=> {
+    if(new URLSearchParams(window.location.search).get("resultCode")== 0) {
+      (async ()=> {
+        console.log(customer.id , deliveryAddress , props , grandTotal)
+
+        if(customer.id && deliveryAddress && props && grandTotal && dataVoucher && deliveryCharge) {
+          const data = {
+            customerId: customer.id,
+            paymentmethod: "Online payment",
+            orderId: Math.floor(Math.random() * Math.floor(Math.random() * Date.now())),
+            deliveryAddress: deliveryAddress,
+            product: props.cartItems,
+            grandTotal,
+            voucherId: dataVoucher ? dataVoucher.id : 0,
+            deliveryCharge
+          };
+      
+          if (data) {
+            let order = await GetOrderDetails.getOrderCreateByUser(JSON.stringify(data));
+            if (order) {
+              NotificationManager.success("Successfully Ordered", "Order");
+              setTimeout(async function () {
+                CartHelper.emptyCart();
+              }, 1000);
+            } else {
+              NotificationManager.error("Order is declined", "Order");
+              setTimeout(async function () {
+                window.location.href = "/failed";
+              }, 1000);
+            }
+          }
+        } 
+        else if(customer.id  && props && grandTotal && deliveryCharge) {
+          
+          const data = {
+            customerId: customer.id,
+            paymentmethod: "Online payment",
+            orderId: Math.floor(Math.random() * Math.floor(Math.random() * Date.now())),
+            deliveryAddress: deliveryAddress,
+            product: props.cartItems,
+            grandTotal,
+            voucherId: dataVoucher ? dataVoucher.id : 0,
+            deliveryCharge
+          };
+      
+          if (data) {
+            let order = await GetOrderDetails.getOrderCreateByUser(JSON.stringify(data));
+            if (order) {
+              NotificationManager.success("Successfully Ordered", "Order");
+              setTimeout(async function () {
+                CartHelper.emptyCart();
+              }, 1000);
+            } else {
+              NotificationManager.error("Order is declined", "Order");
+              setTimeout(async function () {
+                window.location.href = "/failed";
+              }, 1000);
+            }
+          }
+        } 
+      })()
+    }
+  }, [dataVoucher, deliveryAddress, props, customer.id, grandTotal, deliveryCharge])
 
   const loadScript = (src) => {
     return new Promise((resolve) => {
@@ -283,10 +329,11 @@ const Checkout = (props) => {
                         </button>
                       </h5>
                     </div>
+                    {/*  */}
                     <div
-                      id="collapseThree"
+                      id="collapseFour"
                       className="collapse"
-                      aria-labelledby="headingThree"
+                      aria-labelledby="headingFour"
                       data-parent="#accordionExample"
                     >
                       <div className="checkout-step-body">
@@ -316,7 +363,7 @@ const Checkout = (props) => {
                                     <div
                                       className="radio-item_1"
                                       onClick={()=> {
-                                        setPaymentMethod("Online payment")
+                                        // setPaymentMethod("Online payment")
                                         handlePaymentSystem()
                                       }}
                                     >

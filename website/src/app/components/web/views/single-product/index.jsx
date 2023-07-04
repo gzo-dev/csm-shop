@@ -64,27 +64,38 @@ const Singleproduct = ({ addToCart }) => {
         <div className="container">
           {product ? (
             <div className="row">
-              <div className="col-md-6">
-                <div className="shop-detail-left">
-                  <Paper className="shop-detail-slider">
-                    <Slider {...settings}>
-                      {product.productphotos ? (
-                        product.productphotos.map((r, index) => (
-                          <div key={index}>
-                            <img
-                              src={r.imgUrl}
-                              alt=""
-                              className="img-fluid img-center"
-                            />
-                          </div>
-                        ))
-                      ) : (
-                        <div>Please Upload Image</div>
-                      )}
-                    </Slider>
-                  </Paper>
-                </div>
-              </div>
+              {
+                product.productphotos && product.productphotos.length > 0 && <>
+                  <div className="col-md-6" style={{backgroundColor: "#fff"}}>
+                    <div className="shop-detail-left">
+                      <Paper className="shop-detail-slider">
+                        <Slider {...settings}>
+                          {product.productphotos ? (
+                            product.productphotos.map((r, index) => (
+                              <div key={index}>
+                                <img
+                                  src={r.imgUrl}
+                                  alt=""
+                                  className="img-fluid img-center"
+                                />
+                              </div>
+                            ))
+                          ) : (
+                            <div>Please Upload Image</div>
+                          )}
+                        </Slider>
+                      </Paper>
+                    </div>
+                  </div>
+                </>
+              }
+              {
+                product.productphotos.length <= 0 && <>
+                  <div className="col-md-6 d-flex justify-content-center align-items-center" style={{backgroundColor: "#fff", borderRadius: 10}}>
+                      <div style={{fontSize: 18, fontWeight: 600}}>No image of this product</div>
+                  </div>
+                </>
+              }
               <div className="col-md-6">
                 <div className="shop-detail-right">
                   <span className="badge badge-success">
@@ -98,7 +109,7 @@ const Singleproduct = ({ addToCart }) => {
                     - {product.unitSize}
                   </h6>
                   <div className="pdp-product__old-price">
-                    <span className="space__right--2-unit">Product MRP:</span>
+                    <span className="space__right--2-unit">Product price:</span>
                     <span className="regular-price">
                       VND{product.price}
                     </span>
@@ -109,7 +120,7 @@ const Singleproduct = ({ addToCart }) => {
                       Selling price:
                     </span>
                     <span className="pdp-product__price--new">
-                      VND{product.netPrice}
+                      VND{product.price - Math.floor(product.price * product.discountPer / 100)}
                     </span>
                     <div className="pdp-product__tax-disclaimer">
                       (Inclusive of all taxes)
@@ -144,8 +155,9 @@ const Singleproduct = ({ addToCart }) => {
                   </div>
                 </div>
               </div>
-
-              <div className="col-lg-12 col-md-12">
+              <br />
+              <br />
+              <div className="col-lg-12 col-md-12 mt-3">
                 <div className="pdpt-bg">
                   <div className="pdpt-title">
                     <h4>Product Details</h4>

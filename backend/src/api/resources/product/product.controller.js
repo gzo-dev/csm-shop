@@ -1,5 +1,5 @@
 import { db } from '../../../models';
-const { Op } = require("sequelize");
+const { Op, Sequelize } = require("sequelize");
 // import { queue } from '../../../kue';
 import config from '../../../config';
 import AWS from 'aws-sdk';
@@ -131,7 +131,7 @@ export default {
 
     async update(req, res, next) {
         try {
-            const { productId, categoryId, subCategoryId, childCategoryId, name, slug, brand, status, unitSize, desc, buyerPrice, price, qty, discount, discountPer, total, netPrice } = req.body;
+            const { productId, categoryId, subCategoryId, childCategoryId, name, slug, brand, status, unitSize, desc, buyerPrice, price, qty, discount, discountPer, total, netPrice, images } = req.body;
             db.product.findOne({ where: { id: productId } })
                 .then(product => {
                     if (product) {
@@ -158,6 +158,10 @@ export default {
                     throw new RequestError('Not Found Product', 409);
                 })
                 .then((p) => {
+                    db.productphoto.destroy({
+                        where: {productId: productId}
+                    })
+                    db.productphoto.bulkCreate(JSON.parse(images))
                     res.status(200).json({ 'success': true, msg: 'Updated Successfully' });
                 })
                 .catch(function (err) {
@@ -400,13 +404,14 @@ export default {
             })
     },
     //All GroceryStample product
+    // edit to sale product
     async getAllGrocerryStaples(req, res, next) {
         try {
-            db.category.findOne({
-                attributes: ["id", "slug"],
-                where: { slug: 'grocery-staple' },
-                include: [{ model: db.product, order: [['createdAt', 'DESC']], include: [{ model: db.productphoto, attributes: ["id", "imgUrl"] }] }],
-
+            db.product.findAll({
+                // attributes: ["id", "slug"],
+                // where: { discount: 'grocery-staple' },
+                order: [["discountPer", "DESC"]],
+                limit: 8
             })
                 .then(product => {
                     res.status(200).json({ 'success': true, data: product || [] });
@@ -528,6 +533,28 @@ export default {
             // res.status(500).json({ 'success':false, msg: err})
         }
     },
+    async getProductSuggest(req, res, next) {
+        try {
+            // const{ subCategoryId, childCategoryId } = req.body;
+            db.product.findAll({
+                // where: { childCategoryId: childCategoryId, subCategoryId: childCategoryId },
+                order: Sequelize.literal('RAND()'),
+                limit: 8
+            })
+                .then(product => {
+                    res.status(200).json({ 'success': true, data: product });
+                })
+                .catch(function (err) {
+                    console.log(err)
+                    next(err)
+                });
+
+        }
+        catch (err) {
+            next(err)
+            // res.status(500).json({ 'success':false, msg: err})
+        }
+    }
 
 }
 

@@ -114,6 +114,7 @@ export default class Edit extends Component {
       discountPer,
       total,
       grand_total,
+      images
     } = this.state;
     const formData = new FormData();
     formData.append("productId", productId);
@@ -134,6 +135,7 @@ export default class Edit extends Component {
     formData.append("discount", discount);
     formData.append("total", total);
     formData.append("netPrice", grand_total);
+    formData.append("images", JSON.stringify(images))
     const config = {
       headers: {
         "content-type": "multipart/form-data",
@@ -282,8 +284,8 @@ export default class Edit extends Component {
                     </div>
                   </div>
                   {/* new */}
-                  <div className="col-lg-4 col-md-4">
-                    <div className="form-group">
+                  <div className="col-lg-12 col-md-12">
+                    <div className="form-group w-100">
                       <label className="form-label">Product image*</label>
                       {/* <input
                         className="form-control"
@@ -383,6 +385,21 @@ export default class Edit extends Component {
                           className="form-control"
                           name="qty"
                           value={this.state.qty}
+                          onChange={(e) => this.handleChange(e)}
+                        />
+                      </div>
+                    </div>
+                    <div
+                      className="col-lg-1 col-md-1"
+                      style={{  }}
+                    >
+                      <div className="form-group">
+                        <label className="form-label">Discount(%)*</label>
+                        <input
+                          type="number"
+                          className="form-control"
+                          name="discountPer"
+                          value={this.state.discountPer}
                           onChange={(e) => this.handleChange(e)}
                         />
                       </div>

@@ -14,6 +14,7 @@ const Apis = {
   GetProductById: `${API_URL}/api/product/getWebProductById?id=`,
   GetAllGroceryStaple: `${API_URL}/api/product/getAllGroceryStaple`,
   GetAllProductList: `${API_URL}/api/product/list/`,
+  getProductSuggest: `${API_URL}/api/product/suggest/`,
 
   //product api
   GetOrderCreateByUser: `${API_URL}/api/order/create`,

@@ -1,9 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@material-ui/core";
 import Moment from "react-moment";
+import get_detail_voucher from "../../../../../api/get_detail_voucher";
 
 const View = (props) => {
-  const [self, setSelf] = useState({ Addresses: [], Carts: [] });
+  const [self, setSelf] = useState({ Addresses: [], Carts: [], voucherId: 0 });
+  const [dataVoucher, setDataVoucher] = useState({
+    data: { discount: 0 },
+    ok: false,
+  });
+
+  useEffect(() => {
+    (async () => {
+      const voucherId = self.voucherId || 0;
+      if(voucherId != 0) {
+        const result = await get_detail_voucher(voucherId);
+        setDataVoucher(result);
+      }
+    })();
+  }, [self]);
 
   useEffect(() => {
     setSelf(props.location.state);
@@ -58,7 +73,7 @@ const View = (props) => {
                         {/* eslint-disable-next-line */}
                         {self.Addresses.map((data, index) => (
                           <div className="ordr-date right-text" key={index}>
-                            <b>Order Date :</b>
+                            {/* <b>Order Date :</b> */}
                             <br />#{data.shipping},<br />
                             {data.area},<br />
                             {data.city},<br />
@@ -117,7 +132,7 @@ const View = (props) => {
                                       </td>
                                       <td className="text-center">{p.qty}</td>
                                       <td className="text-center">
-                                        VND{p.total}
+                                        VND{parseInt(p.price) * parseInt(p.qty)}
                                       </td>
                                     </tr>
                                   ))}
@@ -139,8 +154,18 @@ const View = (props) => {
                           <div className="order-total-left-text">
                             Delivery Fees
                           </div>
-                          <div className="order-total-right-text">VNDFree</div>
+                          <div className="order-total-right-text">VND{self.deliveryFee}</div>
                         </div>
+                        {self && self.voucherId != 0 && (
+                          <div className="order-total-dt">
+                            <div className="order-total-left-text">
+                              Discount
+                            </div>
+                            <div className="order-total-right-text">
+                              VND{(dataVoucher.data.discount)}
+                            </div>
+                          </div>
+                        )}
                         <div className="order-total-dt">
                           <div className="order-total-left-text fsz-18">
                             Total Amount
