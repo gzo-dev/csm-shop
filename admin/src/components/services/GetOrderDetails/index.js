@@ -2,9 +2,9 @@ import api from '../../ApiConfig';
 import { Apis } from '../../../config';
 import { NotificationManager } from 'react-notifications';
 
-const getAllOrderList = async () => {
+const getAllOrderList = async (data) => {
     try {
-        let result = await api.get(Apis.GetAllOrderDetails);
+        let result = await api.get(Apis.GetAllOrderDetails, {params: {...data}});
         if (result.errors) {
             NotificationManager.error(result.errors);
             return null;

@@ -39,7 +39,7 @@ export default function ContactPopup() {
         <DialogTitle id="alert-dialog-title">{"Contact"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            <TextField value={name} onChange={(e)=> setName(e.target.value)} style={{width: 500, height: 40, marginTop: 12, marginBottom: 12}} placeholder={"Your name"} />
+            <textarea rows={40} cols={40} value={name} onChange={(e)=> setName(e.target.value)} style={{width: 500, height: 200, marginTop: 12, marginBottom: 12, fontSize: 16, resize: "none", border: "1px solid #555"}} placeholder={"Your name"} />
             <TextField value={email} onChange={(e)=> setEmail(e.target.value)} style={{width: 500, height: 40, marginTop: 12, marginBottom: 12}} placeholder={"Your email"} />
             <TextField value={phone} onChange={(e)=> setPhone(e.target.value)} style={{width: 500, height: 40, marginTop: 12, marginBottom: 12}} placeholder={"Your phone"} />
             <TextField value={content} onChange={(e)=> setContent(e.target.value)} style={{width: 500, height: 40, marginTop: 12, marginBottom: 12}} placeholder={"Type here what you want ask"} />
@@ -50,7 +50,7 @@ export default function ContactPopup() {
             Close
           </Button>
           <Button onClick={async ()=> {
-            const result= await submit_contact({email, name, content, date_send: new Date(), status: "unprocessing", phone})
+            const result= await submit_contact({email, name, content, date_send: new Date(), status: "waiting for reply", phone})
             console.log("result", result)
             if(result.ok=== true) {
                 swal("Thông báo", "Đã gửi thành công", "success")

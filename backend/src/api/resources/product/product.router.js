@@ -21,6 +21,7 @@ productRouter.route('/deleteOfferById/:id').get( productController.productOfferD
 productRouter.route('/upload-img').post(upload.array('file', 10), productController.multiplePhotoUpload);
 productRouter.route('/getAllPhoto').get( productController.getAllPhoto);
 productRouter.route('/slider-photo/delete').delete( productController.deleteSliderPhoto);
+productRouter.route("/size").get(productController.getSizeProduct)
 
 //Category by product
 productRouter.route('/getAllGroceryStaple').get( productController.getAllGrocerryStaples);

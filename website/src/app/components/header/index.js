@@ -119,7 +119,9 @@ const Navigation = ({ history }) => {
                         <i className="mdi mdi-account-circle" /> Login/Sign Up
                       </Link>
                     ) : (
+
                       <div className="dropdown">
+                        
                         <button
                           className="btn btn-account dropdown-toggle"
                           type="button"
@@ -170,6 +172,7 @@ const Navigation = ({ history }) => {
                             ></i>{" "}
                             Orders List
                           </Link>
+                          
                           <div className="dropdown-divider"></div>
                           <span
                             className="dropdown-item"
@@ -186,6 +189,16 @@ const Navigation = ({ history }) => {
                     {
                       sessionStorage.getItem("_sid") && 
                       <Cartsidebar />
+                    }
+                  </li>
+                  <li className="list-inline-item">
+                    {
+                      sessionStorage.getItem("_sid") && 
+                      <Link to={"/voucher/gift"}>
+                      <span className="btn btn-link border-none">
+                        <i class="mdi mdi-sale"></i> Săn sale{" "}
+                      </span>
+                      </Link>
                     }
                   </li>
                 </ul>

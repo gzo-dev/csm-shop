@@ -1,9 +1,5 @@
 import React, { Component } from "react";
 import { Button } from "@material-ui/core";
-// import MainCategorylist from '../../../../common/category/main-category';
-// import { GetCategoryDetails } from '../../../../services';
-// import SubCategorylist from '../../../../common/category/sub-category';
-// import ChildCategorylist from '../../../../common/category/child-category';
 import { GetProductDetails } from "../../../../services";
 import RichTextEditor from "../../../../RichTextEditor";
 import Loader from "../../../../loader";
@@ -11,6 +7,8 @@ import { NotificationManager } from "react-notifications";
 import swal from "sweetalert";
 import Axios from "axios";
 import { API_URL } from "../../../../../config1";
+import AddSize from "../new-add/add_size";
+import { Fragment } from "react";
 
 export default class Edit extends Component {
   constructor(props) {
@@ -20,7 +18,7 @@ export default class Edit extends Component {
     this.state = {
       getList: [],
       getsublist: [],
-      /* selectedCategory: '', selectedSubCategory: '', selectedChildCategory: '', */ toggle: true,
+      toggle: true,
       loading: false,
       blockHide: false,
       productId: self.id,
@@ -39,8 +37,12 @@ export default class Edit extends Component {
       total: self.total,
       grand_total: self.netPrice,
       images: [],
-      currentIdPhoto: 0
+      currentIdPhoto: 0,
+      size: [],
+      photo: self.photo,
+      photoTemp: ""
     };
+    this.updateSize= this.updateSize.bind(this)
   }
   handleBack() {
     this.props.history.goBack();
@@ -50,26 +52,14 @@ export default class Edit extends Component {
   }
   onFileChange = (event) => {
     this.setState({ image: event.target.files[0] });
+    this.setState({ photoTemp: URL.createObjectURL(event.target.files[0])})
   };
   handleContentChange = (contentHtml) => {
     this.setState({
       content: contentHtml,
     });
   };
-  // handleCategory = async (value) => {
-  //     this.setState({ selectedCategory: value });
-  //     let categoryId = value;
-  //     let list = await GetCategoryDetails.getSelectSubCategory(categoryId);
-  //     this.setState({ getList: list.data })
-  // }
-  // handleSubCategory = async (value) => {
-  //     this.setState({ selectedSubCategory: value });
-  //     let list = await GetCategoryDetails.getAllSubChildCategory(value);
-  //     this.setState({ getsublist: list.data, blockHide: !this.state.blockHide })
-  // }
-  // handleChildCategory = async (value) => {
-  //     this.setState({ selectedChildCategory: value });
-  // }
+  
   caculationTable = () => {
     let price = this.state.price;
     let qty = this.state.qty;
@@ -114,7 +104,8 @@ export default class Edit extends Component {
       discountPer,
       total,
       grand_total,
-      images
+      images,
+      size
     } = this.state;
     const formData = new FormData();
     formData.append("productId", productId);
@@ -136,6 +127,7 @@ export default class Edit extends Component {
     formData.append("total", total);
     formData.append("netPrice", grand_total);
     formData.append("images", JSON.stringify(images))
+    formData.append("size", JSON.stringify(size))
     const config = {
       headers: {
         "content-type": "multipart/form-data",
@@ -161,14 +153,13 @@ export default class Edit extends Component {
   };
   componentDidMount() {
     this.fetchData()
+    this.fetchData2()
   }
   componentDidUpdate(prevProps, prevState) {
     if(this.state.productId != prevState.productId) {
         this.fetchData()
+        this.fetchData2()
     }
-    // console.log(this.state.productId)
-    // console.log(prevProps)
-    // console.log(prevState)
   }
   fetchData = async () => {
     try {
@@ -185,7 +176,25 @@ export default class Edit extends Component {
      
     }
   };
+  fetchData2 = async () => {
+    try {
+      const response = await Axios({
+        url: API_URL+ "/api/product/size",
+        method: "get",
+        params: {
+            productId: this.state.productId
+        }
+      }); // Gọi API để lấy dữ liệu
+      const result= response.data
+      this.setState({size: result.data})
+    } catch (error) {
+     
+    }
+  };
 
+  updateSize(size) {
+    this.setState({size})
+  }
   render() {
     const { loading } = this.state;
     return (
@@ -260,20 +269,54 @@ export default class Edit extends Component {
                     </div>
                     <div className="col-lg-2 col-md-2">
                       <div className="form-group">
-                        <label className="form-label">Unit Size*</label>
+                        <label className="form-label">Size*</label>
                         <input
-                          type="text"
-                          className="form-control"
-                          placeholder="size"
-                          name="unit"
-                          value={this.state.unit}
-                          onChange={(e) => this.handleChange(e)}
-                        />
+                              readOnly
+                              type="size"
+                              className="form-control"
+                              name="image"
+                              value={this.state.size.map(item=> item.size)}
+                              style={{marginBottom: 12}}
+                            />
+                            <AddSize isupdate={true} updateSize={this.updateSize} size={this.state.size} />
                       </div>
                     </div>
                     <div className="col-lg-2 col-md-2">
                       <div className="form-group">
                         <label className="form-label">Category Image*</label>
+                        {
+                          this.state.photoTemp.length > 0 && 
+                          <Fragment>
+                            <img
+                              src={this.state.photoTemp}
+                              className={"mr-3 mb-3"}
+                              style={{
+                                width: 130,
+                                height: 130,
+                                borderRadius: 10,
+                                objectFit: "cover",
+                                marginBottom: 12,
+                                marginTop: 12
+                              }}
+                            />
+                            <Button onClick={()=> this.setState({photoTemp: ""})} style={{marginTop: 12}} variant={"contained"} color={"#f00"}>Delete</Button>
+                          </Fragment>
+                        }
+                        {
+                          this.state.photoTemp.length <= 0 && 
+                          <img
+                            src={this.state.photo}
+                            className={"mr-3 mb-3"}
+                            style={{
+                              width: 130,
+                              height: 130,
+                              borderRadius: 10,
+                              objectFit: "cover",
+                              marginBottom: 12,
+                              marginTop: 12
+                            }}
+                          />
+                        }
                         <input
                           type="file"
                           className="form-control"
@@ -287,13 +330,6 @@ export default class Edit extends Component {
                   <div className="col-lg-12 col-md-12">
                     <div className="form-group w-100">
                       <label className="form-label">Product image*</label>
-                      {/* <input
-                        className="form-control"
-                        type="file"
-                        multiple
-                        name="files"
-                        // onChange={this.fileSelectedHandler}
-                      /> */}
                       <br />
                       <div
                         className={
@@ -302,7 +338,7 @@ export default class Edit extends Component {
                       >
                          {this.state.images.length > 0 &&
                           this.state.images.map((item, key) => (
-                            <div style={{ position: "relative" }}>
+                            <div key={key} style={{ position: "relative" }}>
                               <img
                                 key={key}
                                 src={item.imgUrl}
@@ -419,15 +455,6 @@ export default class Edit extends Component {
                     </div>
                   </div>
                   <div className="button_price">
-                    {/* <div className="form-group">
-                      <Button
-                        className="checkprice"
-                        variant="contained"
-                        onClick={() => this.handleCheckPrice()}
-                      >
-                        Preview
-                      </Button>
-                    </div> */}
                     <div
                       className="form-group"
                       style={

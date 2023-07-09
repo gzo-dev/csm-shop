@@ -82,6 +82,7 @@ const authenticate = (user, next) => {
     if(typeof window !=="undefined"){
         setCookie('token', user.token, 30);
         setCookie('role', user.role, 30);
+        setCookie("auid", user.auid, 30)
         next();
     }
 };
@@ -90,6 +91,7 @@ const logout = ( next) => {
         eraseCookie('token');
         eraseCookie('role');
         eraseCookie('XSRF-token');
+        eraseCookie("auid")
         window.location.reload();
         // window.location.href="/auth/login";
         // next();

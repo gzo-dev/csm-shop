@@ -4,6 +4,7 @@ import { NotificationManager } from "react-notifications";
 import { Link } from "react-router-dom";
 import Moment from "react-moment";
 import "../../css/index.css";
+
 export default class List extends Component {
   constructor(props) {
     super(props);
@@ -89,6 +90,10 @@ export default class List extends Component {
                       <i className="uil uil-box" />
                       My Orders
                     </a>
+                    <Link to="/account/rewards" className="user-item">
+        <i className="uil uil-gift" />
+        My Voucher
+      </Link>
                     {/* Select Status: */}
                     {/* <a href="/account/wishlist" className="user-item">
                       <i className="uil uil-heart" />

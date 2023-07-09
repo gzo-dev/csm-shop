@@ -45,7 +45,7 @@ export default {
     },
     async addProduct(req, res, next) {
         try {
-            const { categoryId, subCategoryId, childCategoryId, name, slug, brand, status, unitSize, sortDesc, desc, buyerPrice, price, qty, discount, discountPer, total, netPrice, image } = req.body;
+            const { categoryId, subCategoryId, childCategoryId, name, slug, brand, status, unitSize, sortDesc, desc, buyerPrice, price, qty, discount, discountPer, total, netPrice, image, size } = req.body;
             db.product.findOne({
                 where: { name: name }
             })
@@ -76,7 +76,7 @@ export default {
                 })
                 .then(product => {
                    JSON.parse(image)?.map(item=> db.productphoto.create({imgUrl: item?.path, productId: product.dataValues.id}))
-                    console.log("product", product.dataValues.id)
+                   JSON.parse(size)?.map(item=> db.productsize.create({size: item?.size, productId: product.dataValues.id}))
                     res.status(200).json({ 'success': true, msg: "Successfully inserted product" });
                 })
                 .catch(function (err) {
@@ -131,7 +131,7 @@ export default {
 
     async update(req, res, next) {
         try {
-            const { productId, categoryId, subCategoryId, childCategoryId, name, slug, brand, status, unitSize, desc, buyerPrice, price, qty, discount, discountPer, total, netPrice, images } = req.body;
+            const { productId, categoryId, subCategoryId, childCategoryId, name, slug, brand, status, unitSize, desc, buyerPrice, price, qty, discount, discountPer, total, netPrice, images, size } = req.body;
             db.product.findOne({ where: { id: productId } })
                 .then(product => {
                     if (product) {
@@ -161,6 +161,10 @@ export default {
                     db.productphoto.destroy({
                         where: {productId: productId}
                     })
+                    db.productsize.destroy({
+                        where: {productId}
+                    })
+                    db.productsize.bulkCreate(JSON.parse(size))
                     db.productphoto.bulkCreate(JSON.parse(images))
                     res.status(200).json({ 'success': true, msg: 'Updated Successfully' });
                 })
@@ -210,13 +214,14 @@ export default {
 
     async getWebProductListById(req, res, next) {
         try {
+            const size= await db.productsize.findAll({where: {productId: req.query.id}})
             db.product.findOne({
                 where: { id: req.query.id },
                 include: [{ model: db.productphoto, attributes: ["id", "imgUrl"] }],
                 order: [['createdAt', 'DESC']],
             })
                 .then(list => {
-                    res.status(200).json({ 'success': true, data: list });
+                    res.status(200).json({ 'success': true, data: list, datasize: size });
                 })
                 .catch(function (err) {
                     next(err)
@@ -540,6 +545,26 @@ export default {
                 // where: { childCategoryId: childCategoryId, subCategoryId: childCategoryId },
                 order: Sequelize.literal('RAND()'),
                 limit: 8
+            })
+                .then(product => {
+                    res.status(200).json({ 'success': true, data: product });
+                })
+                .catch(function (err) {
+                    console.log(err)
+                    next(err)
+                });
+
+        }
+        catch (err) {
+            next(err)
+            // res.status(500).json({ 'success':false, msg: err})
+        }
+    },
+    async getSizeProduct(req, res, next) {
+        try {
+            const{ productId  } = req.query;
+            db.productsize.findAll({
+                where: {productId}
             })
                 .then(product => {
                     res.status(200).json({ 'success': true, data: product });

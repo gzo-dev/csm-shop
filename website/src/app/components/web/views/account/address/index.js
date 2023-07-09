@@ -83,10 +83,10 @@ export default class Address extends Component {
                       <i className="uil uil-box" />
                       My Orders
                     </Link>
-                    {/* <Link to="/account/rewards" className="user-item">
+                    <Link to="/account/rewards" className="user-item">
         <i className="uil uil-gift" />
-        My Rewards
-      </Link> */}
+        My Voucher
+      </Link>
                     {/* <Link to="/account/wishlist" className="user-item">
         <i className="uil uil-heart" />
         Shopping Wishlist

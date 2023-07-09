@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@material-ui/core";
 import MainCategorylist from "../../../../common/category/main-category";
 import { GetCategoryDetails } from "../../../../services";
@@ -12,122 +12,128 @@ import swal from "sweetalert";
 import { toast } from "react-toastify";
 import { Fragment } from "react";
 // import {AiFillCloseCircle } from "react-icons"
-import TextField from '@material-ui/core/TextField';
+import TextField from "@material-ui/core/TextField";
 import AddSize from "./add_size";
 
-export default class Newproduct extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      files: [],
-      getList: [],
-      getsublist: [{name: ""}],
-      selectedCategory: "",
-      selectedSubCategory: "",
-      selectedChildCategory: "",
-      blockhide: false,
-      toggle: true,
-      isLoaded: false,
-      name: "",
-      slug: "",
-      brand: "",
-      status: 1,
-      unit: "",
-      image: "",
-      content: ``,
-      sortDesc: null,
-      buyerPrice: 0,
-      price: 0,
-      qty: 1,
-      discount: 0,
-      discountPer: 0,
-      total: 0,
-      grand_total: 0,
-      previewImage: [],
-      typeUnit: 0,
-      size: []
-    };
-    this.updateSize= this.updateSize.bind(this)
-  }
-  componentDidMount() {
-    if(["short", "Short"].includes(this.state.getsublist[0].name)== true) {
-      this.setState({typeUnit: 1})
-    }  
-    else if(["shirt", "Shirt"].includes(this.state.getsublist[0].name) === true) {
-      this.setState({typeUnit: 2})
-    } 
-    else if(["short", "Short"].includes(this.state.getsublist[0].name) ===
-    false ||
-    ["shirt", "Shirt"].includes(this.state.getsublist[0].name) ===
-      false) {
-        this.setState({typeUnit: 3})
-      }
-  }
+const NewProduct = () => {
+  const [files, setFiles] = useState([]);
+  const [getList, setGetList] = useState([]);
+  const [getSublist, setGetSublist] = useState([{ name: "" }]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedSubCategory, setSelectedSubCategory] = useState("");
+  const [selectedChildCategory, setSelectedChildCategory] = useState("");
+  const [blockHide, setBlockHide] = useState(false);
+  const [toggle, setToggle] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [name, setName] = useState("");
+  const [slug, setSlug] = useState("");
+  const [brand, setBrand] = useState("");
+  const [status, setStatus] = useState(1);
+  const [unit, setUnit] = useState("");
+  const [image, setImage] = useState("");
+  const [content, setContent] = useState("");
+  const [sortDesc, setSortDesc] = useState(null);
+  const [buyerPrice, setBuyerPrice] = useState(0);
+  const [price, setPrice] = useState(0);
+  const [qty, setQty] = useState(1);
+  const [discount, setDiscount] = useState(0);
+  const [discountPer, setDiscountPer] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [grandTotal, setGrandTotal] = useState(0);
+  const [previewImage, setPreviewImage] = useState([]);
+  const [typeUnit, setTypeUnit] = useState(0);
+  const [size, setSize] = useState([]);
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.getsublist[0].name != this.state.getsublist[0].name) {
-      if(["short", "Short"].includes(this.state.getsublist[0].name)== true) {
-        this.setState({typeUnit: 1})
-      }  
-      else if(["shirt", "Shirt"].includes(this.state.getsublist[0].name) === true) {
-        this.setState({typeUnit: 2})
-      } 
-      else if(["short", "Short"].includes(this.state.getsublist[0].name) ===
-      false ||
-      ["shirt", "Shirt"].includes(this.state.getsublist[0].name) ===
-        false) {
-          this.setState({typeUnit: 3})
-        }
+  useEffect(() => {
+    if (["short", "Short"].includes(getSublist[0].name) === true) {
+      setTypeUnit(1);
+    } else if (["shirt", "Shirt"].includes(getSublist[0].name) === true) {
+      setTypeUnit(2);
+    } else if (
+      !["short", "Short"].includes(getSublist[0].name) &&
+      !["shirt", "Shirt"].includes(getSublist[0].name)
+    ) {
+      setTypeUnit(3);
     }
-  }
+  }, [getSublist]);
 
-  handleBack() {
-    this.props.history.goBack();
-  }
-  handleChange(e) {
-    this.setState({ [e.target.name]: e.target.value });
-    if (e.target.name === "name") {
-      this.setState({
-        slug: e.target.value.toLowerCase().replaceAll(" ", "-"),
-      });
+  const handleBack = () => {
+    history.goBack();
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "name") {
+      setSlug(value.toLowerCase().replaceAll(" ", "-"));
     }
-  }
-  onFileChange = (event) => {
-    this.setState({ image: event.target.files[0] });
+    if (name === "unit") {
+      setSize(value);
+    }
+    switch (name) {
+      case "name":
+        setName(value);
+        break;
+      case "brand":
+        setBrand(value);
+        break;
+      case "status":
+        setStatus(value);
+        break;
+      case "buyerPrice":
+        setBuyerPrice(value);
+        break;
+      case "price":
+        setPrice(value);
+        break;
+      case "qty":
+        setQty(value);
+        break;
+      case "discountPer":
+        setDiscountPer(value);
+        break;
+      default:
+        break;
+    }
   };
-  handleContentChange = (contentHtml) => {
-    this.setState({
-      content: contentHtml,
-    });
+
+  const onFileChange = (event) => {
+    setImage(event.target.files[0]);
   };
-  handleCategory = async (value) => {
-    this.setState({ selectedCategory: value });
+
+  const handleContentChange = (contentHtml) => {
+    setContent(contentHtml);
+  };
+
+  const handleCategory = async (value) => {
+    setSelectedCategory(value);
     let categoryId = value;
     let list = await GetCategoryDetails.getSelectSubCategory(categoryId);
-    this.setState({ getList: list.data });
+    setGetList(list.data);
   };
-  handleSubCategory = async (value) => {
-    this.setState({ selectedSubCategory: value });
+
+  const handleSubCategory = async (value) => {
+    setSelectedSubCategory(value);
     let list = await GetCategoryDetails.getAllSubChildCategory(value);
-    this.setState({ getsublist: list.data, blockhide: true });
+    setGetSublist(list.data);
+    setBlockHide(true);
   };
-  handleChildCategory = async (value) => {
-    this.setState({ selectedChildCategory: value });
+
+  const handleChildCategory = async (value) => {
+    setSelectedChildCategory(value);
   };
-  caculationTable = () => {
-    let price = this.state.price;
-    let qty = this.state.qty;
-    let discountPer = this.state.discountPer;
+
+  const caculationTable = () => {
+    let price = price;
+    let qty = qty;
+    let discountPer = discountPer;
     if (price > 0 && qty > 0 && discountPer >= 0) {
       let discount = Math.round((price * qty * discountPer) / 100);
       let total = Math.round(price * qty);
       let grand_total = Math.round(price * qty - discount);
 
-      this.setState({
-        total: total,
-        grand_total: grand_total,
-        discount: discount,
-      });
+      setTotal(total);
+      setGrandTotal(grand_total);
+      setDiscount(discount);
     } else {
       NotificationManager.error(
         "Negative value & Zero Price not allowed",
@@ -135,36 +141,16 @@ export default class Newproduct extends Component {
       );
     }
   };
-  handleCheckPrice() {
-    this.caculationTable();
-    this.setState({ toggle: !this.state.toggle });
-  }
 
-  handleSubmit = (event, listImage) => {
+  const handleCheckPrice = () => {
+    caculationTable();
+    setToggle(!toggle);
+  };
+
+  const handleSubmit = async (event, listImage) => {
     console.log(listImage);
     event.preventDefault();
-    this.setState({ isLoaded: true });
-    const {
-      selectedCategory,
-      selectedSubCategory,
-      selectedChildCategory,
-      image,
-      name,
-      slug,
-      brand,
-      status,
-      unit,
-      content,
-      sortDesc,
-      buyerPrice,
-      price,
-      qty,
-      discount,
-      discountPer,
-      total,
-      grand_total,
-      size
-    } = this.state;
+    setIsLoaded(true);
     const formData = new FormData();
     formData.append("categoryId", selectedCategory);
     formData.append("subCategoryId", selectedSubCategory);
@@ -183,9 +169,8 @@ export default class Newproduct extends Component {
     formData.append("discountPer", discountPer);
     formData.append("discount", discount);
     formData.append("total", total);
-    formData.append("netPrice", grand_total);
+    formData.append("netPrice", grandTotal);
     formData.append("image", JSON.stringify(listImage));
-    formData.append("size", JSON.stringify(size))
     const config = {
       headers: {
         "content-type": "multipart/form-data",
@@ -201,8 +186,8 @@ export default class Newproduct extends Component {
       if (success) {
         let list = await GetProductDetails.addProductList(formData, config);
         if (list) {
-          this.setState({ isLoaded: false });
-          this.props.history.push("/admin/product/list");
+          setIsLoaded(false);
+          history.push("/admin/product/list");
         } else {
           NotificationManager.error("Please! Check input field", "Input Field");
         }
@@ -210,47 +195,43 @@ export default class Newproduct extends Component {
     });
   };
 
-  fileSelectedHandler = (e) => {
-    this.setState({ files: e.target.files });
+  const fileSelectedHandler = (e) => {
+    setFiles(e.target.files);
     const arr = [];
     Object.values(e.target.files).map((item) => console.log(item));
 
     Object.values(e.target.files).map((item) =>
       arr.push({ preview: URL.createObjectURL(item), id: item.lastModified })
     );
-    this.setState({ previewImage: arr });
-  };
+    setPreviewImage(arr);
 
-  handleSubmitMoreImage = async (event) => {
-    this.setState({ isLoaded: true });
-    const formData = new FormData();
-    formData.append("productId", "-1");
-    for (const file of this.state.files) {
-      formData.append("file", file);
-    }
-    const config = {
-      headers: {
-        "content-type": "multipart/form-data",
-      },
+    const handleSubmitMoreImage = async (event) => {
+      setIsLoaded(true);
+      const formData = new FormData();
+      formData.append("productId", "-1");
+      for (const file of files) {
+        formData.append("file", file);
+      }
+      const config = {
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+      };
+      let list = await GetProductDetails.getUploadProductImage(
+        formData,
+        config
+      );
+      if (list) {
+        setIsLoaded(false);
+        toast.success("successfully added");
+        return list;
+        // window.location.href = "/admin/product/more-photo";
+      } else {
+        toast.error("error");
+        return [];
+      }
     };
 
-    let list = await GetProductDetails.getUploadProductImage(formData, config);
-    if (list) {
-      this.setState({ isLoaded: false });
-      toast.success("successfully added");
-      return list;
-      // window.location.href = "/admin/product/more-photo";
-    } else {
-      toast.error("error");
-      return [];
-    }
-  };
-  updateSize(size) {
-    this.setState({size})
-  }
-
-  render() {
-    const { getList, getsublist, isLoaded } = this.state;
     return (
       <div className="container-fluid">
         <div className="row">
@@ -258,7 +239,7 @@ export default class Newproduct extends Component {
             <h2 className="mt-30 page-title">Products</h2>
           </div>
           <div className="col-lg-5 col-md-3 col-lg-6 back-btn mb-3">
-            <Button variant="contained" onClick={(e) => this.handleBack()}>
+            <Button variant="contained" onClick={handleBack}>
               <i className="fas fa-arrow-left" /> Back
             </Button>
           </div>
@@ -273,7 +254,6 @@ export default class Newproduct extends Component {
           </li>
           <li className="breadcrumb-item active">Add Product</li>
         </ol>
-
         <div className="row">
           <div className="col-lg-6 col-md-6">
             <div className="card card-static-2 mb-30">
@@ -281,7 +261,7 @@ export default class Newproduct extends Component {
                 <div className="news-content-right pd-20">
                   <div className="form-group">
                     <label className="form-label">Category*</label>
-                    <MainCategorylist onSelectCategory={this.handleCategory} />
+                    <MainCategorylist onSelectCategory={handleCategory} />
                   </div>
                 </div>
               </div>
@@ -295,7 +275,7 @@ export default class Newproduct extends Component {
                     <label className="form-label">Sub Category*</label>
                     <SubCategorylist
                       state={getList}
-                      onSelectSubCategory={this.handleSubCategory}
+                      onSelectSubCategory={handleSubCategory}
                     />
                   </div>
                 </div>
@@ -306,9 +286,7 @@ export default class Newproduct extends Component {
 
         <div
           className="row"
-          style={
-            this.state.blockhide ? { display: "block" } : { display: "none" }
-          }
+          style={blockHide ? { display: "block" } : { display: "none" }}
         >
           {isLoaded ? <Loader /> : ""}
           <div className="col-lg-12 col-md-12">
@@ -327,8 +305,8 @@ export default class Newproduct extends Component {
                           className="form-control"
                           placeholder="Product Name"
                           name="name"
-                          value={this.state.name}
-                          onChange={(e) => this.handleChange(e)}
+                          value={name}
+                          onChange={handleChange}
                         />
                       </div>
                     </div>
@@ -336,8 +314,8 @@ export default class Newproduct extends Component {
                       <div className="form-group">
                         <label className="form-label">Category*</label>
                         <ChildCategorylist
-                          state={getsublist}
-                          onSelectchildCategory={this.handleChildCategory}
+                          state={getSublist}
+                          onSelectchildCategory={handleChildCategory}
                         />
                       </div>
                     </div>
@@ -349,62 +327,24 @@ export default class Newproduct extends Component {
                           className="form-control"
                           placeholder="Brand Name"
                           name="brand"
-                          value={this.state.brand}
-                          onChange={(e) => this.handleChange(e)}
+                          value={brand}
+                          onChange={handleChange}
                         />
                       </div>
                     </div>
                     <div className="col-lg-2 col-md-2">
                       <div className="form-group">
                         <label className="form-label">Size*</label>
-                        {/* {this.state.typeUnit== 1 && (
-                            <select
-                              value={this.state.unit}
-                              className="form-control"
-                              placeholder="size"
-                              onChange={(e) => this.handleChange(e)}
-                              name="unit"
-                            >
-                              <option value="1">1</option>
-                              <option value="2">2</option>
-                              <option value="3">3</option>
-                            </select>
-                          )}
-                        {this.state.typeUnit== 2 && (
-                          <select
-                            value={this.state.unit}
+                        <div className={"d-flex align-items-center"}>
+                          <input
+                            type="size"
                             className="form-control"
-                            placeholder="size"
-                            onChange={(e) => this.handleChange(e)}
-                            name="unit"
-                          >
-                            <option value="X">X</option>
-                            <option value="M">M</option>
-                            <option value="L">L</option>
-                            <option value="XL">XL</option>
-                            <option value="XXL">XXL</option>
-                            <option value="3XL">3XL</option>
-                          </select>
-                        )}
-                        {this.state.typeUnit== 3 && (
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder="size"
-                              name="unit"
-                              value={this.state.unit}
-                              onChange={(e) => this.handleChange(e)}
-                            />
-                          )} */}
-                            <input
-                              readOnly
-                              type="size"
-                              className="form-control"
-                              name="image"
-                              value={this.state.size.map(item=> item.size)}
-                              style={{marginBottom: 12}}
-                            />
-                            <AddSize updateSize={this.updateSize} size={this.state.size} />
+                            name="image"
+                            value={size.map((item) => item)}
+                            onChange={handleChange}
+                          />
+                          <AddSize />
+                        </div>
                       </div>
                     </div>
                     <div className="col-lg-2 col-md-2">
@@ -414,7 +354,7 @@ export default class Newproduct extends Component {
                           type="file"
                           className="form-control"
                           name="image"
-                          onChange={this.onFileChange}
+                          onChange={onFileChange}
                         />
                       </div>
                     </div>
@@ -427,7 +367,7 @@ export default class Newproduct extends Component {
                           type="file"
                           multiple
                           name="files"
-                          onChange={this.fileSelectedHandler}
+                          onChange={fileSelectedHandler}
                         />
                         <br />
                         <div
@@ -435,8 +375,8 @@ export default class Newproduct extends Component {
                             "d-flex align-items-center g-10 mr-2 flex-wrap mb-3"
                           }
                         >
-                          {this.state.previewImage.length > 0 &&
-                            this.state.previewImage.map((item, key) => (
+                          {previewImage.length > 0 &&
+                            previewImage.map((item, key) => (
                               <div style={{ position: "relative" }}>
                                 <img
                                   key={key}
@@ -451,17 +391,16 @@ export default class Newproduct extends Component {
                                 />
                                 <button
                                   onClick={() => {
-                                    this.setState({
-                                      previewImage:
-                                        this.state.previewImage.filter(
-                                          (item2) => item2.id != item.id
-                                        ),
-                                    });
-                                    this.setState({
-                                      files: [...this.state.files].filter(
+                                    setPreviewImage(
+                                      previewImage.filter(
+                                        (item2) => item2.id != item.id
+                                      )
+                                    );
+                                    setFiles(
+                                      [...files].filter(
                                         (item2) => item2.lastModified != item.id
-                                      ),
-                                    });
+                                      )
+                                    );
                                   }}
                                   style={{
                                     position: "absolute",
@@ -486,8 +425,8 @@ export default class Newproduct extends Component {
                           id="status"
                           name="status"
                           className="form-control"
-                          value={this.state.status}
-                          onChange={(e) => this.handleChange(e)}
+                          value={status}
+                          onChange={handleChange}
                         >
                           <option value={1}>Active</option>
                           <option value={0}>Inactive</option>
@@ -501,8 +440,8 @@ export default class Newproduct extends Component {
                           type="number"
                           className="form-control"
                           name="buyerPrice"
-                          value={this.state.buyerPrice}
-                          onChange={(e) => this.handleChange(e)}
+                          value={buyerPrice}
+                          onChange={(e) => handleChange(e)}
                         />
                       </div>
                     </div>
@@ -513,8 +452,8 @@ export default class Newproduct extends Component {
                           type="number"
                           className="form-control"
                           name="price"
-                          value={this.state.price}
-                          onChange={(e) => this.handleChange(e)}
+                          value={price}
+                          onChange={(e) => handleChange(e)}
                         />
                       </div>
                     </div>
@@ -525,23 +464,20 @@ export default class Newproduct extends Component {
                           type="number"
                           className="form-control"
                           name="qty"
-                          value={this.state.qty}
-                          onChange={(e) => this.handleChange(e)}
+                          value={qty}
+                          onChange={(e) => handleChange(e)}
                         />
                       </div>
                     </div>
-                    <div
-                      className="col-lg-1 col-md-1"
-                      style={{  }}
-                    >
+                    <div className="col-lg-1 col-md-1" style={{}}>
                       <div className="form-group">
                         <label className="form-label">Discount(%)*</label>
                         <input
                           type="number"
                           className="form-control"
                           name="discountPer"
-                          value={this.state.discountPer}
-                          onChange={(e) => this.handleChange(e)}
+                          value={discountPer}
+                          onChange={(e) => handleChange(e)}
                         />
                       </div>
                     </div>
@@ -556,8 +492,8 @@ export default class Newproduct extends Component {
                           className="form-control"
                           disabled
                           name="discount"
-                          value={this.state.discount}
-                          onChange={(e) => this.handleChange(e)}
+                          value={discount}
+                          onChange={(e) => handleChange(e)}
                         />
                       </div>
                     </div>
@@ -572,8 +508,8 @@ export default class Newproduct extends Component {
                           className="form-control"
                           disabled
                           name="total"
-                          value={this.state.total}
-                          onChange={(e) => this.handleChange(e)}
+                          value={total}
+                          onChange={(e) => handleChange(e)}
                         />
                       </div>
                     </div>
@@ -588,8 +524,8 @@ export default class Newproduct extends Component {
                           className="form-control"
                           disabled
                           name="grand_total"
-                          value={this.state.grand_total}
-                          onChange={(e) => this.handleChange(e)}
+                          value={grandTotal}
+                          onChange={(e) => handleChange(e)}
                         />
                       </div>
                     </div>
@@ -603,16 +539,16 @@ export default class Newproduct extends Component {
                         cols="100"
                         className="form-control"
                         name="sortDesc"
-                        value={this.state.sortDesc}
-                        onChange={(e) => this.handleChange(e)}
+                        value={sortDesc}
+                        onChange={(e) => handleChange(e)}
                       />
                     </div>
                     <div className="col-lg-12 col-md-12">
                       <div className="form-group">
                         <label className="form-label">Description*</label>
                         <RichTextEditor
-                          content={this.state.content}
-                          handleContentChange={this.handleContentChange}
+                          content={content}
+                          handleContentChange={handleContentChange}
                           placeholder="insert text here..."
                         />
                       </div>
@@ -623,7 +559,7 @@ export default class Newproduct extends Component {
                       <Button
                         className="checkprice"
                         variant="contained"
-                        onClick={() => this.handleCheckPrice()}
+                        onClick={() => handleCheckPrice()}
                       >
                         Preview
                       </Button>
@@ -631,18 +567,16 @@ export default class Newproduct extends Component {
                     <div
                       className="form-group"
                       style={
-                        this.state.toggle
-                          ? { display: "block" }
-                          : { display: "none" }
+                        toggle ? { display: "block" } : { display: "none" }
                       }
                     >
                       <button
                         className="save-btn hover-btn"
                         type="submit"
                         onClick={async (e) => {
-                          const result = await this.handleSubmitMoreImage(e);
+                          const result = await handleSubmitMoreImage(e);
                           setTimeout(() => {
-                            this.handleSubmit(e, result.data);
+                            handleSubmit(e, result.data);
                           }, 5000);
                         }}
                       >
@@ -657,5 +591,5 @@ export default class Newproduct extends Component {
         </div>
       </div>
     );
-  }
-}
+  };
+};

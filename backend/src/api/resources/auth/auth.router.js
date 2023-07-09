@@ -9,7 +9,7 @@ authRouter.route('/register').post(/*sanitize(),/* validateBody(schemas.register
 authRouter.route('/user/getAllUserList').get(authController.getAllUserList);
 authRouter.route('/user/update').post(authController.userUpdate);
 authRouter.route('/user/delete').post(authController.deleteUserList);
-authRouter.route('/getUserByEmailId').get(authController.findUser);
+authRouter.route('/info').get(authController.findUser);
 authRouter.route('/rootLogin').post(authController.login);
 
 

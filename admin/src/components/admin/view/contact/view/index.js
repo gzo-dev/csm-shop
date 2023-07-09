@@ -10,6 +10,7 @@ import { API_URL } from "../../../../../config1";
 import ReplyContact from "./reply_contact";
 import delete_contact from "../../../../../api/delete_contact";
 import ViewReply from "./view_replied_contact";
+import ViewContentReply from "./ViewContentReply";
 
 const View = () => {
   const history = useHistory();
@@ -158,7 +159,9 @@ const View = () => {
                         <td>{++index}</td>
                         <td>{row.name}</td>
                         <td>{row.createdAt}</td>
-                        <td>{row.content}</td>
+                        <td>
+                          <p style={{overflow: "hidden", textOverflow: "ellipsis", maxWidth: 200, display: "inline"}}>{row.content}</p>
+                        </td>
                         <td>{row.email}</td>
                         <td>{row.phone || "No data"}</td>
                         <td>{row.status}</td>
@@ -195,6 +198,7 @@ const View = () => {
                           >
                             <i className="fas fa-trash" />
                           </Link>
+                          <ViewContentReply content={row.content} />
                         </td>
                       </tr>
                     ))}

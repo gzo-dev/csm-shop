@@ -34,7 +34,7 @@ const AddVoucher = (props) => {
         >
           <Button
             onClick={async () => {
-              const res = await apply_voucher({ code: voucher });
+              const res = await apply_voucher({ code: voucher.trim() });
               if (res.ok === true) {
                 const res2 = await get_detail_voucher(res.data.id);
                 setDataVoucher(res2.data);
@@ -49,7 +49,7 @@ const AddVoucher = (props) => {
             variant="contained"
             color="primary"
           >
-            Apply
+            Check voucher
           </Button>
         </div>
       )}

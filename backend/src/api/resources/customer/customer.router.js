@@ -16,4 +16,6 @@ customerRouter.route('/list').get(customerController.getAllCustomer);
 customerRouter.route('/update').post(customerController.getCustomerUpdate);
 customerRouter.route('/delete').delete(customerController.deleteCustomer);
 
-
+customerRouter.route("/voucher").get(customerController.getVoucherCustomer)
+customerRouter.route("/voucher").post(customerController.postVoucherCustomer)
+customerRouter.route("/voucher").delete(customerController.deleteVoucherCustomer)

@@ -8,6 +8,7 @@ import './errors';
 import scheduler from './scheduler';
 import path from 'path';
 import cors from 'cors';
+import checkExpiredVouchers from './cronjob';
 global.appRoot = path.resolve(__dirname);
 
 const PORT = config.app.port;
@@ -51,6 +52,8 @@ db.sequelize.authenticate().then(function () {
 }).catch(function (err) {
 	console.log(err, "Something went wrong with the Database Update!")
 });
+
+checkExpiredVouchers.start()
 
 /* Start Listening service */
 app.listen(PORT, () => {

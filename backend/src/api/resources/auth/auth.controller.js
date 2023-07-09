@@ -76,10 +76,10 @@ export default {
     },
 
     async findUser(req,res,next){
-        db.user.findOne({ attributes:["firstName","lastName"], where: { email: req.query.email }, paranoid: false })
+        db.user.findOne({ attributes:["firstName","lastName", "email"], where: { id: req.query.user_id }})
         .then(user => {
             if (user) {
-                return res.status(200).json({ success: true, data:user});
+                return res.status(200).json({ success: true, data:user, ok: true});
             }
             else
                 res.status(500).json({ 'success': false });
@@ -154,7 +154,7 @@ export default {
         const findUser= await db.user.findOne({where: {email, password: md5(password)}})
         if(findUser) {
             const token= JWT.sign({uid: findUser.dataValues.id, id: findUser.dataValues.id}, process.env.JWT_SECRET)
-            return res.status(200).json({ success: true, token, findUser, role: findUser.dataValues.role });
+            return res.status(200).json({ success: true, token, auid: findUser.dataValues.id, role: findUser.dataValues.role });
         }
         else {
             return res.status(200).json({ success: false });

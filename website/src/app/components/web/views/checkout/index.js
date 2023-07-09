@@ -372,7 +372,7 @@ const Checkout = (props) => {
                                         htmlFor="card1"
                                         className="radio-label_1"
                                       >
-                                        Pay With Momo
+                                        Pay Online
                                       </label>
                                     </div>
                                   </li>

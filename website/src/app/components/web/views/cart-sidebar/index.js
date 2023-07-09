@@ -82,7 +82,7 @@ const CartSidebar = ({ cartItems, incrementToCart, decreaseToCart, removeFromCar
                     VND{row.qty * (row.price - Math.floor(row.price * row.discountPer / 100))}
                     {row.discountPer > 0 
                        &&
-                    <span>VND{row.price}</span>
+                    <span>VND{row.price * row.qty}</span>
                     }
                   </div>
                 </div>

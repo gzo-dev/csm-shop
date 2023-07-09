@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Button, Typography } from "@material-ui/core";
 import { GetCategoryDetails } from "../../../../services";
 import swal from "sweetalert";
+import {Link } from "react-router-dom"
 
 export default class List extends Component {
   constructor(props) {
@@ -66,9 +67,9 @@ export default class List extends Component {
         </ol>
         <div className="row justify-content-between">
           <div className="col-lg-12">
-            <a href="add_category.html" className="add-btn hover-btn">
+            <Link to="./create" className="add-btn hover-btn">
               Add New
-            </a>
+            </Link>
           </div>
           <div className="col-lg-3 col-md-4">
             <div className="bulk-section mt-30">

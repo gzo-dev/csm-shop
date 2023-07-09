@@ -32,7 +32,7 @@ const Home = () => {
 
   const getOrderList = async () => {
     setIsLoaded(true);
-    const list = await GetOrderDetails.getAllOrderList();
+    const list = await GetOrderDetails.getAllOrderList({page: currentPage});
     if (list) {
       const tdata = list.order;
       const slice = tdata.slice(offset, offset + perPage);
@@ -69,7 +69,7 @@ const Home = () => {
   useEffect(() => {
     getOrderList();
     getStatusList();
-  }, []);
+  }, [currentPage]);
 
   return (
     <div id="layoutSidenav_content">

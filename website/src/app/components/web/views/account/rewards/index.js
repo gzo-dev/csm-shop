@@ -3,11 +3,27 @@ import { GetUserLogin } from '../../../../services';
 import '../css/index.css'
 
 export default class Reward extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+          user: "",
+        };
+      }
+      async componentDidMount() {
+        let email = sessionStorage.getItem("email");
+        if (email) {
+          let value = await GetUserLogin.getCustomerDetail(email);
+          if (value) {
+            this.setState({ user: value.data });
+          }
+        }
+      }
     handleLogout = async (event) => {
         event.preventDefault();
         await GetUserLogin.logout();
     }
     render() {
+        let { user } = this.state;
         return (
             <div className="wrapper">
                 <div className="gambo-Breadcrumb">
@@ -25,25 +41,30 @@ export default class Reward extends Component {
                     </div>
                 </div>
                 <div className="dashboard-group">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-lg-12">
-                                <div className="user-dt">
-                                    <div className="user-img">
-                                        <img src="images/avatar/img-5.jpg" alt />
-                                        <div className="img-add">
-                                            <input type="file" id="file" />
-                                            <label htmlFor="file"><i className="uil uil-camera-plus" /></label>
-                                        </div>
-                                    </div>
-                                    <h4>Johe Doe</h4>
-                                    <p>+91999999999<a href="#"><i className="uil uil-edit" /></a></p>
-                                    <div className="earn-points"><img src="images/Dollar.svg" alt />Points : <span>20</span></div>
-                                </div>
-                            </div>
-                        </div>
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-12">
+                <div className="user-dt">
+                  <div className="user-img">
+                    <img src="/img/avatar/img-5.jpg" alt />
+                    <div className="img-add">
+                      <input type="file" id="file" />
+                      {/* <label htmlFor="file">
+                        <i className="uil uil-camera-plus" />
+                      </label> */}
                     </div>
+                  </div>
+                  <h4>{user.firstName}</h4>
+                  <p>+84 {user.phone}</p>
+                  {/* <div className="earn-points">
+                    <img src="images/Dollar.svg" alt />
+                    Points : <span>20</span>
+                  </div> */}
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
                 <div className>
                     <div className="container">
                         <div className="row">
@@ -53,7 +74,7 @@ export default class Reward extends Component {
                                         <a href="/account/view" className="user-item"><i className="uil uil-apps" />Overview</a>
                                         <a href="/account/profile" className="user-item"><i className="mdi mdi-account-outline" />My profile</a>
                                         <a href="/account/order/list" className="user-item"><i className="uil uil-box" />My Orders</a>
-                                        <a href="/account/rewards" className="user-item active"><i className="uil uil-gift" />My Rewards</a>
+                                        <a href="/account/rewards" className="user-item active"><i className="uil uil-gift" />My Voucher</a>
                                         {/* <a href="/account/wishlist" className="user-item"><i className="uil uil-heart" />Shopping Wishlist</a> */}
                                         {/* <a href="/account/address" className="user-item"><i className="uil uil-location-point" />My Address</a> */}
                                         <a className="user-item" onClick={this.handleLogout}><i className="uil uil-exit" />Logout</a>
@@ -65,10 +86,10 @@ export default class Reward extends Component {
                                     <div className="row">
                                         <div className="col-md-12">
                                             <div className="main-title-tab">
-                                                <h4><i className="uil uil-gift" />My Rewards</h4>
+                                                <h4><i className="uil uil-gift" />My Vouchers</h4>
                                             </div>
                                         </div>
-                                        <div className="col-lg-12 col-md-12">
+                                        {/* <div className="col-lg-12 col-md-12">
                                             <div className="pdpt-bg">
                                                 <ul className="reward-body-all">
                                                     <li>
@@ -94,19 +115,7 @@ export default class Reward extends Component {
                                                     </li>
                                                 </ul>
                                             </div>
-                                        </div>
-                                        <div className="col-lg-4 col-md-12">
-                                            <div className="pdpt-bg">
-                                                <div className="reward-body-dtt">
-                                                    <div className="reward-img-icon">
-                                                        <img src="images/gift.svg" alt />
-                                                    </div>
-                                                    <span className="rewrd-title">Cashback Won</span>
-                                                    <h4 className="cashbk-price">$2</h4>
-                                                    <span className="date-reward">12 May 2020</span>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        </div> */}
                                         <div className="col-lg-4 col-md-12">
                                             <div className="pdpt-bg rewards-coupns">
                                                 <div className="reward-body-dtt">
@@ -117,7 +126,7 @@ export default class Reward extends Component {
                                                     <h4 className="cashbk-price">Get 25% Cashback</h4>
                                                     <span className="date-reward">Expires on : 31st May</span>
                                                 </div>
-                                                <div className="top-coup-code" title="Coupon Code">Gambocoup25</div>
+                                                
                                             </div>
                                         </div>
                                         <div className="col-lg-4 col-md-12">
@@ -130,7 +139,7 @@ export default class Reward extends Component {
                                                     <h4 className="cashbk-price">Get 10% Cashback</h4>
                                                     <span className="date-reward">Expires on : 25th May</span>
                                                 </div>
-                                                <div className="top-coup-code" title="Coupon Code">Gambocoup10</div>
+                                                
                                             </div>
                                         </div>
                                         <div className="col-lg-4 col-md-12">
@@ -143,7 +152,7 @@ export default class Reward extends Component {
                                                     <h4 className="cashbk-price">Get 15% Cashback</h4>
                                                     <span className="date-reward">Expired on : 5th May</span>
                                                 </div>
-                                                <div className="top-coup-code" title="Coupon Code">Gambocoup15</div>
+                                                
                                             </div>
                                         </div>
                                         <div className="col-lg-4 col-md-12">
@@ -156,7 +165,7 @@ export default class Reward extends Component {
                                                     <h4 className="cashbk-price">Get 5% Cashback</h4>
                                                     <span className="date-reward">Expires on : 20th May</span>
                                                 </div>
-                                                <div className="top-coup-code" title="Coupon Code">Gambocoup5</div>
+                                                
                                             </div>
                                         </div>
                                         <div className="col-lg-4 col-md-12">

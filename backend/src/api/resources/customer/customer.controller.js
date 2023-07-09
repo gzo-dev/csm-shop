@@ -210,7 +210,24 @@ export default {
             throw new RequestError('Error');
         }
     },
-
+    async getVoucherCustomer(req, res, next) {
+        const {id }= req.body
+        db.vouchercustomer.findAll({where: {customerId: id}})
+        .then(data=> res.status(200).json({ok: true, data}))
+        .catch(e=> next(e))
+    },
+    async postVoucherCustomer(req, res, next) {
+        const {voucherId, customerId }= req.body
+        db.vouchercustomer.create({...req.body})
+        return res.status(200).json({ok: true})
+    },
+    async deleteVoucherCustomer(req, res, next) {
+        const {voucherId, customerId }= req.body
+        db.vouchercustomer.destroy({where: {
+            ...req.body
+        }})
+        return res.status(200).json({ok: true})
+    },
 }
 
 

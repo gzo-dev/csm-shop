@@ -9,6 +9,7 @@ import AddVoucher from './AddVoucher';
 import get_list_voucher from '../../../../../api/get_list_voucher';
 import moment from 'moment';
 import delete_voucher from '../../../../../api/delete_voucher';
+import VoucherSchedule from './VoucherSchedule';
 
 const View = () => {
   const history = useHistory();
@@ -70,6 +71,7 @@ const View = () => {
   return (
     <div className="container-fluid">
       <div className="row">
+      
         <div className="col-lg-5 col-md-9 col-lg-6">
           <h2 className="mt-30 page-title">Voucher List</h2>
         </div>
@@ -85,21 +87,13 @@ const View = () => {
       </ol>
       <div className="row justify-content-between">
         <div className="col-lg-3 col-md-4">
-          {/* <div className="bulk-section mt-30">
+          <div className="bulk-section mt-30">
             <div className="input-group">
-              <select id="action" name="action" className="form-control">
-                <option selected>Bulk Actions</option>
-                <option value={1}>Active</option>
-                <option value={2}>Inactive</option>
-                <option value={3}>Delete</option>
-              </select>
               <div className="input-group-append">
-                <button className="status-btn hover-btn" type="submit">
-                  Apply
-                </button>
+                <VoucherSchedule />
               </div>
             </div>
-          </div> */}
+          </div>
         </div>
         <div className="col-lg-5 col-md-3 col-lg-6 back-btn">
           <AddVoucher setChange={setChange} />

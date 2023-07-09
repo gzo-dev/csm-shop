@@ -21,12 +21,13 @@ export default {
     },
 
     async reply_contact(req, res) {
-        const {email, content, contactId, replyText}= req.body
+        const {email, content, contactId, replyText, user_reply}= req.body
         mailer.replyContact(email, content)
         .then(()=> {
             db.contact.update({
-                status: "processed", 
-                reply_text: replyText
+                status: "replied", 
+                reply_text: replyText,
+                user_reply
             },{
                 where: {id: contactId}
             }, 

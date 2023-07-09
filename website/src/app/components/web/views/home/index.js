@@ -11,7 +11,7 @@ export default class Home extends Component {
                 <Bannerslider />
                 <Topsavers />
                 <Bestofferbanner />
-                <Topstample />
+                {/* <Topstample /> */}
             </div>
         )
     }

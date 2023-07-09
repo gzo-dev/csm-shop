@@ -5,6 +5,10 @@ import { Link } from "react-router-dom";
 export default class Sidebar extends Component {
   render() {
     let role = getCookie("role");
+    const isActive = (url) => {
+      return window.location.pathname === url ? "nav-link active" : "nav-link";
+    };
+    
     return (
       <div id="layoutSidenav_nav">
         <nav
@@ -46,12 +50,12 @@ export default class Sidebar extends Component {
                   <Link className="nav-link sub_nav_link" to="/admin/shop/list">
                     list
                   </Link>
-                  <Link
+                  <a
                     className="nav-link sub_nav_link"
-                    to="/admin/shop/create"
+                    href="/admin/shop/create"
                   >
                     create
-                  </Link>
+                  </a>
                   <Link
                     className="nav-link sub_nav_link"
                     to="/admin/vendor/product/list"
@@ -60,9 +64,9 @@ export default class Sidebar extends Component {
                   </Link>
                 </nav>
               </div>
-              <Link
+              <a
                 className="nav-link collapsed"
-                to="/admin/product/list"
+                href="/admin/product/list"
                 data-toggle="collapse"
                 data-target="#collapseProducts"
                 aria-expanded="false"
@@ -71,11 +75,11 @@ export default class Sidebar extends Component {
                 <div className="sb-nav-link-icon">
                   <i className="fas fa-box" />
                 </div>
-                Products
+                  Products
                 <div className="sb-sidenav-collapse-arrow">
                   <i className="fas fa-angle-down" />
                 </div>
-              </Link>
+              </a>
               <div
                 className="collapse"
                 id="collapseProducts"
@@ -224,7 +228,7 @@ export default class Sidebar extends Component {
                 </nav>
               </div>
               <Link
-                className={role === "admin" ? "nav-link" : "d-none"}
+                className={role === "admin" ? isActive("/admin/user/list") : "d-none"}
                 to="/admin/user/list"
               >
                 <div className="sb-nav-link-icon">
@@ -232,25 +236,25 @@ export default class Sidebar extends Component {
                 </div>
                 Roles Management
               </Link>
-              <Link className="nav-link" to="/admin/customer/list">
+              <Link className={isActive("/admin/customer/list")} to="/admin/customer/list">
                 <div className="sb-nav-link-icon">
                   <i className="fas fa-users" />
                 </div>
                 Customers
               </Link>
-              <Link className="nav-link" to="/admin/payment/list">
+              {/* <Link className="nav-link" to="/admin/payment/list">
                 <div className="sb-nav-link-icon">
                   <i className="fas fa-users" />
                 </div>
                 Payment
-              </Link>
-              <Link className="nav-link" to="/admin/voucher/list">
+              </Link> */}
+              <Link className={isActive("/admin/voucher/list")} to="/admin/voucher/list">
                 <div className="sb-nav-link-icon">
                   <i className="fas fa-gift" />
                 </div>
                 Voucher
               </Link>
-              <Link className="nav-link" to="/admin/contact/list">
+              <Link className={isActive("/admin/contact/list")} to="/admin/contact/list">
                 <div className="sb-nav-link-icon">
                   <i className="fas fa-gift" />
                 </div>

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { GetUserLogin } from "../../../../services";
 import { NotificationManager } from "react-notifications";
 import "../css/index.css";
+import {Link } from "react-router-dom"
 
 export default class Profile extends Component {
   constructor(props) {
@@ -119,6 +120,10 @@ export default class Profile extends Component {
                       <i className="uil uil-box" />
                       My Orders
                     </a>
+                    <Link to="/account/rewards" className="user-item">
+        <i className="uil uil-gift" />
+        My Voucher
+      </Link>
                     {/* <a href="/account/rewards" className="user-item"><i className="uil uil-gift" />My Rewards</a> */}
                     {/* <a href="/account/wishlist" className="user-item"><i className="uil uil-heart" />Shopping Wishlist</a> */}
                     {/* <a href="/account/address" className="user-item">

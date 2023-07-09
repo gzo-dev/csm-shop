@@ -119,7 +119,6 @@ const Topsavers = ({ addToCart }) => {
                           <strong>
                             <span className="mdi mdi-approval" /> Available in
                           </strong>{" "}
-                          - {row.unitSize}
                         </h6>
                       </div>
                     </Link>
