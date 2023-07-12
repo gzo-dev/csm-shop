@@ -9,6 +9,7 @@ import Axios from "axios";
 import { API_URL } from "../../../../../config1";
 import AddSize from "../new-add/add_size";
 import { Fragment } from "react";
+import _ from "lodash"
 
 export default class Edit extends Component {
   constructor(props) {
@@ -121,7 +122,7 @@ export default class Edit extends Component {
     formData.append("photo", image);
     formData.append("buyerPrice", buyerPrice);
     formData.append("price", price);
-    formData.append("qty", qty);
+    formData.append("qty", _.sumBy(this.state.size, "amount"));
     formData.append("discountPer", discountPer);
     formData.append("discount", discount);
     formData.append("total", total);
@@ -417,11 +418,12 @@ export default class Edit extends Component {
                       <div className="form-group">
                         <label className="form-label">Amount*</label>
                         <input
+                          style={{width: 80}}
+                          readOnly
                           type="number"
                           className="form-control"
                           name="qty"
-                          value={this.state.qty}
-                          onChange={(e) => this.handleChange(e)}
+                          value={_.sumBy(this.state.size, "amount")}
                         />
                       </div>
                     </div>

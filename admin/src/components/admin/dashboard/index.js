@@ -4,6 +4,7 @@ import Moment from 'react-moment';
 import Loader from '../../loader';
 import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
+import swal from 'sweetalert';
 
 const Home = () => {
   const [getList, setGetList] = useState([]);
@@ -246,7 +247,9 @@ const Home = () => {
                                 ) : row.status === 'delieverd' ? (
                                   <span className="badge-item badge-success">{row.status}</span>
                                 ) : (
-                                  <span className="badge-item badge-danger">{row.status}</span>
+                                  <span onClick={()=> {
+                                    swal("Lý do huỷ", row.reason)
+                                  }} className="badge-item badge-danger" style={{cursor: "pointer"}}>{row.status}</span>
                                 )}
                               </td>
                               <td>VND{row.grandtotal}</td>

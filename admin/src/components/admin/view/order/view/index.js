@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button } from "@material-ui/core";
 import Moment from "react-moment";
 import get_detail_voucher from "../../../../../api/get_detail_voucher";
+import numberWithCommas from "../../../../../util/number_thousand_separator";
 
 const View = (props) => {
   const [self, setSelf] = useState({ Addresses: [], Carts: [], voucherId: 0 });
@@ -105,6 +106,12 @@ const View = (props) => {
                                       style={{ width: 150 }}
                                       className="text-center"
                                     >
+                                      Discount(%)
+                                    </th>
+                                    <th
+                                      style={{ width: 150 }}
+                                      className="text-center"
+                                    >
                                       Qty
                                     </th>
                                     <th
@@ -130,6 +137,9 @@ const View = (props) => {
                                       <td className="text-center">
                                         VND{p.price}
                                       </td>
+                                      <td className="text-center">
+                                        {p.discount}%
+                                      </td>
                                       <td className="text-center">{p.qty}</td>
                                       <td className="text-center">
                                         VND{parseInt(p.price) * parseInt(p.qty)}
@@ -144,12 +154,12 @@ const View = (props) => {
                       </div>
                       <div className="col-lg-7" />
                       <div className="col-lg-5">
-                        <div className="order-total-dt">
+                        {/* <div className="order-total-dt">
                           <div className="order-total-left-text">Sub Total</div>
                           <div className="order-total-right-text">
                             VND{self.grandtotal}
                           </div>
-                        </div>
+                        </div> */}
                         <div className="order-total-dt">
                           <div className="order-total-left-text">
                             Delivery Fees
@@ -162,7 +172,7 @@ const View = (props) => {
                               Discount
                             </div>
                             <div className="order-total-right-text">
-                              VND{(dataVoucher.data.discount)}
+                              VND{numberWithCommas(dataVoucher.data.discount)}
                             </div>
                           </div>
                         )}
@@ -171,7 +181,7 @@ const View = (props) => {
                             Total Amount
                           </div>
                           <div className="order-total-right-text fsz-18">
-                            VND{self.grandtotal}
+                            VND{numberWithCommas(self.grandtotal)}
                           </div>
                         </div>
                       </div>

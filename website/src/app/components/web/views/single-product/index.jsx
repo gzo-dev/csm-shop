@@ -17,6 +17,7 @@ const Singleproduct = ({ addToCart }) => {
       const url = window.location.href.split("/");
       const lastSegment = url.pop() || url.pop();
       const list = await GetProductDetails.getProductById(lastSegment);
+      
       setProduct(list.data);
     };
 

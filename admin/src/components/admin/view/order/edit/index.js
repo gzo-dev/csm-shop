@@ -4,9 +4,14 @@ import { GetOrderDetails } from "../../../../services";
 import { NotificationManager } from "react-notifications";
 import Moment from "react-moment";
 import get_detail_voucher from "../../../../../api/get_detail_voucher";
+import numberWithCommas from "../../../../../util/number_thousand_separator";
+import swal from "sweetalert";
+import CancelPopup from "./CancelPopup";
 
 const Edit = (props) => {
   const [status, setStatus] = useState(props.location.state.row.status);
+  const [open, setOpen]= useState(false)
+  const [reason, setReason]= useState("")
   const [deliveryDate, setDeliveryDate] = useState("");
   const [self, setSelf] = useState({
     row: { Addresses: [], Carts: [], voucherId: 0 },
@@ -40,25 +45,55 @@ const Edit = (props) => {
   };
 
   const handleUpdateStatus = async () => {
-    const data = {
-      status: status,
-      id: self.row.id,
-      deliverydate: new Date(deliveryDate),
-    };
+    if(status=== "cancel") {
+      if(reason.length <= 0) {
+        setOpen(true)
 
-    if (data) {
-      const update = await GetOrderDetails.getOrderStatusUpdate(data);
-      if (update) {
-        NotificationManager.success(update.msg, "Status");
-        setTimeout(function () {
-          window.location.href = "/admin";
-        }, 1000);
-      } else {
-        NotificationManager.error("Check Status", "Status");
       }
+     if(reason.length > 0) {
+      const data = {
+        status: status,
+        id: self.row.id,
+        deliverydate: new Date(deliveryDate),
+        reason
+      };
+  
+      if (data) {
+        const update = await GetOrderDetails.getOrderStatusUpdate(data);
+        if (update) {
+          NotificationManager.success(update.msg, "Status");
+          setTimeout(function () {
+            window.location.href = "/admin";
+          }, 1000);
+        } else {
+          NotificationManager.error("Check Status", "Status");
+        }
+      }
+  
+      console.log("Edit -> handleUpdateStatus -> data", data);
+     }
     }
-
-    console.log("Edit -> handleUpdateStatus -> data", data);
+    else {
+      const data = {
+        status: status,
+        id: self.row.id,
+        deliverydate: new Date(deliveryDate),
+      };
+  
+      if (data) {
+        const update = await GetOrderDetails.getOrderStatusUpdate(data);
+        if (update) {
+          NotificationManager.success(update.msg, "Status");
+          setTimeout(function () {
+            window.location.href = "/admin";
+          }, 1000);
+        } else {
+          NotificationManager.error("Check Status", "Status");
+        }
+      }
+  
+      console.log("Edit -> handleUpdateStatus -> data", data);
+    }
   };
 
   useEffect(() => {
@@ -143,6 +178,12 @@ const Edit = (props) => {
                                       style={{ width: 150 }}
                                       className="text-center"
                                     >
+                                      Discount(%)
+                                    </th>
+                                    <th
+                                      style={{ width: 150 }}
+                                      className="text-center"
+                                    >
                                       Amount
                                     </th>
                                     <th
@@ -168,9 +209,12 @@ const Edit = (props) => {
                                       <td className="text-center">
                                         VND{p.price}
                                       </td>
+                                      <td className="text-center">
+                                        {p.discount}%
+                                      </td>
                                       <td className="text-center">{p.qty}</td>
                                       <td className="text-center">
-                                        VND{p.total}
+                                        VND{numberWithCommas(parseInt(p.price) * parseInt(p.qty) * (1 - (p.discount || 0) / 100))}
                                       </td>
                                     </tr>
                                   ))}
@@ -182,17 +226,17 @@ const Edit = (props) => {
                       </div>
                       <div className="col-lg-7" />
                       <div className="col-lg-5">
-                        <div className="order-total-dt">
+                        {/* <div className="order-total-dt">
                           <div className="order-total-left-text">Sub Total</div>
                           <div className="order-total-right-text">
                             VND{self.row.grandtotal}
                           </div>
-                        </div>
+                        </div> */}
                         <div className="order-total-dt">
                           <div className="order-total-left-text">
                             Delivery Fees
                           </div>
-                          <div className="order-total-right-text">VND{self.row.deliveryFee}</div>
+                          <div className="order-total-right-text">VND{numberWithCommas(self.row.deliveryFee)}</div>
                         </div>
                         {self.row.voucherId != 0 && (
                           <div className="order-total-dt">
@@ -200,7 +244,7 @@ const Edit = (props) => {
                               Discount
                             </div>
                             <div className="order-total-right-text">
-                              VND{(dataVoucher.data.discount)}
+                              VND{numberWithCommas(dataVoucher.data.discount)}
                             </div>
                           </div>
                         )}
@@ -209,7 +253,7 @@ const Edit = (props) => {
                             Total Amount
                           </div>
                           <div className="order-total-right-text fsz-18">
-                            VND{self.row.grandtotal}
+                            VND{numberWithCommas(self.row.grandtotal)}
                           </div>
                         </div>
                       </div>
@@ -264,6 +308,7 @@ const Edit = (props) => {
           </div>
         </div>
       </main>
+      <CancelPopup open={open} setOpen={setOpen} reason={reason} setReason={setReason} />
     </div>
   );
 };

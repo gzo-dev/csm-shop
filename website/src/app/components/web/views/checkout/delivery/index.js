@@ -83,6 +83,8 @@ const DeliveryDetails = (props) => {
       area: area,
       states: states,
       address: address,
+      email: states
+
     };
     props.onSelectDeliveryAddress(delivery);
   };

@@ -73,4 +73,28 @@ export default {
       }
     });
   },
+  sendUserOrder: async (email, content) => {
+    var transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.MAIL_USERNAME,
+        pass: process.env.MAIL_PASSWORD,
+      },
+    });
+    var mailOptions = {
+      from: process.env.MAIL_USERNAME,
+      to: email,
+      subject: "Sending Email from FPT shop",
+      text: content,
+    };
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+        throw error
+      } else {
+        console.log('Email sent: ' + info.response);
+        return 1
+      }
+    });
+  },
 };

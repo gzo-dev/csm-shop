@@ -1,10 +1,11 @@
+import mailer from '../../../mailer';
 import { db } from '../../../models';
 var Sequelize = require("sequelize");
 export default {
 
     async index(req, res, next) {
         try {
-            const { customerId, paymentmethod, orderId, deliveryAddress, product, grandTotal, voucherId, deliveryCharge } = req.body;
+            const { customerId, paymentmethod, orderId, deliveryAddress, product, grandTotal, voucherId, deliveryCharge, reason } = req.body;
             db.customer.findOne({ where: { id: customerId } })
                 .then(p => {
                     if (p) {
@@ -14,7 +15,8 @@ export default {
                             grandtotal: grandTotal,
                             paymentmethod: paymentmethod,
                             voucherId, 
-                            deliveryFee: deliveryCharge
+                            deliveryFee: deliveryCharge,
+                            reason: reason || ""
                         })
                     }
                     return res.status(500).json({ 'errors': ['User is not found'] });
@@ -46,15 +48,18 @@ export default {
                                 price: product[i].price,
                                 total: product[i].total,
                                 photo: product[i].photo,
+                                discount: product[i].discountPer
                             })
                         }
                         return db.Cart.bulkCreate(cartEntries).then((r) => [r])
                     }
                 })
                 .then((success) => {
+                    mailer.sendUserOrder(deliveryAddress?.email ||"", "You have ordered successfully, ordered at "+ new Date())
                     res.status(200).json({ 'success': true });
                 })
                 .catch(function (err) {
+                    mailer.sendUserOrder(deliveryAddress?.email ||"", "You have ordered failed, ordered at "+ new Date())
                     console.log(err);   
                     res.status(500).json({ 'errors': ['Error adding cart'] });
                 });
@@ -107,7 +112,8 @@ export default {
                 .then(list => {
                     return db.Order.update({
                         status: status,
-                        deliverydate: deliverydate ? deliverydate : list.deliverydate
+                        deliverydate: deliverydate ? deliverydate : list.deliverydate,
+                        reason: req.body.reason || ""
                     }, { where: { id: id } })
                 })
                 .then((success) => {

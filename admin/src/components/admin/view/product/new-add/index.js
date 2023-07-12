@@ -14,6 +14,7 @@ import { Fragment } from "react";
 // import {AiFillCloseCircle } from "react-icons"
 import TextField from '@material-ui/core/TextField';
 import AddSize from "./add_size";
+import _ from "lodash"
 
 export default class Newproduct extends Component {
   constructor(props) {
@@ -179,7 +180,7 @@ export default class Newproduct extends Component {
     formData.append("photo", image);
     formData.append("buyerPrice", buyerPrice);
     formData.append("price", price);
-    formData.append("qty", qty);
+    formData.append("qty", _.sumBy(size, "amount"));
     formData.append("discountPer", discountPer);
     formData.append("discount", discount);
     formData.append("total", total);
@@ -245,8 +246,8 @@ export default class Newproduct extends Component {
       return [];
     }
   };
-  updateSize(size) {
-    this.setState({size})
+  updateSize(size, amount) {
+    this.setState({size, amount})
   }
 
   render() {
@@ -333,7 +334,7 @@ export default class Newproduct extends Component {
                       </div>
                     </div>
                     <div className="col-lg-2 col-md-2">
-                      <div className="form-group">
+                      <div className="form-group" style={{opacity: 0}}>
                         <label className="form-label">Category*</label>
                         <ChildCategorylist
                           state={getsublist}
@@ -521,12 +522,14 @@ export default class Newproduct extends Component {
                     <div className="col-lg-1 col-md-1">
                       <div className="form-group">
                         <label className="form-label">Amount*</label>
+                        {console.log(_.sumBy(this.state.size, "amount"))}
                         <input
+                          style={{width: 80}}
+                          readOnly
                           type="number"
                           className="form-control"
                           name="qty"
-                          value={this.state.qty}
-                          onChange={(e) => this.handleChange(e)}
+                          value={_.sumBy(this.state.size, "amount")}
                         />
                       </div>
                     </div>

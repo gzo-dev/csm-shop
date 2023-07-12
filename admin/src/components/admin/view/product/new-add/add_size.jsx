@@ -14,6 +14,8 @@ export default function AddSize(props) {
   const [open, setOpen] = React.useState(false);
   const [listSize, setListSize] = React.useState([]);
   const [currentSize, setCurrentSize] = React.useState("");
+  const [currentAmount, setCurrentAmount]= React.useState()
+  
   const isDisabled = currentSize.trim().length > 0 ? false : true;
 
   const handleClickOpen = () => {
@@ -38,13 +40,22 @@ export default function AddSize(props) {
         <DialogTitle id="alert-dialog-title">{"Add size"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description" style={{width: 400}}>
-            <TextField
-              value={currentSize}
-              onChange={(e) => setCurrentSize(e.target.value)}
-              style={{ width: "100%", height: 40 }}
-              variant={"filled"}
-              label={"size"}
-            />
+            <div style={{display: "flex", alignItems: "center", gap: 10}}>
+              <TextField
+                value={currentSize}
+                onChange={(e) => setCurrentSize(e.target.value)}
+                style={{ flex: 1, height: 40 }}
+                variant={"filled"}
+                label={"size"}
+              />
+              <TextField
+                value={currentAmount}
+                onChange={(e) => setCurrentAmount(e.target.value)}
+                style={{ flex: 1, height: 40 }}
+                variant={"filled"}
+                label={"amont"}
+              />
+            </div>
             <div></div>
             <br />
             <div></div>
@@ -63,7 +74,7 @@ export default function AddSize(props) {
                     border: "1px solid #e7e7e7"
                   }}
                 >
-                  <div>{item.size}</div>
+                  <div>Size: {item.size}, Amount: {item.amount}</div>
                   <div
                     onClick={() =>
                       updateSize(size.filter((item2) => item2.id != item.id))
@@ -86,7 +97,7 @@ export default function AddSize(props) {
           <Button
             onClick={() => {
               setListSize({ id: v4(), size: currentSize });
-              updateSize([...size, { id: v4(), size: currentSize }]);
+              updateSize([...size, { id: v4(), size: currentSize, amount: parseInt(currentAmount) }]);
               setCurrentSize("")
             }}
             disabled={isDisabled}
