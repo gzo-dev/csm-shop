@@ -51,7 +51,7 @@ export default function VoucherSchedule() {
                 url: API_URL+ "/api/voucher/schedule",
                 method: "post",
                 data: {
-                    date_start: dateStart, date_end: dateEnd, amount_voucher: amountVoucher
+                    date_start: dateStart || new Date(), date_end: dateEnd, amount_voucher: amountVoucher
                 }
             })
             const result= await res.data

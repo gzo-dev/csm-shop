@@ -98,7 +98,7 @@ export default {
         const data1= await db.voucherschedule.findOne()
         const data= await db.voucher.findAll({
             order: Sequelize.literal('RAND()'),
-            limit: data1.amount_voucher
+            limit: data1?.amount_voucher || 0
         })
         return res.status(200).json({ok: true, data})
     }

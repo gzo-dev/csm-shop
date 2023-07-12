@@ -94,7 +94,8 @@ const Checkout = (props) => {
       product: props.cartItems,
       grandTotal,
       voucherId: dataVoucher ? dataVoucher.id : 0,
-      deliveryCharge
+      deliveryCharge,
+      email
     };
 
     if (data) {
@@ -134,9 +135,8 @@ const Checkout = (props) => {
   useEffect(()=> {
     if(new URLSearchParams(window.location.search).get("resultCode")== 0) {
       (async ()=> {
-        console.log(customer.id , deliveryAddress , props , grandTotal)
 
-        if(customer.id && deliveryAddress && props && grandTotal && dataVoucher && deliveryCharge) {
+        if(customer.id && deliveryAddress && props && grandTotal && dataVoucher && deliveryCharge) {  
           const data = {
             customerId: customer.id,
             paymentmethod: "Online payment",
@@ -145,7 +145,8 @@ const Checkout = (props) => {
             product: props.cartItems,
             grandTotal,
             voucherId: dataVoucher ? dataVoucher.id : 0,
-            deliveryCharge
+            deliveryCharge,
+            
           };
       
           if (data) {
@@ -163,7 +164,7 @@ const Checkout = (props) => {
             }
           }
         } 
-        else if(customer.id  && props && grandTotal && deliveryCharge) {
+        else if(customer.id  && props && grandTotal && deliveryCharge && email){
           
           const data = {
             customerId: customer.id,
@@ -173,7 +174,8 @@ const Checkout = (props) => {
             product: props.cartItems,
             grandTotal,
             voucherId: dataVoucher ? dataVoucher.id : 0,
-            deliveryCharge
+            deliveryCharge,
+          
           };
       
           if (data) {

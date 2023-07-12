@@ -8,7 +8,7 @@ import numberWithCommas from "../../../../../util/number_thousand_separator";
 
 const VoucherGift = () => {
   const [data, setData] = useState([]);
-  const [data1, setData1]= useState({data})
+  const [data1, setData1]= useState({data: {date_start: 0}})
   const [check, setCheck]= useState()
   useEffect(() => {
     (async () => {
@@ -33,13 +33,15 @@ const VoucherGift = () => {
     })()
   }, [])
   useEffect(()=> {
-    if(data1.data.date_start) {
-        if(moment(data1.data.date_start).valueOf() < moment(new Date()).valueOf()  && moment(data1.data.date_end).valueOf() > moment(new Date()).valueOf() ) {
-            setCheck(true)
-        }
-        else {
-            setCheck(false)
-        }
+    if(data1.data) {
+      if(data1.data.date_start) {
+          if(moment(data1.data.date_start).valueOf() < moment(new Date()).valueOf()  && moment(data1.data.date_end).valueOf() > moment(new Date()).valueOf() ) {
+              setCheck(true)
+          }
+          else {
+              setCheck(false)
+          }
+      }
     }
   }, [data1])
   useEffect(()=> {

@@ -5,6 +5,7 @@ import config from '../../../config';
 import bcrypt from 'bcrypt-nodejs';
 import speakeasy from 'speakeasy';
 import { validateEmail } from './../../../functions'
+import { Sequelize } from 'sequelize';
 
 var JWTSign = function (user, date) {
     return JWT.sign({
@@ -213,6 +214,12 @@ export default {
     async getVoucherCustomer(req, res, next) {
         const {id }= req.body
         db.vouchercustomer.findAll({where: {customerId: id}})
+        .then(data=> res.status(200).json({ok: true, data}))
+        .catch(e=> next(e))
+    },
+    async getVoucherCustomer2(req, res, next) {
+        const {email }= req.query
+        const data= await db.sequelize.query(`SELECT vouchers.* FROM vouchers INNER JOIN vouchercustomers ON vouchercustomers.voucherId = vouchers.id INNER JOIN customers ON customers.id = vouchercustomers.customerId WHERE customers.email= "${email || ""}"`)
         .then(data=> res.status(200).json({ok: true, data}))
         .catch(e=> next(e))
     },
