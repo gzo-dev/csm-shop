@@ -573,11 +573,10 @@ export default {
                     console.log(err)
                     next(err)
                 });
-
         }
         catch (err) {
             next(err)
-            // res.status(500).json({ 'success':false, msg: err})
+            res.status(500).json({ 'success':false, msg: err})
         }
     }
 

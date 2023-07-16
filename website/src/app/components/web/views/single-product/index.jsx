@@ -7,9 +7,12 @@ import { GetProductDetails } from "../../../services";
 import { connect } from "react-redux";
 import { addToCart } from "../../../../store/actions/cartActions";
 import "./index.css";
+import axios from "axios"
+import { API_URL } from "../../../../../config1";
 
 const Singleproduct = ({ addToCart }) => {
   const [product, setProduct] = useState(null);
+  const [productSize, setProductSize]= useState([])
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -23,12 +26,28 @@ const Singleproduct = ({ addToCart }) => {
     fetchProductDetails();
   }, []);
 
+  useEffect(()=> {
+    (async ()=> {
+      const res =await axios({
+        url: API_URL+ "/api/products/size",
+        method: 'get'
+      })
+      const result= await res.data  
+      setProductSize(result)
+      return result
+    })()
+  }, [])
+
   const settings = {
     customPaging: function (i) {
       return (
         <div id="sync1" className="owl-carousel">
           <div className="item">
-            <img src={product?.productphotos[i].imgUrl} alt="" />
+            <img
+              src={product?.productphotos[i].imgUrl}
+              alt=""
+              className="ratio ratio-1x1"
+            />
           </div>
         </div>
       );
@@ -38,6 +57,18 @@ const Singleproduct = ({ addToCart }) => {
     infinite: true,
     speed: 500,
     slidesToShow: 1,
+    appendDots: (dots) => (
+      <ul
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          padding: 10,
+          marginTop: -20,
+        }}
+      >
+        {dots}
+      </ul>
+    ),
     slidesToScroll: 1,
   };
 
@@ -52,9 +83,7 @@ const Singleproduct = ({ addToCart }) => {
                   <span className="mdi mdi-home" /> Home
                 </strong>
               </a>{" "}
-              <span className="mdi mdi-chevron-right" />{" "}
-              <a href="#">Fruits &amp; Vegetables</a>{" "}
-              <span className="mdi mdi-chevron-right" /> <a href="#">Fruits</a>
+              <span className="mdi mdi-chevron-right" /> <a href="#">Product</a>{" "}
             </div>
           </div>
         </div>
@@ -64,9 +93,9 @@ const Singleproduct = ({ addToCart }) => {
         <div className="container">
           {product ? (
             <div className="row">
-              {
-                product.productphotos && product.productphotos.length > 0 && <>
-                  <div className="col-md-6" style={{backgroundColor: "#fff"}}>
+              {product.productphotos && product.productphotos.length > 0 && (
+                <>
+                  <div className="col-md-6" style={{ backgroundColor: "#fff" }}>
                     <div className="shop-detail-left">
                       <Paper className="shop-detail-slider">
                         <Slider {...settings}>
@@ -88,14 +117,19 @@ const Singleproduct = ({ addToCart }) => {
                     </div>
                   </div>
                 </>
-              }
-              {
-                product.productphotos.length <= 0 && <>
-                  <div className="col-md-6 d-flex justify-content-center align-items-center" style={{backgroundColor: "#fff", borderRadius: 10}}>
-                      <div style={{fontSize: 18, fontWeight: 600}}>No image of this product</div>
+              )}
+              {product.productphotos.length <= 0 && (
+                <>
+                  <div
+                    className="col-md-6 d-flex justify-content-center align-items-center"
+                    style={{ backgroundColor: "#fff", borderRadius: 10 }}
+                  >
+                    <div style={{ fontSize: 18, fontWeight: 600 }}>
+                      No image of this product
+                    </div>
                   </div>
                 </>
-              }
+              )}
               <div className="col-md-6">
                 <div className="shop-detail-right">
                   <span className="badge badge-success">
@@ -108,25 +142,45 @@ const Singleproduct = ({ addToCart }) => {
                     </strong>{" "}
                     - {product.unitSize}
                   </h6>
-                  <div className="pdp-product__old-price">
-                    <span className="space__right--2-unit">Product price:</span>
-                    <span className="regular-price">
-                      VND{product.price}
-                    </span>
-                  </div>
 
-                  <div className="pdp-product__new-price">
-                    <span className="space__right--2-unit">
-                      Selling price:
-                    </span>
-                    <span className="pdp-product__price--new">
-                      VND{product.price - Math.floor(product.price * product.discountPer / 100)}
-                    </span>
-                    <div className="pdp-product__tax-disclaimer">
-                      (Inclusive of all taxes)
+                  {product.discountPer != 0 && (
+                    <>
+                      <div className="pdp-product__old-price">
+                        <span className="space__right--2-unit">
+                          Product price:
+                        </span>
+                        <span className="regular-price">
+                          VND{product.price}
+                        </span>
+                      </div>
+                      <div className="pdp-product__new-price">
+                        <span className="space__right--2-unit">
+                          Selling price:
+                        </span>
+                        <span className="pdp-product__price--new">
+                          VND
+                          {product.price -
+                            Math.floor(
+                              (product.price * product.discountPer) / 100
+                            )}
+                        </span>
+                        <div className="pdp-product__tax-disclaimer">
+                          (Inclusive of all taxes)
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  {product.discountPer == 0 && (
+                    <div className="pdp-product__new-price">
+                      <span className="space__right--2-unit">Price:</span>
+                      <span className="pdp-product__price--new">
+                        VND{product.price}
+                      </span>
+                      <div className="pdp-product__tax-disclaimer">
+                        (Inclusive of all taxes)
+                      </div>
                     </div>
-                  </div>
-
+                  )}
                   <button
                     type="button"
                     className="btn btn-secondary btn-lg"
@@ -142,14 +196,19 @@ const Singleproduct = ({ addToCart }) => {
                         <h6 className="text-info">
                           <span>Easy Returns &amp; Refunds</span>
                         </h6>
-                        <p>Return products at doorstep and get refund in seconds.</p>
+                        <p>
+                          Return products at doorstep and get refund in seconds.
+                        </p>
                       </div>
                     </div>
                     <div className="col-md-12">
                       <div className="feature-box">
                         <i className="mdi mdi-basket" />
                         <h6 className="text-info">Lowest price guaranteed</h6>
-                        <p>Get difference refunded if you find it cheaper anywhere else.</p>
+                        <p>
+                          Get difference refunded if you find it cheaper
+                          anywhere else.
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -157,7 +216,10 @@ const Singleproduct = ({ addToCart }) => {
               </div>
               <br />
               <br />
-              <div className="col-lg-12 col-md-12 mt-3">
+              <div
+                className="col-lg-12 col-md-12 mt-2 position-relative "
+                style={{ top: 40 }}
+              >
                 <div className="pdpt-bg">
                   <div className="pdpt-title">
                     <h4>Product Details</h4>

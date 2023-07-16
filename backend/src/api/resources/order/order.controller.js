@@ -2,7 +2,7 @@ import { db } from '../../../models';
 var Sequelize = require("sequelize");
 export default {
 
-    async index(req, res, next) {
+    async index(req, res) {
         try {
             const { customerId, paymentmethod, orderId, deliveryAddress, product, grandTotal, voucherId, deliveryCharge } = req.body;
             db.customer.findOne({ where: { id: customerId } })
@@ -46,6 +46,7 @@ export default {
                                 price: product[i].price,
                                 total: product[i].total,
                                 photo: product[i].photo,
+                                discount: product[i].discountPer
                             })
                         }
                         return db.Cart.bulkCreate(cartEntries).then((r) => [r])
@@ -55,7 +56,6 @@ export default {
                     res.status(200).json({ 'success': true });
                 })
                 .catch(function (err) {
-                    console.log(err);   
                     res.status(500).json({ 'errors': ['Error adding cart'] });
                 });
         }

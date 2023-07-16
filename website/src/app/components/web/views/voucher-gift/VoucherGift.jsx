@@ -74,7 +74,7 @@ const VoucherGift = () => {
                   <div className="pdpt-bg rewards-coupns">
                     <div className="reward-body-dtt">
                       <div className="reward-img-icon">
-                        <img src="images/discount.svg" alt />
+                        <img src="https://downloadr2.apkmirror.com/wp-content/uploads/2023/07/13/64b130887a45b_com.shopee.vn.png" alt />
                       </div>
                       <span className="rewrd-title">Offer</span>
                       <h4 className="cashbk-price">Discount VND{numberWithCommas(item.discount)}</h4>

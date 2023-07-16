@@ -43,7 +43,7 @@ class Shopdetails extends Component {
       <div>
         <section className="pt-3 pb-3 page-info section-padding border-bottom bg-white single-product-header-bk">
           <div className="container">
-            <div className="row">
+          <div className="row">
               <div className="col-md-12">
                 <a href="#">
                   <strong>
@@ -51,9 +51,7 @@ class Shopdetails extends Component {
                   </strong>
                 </a>{" "}
                 <span className="mdi mdi-chevron-right" />{" "}
-                <a href="#">Fruits &amp; Vegetables</a>{" "}
-                <span className="mdi mdi-chevron-right" />{" "}
-                <a href="#">Fruits</a>
+                <a href="#">Product</a>{" "}
               </div>
             </div>
           </div>

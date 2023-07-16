@@ -120,7 +120,7 @@ export default class Reward extends Component {
                                             <div className="pdpt-bg rewards-coupns">
                                                 <div className="reward-body-dtt">
                                                     <div className="reward-img-icon">
-                                                        <img src="images/discount.svg" alt />
+                                                        <img src="https://downloadr2.apkmirror.com/wp-content/uploads/2023/07/13/64b130887a45b_com.shopee.vn.png" alt />
                                                     </div>
                                                     <span className="rewrd-title">Offer</span>
                                                     <h4 className="cashbk-price">Get 25% Cashback</h4>
@@ -133,7 +133,7 @@ export default class Reward extends Component {
                                             <div className="pdpt-bg rewards-coupns">
                                                 <div className="reward-body-dtt">
                                                     <div className="reward-img-icon">
-                                                        <img src="images/coupon.svg" alt />
+                                                        <img src="https://downloadr2.apkmirror.com/wp-content/uploads/2023/07/13/64b130887a45b_com.shopee.vn.png" alt />
                                                     </div>
                                                     <span className="rewrd-title">Coupon Won</span>
                                                     <h4 className="cashbk-price">Get 10% Cashback</h4>
@@ -146,7 +146,7 @@ export default class Reward extends Component {
                                             <div className="pdpt-bg rewards-coupns">
                                                 <div className="reward-body-dtt">
                                                     <div className="reward-img-icon">
-                                                        <img src="images/discount.svg" alt />
+                                                        <img src="https://downloadr2.apkmirror.com/wp-content/uploads/2023/07/13/64b130887a45b_com.shopee.vn.png" alt />
                                                     </div>
                                                     <span className="rewrd-title">Offer</span>
                                                     <h4 className="cashbk-price">Get 15% Cashback</h4>
@@ -159,7 +159,7 @@ export default class Reward extends Component {
                                             <div className="pdpt-bg rewards-coupns">
                                                 <div className="reward-body-dtt">
                                                     <div className="reward-img-icon">
-                                                        <img src="images/coupon.svg" alt />
+                                                        <img src="https://downloadr2.apkmirror.com/wp-content/uploads/2023/07/13/64b130887a45b_com.shopee.vn.png" alt />
                                                     </div>
                                                     <span className="rewrd-title">Coupon Won</span>
                                                     <h4 className="cashbk-price">Get 5% Cashback</h4>
