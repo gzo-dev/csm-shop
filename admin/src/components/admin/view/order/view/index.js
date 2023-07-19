@@ -3,6 +3,7 @@ import { Button } from "@material-ui/core";
 import Moment from "react-moment";
 import get_detail_voucher from "../../../../../api/get_detail_voucher";
 import numberWithCommas from "../../../../../util/number_thousand_separator";
+import { Fragment } from "react";
 
 const View = (props) => {
   const [self, setSelf] = useState({ Addresses: [], Carts: [], voucherId: 0 });
@@ -68,6 +69,67 @@ const View = (props) => {
                           <Moment format="MMMM Do YYYY">
                             {self.createdAt}
                           </Moment>
+                        </div>
+                        <div className="ordr-date">
+                        {
+                          console.log(self)
+                        }
+                          {
+                            <Fragment>
+                              {
+                                self.stauts=== "process" && <Fragment>
+                              <b>Process Date :</b>{" "}
+                              <Moment format="MMMM Do YYYY">
+                            {self.deliverydate}
+                          </Moment>
+
+                                </Fragment>
+                              }
+                            </Fragment>
+                          }
+                          
+                          {
+                            <Fragment>
+                              {
+                                self.stauts=== "shipping" && <Fragment>
+                                <b>Shipping Date :</b>{" "}
+                                <Moment format="MMMM Do YYYY">
+                              {self.deliverydate}
+                            </Moment>
+
+                                </Fragment>
+                              }
+                            </Fragment>
+                          }
+                          {
+                            <Fragment>
+                              {
+                                self.stauts=== "delivered" && 
+                                <Fragment>
+                                    <b>Delivered Date :</b>{" "}
+                                    <Moment format="MMMM Do YYYY">
+                                  {self.deliverydate}
+                          </Moment>
+                                  
+                                </Fragment>
+                              }
+                            </Fragment>
+                          }
+                          {
+                            <Fragment>
+                              {
+                                self.stauts=== "cancel" && 
+                                <Fragment>
+                                <b>Cancel Date :</b>{" "}
+                              <Moment format="MMMM Do YYYY">
+                            {self.deliverydate}
+                          </Moment>
+                                </Fragment>
+                              }
+                              
+                            </Fragment>
+                          }
+                          
                         </div>
                       </div>
                       <div className="col-lg-6 col-sm-6">
