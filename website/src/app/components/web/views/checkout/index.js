@@ -26,35 +26,32 @@ const Checkout = (props) => {
   const [customer, setCustomer] = useState("");
   const [paymentmethod, setPaymentMethod] = useState("");
   const [deliveryAddress, setDeliveryAddress] = useState("");
-  const [dataVoucher, setDataVoucher] = useState({id: undefined});
+  const [dataVoucher, setDataVoucher] = useState({ id: undefined });
   const [city, setCity] = useState(1);
-  const [isVoucherApply, setIsVoucherApply]= useState(false)
-  const [orderId, setOrderId]= useState()
-  const popupRef= useRef(null)
+  const [isVoucherApply, setIsVoucherApply] = useState(false);
+  const [orderId, setOrderId] = useState();
+  const popupRef = useRef(null);
 
-  useEffect(()=> {
-    if(isVoucherApply=== true) {
-      let finalGrandTotal= grandTotal
-      if(parseInt(grandTotal) - parseInt(dataVoucher.discount) < 0) {
-        finalGrandTotal= 0
-        setGrandTotal(finalGrandTotal)
+  useEffect(() => {
+    if (isVoucherApply === true) {
+      let finalGrandTotal = grandTotal;
+      if (parseInt(grandTotal) - parseInt(dataVoucher.discount) < 0) {
+        finalGrandTotal = 0;
+        setGrandTotal(finalGrandTotal);
+      } else {
+        setGrandTotal(parseInt(grandTotal) - parseInt(dataVoucher.discount));
       }
-      else {
-        setGrandTotal(parseInt(grandTotal) - parseInt(dataVoucher.discount))
-      }
+    } else if (isVoucherApply === false) {
+      calculateTotals();
     }
-    else if(isVoucherApply=== false) {
-      calculateTotals()
+  }, [isVoucherApply]);
+  useEffect(() => {
+    if (city == 1) {
+      setDeliveryCharge(0);
+    } else {
+      setDeliveryCharge(50000);
     }
-  }, [isVoucherApply])
-  useEffect(()=> {
-    if(city == 1 ) {
-      setDeliveryCharge(0)
-    }
-    else {
-      setDeliveryCharge(50000)
-    }
-  }, [city])
+  }, [city]);
   useEffect(() => {
     const fetchCustomerData = async () => {
       let email = sessionStorage.getItem("email");
@@ -80,7 +77,12 @@ const Checkout = (props) => {
   };
   const calculateTotals = () => {
     let cart = props.cartItems;
-    let subTotal = cart.reduce((sum, i) => (sum += i.qty * (i.price - Math.floor(i.price * i.discountPer / 100))), 0);
+    let subTotal = cart.reduce(
+      (sum, i) =>
+        (sum +=
+          i.qty * (i.price - Math.floor((i.price * i.discountPer) / 100))),
+      0
+    );
     let discount = cart.reduce((sum, i) => (sum += i.discount), 0);
     let grandTotal = subTotal + discount + deliveryCharge;
 
@@ -94,30 +96,35 @@ const Checkout = (props) => {
     const data = {
       customerId: customer.id,
       paymentmethod: paymentmethod,
-      orderId: Math.floor(Math.random() * Math.floor(Math.random() * Date.now())),
+      orderId: Math.floor(
+        Math.random() * Math.floor(Math.random() * Date.now())
+      ),
       deliveryAddress: deliveryAddress,
       product: props.cartItems,
       grandTotal,
-      voucherId: dataVoucher ? dataVoucher.id : 0,
+      voucherId: dataVoucher.id ? dataVoucher.id : 0,
       deliveryCharge,
-      email
+      email,
+      voucherId: dataVoucher.id || 0,
     };
 
     if (data) {
-      if(dataVoucher.id != 0) {
-          const res= await Axios({
-              url: API_URL+ "/api/customer/voucher",
-              method: "put",
-              headers: {
-                "Authorization": "Bearer "+ Cookies.get("token")
-              },
-              data: {
-                voucherId: dataVoucher.id
-              }
-          })
-          const result= await res.data 
+      if (dataVoucher.id != 0) {
+        const res = await Axios({
+          url: API_URL + "/api/customer/voucher",
+          method: "put",
+          headers: {
+            Authorization: "Bearer " + Cookies.get("token"),
+          },
+          data: {
+            voucherId: dataVoucher.id || 0,
+          },
+        });
+        const result = await res.data;
       }
-      let order = await GetOrderDetails.getOrderCreateByUser(JSON.stringify(data));
+      let order = await GetOrderDetails.getOrderCreateByUser(
+        JSON.stringify(data)
+      );
       if (order) {
         NotificationManager.success("Successfully Ordered", "Order");
         setTimeout(async function () {
@@ -129,12 +136,17 @@ const Checkout = (props) => {
           window.location.href = "/failed";
         }, 1000);
       }
+    } else {
     }
   };
 
   const handlePaymentSystem = async () => {
-    if(parseInt(grandTotal) <= 1000) {
-      return swal("Thông báo", "Số tiền quá ít để thanh toán, Vui lòng thêm sản phẩm để thanh toán", "error")
+    if (parseInt(grandTotal) <= 1000) {
+      return swal(
+        "Thông báo",
+        "Số tiền quá ít để thanh toán, Vui lòng thêm sản phẩm để thanh toán",
+        "error"
+      );
     }
     const res = await axios({
       url: "https://itchy-dirndl-frog.cyclic.app/payment-momo",
@@ -146,90 +158,100 @@ const Checkout = (props) => {
       },
     });
     const result = await res.data;
-    setOrderId(result?.orderId)
+    setOrderId(result?.orderId);
     // window.location.href = result?.payUrl;
-    const popup= window.open(result?.payUrl, "Payment online", 'width=500,height=500')
-    popupRef.current= popup
+    const popup = window.open(
+      result?.payUrl,
+      "Payment online",
+      "width=500,height=500"
+    );
+    popupRef.current = popup;
   };
 
-  // useEffect(()=> {
-  //   const interval = setInterval(async () => {
-  //     // Thực thi công việc định kỳ sau mỗi 5 giây tại đây
-  //     if (orderId) {
-  //       try {
-  //         const res = await axios({
-  //           url: "https://itchy-dirndl-frog.cyclic.app/payment-status",
-  //           method: "post",
-  //           data: {
-  //             orderId
-  //           }
-  //         });
-  //         const result = await res.data;
-      
-  //         if(result.resultCode== 0) {
-  //           popupRef.current.close()
-  //           const data = {
-  //             customerId: customer.id,
-  //             paymentmethod: "Pay online",
-  //             orderId: Math.floor(Math.random() * Math.floor(Math.random() * Date.now())),
-  //             deliveryAddress: deliveryAddress,
-  //             product: props.cartItems,
-  //             grandTotal,
-  //             voucherId: dataVoucher ? dataVoucher.id : 0,
-  //             deliveryCharge,
-  //             email
-  //           };
-        
-  //           if (data) {
-  //             if(dataVoucher.id != 0) {
-  //                 const res= await Axios({
-  //                     url: API_URL+ "/api/customer/voucher",
-  //                     method: "put",
-  //                     headers: {
-  //                       "Authorization": "Bearer "+ Cookies.get("token")
-  //                     },
-  //                     data: {
-  //                       voucherId: dataVoucher.id
-  //                     }
-  //                 })
-  //                 const result= await res.data 
-  //             }
-  //             let order = await GetOrderDetails.getOrderCreateByUser(JSON.stringify(data));
-  //             if (order) {
-  //               NotificationManager.success("Successfully Ordered", "Order");
-  //               setTimeout(async function () {
-  //                 CartHelper.emptyCart();
-  //               }, 1000);
-  //             } else {
-  //               NotificationManager.error("Order is declined", "Order");
-  //               setTimeout(async function () {
-  //                 window.location.href = "/failed";
-  //               }, 1000);
-  //             }
-  //           }
-  //         }
-  //         if(result.resultCode == 1000 || result.resultCode == 7000 || result.resultCode== 7002) {
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      // Thực thi công việc định kỳ sau mỗi 5 giây tại đây
+      if (orderId) {
+        try {
+          const res = await axios({
+            url: "https://itchy-dirndl-frog.cyclic.app/payment-status",
+            method: "post",
+            data: {
+              orderId,
+            },
+          });
+          const result = await res.data;
 
-  //         }
-  //         else {
-  //           window.location.href= window.location.origin+ "/order/failed"
-  //         }
-          
-  //       } catch (error) {
-  //         popupRef.current.close()
-  //         window.location.href= window.location.origin+ "/order/failed"
-  //         console.error("Error:", error);
-  //       }
-  //     }
-  //   }, 5000);
-  //   return () => clearInterval(interval);
-  // }, [orderId])
+          if (result.resultCode == 0) {
+            popupRef.current.close();
+            const data = {
+              customerId: customer.id,
+              paymentmethod: "Pay online",
+              orderId: Math.floor(
+                Math.random() * Math.floor(Math.random() * Date.now())
+              ),
+              deliveryAddress: deliveryAddress,
+              product: props.cartItems,
+              grandTotal,
+              voucherId: dataVoucher ? dataVoucher.id : 0,
+              deliveryCharge,
+              email,
+              voucherId: dataVoucher.id || 0,
+            };
+
+            if (data) {
+              if (dataVoucher.id != 0) {
+                const res = await Axios({
+                  url: API_URL + "/api/customer/voucher",
+                  method: "put",
+                  headers: {
+                    Authorization: "Bearer " + Cookies.get("token"),
+                  },
+                  data: {
+                    voucherId: dataVoucher.id || 0,
+                  },
+                });
+                const result = await res.data;
+              }
+              let order = await GetOrderDetails.getOrderCreateByUser(
+                JSON.stringify(data)
+              );
+              if (order) {
+                NotificationManager.success("Successfully Ordered", "Order");
+                setTimeout(async function () {
+                  CartHelper.emptyCart();
+                }, 1000);
+              } else {
+                NotificationManager.error("Order is declined", "Order");
+                setTimeout(async function () {
+                  window.location.href = "/failed";
+                }, 1000);
+              }
+            }
+          }
+          if (
+            result.resultCode == 1000 ||
+            result.resultCode == 7000 ||
+            result.resultCode == 7002
+          ) {
+          } else {
+            window.location.href = window.location.origin + "/order/failed";
+          }
+        } catch (error) {
+          popupRef.current.close();
+          window.location.href = window.location.origin + "/order/failed";
+          console.error("Error:", error);
+        }
+      }
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [orderId]);
 
   // useEffect(()=> {
   //   if(new URLSearchParams(window.location.search).get("resultCode")== 0) {
   //     (async ()=> {
 
-  //       if(customer.id && deliveryAddress && props && grandTotal && dataVoucher && deliveryCharge) {  
+  //       if(customer.id && deliveryAddress && props && grandTotal && dataVoucher && deliveryCharge) {
   //         const data = {
   //           customerId: customer.id,
   //           paymentmethod: "Online payment",
@@ -239,9 +261,9 @@ const Checkout = (props) => {
   //           grandTotal,
   //           voucherId: dataVoucher ? dataVoucher.id : 0,
   //           deliveryCharge,
-            
+
   //         };
-      
+
   //         if (data) {
   //           let order = await GetOrderDetails.getOrderCreateByUser(JSON.stringify(data));
   //           if (order) {
@@ -256,9 +278,9 @@ const Checkout = (props) => {
   //             }, 1000);
   //           }
   //         }
-  //       } 
+  //       }
   //       else if(customer.id  && props && grandTotal && deliveryCharge && email){
-          
+
   //         const data = {
   //           customerId: customer.id,
   //           paymentmethod: "Online payment",
@@ -268,9 +290,9 @@ const Checkout = (props) => {
   //           grandTotal,
   //           voucherId: dataVoucher ? dataVoucher.id : 0,
   //           deliveryCharge,
-          
+
   //         };
-      
+
   //         if (data) {
   //           let order = await GetOrderDetails.getOrderCreateByUser(JSON.stringify(data));
   //           if (order) {
@@ -285,7 +307,7 @@ const Checkout = (props) => {
   //             }, 1000);
   //           }
   //         }
-  //       } 
+  //       }
   //     })()
   //   }
   // }, [dataVoucher, deliveryAddress, props, customer.id, grandTotal, deliveryCharge])
@@ -304,9 +326,9 @@ const Checkout = (props) => {
     });
   };
 
-  useEffect(()=> {
-    loadScript()
-  }, [])
+  useEffect(() => {
+    loadScript();
+  }, []);
 
   const { cartItems } = props;
 
@@ -406,7 +428,12 @@ const Checkout = (props) => {
                       aria-labelledby="collapseThree"
                       data-parent="#accordionExample"
                     >
-                      <AddVoucher dataVoucher={dataVoucher} setDataVoucher={setDataVoucher} isVoucherApply={isVoucherApply} setIsVoucherApply={setIsVoucherApply} />
+                      <AddVoucher
+                        dataVoucher={dataVoucher}
+                        setDataVoucher={setDataVoucher}
+                        isVoucherApply={isVoucherApply}
+                        setIsVoucherApply={setIsVoucherApply}
+                      />
                     </div>
                   </div>
                   <div className="card">
@@ -457,9 +484,9 @@ const Checkout = (props) => {
                                   <li>
                                     <div
                                       className="radio-item_1"
-                                      onClick={()=> {
+                                      onClick={() => {
                                         // setPaymentMethod("Online payment")
-                                        handlePaymentSystem()
+                                        handlePaymentSystem();
                                       }}
                                     >
                                       {/* <input value="card" name="paymentmethod" type="button" onClick={this.handleRadioChange} /> */}
@@ -494,7 +521,10 @@ const Checkout = (props) => {
             </div>
             <div className="col-md-4">
               <div className="card">
-                <h5 className="card-header"  onClick={()=> popupRef.current.close()}>
+                <h5
+                  className="card-header"
+                  onClick={() => popupRef.current.close()}
+                >
                   My Cart{" "}
                   <span className="text-secondary float-right">
                     ({cartItems.length} item)

@@ -6,6 +6,7 @@ export default {
     async index(req, res) {
         try {
             const { customerId, paymentmethod, orderId, deliveryAddress, product, grandTotal, voucherId, deliveryCharge, reason } = req.body;
+            console.log(voucherId)
             db.customer.findOne({ where: { id: customerId } })
                 .then(p => {
                     if (p) {
@@ -55,11 +56,11 @@ export default {
                     }
                 })
                 .then((success) => {
-                    mailer.sendUserOrder(deliveryAddress?.email ||"", "You have ordered successfully, ordered at "+ new Date())
+                    // mailer.sendUserOrder(deliveryAddress?.email ||"", "You have ordered successfully, ordered at "+ new Date())
                     res.status(200).json({ 'success': true });
                 })
                 .catch(function (err) {
-                    mailer.sendUserOrder(deliveryAddress?.email ||"", "You have ordered failed, ordered at "+ new Date())
+                    // mailer.sendUserOrder(deliveryAddress?.email ||"", "You have ordered failed, ordered at "+ new Date())
                     console.log(err);   
                     res.status(500).json({ 'errors': ['Error adding cart'] });
                 });
