@@ -13,7 +13,7 @@ const AddVoucher = (props) => {
   const { dataVoucher, setDataVoucher, isVoucherApply, setIsVoucherApply }= props;
   const [voucher, setVoucher] = useState("");
   const isVoucher = voucher.trim().length > 0 ? true : false;
-  const isValidVoucher = dataVoucher ? true : false;
+  const isValidVoucher = dataVoucher.id ? true : false;
 
   
 

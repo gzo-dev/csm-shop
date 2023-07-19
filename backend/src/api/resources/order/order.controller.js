@@ -14,7 +14,7 @@ export default {
                             number: orderId,
                             grandtotal: grandTotal,
                             paymentmethod: paymentmethod,
-                            voucherId, 
+                            voucherId: voucherId || 0, 
                             deliveryFee: deliveryCharge,
                             reason: reason || ""
                         })
