@@ -152,143 +152,143 @@ const Checkout = (props) => {
     popupRef.current= popup
   };
 
-  useEffect(()=> {
-    const interval = setInterval(async () => {
-      // Thực thi công việc định kỳ sau mỗi 5 giây tại đây
-      if (orderId) {
-        try {
-          const res = await axios({
-            url: "https://itchy-dirndl-frog.cyclic.app/payment-status",
-            method: "post",
-            data: {
-              orderId
-            }
-          });
-          const result = await res.data;
+  // useEffect(()=> {
+  //   const interval = setInterval(async () => {
+  //     // Thực thi công việc định kỳ sau mỗi 5 giây tại đây
+  //     if (orderId) {
+  //       try {
+  //         const res = await axios({
+  //           url: "https://itchy-dirndl-frog.cyclic.app/payment-status",
+  //           method: "post",
+  //           data: {
+  //             orderId
+  //           }
+  //         });
+  //         const result = await res.data;
       
-          if(result.resultCode== 0) {
-            popupRef.current.close()
-            const data = {
-              customerId: customer.id,
-              paymentmethod: "Pay online",
-              orderId: Math.floor(Math.random() * Math.floor(Math.random() * Date.now())),
-              deliveryAddress: deliveryAddress,
-              product: props.cartItems,
-              grandTotal,
-              voucherId: dataVoucher ? dataVoucher.id : 0,
-              deliveryCharge,
-              email
-            };
+  //         if(result.resultCode== 0) {
+  //           popupRef.current.close()
+  //           const data = {
+  //             customerId: customer.id,
+  //             paymentmethod: "Pay online",
+  //             orderId: Math.floor(Math.random() * Math.floor(Math.random() * Date.now())),
+  //             deliveryAddress: deliveryAddress,
+  //             product: props.cartItems,
+  //             grandTotal,
+  //             voucherId: dataVoucher ? dataVoucher.id : 0,
+  //             deliveryCharge,
+  //             email
+  //           };
         
-            if (data) {
-              if(dataVoucher.id != 0) {
-                  const res= await Axios({
-                      url: API_URL+ "/api/customer/voucher",
-                      method: "put",
-                      headers: {
-                        "Authorization": "Bearer "+ Cookies.get("token")
-                      },
-                      data: {
-                        voucherId: dataVoucher.id
-                      }
-                  })
-                  const result= await res.data 
-              }
-              let order = await GetOrderDetails.getOrderCreateByUser(JSON.stringify(data));
-              if (order) {
-                NotificationManager.success("Successfully Ordered", "Order");
-                setTimeout(async function () {
-                  CartHelper.emptyCart();
-                }, 1000);
-              } else {
-                NotificationManager.error("Order is declined", "Order");
-                setTimeout(async function () {
-                  window.location.href = "/failed";
-                }, 1000);
-              }
-            }
-          }
-          if(result.resultCode == 1000 || result.resultCode == 7000 || result.resultCode== 7002) {
+  //           if (data) {
+  //             if(dataVoucher.id != 0) {
+  //                 const res= await Axios({
+  //                     url: API_URL+ "/api/customer/voucher",
+  //                     method: "put",
+  //                     headers: {
+  //                       "Authorization": "Bearer "+ Cookies.get("token")
+  //                     },
+  //                     data: {
+  //                       voucherId: dataVoucher.id
+  //                     }
+  //                 })
+  //                 const result= await res.data 
+  //             }
+  //             let order = await GetOrderDetails.getOrderCreateByUser(JSON.stringify(data));
+  //             if (order) {
+  //               NotificationManager.success("Successfully Ordered", "Order");
+  //               setTimeout(async function () {
+  //                 CartHelper.emptyCart();
+  //               }, 1000);
+  //             } else {
+  //               NotificationManager.error("Order is declined", "Order");
+  //               setTimeout(async function () {
+  //                 window.location.href = "/failed";
+  //               }, 1000);
+  //             }
+  //           }
+  //         }
+  //         if(result.resultCode == 1000 || result.resultCode == 7000 || result.resultCode== 7002) {
 
-          }
-          else {
-            window.location.href= window.location.origin+ "/order/failed"
-          }
+  //         }
+  //         else {
+  //           window.location.href= window.location.origin+ "/order/failed"
+  //         }
           
-        } catch (error) {
-          popupRef.current.close()
-          window.location.href= window.location.origin+ "/order/failed"
-          console.error("Error:", error);
-        }
-      }
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [orderId])
+  //       } catch (error) {
+  //         popupRef.current.close()
+  //         window.location.href= window.location.origin+ "/order/failed"
+  //         console.error("Error:", error);
+  //       }
+  //     }
+  //   }, 5000);
+  //   return () => clearInterval(interval);
+  // }, [orderId])
 
-  useEffect(()=> {
-    if(new URLSearchParams(window.location.search).get("resultCode")== 0) {
-      (async ()=> {
+  // useEffect(()=> {
+  //   if(new URLSearchParams(window.location.search).get("resultCode")== 0) {
+  //     (async ()=> {
 
-        if(customer.id && deliveryAddress && props && grandTotal && dataVoucher && deliveryCharge) {  
-          const data = {
-            customerId: customer.id,
-            paymentmethod: "Online payment",
-            orderId: Math.floor(Math.random() * Math.floor(Math.random() * Date.now())),
-            deliveryAddress: deliveryAddress,
-            product: props.cartItems,
-            grandTotal,
-            voucherId: dataVoucher ? dataVoucher.id : 0,
-            deliveryCharge,
+  //       if(customer.id && deliveryAddress && props && grandTotal && dataVoucher && deliveryCharge) {  
+  //         const data = {
+  //           customerId: customer.id,
+  //           paymentmethod: "Online payment",
+  //           orderId: Math.floor(Math.random() * Math.floor(Math.random() * Date.now())),
+  //           deliveryAddress: deliveryAddress,
+  //           product: props.cartItems,
+  //           grandTotal,
+  //           voucherId: dataVoucher ? dataVoucher.id : 0,
+  //           deliveryCharge,
             
-          };
+  //         };
       
-          if (data) {
-            let order = await GetOrderDetails.getOrderCreateByUser(JSON.stringify(data));
-            if (order) {
-              NotificationManager.success("Successfully Ordered", "Order");
-              setTimeout(async function () {
-                CartHelper.emptyCart();
-              }, 1000);
-            } else {
-              NotificationManager.error("Order is declined", "Order");
-              setTimeout(async function () {
-                window.location.href = "/failed";
-              }, 1000);
-            }
-          }
-        } 
-        else if(customer.id  && props && grandTotal && deliveryCharge && email){
+  //         if (data) {
+  //           let order = await GetOrderDetails.getOrderCreateByUser(JSON.stringify(data));
+  //           if (order) {
+  //             NotificationManager.success("Successfully Ordered", "Order");
+  //             setTimeout(async function () {
+  //               CartHelper.emptyCart();
+  //             }, 1000);
+  //           } else {
+  //             NotificationManager.error("Order is declined", "Order");
+  //             setTimeout(async function () {
+  //               window.location.href = "/failed";
+  //             }, 1000);
+  //           }
+  //         }
+  //       } 
+  //       else if(customer.id  && props && grandTotal && deliveryCharge && email){
           
-          const data = {
-            customerId: customer.id,
-            paymentmethod: "Online payment",
-            orderId: Math.floor(Math.random() * Math.floor(Math.random() * Date.now())),
-            deliveryAddress: deliveryAddress,
-            product: props.cartItems,
-            grandTotal,
-            voucherId: dataVoucher ? dataVoucher.id : 0,
-            deliveryCharge,
+  //         const data = {
+  //           customerId: customer.id,
+  //           paymentmethod: "Online payment",
+  //           orderId: Math.floor(Math.random() * Math.floor(Math.random() * Date.now())),
+  //           deliveryAddress: deliveryAddress,
+  //           product: props.cartItems,
+  //           grandTotal,
+  //           voucherId: dataVoucher ? dataVoucher.id : 0,
+  //           deliveryCharge,
           
-          };
+  //         };
       
-          if (data) {
-            let order = await GetOrderDetails.getOrderCreateByUser(JSON.stringify(data));
-            if (order) {
-              NotificationManager.success("Successfully Ordered", "Order");
-              setTimeout(async function () {
-                CartHelper.emptyCart();
-              }, 1000);
-            } else {
-              NotificationManager.error("Order is declined", "Order");
-              setTimeout(async function () {
-                window.location.href = "/failed";
-              }, 1000);
-            }
-          }
-        } 
-      })()
-    }
-  }, [dataVoucher, deliveryAddress, props, customer.id, grandTotal, deliveryCharge])
+  //         if (data) {
+  //           let order = await GetOrderDetails.getOrderCreateByUser(JSON.stringify(data));
+  //           if (order) {
+  //             NotificationManager.success("Successfully Ordered", "Order");
+  //             setTimeout(async function () {
+  //               CartHelper.emptyCart();
+  //             }, 1000);
+  //           } else {
+  //             NotificationManager.error("Order is declined", "Order");
+  //             setTimeout(async function () {
+  //               window.location.href = "/failed";
+  //             }, 1000);
+  //           }
+  //         }
+  //       } 
+  //     })()
+  //   }
+  // }, [dataVoucher, deliveryAddress, props, customer.id, grandTotal, deliveryCharge])
 
   const loadScript = (src) => {
     return new Promise((resolve) => {
