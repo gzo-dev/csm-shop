@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { NotificationManager } from "react-notifications";
 import { GetUserLogin, GetOrderDetails, CartHelper } from "../../../services";
@@ -12,6 +12,9 @@ import Loader from "../../../../loader";
 import axios from "axios";
 import AddVoucher from "./add-voucher/AddVoucher";
 import swal from "sweetalert";
+import { API_URL } from "../../../../../config1";
+import Axios from "axios";
+import Cookies from "js-cookie";
 
 const Checkout = (props) => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -26,6 +29,7 @@ const Checkout = (props) => {
   const [dataVoucher, setDataVoucher] = useState();
   const [city, setCity] = useState(1);
   const [isVoucherApply, setIsVoucherApply]= useState(false)
+  const popupRef= useRef(null)
 
   useEffect(()=> {
     if(isVoucherApply=== true) {
@@ -99,6 +103,19 @@ const Checkout = (props) => {
     };
 
     if (data) {
+      if(dataVoucher.id != 0) {
+          const res= await Axios({
+              url: API_URL+ "/api/customer/voucher",
+              method: "put",
+              headers: {
+                "Authorization": "Bearer "+ Cookies.get("token")
+              },
+              data: {
+                voucherId: dataVoucher.id
+              }
+          })
+          const result= await res.data 
+      }
       let order = await GetOrderDetails.getOrderCreateByUser(JSON.stringify(data));
       if (order) {
         NotificationManager.success("Successfully Ordered", "Order");
@@ -128,8 +145,9 @@ const Checkout = (props) => {
       },
     });
     const result = await res.data;
-    window.location.href = result?.payUrl;
-    
+    // window.location.href = result?.payUrl;
+    const popup= window.open(result?.payUrl, "Payment online", 'width=500,height=500')
+    popupRef.current= popup
   };
 
   useEffect(()=> {
@@ -422,7 +440,7 @@ const Checkout = (props) => {
                         - {row.unitSize} gm
                       </h6>
                       <p className="offer-price mb-0">
-                        ${row.qty + "*" + row.netPrice}{" "}
+                        ${row.qty + "*" + row.price}{" "}
                         <i className="mdi mdi-tag-outline" />{" "}
                         <span className="regular-price">${row.price}</span>
                       </p>

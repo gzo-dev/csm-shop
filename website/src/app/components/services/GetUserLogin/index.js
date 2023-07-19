@@ -16,6 +16,7 @@ const getUserLogin = async (data) => {
             return null;
         }
         Cookies.set("udata", result?.data)
+        Cookies.set("token", result?.data?.token)
         return result.data;
     } catch (error) {
         console.log(error);
@@ -97,6 +98,8 @@ const logout = (next) => {
     if (typeof window !== "undefined") {
         sessionStorage.removeItem('_sid');
         sessionStorage.removeItem('email');
+        Cookies.remove("token")
+        
         window.location.href = "/";
         // next();
     }

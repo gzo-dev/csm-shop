@@ -3,7 +3,7 @@ import { db } from '../../../models';
 var Sequelize = require("sequelize");
 export default {
 
-    async index(req, res, next) {
+    async index(req, res) {
         try {
             const { customerId, paymentmethod, orderId, deliveryAddress, product, grandTotal, voucherId, deliveryCharge, reason } = req.body;
             db.customer.findOne({ where: { id: customerId } })

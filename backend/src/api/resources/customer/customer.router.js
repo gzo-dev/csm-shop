@@ -3,6 +3,7 @@ import customerController from './customer.controller';
 import { sanitize } from '../../../middleware/sanitizer';
 import { customerStrategy } from '../../../middleware/strategy';
 import { validateBody, schemas } from '../../../middleware/validator';
+import authenticateJWT from '../../../middleware/verify_token';
 
 export const customerRouter = express.Router();
 
@@ -16,7 +17,8 @@ customerRouter.route('/list').get(customerController.getAllCustomer);
 customerRouter.route('/update').post(customerController.getCustomerUpdate);
 customerRouter.route('/delete').delete(customerController.deleteCustomer);
 
-customerRouter.route("/voucher").get(customerController.getVoucherCustomer)
-customerRouter.route("/voucher/has").get(customerController.getVoucherCustomer2)
-customerRouter.route("/voucher").post(customerController.postVoucherCustomer)
-customerRouter.route("/voucher").delete(customerController.deleteVoucherCustomer)
+customerRouter.route("/voucher").get(authenticateJWT, customerController.getVoucherCustomer)
+customerRouter.route("/voucher/has").get(authenticateJWT, customerController.getVoucherCustomer2)
+customerRouter.route("/voucher").post(authenticateJWT, customerController.postVoucherCustomer)
+customerRouter.route("/voucher").put(authenticateJWT, customerController.putVoucherCustomer)
+customerRouter.route("/voucher").delete(authenticateJWT, customerController.deleteVoucherCustomer)

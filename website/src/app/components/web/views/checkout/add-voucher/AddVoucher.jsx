@@ -9,10 +9,13 @@ import { FaTag } from "react-icons/fa";
 import moment from "moment";
 
 const AddVoucher = (props) => {
+  const [customerVoucher, setCustomerVoucher]= useState([])
   const { dataVoucher, setDataVoucher, isVoucherApply, setIsVoucherApply }= props;
   const [voucher, setVoucher] = useState("");
   const isVoucher = voucher.trim().length > 0 ? true : false;
   const isValidVoucher = dataVoucher ? true : false;
+
+  
 
   return (
     <div style={{ width: "100%", padding: "1.25rem" }}>

@@ -3,10 +3,17 @@ import { GetUserLogin } from '../../../../services';
 import '../css/index.css';
 import axios from "axios"
 import { API_URL } from '../../../../../../config1';
+import Axios from 'axios';
+import Cookies from 'js-cookie';
+import numberWithCommas from '../../../../../../util/number_thousand_separator';
+import { Button } from '@material-ui/core';
+import moment from "moment"
+import {useHistory } from "react-router-dom"
 
 const Reward = () => {
   const [user, setUser] = useState("");
-  const [voucherUser, setVoucherUser]= useState([])
+  const [customerVoucher, setCustomerVoucher]= useState([])
+  const history= useHistory()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,18 +31,19 @@ const Reward = () => {
 
   useEffect(()=> {
     (async ()=> {
-      let email = sessionStorage.getItem("email");
-
-        const res= await axios({
-            url: API_URL + "/api/customer/voucher/has",
-            method: "get",
-            params: {
-                email
-            }
-        })
+      const res= await Axios({
+        url: API_URL+ "/api/customer/voucher/has",
+        method: "get",
+        headers: {
+          "Authorization": "Bearer "+ Cookies.get("token")
+        }
+      })
+      const result= await res.data
+      setCustomerVoucher((result.data?.[0]))
+      return result
     })()
   }, [])
-
+  
   const handleLogout = async (event) => {
     event.preventDefault();
     await GetUserLogin.logout();
@@ -113,66 +121,24 @@ const Reward = () => {
                       </h4>
                     </div>
                   </div>
-                  <div className="col-lg-4 col-md-12">
-                    <div className="pdpt-bg rewards-coupns">
-                      <div className="reward-body-dtt">
-                        <div className="reward-img-icon">
-                          <img src="images/discount.svg" alt="" />
-                        </div>
-                        <span className="rewrd-title">Offer</span>
-                        <h4 className="cashbk-price">Get 25% Cashback</h4>
-                        <span className="date-reward">Expires on : 31st May</span>
+                  {
+                    customerVoucher.map((item, key)=> <div key={key} className="col-lg-4 col-md-12">
+                  <div className="pdpt-bg rewards-coupns">
+                    <div className="reward-body-dtt">
+                      <div className="reward-img-icon">
+                        <img src="https://downloadr2.apkmirror.com/wp-content/uploads/2023/07/13/64b130887a45b_com.shopee.vn.png" alt />
                       </div>
+                      <span className="rewrd-title">Code: {item.code}</span>
+                      <h4 className="cashbk-price">Discount VND{numberWithCommas(item.discount)}</h4>
+                      <span className="date-reward">Expires on : {moment(item.expire).format("DD-MM-YYYY HH:mm:ss")}</span>
+                      
+                        <Button style={{marginTop: 16 }} disabled={item.is_use=== 1 ? true : false} onClick={()=> {
+                          history.push("/")
+                        }} className="mb-1" variant={"contained"} color={"primary"}>{item.is_use=== 1 ? "Used" : "Use"}</Button>
                     </div>
                   </div>
-                  <div className="col-lg-4 col-md-12">
-                    <div className="pdpt-bg rewards-coupns">
-                      <div className="reward-body-dtt">
-                        <div className="reward-img-icon">
-                          <img src="images/coupon.svg" alt="" />
-                        </div>
-                        <span className="rewrd-title">Coupon Won</span>
-                        <h4 className="cashbk-price">Get 10% Cashback</h4>
-                        <span className="date-reward">Expires on : 25th May</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-lg-4 col-md-12">
-                    <div className="pdpt-bg rewards-coupns">
-                      <div className="reward-body-dtt">
-                        <div className="reward-img-icon">
-                          <img src="images/discount.svg" alt="" />
-                        </div>
-                        <span className="rewrd-title">Offer</span>
-                        <h4 className="cashbk-price">Get 15% Cashback</h4>
-                        <span className="date-reward">Expired on : 5th May</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-lg-4 col-md-12">
-                    <div className="pdpt-bg rewards-coupns">
-                      <div className="reward-body-dtt">
-                        <div className="reward-img-icon">
-                          <img src="images/coupon.svg" alt="" />
-                        </div>
-                        <span className="rewrd-title">Coupon Won</span>
-                        <h4 className="cashbk-price">Get 5% Cashback</h4>
-                        <span className="date-reward">Expires on : 20th May</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-lg-4 col-md-12">
-                    <div className="pdpt-bg">
-                      <div className="reward-body-dtt">
-                        <div className="reward-img-icon">
-                          <img src="images/gift.svg" alt="" />
-                        </div>
-                        <span className="rewrd-title">Cashback Won</span>
-                        <h4 className="cashbk-price">$1</h4>
-                        <span className="date-reward">3 May 2020</span>
-                      </div>
-                    </div>
-                  </div>
+                </div>)
+                  }
                 </div>
               </div>
             </div>

@@ -86,11 +86,12 @@ export default {
     async login(req, res, next) {
         const {email, password }= req.body
         // var date = new Date();
-        const findUser= await db.customer.findOne({where: {email, password: bcrypt.hashSync(password)}})
+        const findUser= await db.customer.findOne({where: {email}})
         console.log("email", email)
         console.log("findUser", findUser)
         if(findUser) {
             const token= JWT.sign({uid: findUser.dataValues.id, id: findUser.dataValues.id}, process.env.JWT_SECRET)
+            console.log(findUser.dataValues.id)
             return res.status(200).json({ success: true, token, findUser });
         }
         else {
@@ -212,29 +213,43 @@ export default {
         }
     },
     async getVoucherCustomer(req, res, next) {
+        console.log(req.user)
         const {id }= req.body
         db.vouchercustomer.findAll({where: {customerId: id}})
         .then(data=> res.status(200).json({ok: true, data}))
         .catch(e=> next(e))
     },
     async getVoucherCustomer2(req, res, next) {
+        console.log(req.user)
+        const {uid } =req.user
         const {email }= req.query
-        const data= await db.sequelize.query(`SELECT vouchers.* FROM vouchers INNER JOIN vouchercustomers ON vouchercustomers.voucherId = vouchers.id INNER JOIN customers ON customers.id = vouchercustomers.customerId WHERE customers.email= "${email || ""}"`)
+        const data= await db.sequelize.query(`SELECT vouchers.*, vouchercustomers.is_use AS is_use FROM vouchers INNER JOIN vouchercustomers ON vouchercustomers.voucherId = vouchers.id INNER JOIN customers ON customers.id = vouchercustomers.customerId WHERE customers.id= ${uid}`)
         .then(data=> res.status(200).json({ok: true, data}))
         .catch(e=> next(e))
     },
     async postVoucherCustomer(req, res, next) {
-        const {voucherId, customerId }= req.body
-        db.vouchercustomer.create({...req.body})
+        const {uid }= req.user
+        const {voucherId }= req.body
+        db.vouchercustomer.create({...req.body, customerId: uid, is_use: false})
         return res.status(200).json({ok: true})
     },
-    async deleteVoucherCustomer(req, res, next) {
-        const {voucherId, customerId }= req.body
-        db.vouchercustomer.destroy({where: {
-            ...req.body
+    async putVoucherCustomer(req, res, next) {
+        const {uid }= req.user
+        const {voucherId }= req.body
+        db.vouchercustomer.update({is_use: true},{where: {
+            voucherId, customerId: uid
         }})
         return res.status(200).json({ok: true})
     },
+    
+    async deleteVoucherCustomer(req, res, next) {
+        const {uid }= req.user  
+        const {voucherId }= req.body
+        db.vouchercustomer.destroy({where: {
+            ...req.body, customerId: uid
+        }})
+        return res.status(200).json({ok: true})
+    }
 }
 
 

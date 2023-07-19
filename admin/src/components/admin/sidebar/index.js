@@ -156,7 +156,7 @@ export default class Sidebar extends Component {
                   </Link>
                 </nav>
               </div>
-              <Link
+              {/* <Link
                 className="nav-link collapsed"
                 to="/admin/location/list"
                 data-toggle="collapse"
@@ -192,8 +192,8 @@ export default class Sidebar extends Component {
                     Add Location
                   </Link>
                 </nav>
-              </div>
-              <Link
+              </div> */}
+              {/* <Link
                 className="nav-link collapsed"
                 to="/admin/area/list"
                 data-toggle="collapse"
@@ -226,7 +226,7 @@ export default class Sidebar extends Component {
                     Add Area
                   </Link>
                 </nav>
-              </div>
+              </div> */}
               <Link
                 className={role === "admin" ? isActive("/admin/user/list") : "d-none"}
                 to="/admin/user/list"

@@ -71,9 +71,7 @@ class Productview extends Component {
                   </strong>
                 </a>{" "}
                 <span className="mdi mdi-chevron-right" />{" "}
-                <a href="#">Fruits &amp; Vegetables</a>{" "}
-                <span className="mdi mdi-chevron-right" />{" "}
-                <a href="#">Fruits</a>
+                <a href="#">Product</a>{" "}
               </div>
             </div>
           </div>
@@ -141,9 +139,7 @@ class Productview extends Component {
                     <span className="mdi mdi-home" /> Home
                   </a>{" "}
                   <span className="mdi mdi-chevron-right" />{" "}
-                  <a href="#">Fruits &amp; Vegetables</a>{" "}
-                  <span className="mdi mdi-chevron-right" />{" "}
-                  <a href="#">Fruits</a>
+                  <a href="#">Products</a>{" "}
                   <div className="btn-group float-right mt-2">
                     <button
                       type="button"

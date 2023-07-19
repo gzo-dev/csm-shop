@@ -2,7 +2,8 @@
 module.exports = (sequelize, DataTypes) => {
   const vouchercustomer = sequelize.define('vouchercustomer', {
     customerId: DataTypes.INTEGER,
-    voucherId: DataTypes.INTEGER
+    voucherId: DataTypes.INTEGER,
+    is_use: false
   }, {});
   vouchercustomer.associate = function(models) {
     // associations can be defined here

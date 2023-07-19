@@ -1,32 +1,49 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import { GetUserLogin } from "../../../../../services";
 import Moment from "react-moment";
 import "../../css/index.css";
 import { Link } from "react-router-dom";
+import get_detail_voucher from "../../../../../../../api/get_detail_voucher";
+import numberWithCommas from "../../../../../../../util/number_thousand_separator";
 
-export default class Details extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      user: "",
-    };
-  }
-  async componentDidMount() {
-    let email = sessionStorage.getItem("email");
-    if (email) {
-      let value = await GetUserLogin.getCustomerDetail(email);
-      if (value) {
-        this.setState({ user: value.data });
+const Details = (props) => {
+  const [user, setUser] = useState("");
+  const [list, setList] = useState(null);
+  const [dataVoucher, setDataVoucher] = useState({
+    data: { discount: 0 },
+    ok: false,
+  });
+  useEffect(() => {
+    const fetchData = async () => {
+      let email = sessionStorage.getItem("email");
+      if (email) {
+        let value = await GetUserLogin.getCustomerDetail(email);
+        if (value) {
+          setUser(value.data);
+        }
       }
-    }
-  }
-  handleLogout = async (event) => {
+    };
+
+    fetchData();
+    setList(props.location.query);
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const voucherId = list?.voucherId || 0;
+      if(voucherId != 0) {
+        const result = await get_detail_voucher(voucherId);
+        setDataVoucher(result);
+      }
+    })();
+  }, [list]);
+
+  const handleLogout = async (event) => {
     event.preventDefault();
     await GetUserLogin.logout();
   };
-  render() {
-    let { user } = this.state;
-    let list = this.props.location.query;
+
+  if (list) {
     return (
       <div className="wrapper">
         <div className="gambo-Breadcrumb">
@@ -95,7 +112,7 @@ export default class Details extends Component {
                       <i className="uil uil-location-point" />
                       My Address
                     </a> */}
-                    <a className="user-item" onClick={this.handleLogout}>
+                    <a className="user-item" onClick={handleLogout}>
                       <i className="uil uil-exit" />
                       Logout
                     </a>
@@ -146,7 +163,13 @@ export default class Details extends Component {
                                       style={{ width: 150 }}
                                       className="text-center"
                                     >
-                                      Qty
+                                      Amount
+                                    </th>
+                                    <th
+                                      style={{ width: 150 }}
+                                      className="text-center"
+                                    >
+                                      Discount(%)
                                     </th>
                                     <th
                                       style={{ width: 100 }}
@@ -157,52 +180,56 @@ export default class Details extends Component {
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  {list ? (
-                                    list.Addresses.map((prop) => {
-                                      return prop.Carts.map((p, index) => (
-                                        <tr key={index}>
-                                          <td>{p.id}</td>
-                                          <td>
-                                            <img
-                                              src={p.photo}
-                                              alt="cartimage"
-                                              style={{ height: "50px" }}
-                                            />
-                                          </td>
-                                          <td>{p.name}</td>
-                                          <td className="text-center">
-                                            VND {p.price}
-                                          </td>
-                                          <td className="text-center">
-                                            {p.qty}
-                                          </td>
-                                          <td className="text-center">
-                                            VND {p.total}
-                                          </td>
-                                        </tr>
-                                      ));
-                                    })
-                                  ) : (
-                                    <p>loading...</p>
-                                  )}
+                                  {list.Carts.map((p, index) => (
+                                    <tr key={index}>
+                                      <td>{p.id}</td>
+                                      <td>
+                                        <img
+                                          src={p.photo}
+                                          alt="cartimage"
+                                          style={{ height: "50px" }}
+                                        />
+                                      </td>
+                                      <td>{p.name}</td>
+                                      <td className="text-center">
+                                        VND {numberWithCommas(p.price)}
+                                      </td>
+                                      <td className="text-center">
+                                        {p.qty}
+                                      </td>
+                                      <td className="text-center">
+                                        {p.discount}%
+                                      </td>
+                                      <td className="text-center">
+                                        VND {numberWithCommas(Math.floor(p.price * (1 - p.discount / 100)))}
+                                      </td>
+                                    </tr>
+                                  ))}
                                 </tbody>
                               </table>
                             </div>
 
                             <div className="total-dt">
                               <div className="total-checkout-group">
-                                <div className="cart-total-dil">
+                                {/* <div className="cart-total-dil">
                                   <h4>Sub Total</h4>
                                   <span>VND {list ? list.grandtotal : ""}</span>
-                                </div>
+                                </div> */}
                                 <div className="cart-total-dil pt-3">
                                   <h4>Delivery Charges</h4>
-                                  <span>Free</span>
+                                  <span>VND {numberWithCommas(list.deliveryFee)}</span>
                                 </div>
+                                {
+                                  list.voucherId != 0 &&
+                                  <div className="cart-total-dil pt-3">
+                                    <h4>Voucher</h4>
+                                    <span>VND {numberWithCommas(dataVoucher.data.discount)}</span>
+                                  </div>
+                                }
                               </div>
                               <div className="main-total-cart">
                                 <h2>Total</h2>
-                                <span>VND {list ? list.grandtotal : ""}</span>
+                                <span>VND {numberWithCommas(list.grandtotal)}</span>
                               </div>
                             </div>
                             <div className="track-order">
@@ -229,7 +256,7 @@ export default class Details extends Component {
                                   <div className="progress">
                                     <div className="progress-bar" />
                                   </div>
-                                  <a href="#" className="bs-wizard-dot" />
+                                  <Link href="#" className="bs-wizard-dot" />
                                 </div>
                                 <div
                                   className={
@@ -247,7 +274,7 @@ export default class Details extends Component {
                                   <div className="progress">
                                     <div className="progress-bar" />
                                   </div>
-                                  <a href="#" className="bs-wizard-dot" />
+                                  <Link href="#" className="bs-wizard-dot" />
                                 </div>
                                 <div
                                   className={
@@ -263,27 +290,27 @@ export default class Details extends Component {
                                   <div className="progress">
                                     <div className="progress-bar" />
                                   </div>
-                                  <a href="#" className="bs-wizard-dot" />
+                                  <Link href="#" className="bs-wizard-dot" />
                                 </div>
                               </div>
                             </div>
                             <div className="alert-offer">
-                              <img src="images/ribbon.svg" alt />
+                              {/* <img src="images/ribbon.svg" alt /> */}
                               Cashback of will be credit to Gambo Super Market
                               wallet 6-12 hours of delivery.
                             </div>
                             <div className="call-bill">
-                              <div className="delivery-man">
+                              {/* <div className="delivery-man">
                                 <a href="#">
                                   <i className="uil uil-rss" />
                                   Feedback
                                 </a>
-                              </div>
-                              <div className="order-bill-slip">
+                              </div> */}
+                              {/* <div className="order-bill-slip">
                                 <a href="#" className="bill-btn5 hover-btn">
                                   View Bill
                                 </a>
-                              </div>
+                              </div> */}
                             </div>
                           </div>
                         </div>
@@ -299,5 +326,9 @@ export default class Details extends Component {
         </div>
       </div>
     );
+  } else {
+    return <p>Loading...</p>;
   }
-}
+};
+
+export default Details;
