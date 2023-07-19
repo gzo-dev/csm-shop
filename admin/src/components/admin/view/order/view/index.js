@@ -77,7 +77,7 @@ const View = (props) => {
                           {
                             <Fragment>
                               {
-                                self.stauts=== "processing" && <Fragment>
+                                self.status=== "processing" && <Fragment>
                               <b>Process Date :</b>{" "}
                               <Moment format="MMMM Do YYYY">
                             {self.deliverydate}
@@ -91,7 +91,7 @@ const View = (props) => {
                           {
                             <Fragment>
                               {
-                                self.stauts=== "shipping" && <Fragment>
+                                self.status=== "shipping" && <Fragment>
                                 <b>Shipping Date :</b>{" "}
                                 <Moment format="MMMM Do YYYY">
                               {self.deliverydate}
@@ -104,7 +104,7 @@ const View = (props) => {
                           {
                             <Fragment>
                               {
-                                self.stauts=== "delivered" && 
+                                self.status=== "delivered" && 
                                 <Fragment>
                                     <b>Delivered Date :</b>{" "}
                                     <Moment format="MMMM Do YYYY">
@@ -118,7 +118,7 @@ const View = (props) => {
                           {
                             <Fragment>
                               {
-                                self.stauts=== "cancel" && 
+                                self.status=== "cancel" && 
                                 <Fragment>
                                 <b>Cancel Date :</b>{" "}
                               <Moment format="MMMM Do YYYY">
