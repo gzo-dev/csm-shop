@@ -77,7 +77,7 @@ const View = (props) => {
                           {
                             <Fragment>
                               {
-                                self.stauts=== "process" && <Fragment>
+                                self.stauts=== "processing" && <Fragment>
                               <b>Process Date :</b>{" "}
                               <Moment format="MMMM Do YYYY">
                             {self.deliverydate}
