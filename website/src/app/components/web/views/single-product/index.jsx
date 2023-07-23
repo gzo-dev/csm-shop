@@ -9,10 +9,13 @@ import { addToCart } from "../../../../store/actions/cartActions";
 import "./index.css";
 import axios from "axios"
 import { API_URL } from "../../../../../config1";
+import { useParams } from "react-router-dom";
 
 const Singleproduct = ({ addToCart }) => {
   const [product, setProduct] = useState(null);
   const [productSize, setProductSize]= useState([])
+  const [size, setSize]= useState()
+  const {id }= useParams()
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -30,11 +33,14 @@ const Singleproduct = ({ addToCart }) => {
   useEffect(()=> {
     (async ()=> {
       const res =await axios({
-        url: API_URL+ "/api/products/size",
-        method: 'get'
+        url: API_URL+ "/api/product/size",
+        method: 'get',
+        params: {
+          productId: id
+        }
       })
       const result= await res.data  
-      setProductSize(result)
+      setProductSize(result.data)
       return result
     })()
   }, [])
@@ -94,7 +100,7 @@ const Singleproduct = ({ addToCart }) => {
         <div className="container">
           {product ? (
             <div className="row">
-              {product.productphotos && product.productphotos.length > 0 && (
+                         {product.productphotos && product.productphotos.length > 0 && (
                 <>
                   <div className="col-md-6" style={{ backgroundColor: "#fff" }}>
                     <div className="shop-detail-left">
@@ -141,7 +147,7 @@ const Singleproduct = ({ addToCart }) => {
                     <strong>
                       <span className="mdi mdi-approval" /> Available in
                     </strong>{" "}
-                    - {product.unitSize}
+                    - {productSize.map((item, key)=> <span onClick={()=> setSize(item.size)} style={{cursor: "pointer", padding: 10, backgroundColor: size== item.size ? "#2e89ff": "#f2f0f5", color: size== item.size ? "#fff": "#000", marginLeft: 12}} key={key}>{item.size}</span>)}
                   </h6>
 
                   {product.discountPer != 0 && (
@@ -185,7 +191,7 @@ const Singleproduct = ({ addToCart }) => {
                   <button
                     type="button"
                     className="btn btn-secondary btn-lg"
-                    onClick={() => addToCart(product)}
+                    onClick={() => addToCart({...product, unitSize: size})}
                   >
                     <i className="mdi mdi-cart-outline" /> Add To Cart
                   </button>
