@@ -3,7 +3,6 @@ import moment from "moment"
 
 const cron = require("node-cron");
 
-// Định nghĩa cron job
 const checkExpiredVouchers = cron.schedule("* * * * *", async () => {
   try {
     // Lấy tất cả các voucher từ cơ sở dữ liệu

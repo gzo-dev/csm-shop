@@ -433,8 +433,7 @@ export default {
     async getAllProductBySlug(req, res, next) {
         try {
             db.category.findOne({
-                attributes: ["id", "slug"],
-                where: { slug: req.params.slug },
+                attributes: ["id"],
                 include: [{ model: db.product, order: [['createdAt', 'DESC']], include: [{ model: db.productphoto, attributes: ["id", "imgUrl"] }] }]
             })
                 .then(product => {
@@ -501,13 +500,11 @@ export default {
     async awsProductPhotoDelete(req, res, next) {
         try {
             const { id, imgUrl } = req.body;
-            deleteFileFromS3(imgUrl)
-                .then((data) => {
-                    if (!data) {
-                        return db.productphoto.destroy({ where: { id: id } })
-                    }
-                    throw new RequestError('error');
-                })
+            // db.productphoto.destroy({where: {imgUrl, id}})
+            // deleteFileFromS3(imgUrl)
+                
+                      db.productphoto.destroy({ where: { id: id } })
+                    
                 .then((success) => {
                     res.status(200).json({ 'success': true, msg: "Successflly deleted image from s3 Bucket" });
                 })

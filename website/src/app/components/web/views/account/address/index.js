@@ -71,10 +71,6 @@ export default class Address extends Component {
               <div className="col-lg-3 col-md-4">
                 <div className="left-side-tabs">
                   <div className="dashboard-left-links">
-                    <Link to="/account/view" className="user-item">
-                      <i className="uil uil-apps" />
-                      Overview
-                    </Link>
                     <Link to="/account/profile" className="user-item">
                       <i className="mdi mdi-account-outline" />
                       My profile

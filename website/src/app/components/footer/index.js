@@ -40,7 +40,7 @@ const Footer = () => {
             <div className="col-lg-3 col-md-3">
               <h4 className="mb-5 mt-0">
                 <a className="logo" href="index.html">
-                  <img src="img/logo-footer.png" alt="FPT boutique" />
+                  <img style={{width: 50}} src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/FPT_logo_2010.svg/800px-FPT_logo_2010.svg.png" alt="FPT boutique" />
                 </a>
               </h4>
               <p className="mb-0">
@@ -88,30 +88,30 @@ const Footer = () => {
               <h6 className="mb-4">Download App</h6>
               <div className="app">
                 <a href="#">
-                  <img src="img/google.png" alt />
+                  <img src="https://yt3.googleusercontent.com/UlCw6skRB67meHd_jffAzV6DeXzAk1YzEFyhxI4meSgYAjA0wRhEnhT3TfHvuo7R-VwISzRTTao=s900-c-k-c0x00ffffff-no-rj" alt />
                 </a>
                 <a href="#">
-                  <img src="img/apple.png" alt />
+                  <img src="https://www.apple.com/v/app-store/b/images/overview/icon_appstore__ev0z770zyxoy_large_2x.png" alt />
                 </a>
               </div>
               <h6 className="mb-3 mt-4">GET IN TOUCH</h6>
               <div className="footer-social">
-                <a className="btn-facebook" href="#">
+                <a className="btn-facebook" href="#" style={{marginLeft: 12}}>
                   <i className="mdi mdi-facebook" />
                 </a>
-                <a className="btn-twitter" href="#">
+                <a className="btn-twitter" href="#" style={{marginLeft: 12}}>
                   <i className="mdi mdi-twitter" />
                 </a>
-                <a className="btn-instagram" href="#">
+                <a className="btn-instagram" href="#" style={{marginLeft: 12}}>
                   <i className="mdi mdi-instagram" />
                 </a>
-                <a className="btn-whatsapp" href="#">
+                <a className="btn-whatsapp" href="#" style={{marginLeft: 12}}>
                   <i className="mdi mdi-whatsapp" />
                 </a>
-                <a className="btn-messenger" href="#">
+                <a className="btn-messenger" href="#" style={{marginLeft: 12}}>
                   <i className="mdi mdi-facebook-messenger" />
                 </a>
-                <a className="btn-google" href="#">
+                <a className="btn-google" href="#" style={{marginLeft: 12}}>
                   <i className="mdi mdi-google" />
                 </a>
               </div>

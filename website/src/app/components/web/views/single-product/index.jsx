@@ -7,15 +7,37 @@ import { GetProductDetails } from "../../../services";
 import { connect } from "react-redux";
 import { addToCart } from "../../../../store/actions/cartActions";
 import "./index.css";
-import axios from "axios"
+import axios from "axios";
 import { API_URL } from "../../../../../config1";
 import { useParams } from "react-router-dom";
+import swal from "sweetalert";
+import {Link } from "react-router-dom"
 
 const Singleproduct = ({ addToCart }) => {
   const [product, setProduct] = useState(null);
-  const [productSize, setProductSize]= useState([])
-  const [size, setSize]= useState()
-  const {id }= useParams()
+  const [productSize, setProductSize] = useState([]);
+  const [size, setSize] = useState();
+  const { id } = useParams();
+
+  // Tạo hàm để lưu sản phẩm vào localStorage
+  const saveProductToLocalStorage = (product) => {
+    const viewedProducts = JSON.parse(localStorage.getItem('viewedProducts')) || [];
+
+    const existingProductIndex = viewedProducts.findIndex((p) => p.id === product.id);
+
+    if (existingProductIndex === -1) {
+      viewedProducts.push(product);
+      if (viewedProducts.length > 10) {
+        viewedProducts.shift();
+      }
+    } else {
+      const existingProduct = viewedProducts[existingProductIndex];
+      viewedProducts.splice(existingProductIndex, 1);
+      viewedProducts.unshift(existingProduct);
+    }
+
+    localStorage.setItem('viewedProducts', JSON.stringify(viewedProducts));
+  };
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -23,27 +45,36 @@ const Singleproduct = ({ addToCart }) => {
       const url = window.location.href.split("/");
       const lastSegment = url.pop() || url.pop();
       const list = await GetProductDetails.getProductById(lastSegment);
-      
-      setProduct(list.data);
+
+      if (list.data.status === "inactive") {
+        // Nếu sản phẩm có trạng thái "inactive", hiển thị thông báo và không lưu vào localStorage
+        swal("Thông báo", "Sản phẩm này không có sẵn", "warning");
+      } else {
+        setProduct(list.data);
+        // Lưu sản phẩm vào localStorage khi đã có dữ liệu và không có trạng thái "inactive"
+        if (list.data) {
+          saveProductToLocalStorage(list.data);
+        }
+      }
     };
 
     fetchProductDetails();
   }, []);
 
-  useEffect(()=> {
-    (async ()=> {
-      const res =await axios({
-        url: API_URL+ "/api/product/size",
-        method: 'get',
+  useEffect(() => {
+    (async () => {
+      const res = await axios({
+        url: API_URL + "/api/product/size",
+        method: "get",
         params: {
-          productId: id
-        }
-      })
-      const result= await res.data  
-      setProductSize(result.data)
-      return result
-    })()
-  }, [])
+          productId: id,
+        },
+      });
+      const result = await res.data;
+      setProductSize(result.data);
+      return result;
+    })();
+  }, []);
 
   const settings = {
     customPaging: function (i) {
@@ -53,7 +84,8 @@ const Singleproduct = ({ addToCart }) => {
             <img
               src={product?.productphotos[i].imgUrl}
               alt=""
-              className="ratio ratio-1x1"
+              className="ratio ratio-1x1 ratop"
+              style={{aspectRatio: 1 / 1, minWidth: 100, height: 100}}
             />
           </div>
         </div>
@@ -67,10 +99,13 @@ const Singleproduct = ({ addToCart }) => {
     appendDots: (dots) => (
       <ul
         style={{
+          position: "static",
           display: "flex",
           justifyContent: "center",
           padding: 10,
-          marginTop: -20,
+          height: 140,
+          boxSizing: "border-box",
+          overflow: "auto"
         }}
       >
         {dots}
@@ -85,11 +120,11 @@ const Singleproduct = ({ addToCart }) => {
         <div className="container">
           <div className="row">
             <div className="col-md-12">
-              <a href="#">
+              <Link to="/">
                 <strong>
                   <span className="mdi mdi-home" /> Home
                 </strong>
-              </a>{" "}
+              </Link>{" "}
               <span className="mdi mdi-chevron-right" /> <a href="#">Product</a>{" "}
             </div>
           </div>
@@ -98,7 +133,7 @@ const Singleproduct = ({ addToCart }) => {
 
       <section className="shop-single section-padding pt-3">
         <div className="container">
-          {product ? (
+          {product && product.status !== "inactive" ? (
             <div className="row">
                          {product.productphotos && product.productphotos.length > 0 && (
                 <>
@@ -113,6 +148,7 @@ const Singleproduct = ({ addToCart }) => {
                                   src={r.imgUrl}
                                   alt=""
                                   className="img-fluid img-center"
+                                  style={{aspectRatio: 1 / 1}}
                                 />
                               </div>
                             ))
@@ -143,12 +179,23 @@ const Singleproduct = ({ addToCart }) => {
                     {product.discountPer}% OFF
                   </span>
                   <h2>{product.name}</h2>
-                  <h6>
-                    <strong>
-                      <span className="mdi mdi-approval" /> Available in
-                    </strong>{" "}
-                    - {productSize.map((item, key)=> <span onClick={()=> setSize(item.size)} style={{cursor: "pointer", padding: 10, backgroundColor: size== item.size ? "#2e89ff": "#f2f0f5", color: size== item.size ? "#fff": "#000", marginLeft: 12}} key={key}>{item.size}</span>)}
-                  </h6>
+                  {
+                    productSize?.length > 0 && 
+                    <h6>
+                      <strong>
+                        <span className="mdi mdi-approval" /> Available in
+                      </strong>{" "}
+                      - {productSize.map((item, key)=> <span onClick={()=> setSize(item.size)} style={{cursor: "pointer", padding: 10, backgroundColor: size== item.size ? "#2e89ff": "#f2f0f5", color: size== item.size ? "#fff": "#000", marginLeft: 12}} key={key}>{item.size}</span>)}
+                    </h6>
+                  }
+                  {
+                    productSize?.length <= 0 && 
+                    <h6>
+                      <strong>
+                        <span className="mdi mdi-approval" /> No available
+                      </strong>{" "}
+                    </h6>
+                  }
 
                   {product.discountPer != 0 && (
                     <>
@@ -191,7 +238,22 @@ const Singleproduct = ({ addToCart }) => {
                   <button
                     type="button"
                     className="btn btn-secondary btn-lg"
-                    onClick={() => addToCart({...product, unitSize: size})}
+                    onClick={() => {
+                      if(productSize.length <= 0 ) {
+                        swal("Thông báo", "Sản phẩm này đã hết size, vui lòng thử lại sau", "error")
+                      }
+                      else if(!sessionStorage.getItem("sid")) {
+                        swal("Thông báo", "Bạn phải đăng nhập để có thể mua hàng", "error")
+                      }
+                      else if(!size) {
+                        swal("Thông báo", "Vui lòng chọn size")
+                      }
+                      else {
+                        if(productSize.length > 0 ) {
+                          addToCart({...product, unitSize: size})
+                        }
+                      }
+                    }}
                   >
                     <i className="mdi mdi-cart-outline" /> Add To Cart
                   </button>
@@ -240,7 +302,10 @@ const Singleproduct = ({ addToCart }) => {
               </div>
             </div>
           ) : (
-            "Loading"
+            // Hiển thị thông báo và lớp phủ khi sản phẩm có trạng thái "inactive"
+            <div className="inactive-product-overlay">
+              <h2>Sản phẩm không có sẵn</h2>
+            </div>
           )}
         </div>
       </section>

@@ -207,7 +207,7 @@ const Edit = (props) => {
                                       </td>
                                       <td>{p.name}</td>
                                       <td className="text-center">
-                                        VND{p.price}
+                                        VND{numberWithCommas(p.price)}
                                       </td>
                                       <td className="text-center">
                                         {p.discount}%

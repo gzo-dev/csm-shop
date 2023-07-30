@@ -5,6 +5,7 @@ import AutoSelect from "../../../../common/autoselect";
 import { Link } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import swal from "sweetalert";
+import numberWithCommas from "../../../../../util/number_thousand_separator";
 
 const Arrays = (data, fieldName, fieldValue) => {
   let arrayItem = [];
@@ -230,8 +231,8 @@ export default class List extends Component {
                               </td>
                               <td>{row.brand}</td>
                               <td>{row.unitSize}</td>
-                              <td>VND{row.buyerPrice}</td>
-                              <td>VND{row.price}</td>
+                              <td>VND{numberWithCommas(row.buyerPrice)}</td>
+                              <td>VND{numberWithCommas(row.price)}</td>
                               {/* <td>${row.qty}</td> */}
                               <td>{row.discountPer}%</td>
                               {/* <td>${row.discount}</td>

@@ -309,7 +309,6 @@ export default {
     async getAllCategoryBySlug(req, res, next) {
         try {
             db.category.findOne({
-                where: { slug: req.query.slug },
                 include: [{ model: db.SubCategory, include: [{ model: db.SubChildCategory }] }]
 
             })

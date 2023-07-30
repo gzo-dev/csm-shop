@@ -215,7 +215,7 @@ export default class Uploadphoto extends Component {
           <li className="breadcrumb-item">
             <a href="/admin/product/create">Products</a>
           </li>
-          <li className="breadcrumb-item active">more image</li>
+          <li className="breadcrumb-item active">More image</li>
         </ol>
         <div className="row">
           <div className="col-lg-12 col-md-12">
@@ -229,7 +229,7 @@ export default class Uploadphoto extends Component {
                   <div className="row">
                     <div className="col-lg-6 col-md-6">
                       <div className="form-group">
-                        <label className="form-label">Category*</label>
+                        <label className="form-label">Product*</label>
                         <AutoSelect
                           className="basic-single"
                           value={selectedProduct}

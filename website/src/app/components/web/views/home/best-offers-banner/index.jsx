@@ -6,6 +6,7 @@ import {Link } from "react-router-dom"
 import { connect } from 'react-redux';
 import { addToCart } from "../../../../../store/actions/cartActions";
 import { GroceryStampleDetails } from '../../../../services';
+import numberWithCommas from '../../../../../../util/number_thousand_separator';
 
 const BestOfferBanner = ({addToCart}) => {
   const [productlist, setProductList] = useState([]);
@@ -129,28 +130,28 @@ const BestOfferBanner = ({addToCart}) => {
                       <div className="product-body">
                         <h5>{row.name}</h5>
                         <h6>
-                          <strong>
+                          {/* <strong>
                             <span className="mdi mdi-approval" /> Available in
                           </strong>{" "}
-                          - {row.unitSize}
+                          - {row.unitSize} */}
                         </h6>
                       </div>
                     </Link>
-                    <div className="product-footer">
-                      <button
+                    <div className="product-footer" style={{height: 40}}>
+                      {/* <button
                         type="button"
                         className="btn btn-secondary btn-sm float-right"
                         onClick={() => addToCart(row)}
                       >
                         <i className="mdi mdi-cart-outline" /> Add To Cart
-                      </button>
+                      </button> */}
                       <p className="offer-price mb-0">
-                        VND{row.price - Math.floor(row.price * row.discountPer / 100)} <i className="mdi mdi-tag-outline" />
+                        VND{numberWithCommas(row.price - Math.floor(row.price * row.discountPer / 100))} <i className="mdi mdi-tag-outline" />
                         {
                           row.discountPer > 0 && 
                           <>
                             <br />
-                            <span className="regular-price">VND{row.price}</span>
+                            <span className="regular-price">VND{numberWithCommas(row.price)}</span>
                           </>
                         }
                       </p>

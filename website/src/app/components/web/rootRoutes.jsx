@@ -25,7 +25,7 @@ const RootRoutes = () => {
         <Route exact path="/p/:slug/:id" component={Singleproduct} />
         <Route exact path="/shop/:slug" component={Shopdetails} />
         <PrivateRoute path="/checkout" component={Checkout} />
-        <Route path="/product/catalogsearch/result" component={Productview} />
+        <Route path="/product/catalogsearch/result/:id" component={Productview} />
         <PrivateRoute path="/order/success" component={Complete} />
         <PrivateRoute path="/order/failed" component={Failed} />
         <PrivateRoute path="/account" component={Account} />

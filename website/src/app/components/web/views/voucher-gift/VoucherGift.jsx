@@ -38,15 +38,18 @@ const VoucherGift = () => {
     })()
   }, [])
   useEffect(()=> {
-    if(data1.data) {
+    if(data1.data && data1.data !== null) {
       if(data1.data.date_start) {
           if(moment(data1.data.date_start).valueOf() < moment(new Date()).valueOf()  && moment(data1.data.date_end).valueOf() > moment(new Date()).valueOf() ) {
-              setCheck(true)
+            setCheck(true)
           }
           else {
-              setCheck(false)
+            setCheck(false)
           }
       }
+    }
+    else {
+      setCheck(false)
     }
   }, [data1])
   useEffect(()=> {

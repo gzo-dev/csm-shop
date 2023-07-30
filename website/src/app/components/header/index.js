@@ -138,10 +138,6 @@ const Navigation = ({ history }) => {
                           className="dropdown-menu"
                           aria-labelledby="dropdownMenuButton"
                         >
-                          <Link className="dropdown-item" to="/account/view">
-                            <i className="uil uil-apps" />
-                            Dashboard
-                          </Link>
                           <Link
                             className="dropdown-item"
                             to="/account/profile"
@@ -151,16 +147,6 @@ const Navigation = ({ history }) => {
                               aria-hidden="true"
                             ></i>
                             My Profile
-                          </Link>
-                          <Link
-                            className="dropdown-item"
-                            to="/account/wishlist"
-                          >
-                            <i
-                              className="mdi mdi-heart-outline"
-                              aria-hidden="true"
-                            ></i>
-                            Wish List
                           </Link>
                           <Link
                             className="dropdown-item"
@@ -196,7 +182,7 @@ const Navigation = ({ history }) => {
                       sessionStorage.getItem("_sid") && 
                       <Link to={"/voucher/gift"}>
                       <span className="btn btn-link border-none">
-                        <i class="mdi mdi-sale"></i> Săn sale{" "}
+                        <i className="mdi mdi-sale"></i> Săn sale{" "}
                       </span>
                       </Link>
                     }

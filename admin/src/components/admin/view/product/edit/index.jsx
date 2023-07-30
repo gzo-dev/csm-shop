@@ -284,7 +284,7 @@ export default class Edit extends Component {
                     </div>
                     <div className="col-lg-2 col-md-2">
                       <div className="form-group">
-                        <label className="form-label">Category Image*</label>
+                        <label className="form-label">Image label*</label>
                         {
                           this.state.photoTemp.length > 0 && 
                           <Fragment>

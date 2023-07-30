@@ -63,6 +63,7 @@ export default {
         return res.status(200).json({ok: true, data})
     },
     async applyVoucher(req, res) {
+        const {uid }= req.user
         const {code }= req.body
         const data= await db.voucher.findOne({
             where: {
@@ -70,6 +71,10 @@ export default {
             }
         })
         if(data) {
+            const data1= await db.vouchercustomer.findOne({where: {voucherId: data.id, customerId: uid}})
+            if(data1.is_use== 1) {
+                return res.status(200).json({ok: false, used: true})
+            }
             return res.status(200).json({ok: true, data: {id: data.id}})
         }
         else {

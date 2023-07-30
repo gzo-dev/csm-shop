@@ -48,3 +48,7 @@ p:last-child {
     font-weight: 600;
     color: #2b2f4c;
 }
+
+.ratop {
+    aspect-ratio: 1 / 1 !important;
+}

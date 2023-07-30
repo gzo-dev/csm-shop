@@ -1,5 +1,6 @@
 import axios from "axios"
 import { API_URL } from "../config1"
+import Cookies from "js-cookie"
 
 const apply_voucher= async (data)=> {
     const res= await axios({
@@ -7,6 +8,9 @@ const apply_voucher= async (data)=> {
         method: "post",
         data: {
             ...data
+        },
+        headers: {
+            "Authorization": "Bearer "+ Cookies.get("token")
         }
     })
     const result= await res.data

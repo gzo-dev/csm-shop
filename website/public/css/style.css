@@ -1168,12 +1168,15 @@ body.toggled::after {
 }
 /* Login Modal */
 .login-modal-left {
-    background: rgba(0, 0, 0, 0) url("../img/login.jpg") repeat scroll center center;
+    background: rgba(0, 0, 0, 0) url("https://images.unsplash.com/photo-1686706763783-1378f598d8c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1287&q=80") repeat scroll center center;
     float: right;
     height: 300px;
     list-style: outside none none;
     margin: 70px auto auto;
     width: 322px;
+    background-size: fill;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 .form-control {
     border-radius: 2px;

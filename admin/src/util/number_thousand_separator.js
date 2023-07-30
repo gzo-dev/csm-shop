@@ -1,9 +1,11 @@
 export default function numberWithCommas(x) {
-    if(x) {
-        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-    }
-    else {
-        return  0
+    if(x !== undefined) {
+        console.log("x", x)
+        if(typeof x=== "number") {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+        else {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
     }
 }

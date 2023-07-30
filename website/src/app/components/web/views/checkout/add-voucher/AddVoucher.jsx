@@ -41,6 +41,12 @@ const AddVoucher = (props) => {
               if (res.ok === true) {
                 const res2 = await get_detail_voucher(res.data.id);
                 setDataVoucher(res2.data);
+              } else if(res.used=== true) {
+                swal(
+                  "Thông báo",
+                  "Voucher đã được sử dụng, vui lòng thử lại bằng voucher khác",
+                  "error"
+                );
               } else {
                 swal(
                   "Thông báo",

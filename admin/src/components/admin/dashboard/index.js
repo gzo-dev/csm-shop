@@ -5,6 +5,7 @@ import Loader from '../../loader';
 import ReactPaginate from 'react-paginate';
 import { Link } from 'react-router-dom';
 import swal from 'sweetalert';
+import numberWithCommas from '../../../util/number_thousand_separator';
 
 const Home = () => {
   const [getList, setGetList] = useState([]);
@@ -252,7 +253,7 @@ const Home = () => {
                                   }} className="badge-item badge-danger" style={{cursor: "pointer"}}>{row.status}</span>
                                 )}
                               </td>
-                              <td>VND{row.grandtotal}</td>
+                              <td>VND{numberWithCommas(row.grandtotal)}</td>
                               <td className="action-btns">
                                 <Link
                                   className="views-btn"

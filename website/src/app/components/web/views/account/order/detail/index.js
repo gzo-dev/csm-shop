@@ -90,10 +90,6 @@ const Details = (props) => {
               <div className="col-lg-3 col-md-4">
                 <div className="left-side-tabs">
                   <div className="dashboard-left-links">
-                    <a href="/account/view" className="user-item">
-                      <i className="uil uil-apps" />
-                      Overview
-                    </a>
                     <a href="/account/profile" className="user-item">
                       <i className="mdi mdi-account-outline" />
                       My profile

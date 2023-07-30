@@ -148,12 +148,12 @@ export default class Sidebar extends Component {
                   >
                     Add Sub-Category
                   </Link>
-                  <Link
+                  {/* <Link
                     className="nav-link sub_nav_link"
                     to="/admin/category/sub-child-create"
                   >
                     Add Child-Category
-                  </Link>
+                  </Link> */}
                 </nav>
               </div>
               {/* <Link

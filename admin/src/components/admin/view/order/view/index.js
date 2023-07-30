@@ -15,7 +15,7 @@ const View = (props) => {
   useEffect(() => {
     (async () => {
       const voucherId = self.voucherId || 0;
-      if(voucherId != 0) {
+      if (voucherId != 0) {
         const result = await get_detail_voucher(voucherId);
         setDataVoucher(result);
       }
@@ -71,65 +71,56 @@ const View = (props) => {
                           </Moment>
                         </div>
                         <div className="ordr-date">
-                        {
-                          console.log(self)
-                        }
+                          {console.log(self)}
                           {
                             <Fragment>
-                              {
-                                self.status=== "processing" && <Fragment>
-                              <b>Process Date :</b>{" "}
-                              <Moment format="MMMM Do YYYY">
-                            {self.deliverydate}
-                          </Moment>
-
-                                </Fragment>
-                              }
-                            </Fragment>
-                          }
-                          
-                          {
-                            <Fragment>
-                              {
-                                self.status=== "shipping" && <Fragment>
-                                <b>Shipping Date :</b>{" "}
-                                <Moment format="MMMM Do YYYY">
-                              {self.deliverydate}
-                            </Moment>
-
-                                </Fragment>
-                              }
-                            </Fragment>
-                          }
-                          {
-                            <Fragment>
-                              {
-                                self.status=== "delivered" && 
+                              {self.status === "processing" && (
                                 <Fragment>
-                                    <b>Delivered Date :</b>{" "}
-                                    <Moment format="MMMM Do YYYY">
-                                  {self.deliverydate}
-                          </Moment>
-                                  
+                                  <b>Process Date :</b>{" "}
+                                  <Moment format="MMMM Do YYYY">
+                                    {self.deliverydate}
+                                  </Moment>
                                 </Fragment>
-                              }
+                              )}
+                            </Fragment>
+                          }
+
+                          {
+                            <Fragment>
+                              {self.status === "shipping" && (
+                                <Fragment>
+                                  <b>Shipping Date :</b>{" "}
+                                  <Moment format="MMMM Do YYYY">
+                                    {self.deliverydate}
+                                  </Moment>
+                                </Fragment>
+                              )}
                             </Fragment>
                           }
                           {
                             <Fragment>
-                              {
-                                self.status=== "cancel" && 
+                              {self.status === "delivered" && (
                                 <Fragment>
-                                <b>Cancel Date :</b>{" "}
-                              <Moment format="MMMM Do YYYY">
-                            {self.deliverydate}
-                          </Moment>
+                                  <b>Delivered Date :</b>{" "}
+                                  <Moment format="MMMM Do YYYY">
+                                    {self.deliverydate}
+                                  </Moment>
                                 </Fragment>
-                              }
-                              
+                              )}
                             </Fragment>
                           }
-                          
+                          {
+                            <Fragment>
+                              {self.status === "cancel" && (
+                                <Fragment>
+                                  <b>Cancel Date :</b>{" "}
+                                  <Moment format="MMMM Do YYYY">
+                                    {self.deliverydate}
+                                  </Moment>
+                                </Fragment>
+                              )}
+                            </Fragment>
+                          }
                         </div>
                       </div>
                       <div className="col-lg-6 col-sm-6">
@@ -184,7 +175,7 @@ const View = (props) => {
                                     </th>
                                   </tr>
                                 </thead>
-                                <tbody> 
+                                <tbody>
                                   {self.Carts.map((p, index) => (
                                     <tr key={index}>
                                       <td>{p.id}</td>
@@ -197,14 +188,14 @@ const View = (props) => {
                                       </td>
                                       <td>{p.name}</td>
                                       <td className="text-center">
-                                        VND{p.price}
+                                        VND{numberWithCommas(p.price)}
                                       </td>
                                       <td className="text-center">
                                         {p.discount}%
                                       </td>
                                       <td className="text-center">{p.qty}</td>
                                       <td className="text-center">
-                                        VND{parseInt(p.price) * parseInt(p.qty)}
+                                        VND{numberWithCommas((parseInt(p.price) * parseInt(p.qty)))}
                                       </td>
                                     </tr>
                                   ))}
@@ -226,7 +217,9 @@ const View = (props) => {
                           <div className="order-total-left-text">
                             Delivery Fees
                           </div>
-                          <div className="order-total-right-text">VND{self.deliveryFee}</div>
+                          <div className="order-total-right-text">
+                            VND{numberWithCommas(self.deliveryFee)}
+                          </div>
                         </div>
                         {self && self.voucherId != 0 && (
                           <div className="order-total-dt">

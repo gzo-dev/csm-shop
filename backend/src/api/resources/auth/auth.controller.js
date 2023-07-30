@@ -149,8 +149,8 @@ export default {
     async login(req, res, next) {
         const {email, password }= req.body
         // var date = new Date();
-        console.log(password)
-        console.log(bcrypt.hashSync(password))
+        // console.log(password)
+        // console.log(bcrypt.hashSync(password))
         const findUser= await db.user.findOne({where: {email, password: md5(password)}})
         if(findUser) {
             const token= JWT.sign({uid: findUser.dataValues.id, id: findUser.dataValues.id}, process.env.JWT_SECRET)
