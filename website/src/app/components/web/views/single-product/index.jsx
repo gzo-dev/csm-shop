@@ -242,7 +242,7 @@ const Singleproduct = ({ addToCart }) => {
                       if(productSize.length <= 0 ) {
                         swal("Thông báo", "Sản phẩm này đã hết size, vui lòng thử lại sau", "error")
                       }
-                      else if(!sessionStorage.getItem("sid")) {
+                      else if(!sessionStorage.getItem("_sid")) {
                         swal("Thông báo", "Bạn phải đăng nhập để có thể mua hàng", "error")
                       }
                       else if(!size) {

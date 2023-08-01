@@ -43,7 +43,7 @@ const Edit = (props) => {
       setDeliveryDate(value);
     }
   };
-
+  console.log(self)
   const handleUpdateStatus = async () => {
     if(status=== "cancel") {
       if(reason.length <= 0) {
@@ -55,7 +55,8 @@ const Edit = (props) => {
         status: status,
         id: self.row.id,
         deliverydate: new Date(deliveryDate),
-        reason
+        reason,
+        email: self.row.Addresses[0].states
       };
   
       if (data) {
@@ -78,6 +79,8 @@ const Edit = (props) => {
         status: status,
         id: self.row.id,
         deliverydate: new Date(deliveryDate),
+        reason,
+        email: self.row.Addresses[0].states
       };
   
       if (data) {

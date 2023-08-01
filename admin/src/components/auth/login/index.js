@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Redirect } from 'react-router-dom';
 import { NotificationManager } from 'react-notifications';
 import Loader from '../../loader';
@@ -11,6 +11,17 @@ const Signin = () => {
     const [passwordError, setPasswordError] = useState('');
     const [redirectToReferrer, setRedirectToReferrer] = useState(false);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
+
+    useEffect(() => {
+        const rememberedEmail = localStorage.getItem("rememberedEmail");
+        const rememberedPassword = localStorage.getItem("rememberedPassword");
+        if (rememberedEmail && rememberedPassword) {
+            setEmail(rememberedEmail);
+            setPassword(rememberedPassword);
+            setRememberMe(true);
+        }
+    }, []);
 
     const handleChangeUser = (e) => {
         if (e.target.name === 'email') {
@@ -20,17 +31,25 @@ const Signin = () => {
         }
     }
 
+    const handleRememberMeChange = (e) => {
+        setRememberMe(e.target.checked);
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         setIsLoaded(true);
         let data = { email: email, password: password };
         let user = await GetUserLogin.getUserLogin(data);
         if (user) {
+            if (rememberMe) {
+                localStorage.setItem("rememberedEmail", email);
+                localStorage.setItem("rememberedPassword", password);
+            }
             GetUserLogin.authenticate(user, () => {
                 setRedirectToReferrer(true);
                 setIsLoaded(false);
                 window.location.reload();
-            })
+            });
         } else {
             setIsLoaded(false);
             NotificationManager.error("Please! Check Username & Password", "Input Field");
@@ -66,8 +85,16 @@ const Signin = () => {
                                                 </div>
                                                 <div className="form-group">
                                                     <div className="custom-control custom-checkbox">
-                                                        <input className="custom-control-input" id="rememberPasswordCheck" type="checkbox" />
-                                                        <label className="custom-control-label" htmlFor="rememberPasswordCheck">Remember password</label>
+                                                        <input
+                                                            className="custom-control-input"
+                                                            id="rememberPasswordCheck"
+                                                            type="checkbox"
+                                                            checked={rememberMe}
+                                                            onChange={handleRememberMeChange}
+                                                        />
+                                                        <label className="custom-control-label" htmlFor="rememberPasswordCheck">
+                                                            Remember password
+                                                        </label>
                                                     </div>
                                                 </div>
                                                 <div className="form-group d-flex align-items-center justify-content-between mt-4 mb-0" onClick={handleSubmit}>

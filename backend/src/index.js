@@ -25,10 +25,6 @@ app.options('*', cors());
 app.use('/api', restRouter);
 // app.use('/', webRouter);
 
-app.use((req, res, next) => {
-	next(new RequestError('Invalid route', 404));
-});
-
 app.use((error, req, res, next) => {
 	if (!(error instanceof RequestError)) {
 		error = new RequestError('Some Error Occurred', 500, error.message);

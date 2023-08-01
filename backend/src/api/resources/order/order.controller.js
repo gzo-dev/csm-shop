@@ -56,11 +56,11 @@ export default {
                     }
                 })
                 .then((success) => {
-                    // mailer.sendUserOrder(deliveryAddress?.email ||"", "You have ordered successfully, ordered at "+ new Date())
+                    mailer.sendUserOrder(deliveryAddress?.email ||"", "You have ordered successfully, ordered at "+ new Date())
                     res.status(200).json({ 'success': true });
                 })
                 .catch(function (err) {
-                    // mailer.sendUserOrder(deliveryAddress?.email ||"", "You have ordered failed, ordered at "+ new Date())
+                    mailer.sendUserOrder(deliveryAddress?.email ||"", "You have ordered failed, ordered at "+ new Date())
                     console.log(err);   
                     res.status(500).json({ 'errors': ['Error adding cart'] });
                 });
@@ -111,13 +111,27 @@ export default {
             const { id, status, deliverydate } = req.body;
             db.Order.findOne({ where: { id: id } })
                 .then(list => {
+                    if(req.body?.status=== "delieverd") {
+                        mailer.sendUserOrder(req.body?.email ||"", `Your #ORDER-${list.number} have delivered successfully, delivered at `+ req.body?.deliverydate)
+                    }
+                    if(req.body?.status=== "processing") {
+                        mailer.sendUserOrder(req.body?.email ||"", `Your #ORDER-${list.number} is processing, delivered at `+ req.body?.deliverydate)
+                    }
+                    if(req.body?.status=== "shipping") {
+                        mailer.sendUserOrder(req.body?.email ||"", `Your #ORDER-${list.number} is shipping, shipping at `+ req.body?.deliverydate)
+                    }
+                    if(req.body?.status=== "cancel") {
+                        mailer.sendUserOrder(req.body?.email ||"", `Your #ORDER-${list.number} is canceled, reason: ${req.body?.reason || ""}, cancel at `+ req.body?.deliverydate)
+                    }
                     return db.Order.update({
                         status: status,
                         deliverydate: deliverydate ? deliverydate : list.deliverydate,
                         reason: req.body.reason || ""
                     }, { where: { id: id } })
+                    
                 })
                 .then((success) => {
+                    
                     res.status(200).json({ 'success': true, msg: "Successfully Updated Status" });
                 })
                 .catch(function (err) {

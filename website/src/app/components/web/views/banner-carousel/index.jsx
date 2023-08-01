@@ -3,6 +3,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Category from '../category';
+import "./index.css"
 
 export default class Bannerslider extends Component {
     render() {
@@ -21,13 +22,13 @@ export default class Bannerslider extends Component {
                 {/* <Category /> */}
                 <Slider {...settings}>
                     <div className="owl-item">
-                        <img src="https://f9-zpc.zdn.vn/8938671365555282785/ba56367463f9b2a7ebe8.jpg" alt="supermarket" />
+                        <img className="owl-item-img-" style={{width: "100%", aspectRatio: 16 / 9}} src="https://res.cloudinary.com/cockbook/image/upload/v1690831439/z4559682910612_157eb9b1f3c2180566a5375ea2d57220_op4urh.jpg" alt="supermarket" />
                     </div>
                     <div className="owl-item">
-                        <img src="https://f2-zpc.zdn.vn/3368511878183810319/b5bd219f7412a54cfc03.jpg" alt="supermarket" />
+                        <img className="owl-item-img-" style={{width: "100%", aspectRatio: 16 / 9}} src="https://res.cloudinary.com/cockbook/image/upload/v1690831403/z4559682975986_13318aec10875184d72b1a325c5bfafe_gpgn2d.jpg" alt="supermarket" />
                     </div>
                     <div className="owl-item">
-                        <img src="https://f9-zpc.zdn.vn/4275139286401155915/d56d474f12c2c39c9ad3.jpg" alt="supermarket" />
+                        <img className="owl-item-img-" style={{width: "100%", aspectRatio: 16 / 9}} src="https://res.cloudinary.com/cockbook/image/upload/v1690831536/z4559682878534_2642e286a2a14445116b3745bff14b3d_gkfubh.jpg" alt="supermarket" />
                     </div>
                 </Slider>
             </div>
