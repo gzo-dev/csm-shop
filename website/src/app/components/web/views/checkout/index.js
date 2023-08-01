@@ -181,7 +181,6 @@ const Checkout = (props) => {
             },
           });
           const result = await res.data;
-
           if (result.resultCode == 0) {
             popupRef.current.close();
             const data = {
@@ -229,12 +228,13 @@ const Checkout = (props) => {
               }
             }
           }
-          if (
+          else if (
             result.resultCode == 1000 ||
             result.resultCode == 7000 ||
             result.resultCode == 7002
           ) {
           } else {
+            popupRef.current.close();
             window.location.href = window.location.origin + "/order/failed";
           }
         } catch (error) {
