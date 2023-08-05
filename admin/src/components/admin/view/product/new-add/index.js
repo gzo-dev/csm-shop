@@ -15,6 +15,8 @@ import { Fragment } from "react";
 import TextField from '@material-ui/core/TextField';
 import AddSize from "./add_size";
 import _ from "lodash"
+import Axios from "axios";
+import { v4 } from "uuid";
 
 export default class Newproduct extends Component {
   constructor(props) {
@@ -46,41 +48,42 @@ export default class Newproduct extends Component {
       grand_total: 0,
       previewImage: [],
       typeUnit: 0,
-      size: []
+      size: [],
+      newAddImage: []
     };
     this.updateSize= this.updateSize.bind(this)
   }
-  componentDidMount() {
-    if(["short", "Short"].includes(this.state.getsublist[0].name)== true) {
-      this.setState({typeUnit: 1})
-    }  
-    else if(["shirt", "Shirt"].includes(this.state.getsublist[0].name) === true) {
-      this.setState({typeUnit: 2})
-    } 
-    else if(["short", "Short"].includes(this.state.getsublist[0].name) ===
-    false ||
-    ["shirt", "Shirt"].includes(this.state.getsublist[0].name) ===
-      false) {
-        this.setState({typeUnit: 3})
-      }
-  }
+  // componentDidMount() {
+  //   if(["short", "Short"].includes(this.state.getsublist[0].name)== true) {
+  //     this.setState({typeUnit: 1})
+  //   }  
+  //   else if(["shirt", "Shirt"].includes(this.state.getsublist[0].name) === true) {
+  //     this.setState({typeUnit: 2})
+  //   } 
+  //   else if(["short", "Short"].includes(this.state.getsublist[0].name) ===
+  //   false ||
+  //   ["shirt", "Shirt"].includes(this.state.getsublist[0].name) ===
+  //     false) {
+  //       this.setState({typeUnit: 3})
+  //     }
+  // }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.getsublist[0].name != this.state.getsublist[0].name) {
-      if(["short", "Short"].includes(this.state.getsublist[0].name)== true) {
-        this.setState({typeUnit: 1})
-      }  
-      else if(["shirt", "Shirt"].includes(this.state.getsublist[0].name) === true) {
-        this.setState({typeUnit: 2})
-      } 
-      else if(["short", "Short"].includes(this.state.getsublist[0].name) ===
-      false ||
-      ["shirt", "Shirt"].includes(this.state.getsublist[0].name) ===
-        false) {
-          this.setState({typeUnit: 3})
-        }
-    }
-  }
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (prevState.getsublist[0].name != this.state.getsublist[0].name) {
+  //     if(["short", "Short"].includes(this.state.getsublist[0].name)== true) {
+  //       this.setState({typeUnit: 1})
+  //     }  
+  //     else if(["shirt", "Shirt"].includes(this.state.getsublist[0].name) === true) {
+  //       this.setState({typeUnit: 2})
+  //     } 
+  //     else if(["short", "Short"].includes(this.state.getsublist[0].name) ===
+  //     false ||
+  //     ["shirt", "Shirt"].includes(this.state.getsublist[0].name) ===
+  //       false) {
+  //         this.setState({typeUnit: 3})
+  //       }
+  //   }
+  // }
 
   handleBack() {
     this.props.history.goBack();
@@ -164,7 +167,9 @@ export default class Newproduct extends Component {
       discountPer,
       total,
       grand_total,
-      size
+      size,
+      newAddImage,
+
     } = this.state;
     const formData = new FormData();
     formData.append("categoryId", selectedCategory);
@@ -181,6 +186,7 @@ export default class Newproduct extends Component {
     formData.append("buyerPrice", buyerPrice);
     formData.append("price", price);
     formData.append("qty", _.sumBy(size, "amount"));
+    formData.append("amount", _.sumBy(size, "amount"));
     formData.append("discountPer", discountPer);
     formData.append("discount", discount);
     formData.append("total", total);
@@ -200,6 +206,8 @@ export default class Newproduct extends Component {
       dangerMode: true,
     }).then(async (success) => {
       if (success) {
+        const imgList= await this.uploadImages(this.state.newAddImage)
+        formData.append("newaddimage", JSON.stringify(imgList))
         let list = await GetProductDetails.addProductList(formData, config);
         if (list) {
           this.setState({ isLoaded: false });
@@ -221,7 +229,43 @@ export default class Newproduct extends Component {
     );
     this.setState({ previewImage: arr });
   };
-
+  
+  uploadImageToCloudinary = async (imageObject) => {
+    const cloudinaryConfig = {
+      cloud_name: "cockbook",
+      upload_preset: "uem2kud5",
+    };
+    try {
+      const { image } = imageObject;
+      const formData = new FormData();
+      formData.append("file", image);
+      formData.append("upload_preset", cloudinaryConfig.upload_preset);
+  
+      const response = await Axios.post(
+        `https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloud_name}/image/upload`,
+        formData
+      );
+  
+      const imageUrl = response.data.secure_url;
+  
+      return {
+        ...imageObject,
+        imageUrl,
+      };
+    } catch (error) {
+      console.error("Lỗi khi upload hình ảnh:", error);
+      return imageObject;
+    }
+  };
+  
+  uploadImages = async (imageObjects) => {
+    const uploadedImages = await Promise.all(
+      imageObjects.map((imageObject) => this.uploadImageToCloudinary(imageObject))
+    );
+    
+    return uploadedImages;
+  };
+  
   handleSubmitMoreImage = async (event) => {
     this.setState({ isLoaded: true });
     const formData = new FormData();
@@ -234,7 +278,8 @@ export default class Newproduct extends Component {
         "content-type": "multipart/form-data",
       },
     };
-
+    const imgList= await this.uploadImages(this.state.newAddImage)
+        formData.append("newaddimage", JSON.stringify(imgList))
     let list = await GetProductDetails.getUploadProductImage(formData, config);
     if (list) {
       this.setState({ isLoaded: false });
@@ -420,7 +465,7 @@ export default class Newproduct extends Component {
                       </div>
                     </div>
                     {/* new */}
-                    <div className="col-lg-4 col-md-4">
+                    <div className="col-lg-12 col-md-12">
                       <div className="form-group">
                         <label className="form-label">Product image*</label>
                         <input
@@ -474,6 +519,53 @@ export default class Newproduct extends Component {
                                 </button>
                               </div>
                             ))}
+                            
+                          {this.state.newAddImage.map((item, key)=> <div key={key} style={{ position: "relative" }}>
+                          <img
+                              src={item.previewUrl}
+                              className={"mr-3 mb-3"}
+                              style={{
+                                width: 130,
+                                height: 130,
+                                borderRadius: 10,
+                                objectFit: "cover",
+                              }}
+                            />
+                            <button
+                              onClick={() => {
+                                this.setState({newAddImage: this.state.newAddImage.filter((item2) => item2.id !== item.id)});
+                              }}
+                              style={{
+                                position: "absolute",
+                                right: 0,
+                                top: 0,
+                              }}
+                            >
+                              X
+                            </button>
+                          </div>)
+                        }
+                        <div
+                          className={"mr-3 mb-3"}
+                          style={{
+                            width: 130,
+                            height: 130,
+                            borderRadius: 10,
+                            objectFit: "cover",
+                            backgroundColor: "#f2f0f5",
+                            marginLeft: 12,
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            position: "relative"
+                          }}
+                        >
+                          <input style={{width: "100%", height: "100%", position: "absolute", top: 0, left: 0, opacity: 0}} type="file" onChange={(e)=> {
+                            e.persist()
+                            this.setState(prev=> ({newAddImage: [...prev.newAddImage, {id: v4(), previewUrl: URL.createObjectURL(e.target.files[0]), image: e.target.files[0]}]}))
+                          }} />
+                          Add image
+                        </div>
                         </div>
                       </div>
                     </div>

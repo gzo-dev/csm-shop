@@ -9,6 +9,7 @@ import numberWithCommas from '../../../../../../util/number_thousand_separator';
 import { Button } from '@material-ui/core';
 import moment from "moment"
 import {useHistory } from "react-router-dom"
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 const Reward = () => {
   const [user, setUser] = useState("");
@@ -28,7 +29,10 @@ const Reward = () => {
 
     fetchData();
   }, []);
-
+  const handleCopyCodeToClipboard = (code) => {
+    navigator.clipboard.writeText(code);
+    alert("Code copied to clipboard!");
+  };
   useEffect(()=> {
     (async ()=> {
       const res= await Axios({
@@ -129,9 +133,17 @@ const Reward = () => {
                       <h4 className="cashbk-price">Discount VND{numberWithCommas(item.discount)}</h4>
                       <span className="date-reward">Expires on : {moment(item.expire).format("DD-MM-YYYY HH:mm:ss")}</span>
                       
-                        <Button style={{marginTop: 16 }} disabled={item.is_use=== 1 ? true : false} onClick={()=> {
-                          history.push("/")
-                        }} className="mb-1" variant={"contained"} color={"primary"}>{item.is_use=== 1 ? "Used" : "Use"}</Button>
+                      <CopyToClipboard onCopy={()=> alert("Copy success")} text={item.code}>
+                      <Button
+                        style={{ marginTop: 16 }}
+                        disabled={item.is_use === 1}
+                         className="mb-1"
+                        variant="contained"
+                        color="primary"
+                      >
+                        {item.is_use === 1 ? "Used" : "Copy"}
+                      </Button>
+                    </CopyToClipboard>
                     </div>
                   </div>
                 </div>)

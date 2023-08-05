@@ -141,6 +141,9 @@ const Details = (props) => {
                               )}
                             </h6>
                           </div>
+                          <div style={{fontSize: 16}}>Detail order: </div>
+                          <div style={{fontSize: 16}}>Phone number: {list.Addresses[0].phone}</div>
+                          <div style={{fontSize: 16}}>Address: {list.Addresses[0].shipping}</div>
                           <div className="order-body10">
                             <div className="table-responsive">
                               <table className="table ucp-table table-hover">

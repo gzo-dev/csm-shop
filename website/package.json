@@ -13,6 +13,7 @@
     "js-cookie": "^2.2.1",
     "moment": "^2.29.4",
     "react": "^16.13.1",
+    "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "^16.13.1",
     "react-fullscreen-loading": "0.0.4",
     "react-icons": "^4.10.1",

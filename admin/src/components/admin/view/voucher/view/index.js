@@ -15,7 +15,9 @@ const View = () => {
   const history = useHistory();
   const [getList, setGetList] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [change, setChange]= useState(false)
+  const [change, setChange] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // Số lượng item trên mỗi trang
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,10 +70,34 @@ const View = () => {
     history.push({ pathname: `/admin/user/create` });
   };
 
+  // Hàm để lấy danh sách item trên trang hiện tại
+  const getCurrentItems = () => {
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    return getList.slice(indexOfFirstItem, indexOfLastItem);
+  };
+
+  // Tính tổng số trang
+  const totalPages = Math.ceil(getList.length / itemsPerPage);
+
+  // Xử lý chuyển đến trang trước
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  // Xử lý chuyển đến trang tiếp theo
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+  };
+
+  // Xử lý chuyển đến trang cụ thể
+  const goToPage = (page) => {
+    setCurrentPage(Math.min(Math.max(page, 1), totalPages));
+  };
+
   return (
     <div className="container-fluid">
       <div className="row">
-      
         <div className="col-lg-5 col-md-9 col-lg-6">
           <h2 className="mt-30 page-title">Voucher List</h2>
         </div>
@@ -117,32 +143,28 @@ const View = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {getList.map((row, index) => (
+                    {/* Hiển thị danh sách item của trang hiện tại */}
+                    {getCurrentItems().map((row, index) => (
                       <tr key={index}>
-                        <td>{++index}</td>
+                        <td>{index + 1}</td>
                         <td>{row.code}</td>
-                        <td>
-                          {moment(row.expire).format("DD-MM-YYYY HH:mm")}
-                        </td>
+                        <td>{moment(row.expire).format("DD-MM-YYYY HH:mm")}</td>
                         <td>VND{row.discount}</td>
                         <td>
-                          <div onClick={()=> {
-                            swal("Thông báo", "Bạn có muốn xóa voucher này không ? ", {buttons: {
-                              ok: "Ok",
-                              cancel: "Cancel"
-                            }})
-                            .then(async value=> {
-                              if(value=== "ok") {
-                                const result= await delete_voucher(row.id)
-                                if(result.ok=== true) {
-                                  swal("Thông báo", "Xóa thành công", "success")
-                                  .then(()=> setGetList(getList.filter(item=> item.id != row.id)))
+                          <div onClick={() => {
+                            swal("Thông báo", "Bạn có muốn xóa voucher này không ? ", { buttons: { ok: "Ok", cancel: "Cancel" } })
+                              .then(async value => {
+                                if (value === "ok") {
+                                  const result = await delete_voucher(row.id)
+                                  if (result.ok === true) {
+                                    swal("Thông báo", "Xóa thành công", "success")
+                                      .then(() => setGetList(getList.filter(item => item.id !== row.id)))
+                                  }
+                                  else {
+                                    swal("Thông báo", "Xóa thất bại", "error")
+                                  }
                                 }
-                                else {
-                                  swal("Thông báo", "Xóa thất bại", "error")
-                                }
-                              }
-                            })
+                              })
                           }} title={"Delete"}>
                             <i className="fas fa-trash-alt" />
                           </div>
@@ -152,6 +174,22 @@ const View = () => {
                   </tbody>
                 </table>
               </div>
+            </div>
+            <div className="pagination">
+              {/* Nút chuyển đến trang trước */}
+              <Button onClick={handlePrevPage} disabled={currentPage === 1}>
+                Prev
+              </Button>
+              {/* Hiển thị các nút chuyển đến các trang cụ thể */}
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map(page => (
+                <Button key={page} onClick={() => goToPage(page)} disabled={currentPage === page}>
+                  {page}
+                </Button>
+              ))}
+              {/* Nút chuyển đến trang tiếp theo */}
+              <Button onClick={handleNextPage} disabled={currentPage === totalPages}>
+                Next
+              </Button>
             </div>
           </div>
         </div>

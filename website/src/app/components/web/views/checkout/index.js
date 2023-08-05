@@ -107,7 +107,9 @@ const Checkout = (props) => {
       email,
       voucherId: dataVoucher.id || 0,
     };
-
+    if(deliveryAddress.name.length <= 0 || deliveryAddress.phone.length <= 0 || deliveryAddress.district.length <= 0 || deliveryAddress.states.length <= 0) { 
+      return swal("Thông báo" ,"Bạn hãy nhập đủ thông tin", "error")
+    }
     if (data) {
       if (dataVoucher.id != 0) {
         const res = await Axios({
@@ -197,7 +199,9 @@ const Checkout = (props) => {
               email,
               voucherId: dataVoucher.id || 0,
             };
-
+            if(deliveryAddress.name.length <= 0 || deliveryAddress.phone.length <= 0 || deliveryAddress.district.length <= 0 || deliveryAddress.states.length <= 0) { 
+              return swal("Thông báo" ,"Bạn hãy nhập đủ thông tin", "error")
+            }
             if (data) {
               if (dataVoucher.id != 0) {
                 const res = await Axios({

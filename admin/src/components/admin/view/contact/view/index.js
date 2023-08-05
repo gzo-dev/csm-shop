@@ -17,6 +17,9 @@ const View = () => {
   const [getList, setGetList] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [change, setChange]= useState(false)
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10); // Số lượng item trên mỗi trang
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoaded(true);
@@ -30,14 +33,12 @@ const View = () => {
   };
 
   const getContact = async () => {
-    // let list = await GetPaymentDetails.getAllPaymentList();
     const res = await Axios({
       url: API_URL + "/api/contact",
       method: "get",
     });
     const result = await res.data;
     let list = result.data;
-    // console.log("list", list)
     if (list) {
       setGetList(list);
       setIsLoaded(false);
@@ -64,15 +65,54 @@ const View = () => {
     });
   };
 
-  const handlEditRow = (row) => {
-    history.push({
-      pathname: `/admin/user/edit/${row.id}`,
-      state: row,
-    });
-  };
-
   const handleAddNewUser = () => {
     history.push({ pathname: `/admin/user/create` });
+  };
+
+  // Hàm để lấy danh sách item trên trang hiện tại
+  const getCurrentItems = () => {
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    return getList.slice(indexOfFirstItem, indexOfLastItem);
+  };
+
+  // Tính tổng số trang
+  const totalPages = Math.ceil(getList.length / itemsPerPage);
+
+  // Tạo mảng các trang trung tâm
+  const centerPages = () => {
+    const totalPageCount = Math.min(5, totalPages); // Hiển thị tối đa 5 trang trung tâm
+    let centerPages = [];
+    const startPage = Math.max(2, currentPage - Math.floor(totalPageCount / 2));
+    for (let i = 0; i < totalPageCount; i++) {
+      centerPages.push(startPage + i);
+    }
+    return centerPages;
+  };
+
+  // Xác định xem có hiển thị nút '...' bên trái
+  const showLeftDots = () => {
+    return centerPages()[0] > 2;
+  };
+
+  // Xác định xem có hiển thị nút '...' bên phải
+  const showRightDots = () => {
+    return centerPages()[centerPages().length - 1] < totalPages - 1;
+  };
+
+  // Xử lý chuyển đến trang trước
+  const handlePrevPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  // Xử lý chuyển đến trang tiếp theo
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+  };
+
+  // Xử lý chuyển đến trang cụ thể
+  const goToPage = (page) => {
+    setCurrentPage(Math.min(Math.max(page, 1), totalPages));
   };
 
   return (
@@ -92,35 +132,6 @@ const View = () => {
         <li className="breadcrumb-item active">voucher</li>
       </ol>
       <div className="row justify-content-between">
-        {/* <div className="col-lg-3 col-md-4">
-          <div className="bulk-section mt-30">
-            <div className="input-group">
-              <select id="action" name="action" className="form-control">
-                <option selected>Bulk Actions</option>
-                <option value={1}>Active</option>
-                <option value={2}>Inactive</option>
-                <option value={3}>Delete</option>
-              </select>
-              <div className="input-group-append">
-                <button className="status-btn hover-btn" type="submit">
-                  Apply
-                </button>
-              </div>
-            </div>
-          </div>
-        </div> */}
-        <div
-          className="col-lg-5 col-md-3 col-lg-6 back-btn"
-          style={{ display: "none" }}
-        >
-          <Button
-            variant="contained"
-            className="status-btn hover-btn"
-            onClick={handleAddNewUser}
-          >
-            Add New User
-          </Button>
-        </div>
         <div className="col-lg-12 col-md-12">
           {isLoaded ? <Loader /> : ""}
           <div className="card card-static-2 mt-30 mb-30">
@@ -132,9 +143,6 @@ const View = () => {
                 <table className="table ucp-table table-hover">
                   <thead>
                     <tr>
-                      {/* <th style={{ width: 60 }}>
-                        <input type="checkbox" className="check-all" />
-                      </th> */}
                       <th style={{ width: 60 }}>ID</th>
                       <th>Customer name</th>
                       <th>Date send</th>
@@ -146,16 +154,9 @@ const View = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {getList.map((row, index) => (
+                    {/* Hiển thị danh sách item của trang hiện tại */}
+                    {getCurrentItems().map((row, index) => (
                       <tr key={index}>
-                        {/* <td>
-                          <input
-                            type="checkbox"
-                            className="check-item"
-                            name="ids[]"
-                            defaultValue={7}
-                          />
-                        </td> */}
                         <td>{++index}</td>
                         <td>{row.name}</td>
                         <td>{row.createdAt}</td>
@@ -167,7 +168,7 @@ const View = () => {
                         <td>{row.status}</td>
                         <td className="action-btns">
                           {
-                            row.status=== "processed" ? <ViewReply {...row} />
+                            row.status === "processed" ? <ViewReply {...row} />
                             :
                             <ReplyContact {...row} setChange={setChange} /> 
                           }
@@ -205,6 +206,46 @@ const View = () => {
                   </tbody>
                 </table>
               </div>
+            </div>
+            <div className="pagination">
+              <Button onClick={handlePrevPage} disabled={currentPage === 1}>
+                Prev
+              </Button>
+
+              {/* Hiển thị nút chuyển đến trang đầu tiên */}
+              {currentPage > 1 && (
+                <Button onClick={() => goToPage(1)}>
+                  1
+                </Button>
+              )}
+
+              {/* Hiển thị nút '...' bên trái */}
+              {showLeftDots() && (
+                <Button disabled>...</Button>
+              )}
+
+              {/* Hiển thị các trang trung tâm */}
+              {centerPages().map((page) => (
+                <Button key={page} onClick={() => goToPage(page)} disabled={currentPage === page}>
+                  {page}
+                </Button>
+              ))}
+
+              {/* Hiển thị nút '...' bên phải */}
+              {showRightDots() && (
+                <Button disabled>...</Button>
+              )}
+
+              {/* Hiển thị nút chuyển đến trang cuối cùng */}
+              {currentPage < totalPages && (
+                <Button onClick={() => goToPage(totalPages)}>
+                  {totalPages}
+                </Button>
+              )}
+
+              <Button onClick={handleNextPage} disabled={currentPage === totalPages}>
+                Next
+              </Button>
             </div>
           </div>
         </div>

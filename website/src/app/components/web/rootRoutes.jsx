@@ -15,6 +15,7 @@ import Complete from "./views/checkout/complete";
 import Account from "./views/account";
 import Failed from "./views/checkout/failed";
 import VoucherGift from "./views/voucher-gift/VoucherGift";
+import SignUpSuccess from "./views/checkout/signupsuccess/SignupSuccess";
 
 const RootRoutes = () => {
   return (
@@ -31,6 +32,7 @@ const RootRoutes = () => {
         <PrivateRoute path="/account" component={Account} />
         <Route exact path="/login" component={Login} />
         <Route exact path="/register" component={Register} />
+        <Route exact path="/signup/success" component={SignUpSuccess} />
         <Route exact path="/voucher/gift" component={VoucherGift} />
         <Route component={NotFound} />
       </Switch>

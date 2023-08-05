@@ -8,13 +8,17 @@ import swal from 'sweetalert';
 
 const Allshop = () => {
     const [getdata, setGetData] = useState([]);
+    const [getdataSearch, setgetdataSearch]= useState([])
+    const [searchText, setSearchText]= useState("")
+    const isSearching= searchText.length > 0 ? true : false
 
     const handleBack = () => {
         // Logic xử lý khi bấm nút Back
-    };
+    };   
+
 
     const formatDate = (date) => {
-        // Logic xử lý format ngày tháng
+        // Logic xử lý format ngày tháng  
     };
 
     const getSellarList = async () => {
@@ -52,6 +56,20 @@ const Allshop = () => {
         return ()=> setGetData([])
     }, []);
 
+    const handleSearch = (e) => {
+        setSearchText(e.target.value)
+        if (e.target.value.length <= 0) {
+          setgetdataSearch(getdata); // Hiển thị toàn bộ danh sách nếu không có từ khóa tìm kiếm
+          return;
+        }
+      
+        const filteredList = getdata.filter((item) =>
+          item.storename.toLowerCase().includes(e.target.value.toLowerCase())
+        );
+      
+        setgetdataSearch(filteredList);
+      };
+
     return (
         <div className="container-fluid">
             <div className="row">
@@ -85,16 +103,16 @@ const Allshop = () => {
                         </div>
                     </div> */}
                 </div>
-                <div className="col-lg-5 col-md-6">
+                <div className="col-lg-12 col-md-6">
                     <div className="bulk-section mt-30">
                         <div className="search-by-name-input">
-                            <input className="form-control" placeholder="Search" />
+                            <input value={searchText} onChange={(e)=> handleSearch(e)} className="form-control" placeholder="Search" />
                         </div>
                         <div className="input-group">
-                            <select id="categeory" name="categeory" className="form-control">
+                            {/* <select id="categeory" name="categeory" className="form-control">
                                 <option selected>Active</option>
                                 <option value={1}>Inactive</option>
-                            </select>
+                            </select> */}
                             <div className="input-group-append">
                                 <button className="status-btn hover-btn" type="submit">Search Product</button>
                             </div>
@@ -121,7 +139,7 @@ const Allshop = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {getdata.map((row, index) => (
+                                        {isSearching=== false && getdata.map((row, index) => (
                                             <tr key={index}>
                                                 <td><input type="checkbox" className="check-item" name="ids[]" defaultValue={5} /></td>
                                                 <td>{++index}</td>
@@ -155,6 +173,42 @@ const Allshop = () => {
                                                 </td>
                                             </tr>
                                         ))}
+                                        {
+                                            isSearching=== true && getdataSearch.map((row, index) => (
+                                            <tr key={index}>
+                                                <td><input type="checkbox" className="check-item" name="ids[]" defaultValue={5} /></td>
+                                                <td>{++index}</td>
+                                                <td>{row.storename}</td>
+                                                <td>{row.ownername}</td>
+                                                <td>{row.area ? row.area.location.name : ''}</td>
+                                                <td>
+                                                    {row.status === 'active' ? <span className="badge-item badge-status-success">{row.status}</span> :
+                                                        <span className="badge-item badge-status">{row.status}</span>
+                                                    }
+                                                </td>
+                                                <td className="action-btns">
+                                                    <Link to={{
+                                                        pathname: `/admin/shop/view`,
+                                                        state: { row }
+                                                    }}>
+                                                        <Typography className="view-shop-btn"><i className="fas fa-eye" /></Typography>
+                                                    </Link>
+                                                    <Link to={{
+                                                        pathname: `/admin/shop/shop-product`,
+                                                    }}>
+                                                        <Typography className="list-btn"><i className="fas fa-list-alt" /></Typography>
+                                                    </Link>
+                                                    <Link to={{
+                                                        pathname: `/admin/shop/edit`,
+                                                        state: { row }
+                                                    }}>
+                                                        <Typography className="edit-btn"><i className="fas fa-edit" /></Typography>
+                                                    </Link>
+                                                    <Typography className="delete-btn" onClick={(e) => handleDeleteById(row.id)} ><i className="fas fa-trash-alt" /></Typography>
+                                                </td>
+                                            </tr>
+                                        ))
+                                        }
                                     </tbody>
                                 </table>
                             </div>

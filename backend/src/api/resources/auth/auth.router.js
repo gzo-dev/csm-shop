@@ -11,5 +11,6 @@ authRouter.route('/user/update').post(authController.userUpdate);
 authRouter.route('/user/delete').post(authController.deleteUserList);
 authRouter.route('/info').get(authController.findUser);
 authRouter.route('/rootLogin').post(authController.login);
+authRouter.route('/verification').post(authController.verifyMail)
 
 

@@ -4,8 +4,10 @@ import mailer from '../../../mailer';
 import config from '../../../config';
 import bcrypt from 'bcrypt-nodejs';
 import speakeasy from 'speakeasy';
-import { validateEmail } from './../../../functions'
+// import { validateEmail } from './../../../functions'
 import md5 from "md5"
+import nodemailer from "nodemailer"
+import axios from "axios"
 
 var JWTSign = function (user, date) {
     return JWT.sign({
@@ -175,6 +177,43 @@ export default {
                 next(err)
             })
     },
+    async verifyMail(req, res) {
+        try {
+            // Nhận email từ request body
+            const { email, password, firstName } = req.body;
+    
+            // Tạo một mã xác thực ngẫu nhiên
+           
+    
+            // Cấu hình thông tin mail server (dùng Gmail làm ví dụ)
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: process.env.MAIL_USERNAME, // Thay bằng địa chỉ email của bạn
+                    pass: process.env.MAIL_PASSWORD // Thay bằng mật khẩu email của bạn
+                }
+            });
+    
+            // Cấu hình nội dung email
+            const mailOptions = {
+                from: process.env.MAIL_USERNAME, // Thay bằng địa chỉ email của bạn
+                to: email, // Địa chỉ email người dùng cần xác thực
+                subject: 'Email Verification', // Tiêu đề email
+                html: `
+                    <a href="${process.env.URL_FRONTEND}/signup/success" style="padding: 10px; border-radius: 10px; background-color: #2e89ff; color: #fff; width: 100%">Click here to complete singup process</a>
+                ` // Nội dung email chứa mã xác thực
+            };
+            
+            // Gửi email
+            await transporter.sendMail(mailOptions);
+            // Trả về mã xác thực để sử dụng sau này (ví dụ để kiểm tra mã khi người dùng nhập vào)
+            res.json({ success: true });
+        } catch (error) {
+            // Xử lý lỗi nếu có
+            console.error('Error sending verification email:', error);
+            res.status(500).json({ success: false, error: 'Error sending verification email' });
+        }
+    }
 }
 
 

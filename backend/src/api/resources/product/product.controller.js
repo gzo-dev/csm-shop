@@ -45,7 +45,7 @@ export default {
     },
     async addProduct(req, res, next) {
         try {
-            const { categoryId, subCategoryId, childCategoryId, name, slug, brand, status, unitSize, sortDesc, desc, buyerPrice, price, qty, discount, discountPer, total, netPrice, image, size } = req.body;
+            const { categoryId, subCategoryId, childCategoryId, name, slug, brand, status, unitSize, sortDesc, desc, buyerPrice, price, qty, discount, discountPer, total, netPrice, image, size, newaddimage } = req.body;
             db.product.findOne({
                 where: { name: name }
             })
@@ -54,7 +54,7 @@ export default {
                         return db.product.create({
                             categoryId: categoryId,
                             subCategoryId: subCategoryId,
-                            childCategoryId: childCategoryId,
+                            childCategoryId: childCategoryId || 0,
                             name: name,
                             slug: slug,
                             status: parseInt(status) ? 'active' : 'inactive',
@@ -70,12 +70,15 @@ export default {
                             total: total,
                             netPrice: netPrice,
                             photo: req.file ? req.file.path : '',
-                        })
+                        })  
                     }
                     return res.status(409).json({message: 'Already exist product'});
                 })
                 .then(product => {
                    JSON.parse(image)?.map(item=> db.productphoto.create({imgUrl: item?.path, productId: product.dataValues.id}))
+                   if(newaddimage) {
+                    JSON.parse(newaddimage)?.map(item=> db.productphoto.create({imgUrl: item?.imageUrl, productId: productId}))
+                   }
                    JSON.parse(size)?.map(item=> db.productsize.create({size: item?.size, productId: product.dataValues.id}))
                     res.status(200).json({ 'success': true, msg: "Successfully inserted product" });
                 })
@@ -131,7 +134,7 @@ export default {
 
     async update(req, res, next) {
         try {
-            const { productId, categoryId, subCategoryId, childCategoryId, name, slug, brand, status, unitSize, desc, buyerPrice, price, qty, discount, discountPer, total, netPrice, images, size } = req.body;
+            const { productId, categoryId, subCategoryId, childCategoryId, name, slug, brand, status, unitSize, desc, buyerPrice, price, qty, discount, discountPer, total, netPrice, images, size, newaddimage } = req.body;
             db.product.findOne({ where: { id: productId } })
                 .then(product => {
                     if (product) {
@@ -158,6 +161,9 @@ export default {
                     throw new RequestError('Not Found Product', 409);
                 })
                 .then((p) => {
+                    if(newaddimage) {
+                        JSON.parse(newaddimage)?.map(item=> db.productphoto.create({imgUrl: item?.imageUrl, productId: productId}))
+                       }
                     db.productphoto.destroy({
                         where: {productId: productId}
                     })

@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
-import { GetUserLogin } from '../../components/services';
-import { NotificationManager } from "react-notifications";
+import React, { useState } from 'react';
+import axios from 'axios';
+import { NotificationManager } from 'react-notifications';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@material-ui/core';
 
 const emailRegex = RegExp(
     /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
@@ -8,112 +9,156 @@ const emailRegex = RegExp(
 
 const formValid = ({ formErrors, ...rest }) => {
     let valid = true;
-
-    // validate form errors being empty
     Object.values(formErrors).forEach(val => {
         val.length > 0 && (valid = false);
     });
-
-    // validate the form was filled out
     Object.values(rest).forEach(val => {
         val === null && (valid = false);
     });
-
     return valid;
 };
-export default class Register extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            firstName:null,
-            email: null,
-            password: null,
-            formErrors: {
-                firstName:"",
-                email: "",
-                password: ""
-            }
-        };
-    }
-    handleChange = e => {
+
+const Register = () => {
+    const [open, setOpen] = useState(false); // State để kiểm soát việc mở/đóng Dialog
+    const [formData, setFormData] = useState({
+        firstName: null,
+        email: null,
+        password: null,
+        verificationCode: '',
+        isEmailSent: false,
+        formErrors: {
+            firstName: "",
+            email: "",
+            password: "",
+            verificationCode: ""
+        }
+    });
+
+    const { firstName, email, password, verificationCode, isEmailSent, formErrors } = formData;
+
+    const handleOpenDialog = () => {
+        setOpen(true);
+    };
+
+    const handleCloseDialog = () => {
+        setOpen(false);
+    };
+
+    const handleChange = e => {
         e.preventDefault();
         const { name, value } = e.target;
-        let formErrors = { ...this.state.formErrors };
-
+        let updatedFormErrors = { ...formErrors };
         switch (name) {
             case "firstName":
-                formErrors.firstName =
+                updatedFormErrors.firstName =
                     value.length < 3 ? "minimum 3 characaters required" : "";
                 break;
             case "email":
-                formErrors.email = emailRegex.test(value)
+                updatedFormErrors.email = emailRegex.test(value)
                     ? ""
                     : "invalid email address";
                 break;
             case "password":
-                formErrors.password =
+                updatedFormErrors.password =
                     value.length < 6 ? "minimum 6 characaters required" : "";
+                break;
+            case "verificationCode":
+                updatedFormErrors.verificationCode =
+                    value.length !== 6 ? "verification code must be 6 characters" : "";
                 break;
             default:
                 break;
         }
-
-        this.setState({ formErrors, [name]: value });
+        setFormData({ ...formData, formErrors: updatedFormErrors, [name]: value });
     };
 
-    handleSubmit = async (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        let { firstName, email, password, gender } = this.state;
-        let data = {firstName: firstName, email: email, password: password, gender: gender }
-        if (formValid(this.state)) {
-          let list = await GetUserLogin.getUserRegister(data);
-          if(list){
-            NotificationManager.success("Successfully Added New User");
-            // window.location.href="/";
-          }
-        } else{
-            NotificationManager.error("Please check your Register", "Input Error");
-          }
+        const data = { firstName, email, password };
+        if (!isEmailSent) {
+            try {
+                await axios.post('/api/sendEmailVerification', { email });
+                setFormData({ ...formData, isEmailSent: true });
+                NotificationManager.success("Verification code has been sent to your email");
+            } catch (error) {
+                NotificationManager.error("Error sending verification code", "Error");
+            }
+        } else {
+            try {
+                const response = await axios.post('/api/verifyEmailCode', { email, code: verificationCode });
+                if (response.data.success) {
+                    await axios.post('/api/registerUser', data);
+                    NotificationManager.success("Successfully Added New User");
+                }
+            } catch (error) {
+                NotificationManager.error("Invalid verification code", "Error");
+            }
+        }
+    };
 
-    }
-    render() {
-        let { firstName,email, password, formErrors } = this.state;
-        return (
-            <div>
-                <h5 className="heading-design-h5">Register Now!</h5>
+    return (
+        <div>
+            <h5 className="heading-design-h5">Register Now!</h5>
+            <div action='#'>
                 <fieldset className="form-group">
                     <label>First Name</label>
-                    <input type="text" className="form-control" name="firstName" value={firstName} onChange={this.handleChange}  />
+                    <input type="text" className="form-control" name="firstName" value={firstName} onChange={handleChange} />
                     {formErrors.firstName.length > 0 && (
                         <span className="errorMessage">{formErrors.firstName}</span>
                     )}
                 </fieldset>
                 <fieldset className="form-group">
                     <label>Enter Email/Mobile number</label>
-                    <input type="text" className="form-control" name="email" value={email} onChange={this.handleChange}  />
+                    <input type="text" className="form-control" name="email" value={email} onChange={handleChange} />
                     {formErrors.email.length > 0 && (
                         <span className="errorMessage">{formErrors.email}</span>
                     )}
                 </fieldset>
                 <fieldset className="form-group">
                     <label>Enter Password</label>
-                    <input type="password" className="form-control" name="password" value={password} onChange={this.handleChange}  />
+                    <input type="password" className="form-control" name="password" value={password} onChange={handleChange} />
                     {formErrors.password.length > 0 && (
                         <span className="errorMessage">{formErrors.password}</span>
-                      )}
+                    )}
                 </fieldset>
-                {/* <fieldset className="form-group">
-                    <label>Enter Confirm Password </label>
-                    <input type="password" className="form-control" placeholder="********" />
-                </fieldset> */}
+                {!formData.isEmailVerified && formData.isEmailSent && (
+                    <fieldset className="form-group">
+                        <label>Enter Verification Code</label>
+                        <input type="text" className="form-control" name="verificationCode" value={verificationCode} onChange={handleChange} />
+                        {formErrors.verificationCode.length > 0 && (
+                            <span className="errorMessage">{formErrors.verificationCode}</span>
+                        )}
+                    </fieldset>
+                )}
                 <fieldset className="form-group">
-                    <button type="submit" className="btn btn-lg btn-secondary btn-block" onClick={this.handleSubmit}>Create Your Account</button>
+                    <button type="submit" className="btn btn-lg btn-secondary btn-block" onClick={handleOpenDialog}>
+                        {formData.isEmailSent && !formData.isEmailVerified ? "Verify Email" : "Create Your Account"}
+                    </button>
                 </fieldset>
                 <div className="custom-control custom-checkbox">
                     <input type="checkbox" className="custom-control-input" id="customCheck2" />
                     <label className="custom-control-label" htmlFor="customCheck2">I Agree with <a href="#">Term and Conditions</a></label>
                 </div>
             </div>
-        )
-    }
-}
+            <Dialog open={open} onClose={handleCloseDialog}>
+                <DialogTitle>Enter Verification Code</DialogTitle>
+                <DialogContent>
+                    <input type="text" className="form-control" name="verificationCode" value={verificationCode} onChange={handleChange} />
+                    {formErrors.verificationCode.length > 0 && (
+                        <span className="errorMessage">{formErrors.verificationCode}</span>
+                    )}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseDialog} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleSubmit} color="primary">
+                        Verify
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </div>
+    )
+};
+
+export default Register;
