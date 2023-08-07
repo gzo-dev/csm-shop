@@ -23,7 +23,7 @@ export default class List extends Component {
     return [year, month, day].join("-");
   }
   async getChildCategory() {
-    let list = await GetCategoryDetails.getChildCategoryList();
+    let list = await GetCategoryDetails.getCategoryList();
     this.setState({ getdata: list.data });
   }
   async componentDidMount() {
@@ -73,7 +73,7 @@ export default class List extends Component {
           </div>
           <div className="col-lg-3 col-md-4">
             <div className="bulk-section mt-30">
-              <div className="input-group">
+              {/* <div className="input-group">
                 <select id="action" name="action" className="form-control">
                   <option selected>Bulk Actions</option>
                   <option value={1}>Active</option>
@@ -85,7 +85,7 @@ export default class List extends Component {
                     Apply
                   </button>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
           <div className="col-lg-5 col-md-6">
@@ -128,8 +128,7 @@ export default class List extends Component {
                           <input type="checkbox" className="check-all" />
                         </th>
                         <th scope="col">Category </th>
-                        <th scope="col">Sub Category</th>
-                        <th scope="col">Item Name</th>
+                        <th scope="col">Slug</th>
                         <th scope="col">Date</th>
                         <th scope="col">Action</th>
                       </tr>
@@ -145,15 +144,10 @@ export default class List extends Component {
                               defaultValue={5}
                             />
                           </td>
-                          <td>
-                            {row.SubCategory
-                              ? row.SubCategory.category.name
-                              : ""}
-                          </td>
-                          <td>
-                            {row.SubCategory ? row.SubCategory.sub_name : ""}
-                          </td>
+                          
                           <td>{row.name}</td>
+                          <td>{row.slug}</td>
+
                           <td>
                             <span className="delivery-time">
                               {this.formatDate(row.createdAt)}

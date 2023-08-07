@@ -160,7 +160,7 @@ export default {
     async getList(req, res, next) {
         try {
             db.SubChildCategory.findAll({
-                include: [{ model: db.SubCategory, attributes: ['id', 'sub_name'], include: [{ model: db.category, attributes: ["id", "name"] }] }]
+                include: [{ model: db.category, attributes: ["id", "name"] }]
             })
                 .then(list => {
                     res.status(200).json({ 'success': true, data: list });
