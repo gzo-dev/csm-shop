@@ -148,7 +148,7 @@ const Singleproduct = ({ addToCart }) => {
                                   src={r.imgUrl}
                                   alt=""
                                   className="img-fluid img-center"
-                                  style={{aspectRatio: 1 / 1}}
+                                  style={{aspectRatio: 1 / 1, width: "100%"}}
                                 />
                               </div>
                             ))
