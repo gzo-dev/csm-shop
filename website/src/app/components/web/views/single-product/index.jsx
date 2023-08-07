@@ -46,7 +46,7 @@ const Singleproduct = ({ addToCart }) => {
       const lastSegment = url.pop() || url.pop();
       const list = await GetProductDetails.getProductById(lastSegment);
 
-      if (list.data.status === "inactive") {
+      if (list?.data?.status === "inactive") {
         // Nếu sản phẩm có trạng thái "inactive", hiển thị thông báo và không lưu vào localStorage
         swal("Thông báo", "Sản phẩm này không có sẵn", "warning");
       } else {
@@ -148,7 +148,7 @@ const Singleproduct = ({ addToCart }) => {
                                   src={r.imgUrl}
                                   alt=""
                                   className="img-fluid img-center"
-                                  style={{aspectRatio: 1 / 1, width: "100%"}}
+                                  style={{aspectRatio: 1 / 1, width: "100%", height: "auto"}}
                                 />
                               </div>
                             ))

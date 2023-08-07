@@ -52,3 +52,7 @@ p:last-child {
 .ratop {
     aspect-ratio: 1 / 1 !important;
 }
+
+.img-center.img-fluid {
+    aspect-ratio: 1 / 1 !important;
+}
