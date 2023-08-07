@@ -79,7 +79,7 @@ export default {
                    if(newaddimage) {
                     JSON.parse(newaddimage)?.map(item=> db.productphoto.create({imgUrl: item?.imageUrl, productId: productId}))
                    }
-                   JSON.parse(size)?.map(item=> db.productsize.create({size: item?.size, productId: product.dataValues.id}))
+                   JSON.parse(size)?.map(item=> db.productsize.create({size: item?.size, productId: product.dataValues.id, amount: item?.amount}))
                     res.status(200).json({ 'success': true, msg: "Successfully inserted product" });
                 })
                 .catch(function (err) {
@@ -156,7 +156,7 @@ export default {
                             total: total,
                             netPrice: netPrice,
                             photo: req.file ? req.file.location : product.photo,
-                        }, { where: { id: product.id } })
+                        }, { where: { id: productId } })
                     }
                     throw new RequestError('Not Found Product', 409);
                 })
@@ -164,14 +164,18 @@ export default {
                     if(newaddimage) {
                         JSON.parse(newaddimage)?.map(item=> db.productphoto.create({imgUrl: item?.imageUrl, productId: productId}))
                        }
-                    db.productphoto.destroy({
-                        where: {productId: productId}
-                    })
-                    db.productsize.destroy({
-                        where: {productId}
-                    })
-                    db.productsize.bulkCreate(JSON.parse(size))
-                    db.productphoto.bulkCreate(JSON.parse(images))
+                    if(size) {
+                        db.productsize.destroy({
+                            where: {productId}
+                        })
+                        db.productsize.bulkCreate(JSON.parse(size).map(({size, amount})=> ({size, amount , productId})))
+                    }
+                    if(images) {
+                        db.productphoto.destroy({
+                            where: {productId: productId}
+                        })
+                        db.productphoto.bulkCreate(JSON.parse(images).map(item=> ({...item, productId})))
+                    }
                     res.status(200).json({ 'success': true, msg: 'Updated Successfully' });
                 })
                 .catch(function (err) {

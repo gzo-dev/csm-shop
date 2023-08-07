@@ -20,7 +20,6 @@ module.exports = (sequelize, DataTypes) => {
     sortDesc: DataTypes.TEXT,
     desc: DataTypes.TEXT,
     
-
   }, {});
   product.associate = function(models) {
     // associations can be defined here
