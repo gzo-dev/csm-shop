@@ -532,7 +532,7 @@ const NewProduct = () => {
                   </div>
 
                   <div className="row" style={{ paddingTop: "2rem" }}>
-                    <div className="form-group">
+                    <div className="form-group" style={{opacity: 0}}>
                       <label className="form-label">Sort Description*</label>
                       <textarea
                         rows="4"

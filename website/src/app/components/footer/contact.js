@@ -39,10 +39,10 @@ export default function ContactPopup() {
         <DialogTitle id="alert-dialog-title">{"Contact"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            <textarea rows={40} cols={40} value={name} onChange={(e)=> setName(e.target.value)} style={{width: 500, height: 200, marginTop: 12, marginBottom: 12, fontSize: 16, resize: "none", border: "1px solid #555"}} placeholder={"Your name"} />
+            <TextField value={name} onChange={(e)=> setName(e.target.value)} style={{width: 500, height: 40, marginTop: 12, marginBottom: 12}} placeholder={"Your name"} />
             <TextField value={email} onChange={(e)=> setEmail(e.target.value)} style={{width: 500, height: 40, marginTop: 12, marginBottom: 12}} placeholder={"Your email"} />
             <TextField value={phone} onChange={(e)=> setPhone(e.target.value)} style={{width: 500, height: 40, marginTop: 12, marginBottom: 12}} placeholder={"Your phone"} />
-            <TextField value={content} onChange={(e)=> setContent(e.target.value)} style={{width: 500, height: 40, marginTop: 12, marginBottom: 12}} placeholder={"Type here what you want ask"} />
+            <textarea rows={40} cols={40} value={content} onChange={(e)=> setContent(e.target.value)} style={{width: 500, height: 200, marginTop: 12, marginBottom: 12, fontSize: 16, resize: "none", border: "1px solid #555"}} placeholder={"Type here what you want ask"} />
           </DialogContentText>
         </DialogContent>
         <DialogActions>
