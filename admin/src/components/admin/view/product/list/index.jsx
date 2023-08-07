@@ -190,7 +190,7 @@ const List = () => {
                       <th>Name</th>
                       <th>Sub</th>
                       <th>Brand</th>
-                      <th>Unit</th>
+                      {/* <th>Unit</th> */}
                       <th>Cost</th>
                       <th>Price</th>
                       <th>Discount(%)</th>
@@ -215,7 +215,7 @@ const List = () => {
                                 : ".."}
                             </td>
                             <td>{row.brand}</td>
-                            <td>{row.unitSize}</td>
+                            {/* <td>{row.unitSize}</td> */}
                             <td>VND{numberWithCommas(row.buyerPrice)}</td>
                             <td>VND{numberWithCommas(row.price)}</td>
                             <td>{row.discountPer}%</td>

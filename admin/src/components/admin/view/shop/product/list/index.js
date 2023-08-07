@@ -150,7 +150,7 @@ export default class List extends Component {
                                                     <th>Name</th>
                                                     <th>Category</th>
                                                     <th>Brand</th>
-                                                    <th>Unit</th>
+                                                    {/* <th>Unit</th> */}
                                                     <th>Price</th>
                                                     <th>Action</th>
                                                 </tr>
@@ -169,7 +169,7 @@ export default class List extends Component {
                                                             <td>{row.name}</td>
                                                             <td>{row.SubCategory ? row.SubCategory.category.name : '..'}</td>
                                                             <td>{row.brand}</td>
-                                                            <td><input type="text" value={row.unitSize} disabled /></td>
+                                                            {/* <td><input type="text" value={row.unitSize} disabled /></td> */}
                                                             <td><input type="text" value={row.buyerPrice} disabled /></td>
                                                             <td><Modal_box state={row}/></td>
 

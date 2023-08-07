@@ -292,10 +292,10 @@ export default {
 
     //child category 
     async deleteCategory(req, res, next) {
-        db.SubChildCategory.findOne({ where: { id: parseInt(req.query.id) } })
+        db.category.findOne({ where: { id: parseInt(req.query.id) } })
             .then(data => {
                 if (data) {
-                    return db.SubChildCategory.destroy({ where: { id: data.id } }).then(r => [r, data])
+                    return db.category.destroy({ where: { id: data.id } }).then(r => [r, data])
                 }
                 throw new RequestError('child_category is not found')
             })
