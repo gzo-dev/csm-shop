@@ -135,10 +135,7 @@ const Register = () => {
                         {formData.isEmailSent && !formData.isEmailVerified ? "Verify Email" : "Create Your Account"}
                     </button>
                 </fieldset>
-                <div className="custom-control custom-checkbox">
-                    <input type="checkbox" className="custom-control-input" id="customCheck2" />
-                    <label className="custom-control-label" htmlFor="customCheck2">I Agree with <a href="#">Term and Conditions</a></label>
-                </div>
+             
             </div>
             <Dialog open={open} onClose={handleCloseDialog}>
                 <DialogTitle>Enter Verification Code</DialogTitle>

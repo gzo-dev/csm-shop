@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { GetUserLogin } from "../../components/services";
 import { NotificationManager } from "react-notifications";
 import Register from "../register";
+import {Button } from "@material-ui/core"
+import {useHistory} from "react-router-dom"
 
 const emailRegex = RegExp(
   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
@@ -24,6 +26,7 @@ const formValid = ({ formErrors, ...rest }) => {
 };
 
 const Login = () => {
+    const history= useHistory()
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [formErrors, setFormErrors] = useState({
@@ -192,9 +195,7 @@ const Login = () => {
                               </label>
                             </div>
                             <div className="custom-control">
-                              <a href="/register" style={{fontSize: 16}}>
-                                  Register
-                              </a>
+                              <Button color="primary" variant="contained" onClick={()=> window.location.href= window.location.origin+ "/register"}>Register</Button>
                             </div>
                           </div>
                           <div
