@@ -95,6 +95,11 @@ export default class Newproduct extends Component {
         slug: e.target.value.toLowerCase().replaceAll(" ", "-"),
       });
     }
+    if (e.target.name === "content") {
+      this.setState({
+        sortDesc: e.target.value,
+      });
+    }
   }
   onFileChange = (event) => {
     this.setState({ image: event.target.files[0] });
@@ -145,7 +150,6 @@ export default class Newproduct extends Component {
   }
 
   handleSubmit = (event, listImage) => {
-    console.log(listImage);
     event.preventDefault();
     this.setState({ isLoaded: true });
     const {
@@ -216,7 +220,7 @@ export default class Newproduct extends Component {
           NotificationManager.error("Please! Check input field", "Input Field");
         }
       }
-    });
+    }).catch(()=> NotificationManager.error("Please! Check input field", "Input Field"));
   };
 
   fileSelectedHandler = (e) => {

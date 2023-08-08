@@ -168,9 +168,9 @@ const View = () => {
                         <td>{row.status}</td>
                         <td className="action-btns">
                           {
-                            row.status === "processed" ? <ViewReply {...row} />
+                            row.status === "processed" ? <ReplyContact {...row} setChange={setChange} /> 
                             :
-                            <ReplyContact {...row} setChange={setChange} /> 
+                            <ViewReply {...row} />
                           }
                           <Link
                             title={"Delete"}

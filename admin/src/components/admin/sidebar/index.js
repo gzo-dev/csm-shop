@@ -56,12 +56,12 @@ export default class Sidebar extends Component {
                   >
                     create
                   </a>
-                  <Link
+                  {/* <Link
                     className="nav-link sub_nav_link"
                     to="/admin/vendor/product/list"
                   >
                     Product
-                  </Link>
+                  </Link> */}
                 </nav>
               </div>
               <a

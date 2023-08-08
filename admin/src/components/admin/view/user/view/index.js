@@ -2,30 +2,43 @@ import React, { Component } from "react";
 import { Typography, Button } from "@material-ui/core";
 import { GetUserLogin } from "../../../../services";
 import { NotificationManager } from "react-notifications";
-import Loader from "../../../../loader";
 import swal from "sweetalert";
-export default class View extends Component {
+import Loader from "../../../../loader";
+import Pagination from "./Pagination"; // Import the Pagination component
+import "./View.css"; // Import your custom CSS for styling
+
+class View extends Component {
   constructor(props) {
     super(props);
     this.state = {
       getList: [],
       isLoaded: false,
+      currentPage: 1,
+      itemsPerPage: 10,
     };
   }
-  handleBack() {
-    this.props.history.goBack();
-  }
+
   async componentDidMount() {
     this.setState({ isLoaded: true });
-    this.getCustomer();
+    await this.getCustomer();
   }
+
   async getCustomer() {
     let list = await GetUserLogin.getAllUserList();
     if (list) {
       this.setState({ getList: list.data, isLoaded: false });
     }
   }
-  async handlDeleteById(id) {
+
+  handlePageChange = (pageNumber) => {
+    this.setState({ currentPage: pageNumber });
+  };
+
+  handleBack() {
+    this.props.history.goBack();
+  }
+
+  handlDeleteById(id) {
     swal({
       title: "Are you sure?",
       text: "You want to delete User from the List",
@@ -44,17 +57,24 @@ export default class View extends Component {
       }
     });
   }
+
   handlEditRow(row) {
     this.props.history.push({
       pathname: `/admin/user/edit/${row.id}`,
       state: row,
     });
   }
+
   handleAddNewUser() {
     this.props.history.push({ pathname: `/admin/user/create` });
   }
+
   render() {
-    const { getList, isLoaded } = this.state;
+    const { getList, isLoaded, currentPage, itemsPerPage } = this.state;
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = getList.slice(indexOfFirstItem, indexOfLastItem);
+
     return (
       <div className="container-fluid">
         <div className="row">
@@ -72,32 +92,6 @@ export default class View extends Component {
           <li className="breadcrumb-item active">User</li>
         </ol>
         <div className="row justify-content-between">
-          <div className="col-lg-3 col-md-4">
-            {/* <div className="bulk-section mt-30">
-              <div className="input-group">
-                <select id="action" name="action" className="form-control">
-                  <option selected>Bulk Actions</option>
-                  <option value={1}>Active</option>
-                  <option value={2}>Inactive</option>
-                  <option value={3}>Delete</option>
-                </select>
-                <div className="input-group-append">
-                  <button className="status-btn hover-btn" type="submit">
-                    Apply
-                  </button>
-                </div>
-              </div>
-            </div> */}
-          </div>
-          <div className="col-lg-5 col-md-3 col-lg-6 back-btn">
-            <Button
-              variant="contained"
-              className="status-btn hover-btn"
-              onClick={(e) => this.handleAddNewUser()}
-            >
-              Add New User
-            </Button>
-          </div>
           <div className="col-lg-12 col-md-12">
             {isLoaded ? <Loader /> : ""}
             <div className="card card-static-2 mt-30 mb-30">
@@ -109,9 +103,9 @@ export default class View extends Component {
                   <table className="table ucp-table table-hover">
                     <thead>
                       <tr>
-                        <th style={{ width: 60 }}>ID</th>
+                        <th>ID</th>
                         <th>First Name</th>
-                        <th>First Name</th>
+                        <th>Last Name</th>
                         <th>Email</th>
                         <th>Role</th>
                         <th>Status</th>
@@ -119,7 +113,7 @@ export default class View extends Component {
                       </tr>
                     </thead>
                     <tbody>
-                      {getList.map((row, index) => (
+                      {currentItems.map((row, index) => (
                         <tr key={index}>
                           <td>{++index}</td>
                           <td>{row.firstName}</td>
@@ -151,9 +145,17 @@ export default class View extends Component {
                 </div>
               </div>
             </div>
+            <Pagination
+              itemsPerPage={itemsPerPage}
+              totalItems={getList.length}
+              currentPage={currentPage}
+              onPageChange={this.handlePageChange}
+            />
           </div>
         </div>
       </div>
     );
   }
 }
+
+export default View;

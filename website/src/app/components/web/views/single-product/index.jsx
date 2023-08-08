@@ -12,6 +12,7 @@ import { API_URL } from "../../../../../config1";
 import { useParams } from "react-router-dom";
 import swal from "sweetalert";
 import {Link } from "react-router-dom"
+import numberWithCommas from "../../../../../util/number_thousand_separator";
 
 const Singleproduct = ({ addToCart }) => {
   const [product, setProduct] = useState(null);
@@ -47,7 +48,7 @@ const Singleproduct = ({ addToCart }) => {
       const list = await GetProductDetails.getProductById(lastSegment);
 
       if (list?.data?.status === "inactive") {
-        // Nếu sản phẩm có trạng thái "inactive", hiển thị thông báo và không lưu vào localStorage
+        // Nếu sản phẩm có trạng thái "inactive", hiển thị thông báo và không lưu vào localStorage  
         swal("Thông báo", "Sản phẩm này không có sẵn", "warning");
       } else {
         setProduct(list.data);
@@ -204,7 +205,7 @@ const Singleproduct = ({ addToCart }) => {
                           Product price:
                         </span>
                         <span className="regular-price">
-                          VND{product.price}
+                          VND{numberWithCommas(product.price)}
                         </span>
                       </div>
                       <div className="pdp-product__new-price">
@@ -213,10 +214,10 @@ const Singleproduct = ({ addToCart }) => {
                         </span>
                         <span className="pdp-product__price--new">
                           VND
-                          {product.price -
+                          {numberWithCommas(product.price -
                             Math.floor(
                               (product.price * product.discountPer) / 100
-                            )}
+                            ))}
                         </span>
                         <div className="pdp-product__tax-disclaimer">
                           (Inclusive of all taxes)
@@ -228,7 +229,7 @@ const Singleproduct = ({ addToCart }) => {
                     <div className="pdp-product__new-price">
                       <span className="space__right--2-unit">Price:</span>
                       <span className="pdp-product__price--new">
-                        VND{product.price}
+                        VND{numberWithCommas(product.price)}
                       </span>
                       <div className="pdp-product__tax-disclaimer">
                         (Inclusive of all taxes)
