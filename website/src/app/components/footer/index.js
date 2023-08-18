@@ -40,7 +40,7 @@ const Footer = () => {
             <div className="col-lg-3 col-md-3">
               <h4 className="mb-5 mt-0">
                 <a className="logo" href="index.html">
-                  <img style={{width: 50}} src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/FPT_logo_2010.svg/800px-FPT_logo_2010.svg.png" alt="FPT boutique" />
+                  <img style={{width: 50}} src="https://res.cloudinary.com/cockbook/image/upload/v1691660583/single/z4582436233417_0f8470419bce65bc3911fb17d8586a44-removebg-preview_m9ezon.png" alt="FPT boutique" />
                 </a>
               </h4>
               <p className="mb-0">

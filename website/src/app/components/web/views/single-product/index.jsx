@@ -48,8 +48,8 @@ const Singleproduct = ({ addToCart }) => {
       const list = await GetProductDetails.getProductById(lastSegment);
 
       if (list?.data?.status === "inactive") {
-        // Nếu sản phẩm có trạng thái "inactive", hiển thị thông báo và không lưu vào localStorage  
-        swal("Thông báo", "Sản phẩm này không có sẵn", "warning");
+        // Nếu sản phẩm có trạng thái "inactive", hiển thị Notice và không lưu vào localStorage  
+        swal("Notice", "Sản phẩm này không có sẵn", "warning");
       } else {
         setProduct(list.data);
         // Lưu sản phẩm vào localStorage khi đã có dữ liệu và không có trạng thái "inactive"
@@ -241,13 +241,13 @@ const Singleproduct = ({ addToCart }) => {
                     className="btn btn-secondary btn-lg"
                     onClick={() => {
                       if(productSize.length <= 0 ) {
-                        swal("Thông báo", "Sản phẩm này đã hết size, vui lòng thử lại sau", "error")
+                        swal("Notice", "Sản phẩm này đã hết size, vui lòng thử lại sau", "error")
                       }
                       else if(!sessionStorage.getItem("_sid")) {
-                        swal("Thông báo", "Bạn phải đăng nhập để có thể mua hàng", "error")
+                        swal("Notice", "Bạn phải đăng nhập để có thể mua hàng", "error")
                       }
                       else if(!size) {
-                        swal("Thông báo", "Vui lòng chọn size")
+                        swal("Notice", "Vui lòng chọn size")
                       }
                       else {
                         if(productSize.length > 0 ) {
@@ -303,7 +303,7 @@ const Singleproduct = ({ addToCart }) => {
               </div>
             </div>
           ) : (
-            // Hiển thị thông báo và lớp phủ khi sản phẩm có trạng thái "inactive"
+            // Hiển thị Notice và lớp phủ khi sản phẩm có trạng thái "inactive"
             <div className="inactive-product-overlay">
               <h2>Sản phẩm không có sẵn</h2>
             </div>

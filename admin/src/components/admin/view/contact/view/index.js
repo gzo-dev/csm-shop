@@ -176,7 +176,7 @@ const View = () => {
                             title={"Delete"}
                             className="edit-btn"
                             onClick={()=> {
-                              swal("Thông báo", "Bạn có muốn xóa không ?", {buttons: {
+                              swal("Notice", "Bạn có muốn xóa không ?", {buttons: {
                                 ok: "OK",
                                 cancel: "Cancel"
                               }})
@@ -184,16 +184,16 @@ const View = () => {
                                 if(value=== "ok") {
                                   const result= await delete_contact(row.id)
                                   if(result.ok=== true) {
-                                    swal("Thông báo", "Đã xóa thành công", "success")
+                                    swal("Notice", "Đã xóa thành công", "success")
                                     .then(()=> setChange(prev=> !prev))
                                   }
                                   else {
-                                    swal("Thông báo", "Xóa thất bại", "error")
+                                    swal("Notice", "Xóa thất bại", "error")
                                   }
                                 }
                               })
                               .catch(()=> {
-                                swal("Thông báo", "Xóa thất bại", "error")
+                                swal("Notice", "Xóa thất bại", "error")
                               })
                             }}
                           >

@@ -40,7 +40,7 @@ export default function VoucherSchedule() {
   };
 
   const createVoucher= async ()=> {
-    swal("Thông báo", "Bạn có chắc muốn tạo ra lịch săn voucher như trên không, sau khi bạn xác nhận sẽ không thể thay đổi", {buttons: {
+    swal("Notice", "Bạn có chắc muốn tạo ra lịch săn voucher như trên không, sau khi bạn xác nhận sẽ không thể thay đổi", {buttons: {
         ok: "Xác nhận",
         cancel: "Hủy"
     }})
@@ -56,7 +56,7 @@ export default function VoucherSchedule() {
             })
             const result= await res.data
             if(result.ok=== true) {
-                swal("Thông báo", "Tạo lịch săn sale thành công", "success")
+                swal("Notice", "Tạo lịch săn sale thành công", "success")
                 .then(()=> {
                     setAmountVoucher("")
                     setDateStart()
@@ -67,7 +67,7 @@ export default function VoucherSchedule() {
                 .then(()=> window.location.reload())
             }
             else {
-                swal("Thông báo", "Tạo lịch săn sale thất bại", "error")
+                swal("Notice", "Tạo lịch săn sale thất bại", "error")
             }
         }
         else {

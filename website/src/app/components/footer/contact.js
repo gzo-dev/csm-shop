@@ -53,7 +53,7 @@ export default function ContactPopup() {
             const result= await submit_contact({email, name, content, date_send: new Date(), status: "waiting for reply", phone})
             console.log("result", result)
             if(result.ok=== true) {
-                swal("Thông báo", "Đã gửi thành công", "success")
+                swal("Notice", "Đã gửi thành công", "success")
                 .then(()=> {
                     setEmail("")
                     setName("")
@@ -62,7 +62,7 @@ export default function ContactPopup() {
                 .then(()=> handleClose())
             }
             else {
-                swal("Thông báo", "Gửi thất bại", "error")
+                swal("Notice", "Gửi thất bại", "error")
             }
           }} color="primary" autoFocus variant={"contained"}>
             Submit

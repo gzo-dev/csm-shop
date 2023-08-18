@@ -58,12 +58,12 @@ export default function ReplyContact(props) {
             onClick={async ()=> {
                 const result= await reply_contact(props.email, props.content, id, reply)
                 if(result.ok=== true) {
-                    swal("Thông báo", "Phản hồi thành công", "success")
+                    swal("Notice", "Phản hồi thành công", "success")
                     .then(()=> setChange(prev=> !prev))
                     .then(()=> handleClose())
                 }
                 else {
-                    swal("Thông báo", "Phản hồi thất bại", "error")
+                    swal("Notice", "Phản hồi thất bại", "error")
 
                 }
             }}

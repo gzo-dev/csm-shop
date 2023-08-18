@@ -108,7 +108,7 @@ const Checkout = (props) => {
       voucherId: dataVoucher.id || 0,
     };
     if(deliveryAddress.name.length <= 0 || deliveryAddress.phone.length <= 0 || deliveryAddress.district.length <= 0 || deliveryAddress.states.length <= 0) { 
-      return swal("Thông báo" ,"Bạn hãy nhập đủ thông tin", "error")
+      return swal("Notice" ,"Bạn hãy nhập đủ thông tin", "error")
     }
     if (data) {
       if (dataVoucher.id != 0) {
@@ -145,7 +145,7 @@ const Checkout = (props) => {
   const handlePaymentSystem = async () => {
     if (parseInt(grandTotal) <= 1000) {
       return swal(
-        "Thông báo",
+        "Notice",
         "Số tiền quá ít để thanh toán, Vui lòng thêm sản phẩm để thanh toán",
         "error"
       );
@@ -200,7 +200,7 @@ const Checkout = (props) => {
               voucherId: dataVoucher.id || 0,
             };
             if(deliveryAddress.name.length <= 0 || deliveryAddress.phone.length <= 0 || deliveryAddress.district.length <= 0 || deliveryAddress.states.length <= 0) { 
-              return swal("Thông báo" ,"Bạn hãy nhập đủ thông tin", "error")
+              return swal("Notice" ,"Bạn hãy nhập đủ thông tin", "error")
             }
             if (data) {
               if (dataVoucher.id != 0) {

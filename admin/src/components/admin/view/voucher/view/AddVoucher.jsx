@@ -83,11 +83,11 @@ export default function AddVoucher(props) {
             variant={"contained"}
             onClick={async () => {
                 if(!expire || !discount) {
-                    return swal("Thông báo", "Vui lòng nhập đầy đủ các trường ", "error")
+                    return swal("Notice", "Vui lòng nhập đầy đủ các trường ", "error")
                 }
                 const result= await create_voucher({discount: parseInt(discount), expire, code: generateVoucher(8)})
                 if(result.ok=== true) {
-                    swal("Thông báo", "Tạo voucher thành công", "success")
+                    swal("Notice", "Tạo voucher thành công", "success")
                     .then(()=> {
                         setExpire()
                         setDiscount()
@@ -98,7 +98,7 @@ export default function AddVoucher(props) {
                     .then(()=> handleClose())
                 }
                 else {
-                    swal("Thông báo", "Tạo voucher thất bại", "error")
+                    swal("Notice", "Tạo voucher thất bại", "error")
                 }
             }}
             color="primary"

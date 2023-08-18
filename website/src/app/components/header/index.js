@@ -45,29 +45,13 @@ const Navigation = ({ history }) => {
   return (
     <div>
       <header className="header clearfix">
-        <div className="navbar-top bg-success pt-2 pb-2">
-          <div className="container-fluid">
-            <div className="row">
-              <div className="col-lg-12 text-center">
-                <Link to="/" className="mb-0 text-white">
-                  Voucher discount 50000VND for new users | Code:{" "}
-                  <strong>
-                    <span className="text-light">
-                      OGOFERS13 <span className="mdi mdi-tag-faces" />
-                    </span>{" "}
-                  </strong>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
         <nav className="navbar navbar-light navbar-expand-lg bg-dark bg-faded osahan-menu">
           <div className="container-fluid">
             <Link className="navbar-brand" to="/">
               {" "}
               <img
                 style={{ width: 80 }}
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/FPT_logo_2010.svg/800px-FPT_logo_2010.svg.png"
+                src="https://res.cloudinary.com/cockbook/image/upload/v1691660583/single/z4582436233417_0f8470419bce65bc3911fb17d8586a44-removebg-preview_m9ezon.png"
                 alt="logo"
               />{" "}
             </Link>
@@ -91,8 +75,8 @@ const Navigation = ({ history }) => {
                   <div className="input-group">
                     <input
                       className="form-control"
-                      placeholder="Search products in Your City"
-                      aria-label="Search products in Your City"
+                      placeholder="Search products"
+                      aria-label="Search products"
                       type="text"
                       name="searchtxt"
                       value={searchtxt}
@@ -182,7 +166,7 @@ const Navigation = ({ history }) => {
                       sessionStorage.getItem("_sid") && 
                       <Link to={"/voucher/gift"}>
                       <span className="btn btn-link border-none">
-                        <i className="mdi mdi-sale"></i> Săn sale{" "}
+                        <i className="mdi mdi-sale"></i> Earn voucher{" "}
                       </span>
                       </Link>
                     }

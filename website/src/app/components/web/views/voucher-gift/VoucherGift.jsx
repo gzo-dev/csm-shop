@@ -68,7 +68,7 @@ const VoucherGift = () => {
   }, [])
   useEffect(()=> {
     if(check=== false) {
-        swal("Thông báo", "Chưa đến giờ săn voucher hoặc không có lịch săn voucher bạn vui lòng thử lại sau")
+        swal("Notice", "Chưa đến giờ săn voucher hoặc không có lịch săn voucher bạn vui lòng thử lại sau")
         .then(()=> window.location.href= window.location.origin)
     }
   }, [check])

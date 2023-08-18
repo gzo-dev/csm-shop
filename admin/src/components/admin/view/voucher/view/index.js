@@ -152,16 +152,16 @@ const View = () => {
                         <td>VND{row.discount}</td>
                         <td>
                           <div onClick={() => {
-                            swal("Thông báo", "Bạn có muốn xóa voucher này không ? ", { buttons: { ok: "Ok", cancel: "Cancel" } })
+                            swal("Notice", "Bạn có muốn xóa voucher này không ? ", { buttons: { ok: "Ok", cancel: "Cancel" } })
                               .then(async value => {
                                 if (value === "ok") {
                                   const result = await delete_voucher(row.id)
                                   if (result.ok === true) {
-                                    swal("Thông báo", "Xóa thành công", "success")
+                                    swal("Notice", "Xóa thành công", "success")
                                       .then(() => setGetList(getList.filter(item => item.id !== row.id)))
                                   }
                                   else {
-                                    swal("Thông báo", "Xóa thất bại", "error")
+                                    swal("Notice", "Xóa thất bại", "error")
                                   }
                                 }
                               })

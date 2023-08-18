@@ -43,13 +43,13 @@ const AddVoucher = (props) => {
                 setDataVoucher(res2.data);
               } else if(res.used=== true) {
                 swal(
-                  "Thông báo",
+                  "Notice",
                   "Voucher đã được sử dụng, vui lòng thử lại bằng voucher khác",
                   "error"
                 );
               } else {
                 swal(
-                  "Thông báo",
+                  "Notice",
                   "Voucher không hợp lệ hoặc đã hết hạn",
                   "error"
                 );
