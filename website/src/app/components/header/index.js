@@ -46,15 +46,20 @@ const Navigation = ({ history }) => {
     <div>
       <header className="header clearfix">
         <nav className="navbar navbar-light navbar-expand-lg bg-dark bg-faded osahan-menu">
-          <div className="container-fluid">
-            <Link className="navbar-brand" to="/">
-              {" "}
-              <img
-                style={{ width: 80 }}
-                src="https://res.cloudinary.com/cockbook/image/upload/v1691660583/single/z4582436233417_0f8470419bce65bc3911fb17d8586a44-removebg-preview_m9ezon.png"
-                alt="logo"
-              />{" "}
-            </Link>
+          <div className="container-fluid justify-content-between d-flex gap-20">
+            <div>
+            
+              <Link className="navbar-brand" to="/">
+                {" "}
+                <img
+                  style={{ width: 80 }}
+                  src="https://res.cloudinary.com/cockbook/image/upload/v1691660583/single/z4582436233417_0f8470419bce65bc3911fb17d8586a44-removebg-preview_m9ezon.png"
+                  alt="logo"
+                />{" "}
+              </Link>
+              
+            </div>
+        
             <button
               className="navbar-toggler navbar-toggler-white"
               type="button"
@@ -67,32 +72,34 @@ const Navigation = ({ history }) => {
               <span className="navbar-toggler-icon" />
             </button>
             <div className="navbar-collapse" id="navbarNavDropdown">
-              <div className="navbar-nav mr-auto mt-2 mt-lg-0 margin-auto top-categories-search-main">
-                <form
-                  className="top-categories-search"
-                  onSubmit={handleClickSearch}
-                >
-                  <div className="input-group">
-                    <input
-                      className="form-control"
-                      placeholder="Search products"
-                      aria-label="Search products"
-                      type="text"
-                      name="searchtxt"
-                      value={searchtxt}
-                      onChange={handleChange}
-                    />
-                    <span className="input-group-btn">
-                      <button className="btn btn-secondary" type="submit">
-                        <i className="mdi mdi-file-find" /> Search
-                      </button>
-                    </span>
-                  </div>
-                </form>
-              </div>
+            <div className="navbar-nav mr-auto mt-2 mt-lg-0 top-categories-search-main" style={{flex: 1}}>
+                      <form
+                        className="top-categories-search"
+                        onSubmit={handleClickSearch}
+                        style={{flex: 1}}
+                      >
+                        <div className="input-group">
+                          <input
+                            className="form-control"
+                            placeholder="Search products"
+                            aria-label="Search products"
+                            type="text"
+                            name="searchtxt"
+                            value={searchtxt}
+                            onChange={handleChange}
+                          />
+                          <span className="input-group-btn">
+                            <button className="btn btn-secondary" type="submit">
+                              <i className="mdi mdi-file-find" /> Search
+                            </button>
+                          </span>
+                        </div>
+                      </form>
+                    </div>
               <div className="my-2 my-lg-0">
                 <ul className="list-inline main-nav-right">
                   <li className="list-inline-item">
+                    
                     {!token ? (
                       <Link
                         to="#"
@@ -103,9 +110,7 @@ const Navigation = ({ history }) => {
                         <i className="mdi mdi-account-circle" /> Login/Sign Up
                       </Link>
                     ) : (
-
                       <div className="dropdown">
-                        
                         <button
                           className="btn btn-account dropdown-toggle"
                           type="button"
@@ -114,18 +119,14 @@ const Navigation = ({ history }) => {
                           aria-haspopup="true"
                           aria-expanded="false"
                         >
-                         <i className="mdi mdi-account-circle" /> 
+                          <i className="mdi mdi-account-circle" />
                           {userName}
-
                         </button>
                         <div
                           className="dropdown-menu"
                           aria-labelledby="dropdownMenuButton"
                         >
-                          <Link
-                            className="dropdown-item"
-                            to="/account/profile"
-                          >
+                          <Link className="dropdown-item" to="/account/profile">
                             <i
                               className="mdi mdi-account-outline"
                               aria-hidden="true"
@@ -142,7 +143,7 @@ const Navigation = ({ history }) => {
                             ></i>{" "}
                             Orders List
                           </Link>
-                          
+
                           <div className="dropdown-divider"></div>
                           <span
                             className="dropdown-item"
@@ -156,20 +157,16 @@ const Navigation = ({ history }) => {
                     )}
                   </li>
                   <li className="list-inline-item cart-btn">
-                    {
-                      sessionStorage.getItem("_sid") && 
-                      <Cartsidebar />
-                    }
+                    {sessionStorage.getItem("_sid") && <Cartsidebar />}
                   </li>
                   <li className="list-inline-item">
-                    {
-                      sessionStorage.getItem("_sid") && 
+                    {sessionStorage.getItem("_sid") && (
                       <Link to={"/voucher/gift"}>
-                      <span className="btn btn-link border-none">
-                        <i className="mdi mdi-sale"></i> Earn voucher{" "}
-                      </span>
+                        <span className="btn btn-link border-none">
+                          <i className="mdi mdi-sale"></i> Earn voucher{" "}
+                        </span>
                       </Link>
-                    }
+                    )}
                   </li>
                 </ul>
               </div>

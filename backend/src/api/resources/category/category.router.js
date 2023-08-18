@@ -5,6 +5,7 @@ import categoryController from './category.controller';
 // import { validateBody, schemas } from '../../../middleware/validator';
 
 export const categoryRouter = express.Router();
+categoryRouter.route("/getCategoryHeader", categoryController.getCategoryListHeader)
 categoryRouter.route('/getAllCategory').get( categoryController.getCategoryList);
 categoryRouter.route('/getAllSubCategory').get( categoryController.getSubCategoryList);
 categoryRouter.route('/getAllSubChildCategory').get( categoryController.getSubChildCategoryList);

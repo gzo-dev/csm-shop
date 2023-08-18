@@ -107,7 +107,7 @@ export default {
         try {
             db.category.findAll({
                 attributes: ["id", "name"],
-                include: [{ model: db.SubCategory }]
+                include: [{ model: db.SubCategory }],
             })
                 .then(list => {
                     res.status(200).json({ 'success': true, data: list });
@@ -118,6 +118,18 @@ export default {
         }
         catch (err) {
             throw new RequestError('Error');
+        }
+    },
+    async getCategoryListHeader(req, res, next) {
+        try {
+            db.category.findAll({
+                limit: 3
+            })
+            .then(list=> res.status(200).json({'success': true, data: list}))
+            .catch(e=> next(e))
+        } catch (error) {
+            throw new RequestError("Error")
+            
         }
     },
 

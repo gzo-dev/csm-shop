@@ -241,13 +241,13 @@ const Singleproduct = ({ addToCart }) => {
                     className="btn btn-secondary btn-lg"
                     onClick={() => {
                       if(productSize.length <= 0 ) {
-                        swal("Notice", "Sản phẩm này đã hết size, vui lòng thử lại sau", "error")
+                        swal("Notice", "This product is out of size, please try again later", "error")
                       }
                       else if(!sessionStorage.getItem("_sid")) {
-                        swal("Notice", "Bạn phải đăng nhập để có thể mua hàng", "error")
+                        swal("Notice", "You must be logged in to be able to purchase", "error")
                       }
                       else if(!size) {
-                        swal("Notice", "Vui lòng chọn size")
+                        swal("Notice", "VPlease choose size")
                       }
                       else {
                         if(productSize.length > 0 ) {
@@ -258,7 +258,7 @@ const Singleproduct = ({ addToCart }) => {
                   >
                     <i className="mdi mdi-cart-outline" /> Add To Cart
                   </button>
-                  <h6 className="mb-3 mt-4">Why shop from fpt?</h6>
+                  <h6 className="mb-3 mt-4">Why shop from csm?</h6>
                   <div className="row">
                     <div className="col-md-12">
                       <div className="feature-box">

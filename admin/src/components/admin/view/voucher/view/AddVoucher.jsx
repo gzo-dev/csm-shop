@@ -87,7 +87,7 @@ export default function AddVoucher(props) {
                 }
                 const result= await create_voucher({discount: parseInt(discount), expire, code: generateVoucher(8)})
                 if(result.ok=== true) {
-                    swal("Notice", "Tạo voucher thành công", "success")
+                    swal("Notice", "Successfully created voucher", "success")
                     .then(()=> {
                         setExpire()
                         setDiscount()
@@ -98,7 +98,7 @@ export default function AddVoucher(props) {
                     .then(()=> handleClose())
                 }
                 else {
-                    swal("Notice", "Tạo voucher thất bại", "error")
+                    swal("Notice", "Voucher creation failed", "error")
                 }
             }}
             color="primary"
