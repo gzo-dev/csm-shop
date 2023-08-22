@@ -7,13 +7,16 @@ import { NotificationManager } from "react-notifications";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { useParams } from "react-router-dom";
 import numberWithCommas from "../../../../../util/number_thousand_separator";
+import _ from "lodash"
 
 const Productview = ({ addToCart }) => {
   const [list, setList] = useState([]);
+  const [allList, setAllList] = useState([]);
+  const [isFilter, setIsFilter] = useState(false);
   const [categorybyproduct, setCategoryByProduct] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const [toggle, setToggle] = useState(false);
-  const [limit, setLimit] = useState(3);
+  const [limit, setLimit] = useState(6);
   const { id } = useParams();
 
   const getFilterByProduct = async () => {
@@ -23,7 +26,9 @@ const Productview = ({ addToCart }) => {
     try {
       let p = await GetProductDetails.getProductByFilter(lastSegment);
       if (p) {
-        setList(p.data);
+        setAllList(p.data);
+        const a = p.data.map((item) => item.products);
+        setList(a.flat());
         setIsLoaded(true);
       }
     } catch (e) {
@@ -48,6 +53,7 @@ const Productview = ({ addToCart }) => {
     let category = await GetProductDetails.getProductBySubcategory(data);
     if (category) {
       setCategoryByProduct(category.data);
+      setList(category.data[0].products);
       setIsLoaded(true);
       setToggle(true);
     } else {
@@ -62,21 +68,29 @@ const Productview = ({ addToCart }) => {
   function sortProducts(products, sortOption) {
     switch (sortOption) {
       case 1: // Relevance (Default: Newest to Oldest)
-        return products.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        return _.orderBy(products, 
+          function(e) {return e.createdAt}
         );
       case 2: // Price - Low to High
-        return products.sort((a, b) => a.price - b.price);
+      return _.orderBy(products, 
+        function(e) {return parseInt(e.price)}
+      );
       case 3: // Price - High to Low
-        return products.sort((a, b) => b.price - a.price);
-      case 4: // Discount - High to Low
-        return products.sort((a, b) => b.discountPer - a.discountPer);
-      case 5: // Name - A to Z
-        return products.sort((a, b) => a.name.localeCompare(b.name));
-      default: // Relevance (Default: Newest to Oldest)
-        return products.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        return _.orderBy(products, 
+          function(e) {return parseInt(e.price)}, "desc"
         );
+      case 4: // Discount - High to Low
+      return _.orderBy(products, 
+        function(e) {return parseInt(e.discountPer)}
+      );
+      case 5: // Name - A to Z
+      _.orderBy(products, 
+        function(e) {return parseInt(e.name)}
+      );
+      default: // Relevance (Default: Newest to Oldest)
+      return _.orderBy(products, 
+        function(e) {return e.createdAt}, "desc"
+      );
     }
   }
 
@@ -127,7 +141,7 @@ const Productview = ({ addToCart }) => {
                     >
                       <div className="card-body card-shop-filters">
                         {isLoaded
-                          ? list.map((row, index) => {
+                          ? allList.map((row, index) => {
                               return (
                                 <div className="card-body" key={index}>
                                   <div
@@ -158,22 +172,20 @@ const Productview = ({ addToCart }) => {
                 <span className="mdi mdi-chevron-right" />{" "}
                 <a href="#">Products</a>{" "}
                 <div className="btn-group float-right mt-2">
-                  <button type="button" className="btn btn-dark">
+                  <div type="button" className="btn btn-dark">
                     Sort by Products &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  </button>
+                  </div>
                   <select
                     onChange={(e) => {
                       e.persist();
                       console.log(e.target.value);
-                      setList((prev) => [
-                        {
-                          ...prev[0],
-                          products: sortProducts(
-                            list[0].products,
+                      setList(
+                         sortProducts(
+                            list,
                             parseInt(e.target?.value)
                           ),
-                        },
-                      ]);
+              
+                      );
                     }}
                   >
                     <option value={1}>Relevance</option>
@@ -192,8 +204,7 @@ const Productview = ({ addToCart }) => {
               ) : toggle ? (
                 <div className="row no-gutters">
                   {categorybyproduct ? (
-                    categorybyproduct.map((row) =>
-                      row.products.slice(0, limit).map((row, index) => (
+                    list.slice(0, limit).map((row, index) => (
                         <div key={index} className="col-md-4">
                           <div className="item">
                             <div className="product">
@@ -253,7 +264,6 @@ const Productview = ({ addToCart }) => {
                           </div>
                         </div>
                       ))
-                    )
                   ) : (
                     <div className="text-danger">
                       Empty item in this category
@@ -263,68 +273,66 @@ const Productview = ({ addToCart }) => {
               ) : (
                 <div className="row no-gutters">
                   {list ? (
-                    list.map((row) =>
-                      row.products.slice(0, limit).map((row, index) => (
-                        <div key={index} className="col-md-4">
-                          <div className="item">
-                            <div className="product">
-                              <Link
-                                to={{
-                                  pathname: `/p/${row.slug}/${row.id}`,
-                                  state: row,
-                                }}
-                              >
-                                <div className="product-header">
-                                  <span className="badge badge-success">
-                                    {row.discountPer}% OFF
-                                  </span>
-                                  <img
-                                    className="img-fluid"
-                                    src={row.photo}
-                                    alt="product"
-                                  />
-                                  <span className="veg text-success mdi mdi-circle" />
-                                </div>
-                                <div className="product-body">
-                                  <h5>{row.name}</h5>
-                                  {/* <h6>
+                    list.slice(0, limit).map((row, index) => (
+                      <div key={index} className="col-md-4">
+                        <div className="item">
+                          <div className="product">
+                            <Link
+                              to={{
+                                pathname: `/p/${row.slug}/${row.id}`,
+                                state: row,
+                              }}
+                            >
+                              <div className="product-header">
+                                <span className="badge badge-success">
+                                  {row.discountPer}% OFF
+                                </span>
+                                <img
+                                  className="img-fluid"
+                                  src={row.photo}
+                                  alt="product"
+                                />
+                                <span className="veg text-success mdi mdi-circle" />
+                              </div>
+                              <div className="product-body">
+                                <h5>{row.name}</h5>
+                                {/* <h6>
                                     <strong>
                                       <span className="mdi mdi-approval" />{" "}
                                       Available in
                                     </strong>{" "}
                                     - {row.unitSize}
                                   </h6> */}
-                                </div>
-                              </Link>
-                              <div className="product-footer">
-                                <button
-                                  type="button"
-                                  className="btn btn-secondary btn-sm float-right"
-                                  onClick={() => addToCart(row)}
-                                >
-                                  <i className="mdi mdi-cart-outline" /> Add To
-                                  Cart
-                                </button>
-                                <p className="offer-price mb-0">
-                                  $
-                                  {numberWithCommas(
-                                    row.price -
-                                      Math.floor(
-                                        (row.price * row.discountPer) / 100
-                                      )
-                                  )}{" "}
-                                  <i className="mdi mdi-tag-outline" />
-                                  <br />
-                                  <span className="regular-price">
-                                    ${numberWithCommas(row.price)}{" "}
-                                  </span>
-                                </p>
                               </div>
+                            </Link>
+                            <div className="product-footer">
+                              <button
+                                type="button"
+                                className="btn btn-secondary btn-sm float-right"
+                                onClick={() => addToCart(row)}
+                              >
+                                <i className="mdi mdi-cart-outline" /> Add To
+                                Cart
+                              </button>
+                              <p className="offer-price mb-0">
+                                $
+                                {numberWithCommas(
+                                  row.price -
+                                    Math.floor(
+                                      (row.price * row.discountPer) / 100
+                                    )
+                                )}{" "}
+                                <i className="mdi mdi-tag-outline" />
+                                <br />
+                                <span className="regular-price">
+                                  ${numberWithCommas(row.price)}{" "}
+                                </span>
+                              </p>
                             </div>
                           </div>
                         </div>
-                      ))
-                    )
+                      </div>
+                    ))
                   ) : (
                     <div className="text-danger">
                       Empty item in this category
