@@ -1,7 +1,4 @@
-const API_URL =
-    document.domain === 'localhost'
-    ? "http://localhost:4000"
-    : "production";
+import { API_URL } from "../config1";
 
 const Apis = {
   //Authentication api

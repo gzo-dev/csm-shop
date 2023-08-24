@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { addToCart } from "../../../../../store/actions/cartActions";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import numberWithCommas from "../../../../../../util/number_thousand_separator";
 
 const TopSamples = ({ addToCart }) => {
   const [list, setList] = useState([]);
@@ -167,14 +168,14 @@ const TopSamples = ({ addToCart }) => {
                       </button> */}
                       <p className="offer-price mb-0">
                         VND
-                        {row.price -
-                          Math.floor((row.price * row.discountPer) / 100)}{" "}
+                        {numberWithCommas(row.price -
+                          Math.floor((row.price * row.discountPer) / 100))}{" "}
                         <i className="mdi mdi-tag-outline" />
                         {row.discountPer > 0 && (
                           <>
                             <br />
                             <span className="regular-price">
-                              VND{row.price}
+                              VND{numberWithCommas(row.price)}
                             </span>
                           </>
                         )}
