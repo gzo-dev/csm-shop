@@ -3,7 +3,7 @@
 
 /* Body */
  body {
-     background-color: #f9f9f9;
+     background-color: #fff;
      font-size: 13px;
      font-family: 'Maven Pro', sans-serif;
      line-height: 25px;
@@ -129,9 +129,9 @@ button.close {
     appearance: none;
 }
 .cart-text {
-    margin-left: 20px;
     width: 100%;
     position: relative;
+    padding: 0 20px
 }
 .cart-text h4 {
     font-size: 13px;
@@ -160,9 +160,9 @@ button.close {
     font-weight: 700;
     line-height: 24px;
     color: #f55d2c;
-    text-align: right;
+    /* text-align: right; */
     display: inline-flex;
-    margin-left: auto;
+    /* margin-left: auto; */
 }
 .cart-item-price span {
     color: #c7c7c7;
@@ -349,19 +349,19 @@ a:focus {
     padding: 15px 18px;
 }
 .osahan-menu .navbar-brand:hover {
-    background: #384042 none repeat scroll 0 0;
+    /* background: #384042 none repeat scroll 0 0; */
 }
 .main-nav-right .btn {
     border-radius: 0 !important;
-    border-right: 1px solid #384042;
-    color: #fff;
+    /* border-right: 1px solid #384042; */
+    color: #000;
     margin: 0 0 0 -4px;
     padding: 24px;
     text-decoration: none;
 }
 .main-nav-right .btn:hover {
-     background-color: #384042 !important;
-     color: #fff !important;
+     /* background-color: #384042 !important; */
+     /* color: #fff !important; */
 }
 .main-nav-right li {
     margin: 0 !important;
@@ -428,6 +428,8 @@ a:focus {
     height: 38px;
     padding: 0 21px;
     text-transform: uppercase;
+    border-bottom-right-radius: 80px !important;
+    border-top-right-radius: 80px !important;
 }
 .top-categories-search .select2-selection.select2-selection--single {
     -moz-border-bottom-colors: none;
@@ -572,7 +574,7 @@ a:focus {
 }
 .product {
     background: #fff none repeat scroll 0 0;
-    border: 1px solid #eeeeee;
+    /* border: 1px solid #eeeeee; */
     border-radius: 2px;
     margin: 0 -1px 0 0;
     padding: 20px;
@@ -602,9 +604,9 @@ a:focus {
     margin: 5px 0 14px;
 }
 .product-header img {
-	height: 200px;
+	/* height: 200px; */
 	margin: 0 0 18px;
-	object-fit: scale-down;
+	/* object-fit: scale-down; */
 	transform: scale(1);
 	transition-duration: 0.4s;
 }

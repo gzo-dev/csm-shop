@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { GetUserLogin } from "../../components/services";
 import { NotificationManager } from "react-notifications";
 import Register from "../register";
-import {Button } from "@material-ui/core"
-import {useHistory} from "react-router-dom"
+import { Button } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
 
 const emailRegex = RegExp(
   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
@@ -26,7 +26,7 @@ const formValid = ({ formErrors, ...rest }) => {
 };
 
 const Login = () => {
-    const history= useHistory()
+  const history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [formErrors, setFormErrors] = useState({
@@ -109,8 +109,8 @@ const Login = () => {
           className="modal-dialog modal-lg modal-dialog-centered"
           role="document"
         >
-          <div className="modal-content">
-            <div className="modal-body">
+          <div className="modal-content" style={{borderRadius: 10}}>
+            <div className="modal-body" style={{borderRadius: 10}}>
               <div className="login-modal">
                 <div className="row">
                   <div className="col-lg-6 pad-right-0">
@@ -175,6 +175,7 @@ const Login = () => {
                                 type="submit"
                                 className="btn btn-lg btn-secondary btn-block"
                                 onClick={handleSubmit}
+                                style={{background: "#2e89ff", borderRadius: 10, fontSize: 16}}
                               >
                                 Enter to your account
                               </button>
@@ -194,8 +195,17 @@ const Login = () => {
                                 Remember me
                               </label>
                             </div>
-                            <div className="custom-control">
-                              <Button color="primary" variant="contained" onClick={()=> window.location.href= window.location.origin+ "/register"}>Register</Button>
+                            <div className="custom-control" style={{paddingLeft: 0, marginTop: 12}}>
+                              <Button
+                                color="primary"
+                                variant="contained"
+                                onClick={() =>
+                                  (window.location.href =
+                                    window.location.origin + "/register")
+                                }
+                              >
+                                Register
+                              </Button>
                             </div>
                           </div>
                           <div

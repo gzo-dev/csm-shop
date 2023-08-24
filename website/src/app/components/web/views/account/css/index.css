@@ -683,7 +683,7 @@ label.control-label {
 .form-control:focus {
     outline: none !important;
     box-shadow: none !important;
-	border: 1px solid #f55d2c !important;
+	border-bottom: 1px solid #2e89ff !important;
 }
 
 .address-btns {
@@ -3238,6 +3238,7 @@ textarea {
 .form-control {
     color: #2b2f4c !important;
 	font-weight: 400 !important;
+    border-radius: 0
 }
 
 .post-btn {

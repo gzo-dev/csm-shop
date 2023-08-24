@@ -196,7 +196,7 @@ const DeliveryDetails = (props) => {
           </div>
           <div className="col-sm-6">
             <div className="form-group">
-              <label className="control-label">
+              <label className="confirm ordertrol-label">
                 Ward <span className="required">*</span>
               </label>
               <select
@@ -225,9 +225,9 @@ const DeliveryDetails = (props) => {
                 value={address}
                 onChange={handleChange}
               />
-              <small className="text-danger">
+              {/* <small className="text-danger">
                 Please provide the number and street.
-              </small>
+              </small> */}
             </div>
           </div>
         </div>
@@ -240,7 +240,7 @@ const DeliveryDetails = (props) => {
           className="btn btn-secondary mb-2 btn-lg"
           onClick={handleSubmit}
         >
-          NEXT
+          Next
         </button>
       </form>
     </div>

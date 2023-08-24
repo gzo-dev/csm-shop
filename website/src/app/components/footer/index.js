@@ -7,7 +7,7 @@ const Footer = () => {
     <div>
       {/* Footer */}
       <section className="section-padding bg-white border-top">
-        <div className="container">
+        <div className="container" style={{maxWidth: "100%"}}>
           <div className="row">
             <div className="col-lg-4 col-sm-6">
               <div className="feature-box">
@@ -35,7 +35,7 @@ const Footer = () => {
       </section>
 
       <section className="section-padding footer bg-white border-top">
-        <div className="container">
+        <div className="container" style={{maxWidth: "100%"}}>
           <div className="row">
             <div className="col-lg-3 col-md-3">
               <h4 className="mb-5 mt-0">
@@ -59,19 +59,19 @@ const Footer = () => {
             <div className="col-lg-2 col-md-2">
               <h6 className="mb-4">ABOUT US</h6>
               <ul>
-                <li>
+                <li style={{padding: 10}}>
                   <a href="#">Company Information</a>
                 </li>
-                <li>
+                <li style={{padding: 10}}>
                   <a href="#">Careers</a>
                 </li>
-                <li>
+                <li style={{padding: 10}}>
                   <a href="#">Store Location</a>
                 </li>
-                <li>
+                <li style={{padding: 10}}>
                   <a href="#">Affillate Program</a>
                 </li>
-                <li>
+                <li style={{padding: 10}}>
                   <a href="#">Copyright</a>
                 </li>
               </ul>
@@ -122,7 +122,7 @@ const Footer = () => {
       {/* End Footer */}
       {/* Copyright */}
       <section className="pt-4 pb-4 footer-bottom">
-        <div className="container">
+        <div className="container" style={{maxWidth: "100%"}}>
           <div className="row no-gutters">
             <div className="col-lg-6 col-sm-6">
               <p className="mt-1 mb-0">
@@ -130,7 +130,7 @@ const Footer = () => {
                 <strong className="text-dark">Fpt</strong>. All Rights Reserved
                 <br />
                 <small className="mt-0 mb-0">
-                  Made with <i className="mdi mdi-heart text-danger" /> by FPT
+                  Made with <i className="mdi mdi-heart text-danger" /> by CSM team
                 </small>
               </p>
             </div>

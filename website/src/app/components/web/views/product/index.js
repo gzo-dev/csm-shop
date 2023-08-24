@@ -7,7 +7,7 @@ import { NotificationManager } from "react-notifications";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { useParams } from "react-router-dom";
 import numberWithCommas from "../../../../../util/number_thousand_separator";
-import _ from "lodash"
+import _ from "lodash";
 
 const Productview = ({ addToCart }) => {
   const [list, setList] = useState([]);
@@ -68,36 +68,44 @@ const Productview = ({ addToCart }) => {
   function sortProducts(products, sortOption) {
     switch (sortOption) {
       case 1: // Relevance (Default: Newest to Oldest)
-        return _.orderBy(products, 
-          function(e) {return e.createdAt}
-        );
+        return _.orderBy(products, function (e) {
+          return e.createdAt;
+        });
       case 2: // Price - Low to High
-      return _.orderBy(products, 
-        function(e) {return parseInt(e.price)}
-      );
+        return _.orderBy(products, function (e) {
+          return parseInt(e.price);
+        });
       case 3: // Price - High to Low
-        return _.orderBy(products, 
-          function(e) {return parseInt(e.price)}, "desc"
+        return _.orderBy(
+          products,
+          function (e) {
+            return parseInt(e.price);
+          },
+          "desc"
         );
       case 4: // Discount - High to Low
-      return _.orderBy(products, 
-        function(e) {return parseInt(e.discountPer)}
-      );
+        return _.orderBy(products, function (e) {
+          return parseInt(e.discountPer);
+        });
       case 5: // Name - A to Z
-      _.orderBy(products, 
-        function(e) {return parseInt(e.name)}
-      );
+        _.orderBy(products, function (e) {
+          return parseInt(e.name);
+        });
       default: // Relevance (Default: Newest to Oldest)
-      return _.orderBy(products, 
-        function(e) {return e.createdAt}, "desc"
-      );
+        return _.orderBy(
+          products,
+          function (e) {
+            return e.createdAt;
+          },
+          "desc"
+        );
     }
   }
 
   return (
     <div>
       <section className="pt-3 pb-3 page-info section-padding border-bottom bg-white single-product-header-bk">
-        <div className="container">
+        <div className="container" style={{ maxWidth: "100%" }}>
           <div className="row">
             <div className="col-md-12">
               <Link to="/">
@@ -113,7 +121,7 @@ const Productview = ({ addToCart }) => {
 
       {/* All product */}
       <section className="shop-list section-padding">
-        <div className="container">
+        <div className="container" style={{ maxWidth: "100%" }}>
           <div className="row">
             <div className="col-md-3">
               <div className="shop-filters">
@@ -179,13 +187,7 @@ const Productview = ({ addToCart }) => {
                     onChange={(e) => {
                       e.persist();
                       console.log(e.target.value);
-                      setList(
-                         sortProducts(
-                            list,
-                            parseInt(e.target?.value)
-                          ),
-              
-                      );
+                      setList(sortProducts(list, parseInt(e.target?.value)));
                     }}
                   >
                     <option value={1}>Relevance</option>
@@ -205,65 +207,103 @@ const Productview = ({ addToCart }) => {
                 <div className="row no-gutters">
                   {categorybyproduct ? (
                     list.slice(0, limit).map((row, index) => (
-                        <div key={index} className="col-md-4">
-                          <div className="item">
-                            <div className="product">
-                              <Link
-                                to={{
-                                  pathname: `/p/${row.slug}/${row.id}`,
-                                  state: row,
-                                }}
-                              >
-                                <div className="product-header">
-                                  <span className="badge badge-success">
-                                    {row.discountPer}% OFF
+                      <div key={index} className="col-md-4">
+                        <div className="item">
+                          <div className="product">
+                            <Link
+                              to={{
+                                pathname: `/p/${row.slug}/${row.id}`,
+                                state: row,
+                              }}
+                            >
+                              <div className="product-header">
+                                <span className="badge badge-success">
+                                  {row.discountPer}% OFF
+                                </span>
+                                <>
+                                  <span
+                                    className="product-image-container product-image-container-42448"
+                                    style={{ width: "480px" }}
+                                  >
+                                    <span
+                                      className="product-image-wrapper"
+                                      style={{ paddingBottom: "150%" }}
+                                    >
+                                      <img
+                                        className="product-image-photo"
+                                        data-catalog_image_hovering="https://routine.vn/media/catalog/product/cache/d0cf4470db45e8932c69fc124d711a7e/1/0/10s23dpa025_m_blue-quan-jean-nam_2__2.jpg"
+                                        data-original_category_image
+                                        src={row.photo}
+                                        loading="lazy"
+                                        width={480}
+                                        height={720}
+                                        alt="10S23DPA025 M/ BLUE 28"
+                                        style={{ transition: "all 0s ease 0s" }}
+                                      />
+                                      <div
+                                        className="mgn-product-label product-label-container top-right image-layout"
+                                        style={{
+                                          width: "25%",
+                                          "--spaceX": "92px",
+                                        }}
+                                      >
+                                        <div
+                                          className="label-text"
+                                          style={{
+                                            fontSize: "16px",
+                                            color: "#000000",
+                                          }}
+                                        >
+                                          <span />
+                                        </div>
+                                      </div>
+                                    </span>
                                   </span>
-                                  <img
-                                    className="img-fluid"
-                                    src={row.photo}
-                                    alt="product"
-                                  />
-                                  <span className="veg text-success mdi mdi-circle" />
-                                </div>
-                                <div className="product-body">
-                                  <h5>{row.name}</h5>
-                                  {/* <h6>
-                                    <strong>
-                                      <span className="mdi mdi-approval" />{" "}
-                                      Available in
-                                    </strong>{" "}
-                                    - {row.unitSize}
-                                  </h6> */}
-                                </div>
-                              </Link>
-                              <div className="product-footer">
-                                <button
-                                  type="button"
-                                  className="btn btn-secondary btn-sm float-right"
-                                  onClick={() => addToCart(row)}
-                                >
-                                  <i className="mdi mdi-cart-outline" /> Add To
-                                  Cart
-                                </button>
-                                <p className="offer-price mb-0">
-                                  $
-                                  {numberWithCommas(
-                                    row.price -
-                                      Math.floor(
-                                        (row.price * row.discountPer) / 100
-                                      )
-                                  )}{" "}
-                                  <i className="mdi mdi-tag-outline" />
-                                  <br />
-                                  <span className="regular-price">
-                                    ${numberWithCommas(row.price)}{" "}
-                                  </span>
-                                </p>
+                                </>
+
+                                <span className="veg text-success mdi mdi-circle" />
                               </div>
+                             
+                            </Link>
+                            <div
+                                className="product-body"
+                                style={{ marginTop: 12, marginBottom: 12 }}
+                              >
+                                <h4>{row.name}</h4>
+                                {/* <h6>
+                          <strong>
+                            <span className="mdi mdi-approval" /> Available in
+                          </strong>{" "}
+                        </h6> */}
+                              </div>
+                            <div className="product-footer">
+                              <button
+                                type="button"
+                                className="btn btn-secondary btn-sm float-right"
+                                onClick={() => addToCart(row)}
+                              >
+                                <i className="mdi mdi-cart-outline" /> Add To
+                                Cart
+                              </button>
+                              <p className="offer-price mb-0">
+                                $
+                                {numberWithCommas(
+                                  row.price -
+                                    Math.floor(
+                                      (row.price * row.discountPer) / 100
+                                    )
+                                )}{" "}
+                                <i className="mdi mdi-tag-outline" />
+                                <br />
+                                <span className="regular-price">
+                                  ${numberWithCommas(row.price)}{" "}
+                                </span>
+                              </p>
                             </div>
                           </div>
                         </div>
-                      ))
+                      </div>
+                    ))
                   ) : (
                     <div className="text-danger">
                       Empty item in this category
@@ -287,12 +327,50 @@ const Productview = ({ addToCart }) => {
                                 <span className="badge badge-success">
                                   {row.discountPer}% OFF
                                 </span>
-                                <img
-                                  className="img-fluid"
-                                  src={row.photo}
-                                  alt="product"
+                                <>
+                                  <span
+                                    className="product-image-container product-image-container-42448"
+                                    style={{ width: "480px" }}
+                                  >
+                                    <span
+                                      className="product-image-wrapper"
+                                      style={{ paddingBottom: "150%" }}
+                                    >
+                                      <img
+                                        className="product-image-photo"
+                                        data-catalog_image_hovering="https://routine.vn/media/catalog/product/cache/d0cf4470db45e8932c69fc124d711a7e/1/0/10s23dpa025_m_blue-quan-jean-nam_2__2.jpg"
+                                        data-original_category_image
+                                        src={row.photo}
+                                        loading="lazy"
+                                        width={480}
+                                        height={720}
+                                        alt="10S23DPA025 M/ BLUE 28"
+                                        style={{ transition: "all 0s ease 0s" }}
+                                      />
+                                      <div
+                                        className="mgn-product-label product-label-container top-right image-layout"
+                                        style={{
+                                          width: "25%",
+                                          "--spaceX": "92px",
+                                        }}
+                                      >
+                                        <div
+                                          className="label-text"
+                                          style={{
+                                            fontSize: "16px",
+                                            color: "#000000",
+                                          }}
+                                        >
+                                          <span />
+                                        </div>
+                                      </div>
+                                    </span>
+                                  </span>
+                                </>
+                                <span
+                                  className="veg text-success mdi mdi-circle"
+                                  style={{ zIndex: 100, padding: 10 }}
                                 />
-                                <span className="veg text-success mdi mdi-circle" />
                               </div>
                               <div className="product-body">
                                 <h5>{row.name}</h5>

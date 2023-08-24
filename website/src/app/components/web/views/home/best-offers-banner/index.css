@@ -1,8 +1,10 @@
 .section145 {
-    padding: 47px 0 0;
+    padding: 47px 15px;
     width: 100%;
     display: block;
 }
+
+
 .main-title-tt {
     margin-bottom: 27px;
     display: flex;
@@ -31,4 +33,10 @@
     width: 100%;
     margin-bottom: 30px;
     position: relative;
+}
+
+@media screen and (min-width: 1200px) {
+    .section145 .container {
+        max-width: 100% !important
+    }
 }

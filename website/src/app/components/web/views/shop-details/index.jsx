@@ -2,19 +2,20 @@ import React, { useState, useEffect, useCallback } from "react";
 import { GetProductDetails } from "../../../services";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { addToCart } from "../../../../store/actions/cartActions";
+// import { addToCart } from "../../../../store/actions/cartActions";
 import { NotificationManager } from "react-notifications";
 import "./index.css";
-import Filterbycategory from "./Filtersbycategory";
+// import Filterbycategory from "./Filtersbycategory";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { Button } from "@material-ui/core/";
 import numberWithCommas from "../../../../../util/number_thousand_separator";
+import _ from "lodash"
 
 const Shopdetails = () => {
   const [list, setList] = useState([]);
   const [limit, setLimit] = useState(12);
   const [isloaded, setIsLoaded] = useState(false);
-  const [filter, setFilter]= useState()
+  const [filter, setFilter] = useState();
 
   const dispatch = useDispatch();
 
@@ -46,23 +47,41 @@ const Shopdetails = () => {
   const onLoadMore = () => {
     setLimit((prevLimit) => prevLimit + 6);
   };
-  
+
   function sortProducts(products, sortOption) {
     switch (sortOption) {
-      case 1: // Price - Low to High
-        return products.sort((a, b) => b.price - a.price);
-      case 2: // Price - High to Low
-        return products.sort((a, b) => a.price - b.price);
-      case 3: // Alphabetical
-        return products.sort((a, b) => a.name.localeCompare(b.name));
-      case 4: // Saving - High to Low
-        return products.sort((a, b) => b.discount - a.discount);
-      case 5: // Saving - Low to High
-        return products.sort((a, b) => a.discount - b.discount);
-      case 6: // % Off - High to Low
-        return products.sort((a, b) => b.discountPer - a.discountPer);
-      default: // Sort by Products (Default: Newest to Oldest)
-        return products.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      case 1: // Relevance (Default: Newest to Oldest)
+        return _.orderBy(products, function (e) {
+          return e.createdAt;
+        });
+      case 2: // Price - Low to High
+        return _.orderBy(products, function (e) {
+          return parseInt(e.price);
+        });
+      case 3: // Price - High to Low
+        return _.orderBy(
+          products,
+          function (e) {
+            return parseInt(e.price);
+          },
+          "desc"
+        );
+      case 4: // Discount - High to Low
+        return _.orderBy(products, function (e) {
+          return parseInt(e.discountPer);
+        });
+      case 5: // Name - A to Z
+        _.orderBy(products, function (e) {
+          return parseInt(e.name);
+        });
+      default: // Relevance (Default: Newest to Oldest)
+        return _.orderBy(
+          products,
+          function (e) {
+            return e.createdAt;
+          },
+          "desc"
+        );
     }
   }
 
@@ -99,12 +118,16 @@ const Shopdetails = () => {
                   className="filter-btn"
                   variant="contained"
                   color="secondary"
-                  onClick={()=> setList(sortProducts(list, filter))}
+                  onClick={() => setList(sortProducts(list, filter))}
                 >
                   Filters
                 </Button>
                 <div className="product-sort">
-                  <select className="form-control" onChange={(e)=> setFilter(parseInt(e.target.value))}>
+                  <select
+                    style={{height: 40}}
+                    className="form-control"
+                    onChange={(e) => setFilter(parseInt(e.target.value))}
+                  >
                     <option className="item" value={0}>
                       Sort by Products
                     </option>
@@ -159,22 +182,58 @@ const Shopdetails = () => {
                               <span className="badge badge-success">
                                 {row.discountPer}% OFF
                               </span>
-                              <img
-                                className="img-fluid"
-                                src={row.photo}
-                                alt="product"
-                              />
+                              <>
+                                <span
+                                  className="product-image-container product-image-container-42448"
+                                  style={{ width: "480px" }}
+                                >
+                                  <span
+                                    className="product-image-wrapper"
+                                    style={{ paddingBottom: "150%" }}
+                                  >
+                                    <img
+                                      className="product-image-photo"
+                                      data-catalog_image_hovering="https://routine.vn/media/catalog/product/cache/d0cf4470db45e8932c69fc124d711a7e/1/0/10s23dpa025_m_blue-quan-jean-nam_2__2.jpg"
+                                      data-original_category_image
+                                      src={row.photo}
+                                      loading="lazy"
+                                      width={480}
+                                      height={720}
+                                      alt="10S23DPA025 M/ BLUE 28"
+                                      style={{ transition: "all 0s ease 0s" }}
+                                    />
+                                    <div
+                                      className="mgn-product-label product-label-container top-right image-layout"
+                                      style={{
+                                        width: "25%",
+                                        "--spaceX": "92px",
+                                      }}
+                                    >
+                                      <div
+                                        className="label-text"
+                                        style={{
+                                          fontSize: "16px",
+                                          color: "#000000",
+                                        }}
+                                      >
+                                        <span />
+                                      </div>
+                                    </div>
+                                  </span>
+                                </span>
+                              </>
+
                               {/* <span className="veg text-success mdi mdi-circle" /> */}
                             </div>
-                            <div className="product-body">
-                              <h5>{row.name}</h5>
-                              {/* <h6>
+                          </Link>
+                          <div className="product-body" style={{margin: "12px 0"}}>
+                            <h4>{row.name}</h4>
+                            {/* <h6>
                           <strong>
                             <span className="mdi mdi-approval" /> Available in
                           </strong>{" "}
                         </h6> */}
-                            </div>
-                          </Link>
+                          </div>
                           <div
                             className="product-footer"
                             style={{ height: 40 }}
@@ -188,10 +247,12 @@ const Shopdetails = () => {
                       </button> */}
                             <p className="offer-price mb-0">
                               VND
-                              {numberWithCommas(row.price -
-                                Math.floor(
-                                  (row.price * row.discountPer) / 100
-                                ))}{" "}
+                              {numberWithCommas(
+                                row.price -
+                                  Math.floor(
+                                    (row.price * row.discountPer) / 100
+                                  )
+                              )}{" "}
                               <i className="mdi mdi-tag-outline" />
                               {row.discountPer > 0 && (
                                 <>

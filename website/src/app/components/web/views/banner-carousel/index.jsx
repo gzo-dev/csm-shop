@@ -22,13 +22,13 @@ export default class Bannerslider extends Component {
                 {/* <Category /> */}
                 <Slider {...settings}>
                     <div className="owl-item">
-                        <img className="owl-item-img-" style={{width: "100%", aspectRatio: 16 / 9}} src="https://res.cloudinary.com/cockbook/image/upload/v1690831439/z4559682910612_157eb9b1f3c2180566a5375ea2d57220_op4urh.jpg" alt="supermarket" />
+                        <img className="owl-item-img-" style={{width: "100%", aspectRatio: 5 / 2}} src="https://routine.vn/media/banner/tmp/images/LOVE_DESKTOP.jpg" alt="supermarket" />
                     </div>
                     <div className="owl-item">
-                        <img className="owl-item-img-" style={{width: "100%", aspectRatio: 16 / 9}} src="https://res.cloudinary.com/cockbook/image/upload/v1690831403/z4559682975986_13318aec10875184d72b1a325c5bfafe_gpgn2d.jpg" alt="supermarket" />
+                        <img className="owl-item-img-" style={{width: "100%", aspectRatio: 5 / 2}} src="https://routine.vn/media/banner/tmp/images/ACTIVEWEAR_-_MAIN_KV_1.jpg" alt="supermarket" />
                     </div>
                     <div className="owl-item">
-                        <img className="owl-item-img-" style={{width: "100%", aspectRatio: 16 / 9}} src="https://res.cloudinary.com/cockbook/image/upload/v1690831536/z4559682878534_2642e286a2a14445116b3745bff14b3d_gkfubh.jpg" alt="supermarket" />
+                        <img className="owl-item-img-" style={{width: "100%", aspectRatio: 5 / 2}} src="https://routine.vn/media/banner/tmp/images/banner-cfl-01.jpg" alt="supermarket" />
                     </div>
                 </Slider>
             </div>

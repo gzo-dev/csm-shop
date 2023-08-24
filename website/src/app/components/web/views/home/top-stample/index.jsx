@@ -11,7 +11,8 @@ const TopSamples = ({ addToCart }) => {
 
   useEffect(() => {
     // Kiểm tra xem có dữ liệu trong localStorage không
-    const viewedProducts = JSON.parse(localStorage.getItem("viewedProducts")) || [];
+    const viewedProducts =
+      JSON.parse(localStorage.getItem("viewedProducts")) || [];
 
     if (viewedProducts.length > 0) {
       setList(viewedProducts);
@@ -21,7 +22,6 @@ const TopSamples = ({ addToCart }) => {
       // Nếu muốn thực hiện fetching, hãy sử dụng hàm GroceryStampleDetails.getAllGroceryStaple() như cách bạn đã viết ở trên.
       // Sau khi fetching xong, hãy lưu dữ liệu vào state productlist và cập nhật vào localStorage tương tự như cách bạn đã làm trong component Singleproduct.
       // Sau khi setProductList và setIsLoaded, bạn có thể cập nhật dữ liệu vào localStorage để sử dụng lần sau.
-
       // Ví dụ:
       // const fetchData = async () => {
       //   let list = await GroceryStampleDetails.getAllGroceryStaple();
@@ -82,10 +82,13 @@ const TopSamples = ({ addToCart }) => {
     <div>
       {/* New Item slider */}
       <section className="product-items-slider section-padding">
-        <div className="container" id="header-category-bk">
-          <div className="section-header" style={{marginBottom: 12}}>
+        <div
+          className="container container-1"
+          id="header-category-bk"
+          style={{ maxWidth: "100%" }}
+        >
+          <div className="section-header" style={{ marginBottom: 12 }}>
             <span>You just watched</span>
-            
           </div>
           <Slider {...settings}>
             {!isLoaded ? (
@@ -106,15 +109,47 @@ const TopSamples = ({ addToCart }) => {
                         <span className="badge badge-success">
                           {row.discountPer}% OFF
                         </span>
-                        <img
-                          className="img-fluid"
-                          src={row.photo}
-                          alt="product"
-                        />
+                        <>
+                          <span
+                            className="product-image-container product-image-container-42448"
+                            style={{ width: "480px" }}
+                          >
+                            <span
+                              className="product-image-wrapper"
+                              style={{ paddingBottom: "150%" }}
+                            >
+                              <img
+                                className="product-image-photo"
+                                data-catalog_image_hovering="https://routine.vn/media/catalog/product/cache/d0cf4470db45e8932c69fc124d711a7e/1/0/10s23dpa025_m_blue-quan-jean-nam_2__2.jpg"
+                                data-original_category_image
+                                src={row.photo}
+                                loading="lazy"
+                                width={480}
+                                height={720}
+                                alt="10S23DPA025 M/ BLUE 28"
+                                style={{ transition: "all 0s ease 0s" }}
+                              />
+                              <div
+                                className="mgn-product-label product-label-container top-right image-layout"
+                                style={{ width: "25%", "--spaceX": "92px" }}
+                              >
+                                <div
+                                  className="label-text"
+                                  style={{ fontSize: "16px", color: "#000000" }}
+                                >
+                                  <span />
+                                </div>
+                              </div>
+                            </span>
+                          </span>
+                        </>
                         {/* <span className="veg text-success mdi mdi-circle" /> */}
                       </div>
-                      <div className="product-body">
-                        <h5>{row.name}</h5>
+                      <div
+                        className="product-body"
+                        style={{ marginTop: 12, marginBottom: 12 }}
+                      >
+                        <h4>{row.name}</h4>
                         {/* <h6>
                           <strong>
                             <span className="mdi mdi-approval" /> Available in
@@ -122,7 +157,7 @@ const TopSamples = ({ addToCart }) => {
                         </h6> */}
                       </div>
                     </Link>
-                    <div className="product-footer" style={{height: 40}}>
+                    <div className="product-footer" style={{ height: 40 }}>
                       {/* <button
                         type="button"
                         className="btn btn-secondary btn-sm float-right"
@@ -131,14 +166,18 @@ const TopSamples = ({ addToCart }) => {
                         <i className="mdi mdi-cart-outline" /> Add To Cart
                       </button> */}
                       <p className="offer-price mb-0">
-                        VND{row.price - Math.floor(row.price * row.discountPer / 100)} <i className="mdi mdi-tag-outline" />
-                        {
-                          row.discountPer > 0 && 
+                        VND
+                        {row.price -
+                          Math.floor((row.price * row.discountPer) / 100)}{" "}
+                        <i className="mdi mdi-tag-outline" />
+                        {row.discountPer > 0 && (
                           <>
                             <br />
-                            <span className="regular-price">VND{row.price}</span>
+                            <span className="regular-price">
+                              VND{row.price}
+                            </span>
                           </>
-                        }
+                        )}
                       </p>
                     </div>
                   </div>

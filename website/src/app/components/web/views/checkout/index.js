@@ -15,6 +15,7 @@ import swal from "sweetalert";
 import { API_URL } from "../../../../../config1";
 import Axios from "axios";
 import Cookies from "js-cookie";
+import numberWithCommas from "../../../../../util/number_thousand_separator";
 
 const Checkout = (props) => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -94,17 +95,17 @@ const Checkout = (props) => {
   const handlePlaceOrder = async (event) => {
     event.preventDefault();
     const data = {
-      customerId: customer.id,
-      paymentmethod: paymentmethod,
+      customerId: customer.id || "",
+      paymentmethod: paymentmethod || "",
       orderId: Math.floor(
         Math.random() * Math.floor(Math.random() * Date.now())
       ),
-      deliveryAddress: deliveryAddress,
+      deliveryAddress: deliveryAddress || "",
       product: props.cartItems,
-      grandTotal,
+      grandTotal: grandTotal || "",
       voucherId: dataVoucher.id ? dataVoucher.id : 0,
-      deliveryCharge,
-      email,
+      deliveryCharge: deliveryCharge || 0,
+      email: email || "",
       voucherId: dataVoucher.id || 0,
     };
     if(deliveryAddress.name.length <= 0 || deliveryAddress.phone.length <= 0 || deliveryAddress.district.length <= 0 || deliveryAddress.states.length <= 0) { 
@@ -549,9 +550,11 @@ const Checkout = (props) => {
                         - {row.unitSize} gm
                       </h6>
                       <p className="offer-price mb-0">
-                        ${row.qty + "*" + row.price}{" "}
+                        {row.qty + "*" + numberWithCommas(row.price)}{" "}
                         <i className="mdi mdi-tag-outline" />{" "}
-                        <span className="regular-price">${row.price}</span>
+                        <div className="regular-price">VND{numberWithCommas(row.qty  * row.price)}</div>
+                        <div>VND{numberWithCommas(row.qty  * row.price * (1- row.discountPer / 100))}</div>
+
                       </p>
                     </div>
                   </div>
@@ -559,20 +562,20 @@ const Checkout = (props) => {
                 <div className="total-checkout-group">
                   <div className="cart-total-dil">
                     <h4>Sub Total</h4>
-                    <span>VND{subTotal}</span>
+                    <span>VND{numberWithCommas(subTotal)}</span>
                   </div>
                   <div className="cart-total-dil pt-3">
                     <h4>Delivery Charges</h4>
-                    <span>VND{deliveryCharge}</span>
+                    <span>VND{numberWithCommas(deliveryCharge)}</span>
                   </div>
                 </div>
-                <div className="cart-total-dil saving-total ">
+                <div className="cart-total-dil saving-total pt-3" style={{padding: 20}}>
                   <h4>Total Saving</h4>
-                  <span>VND{discount}</span>
+                  <span>VND{numberWithCommas(discount)}</span>
                 </div>
-                <div className="main-total-cart">
+                <div className="main-total-cart pt-3" style={{padding: 20}}>
                   <h2>Total</h2>
-                  <span>VND{grandTotal}</span>
+                  <span>VND{numberWithCommas(grandTotal)}</span>
                 </div>
               </div>
             </div>

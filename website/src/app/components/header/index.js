@@ -3,6 +3,7 @@ import { Link, withRouter } from "react-router-dom";
 import Login from "../../auth/login";
 import Cartsidebar from "../web/views/cart-sidebar";
 import { GetUserLogin } from "../../components/services";
+import "./index.css"
 
 const Navigation = ({ history }) => {
   const [token, setToken] = useState("");
@@ -45,7 +46,7 @@ const Navigation = ({ history }) => {
   return (
     <div>
       <header className="header clearfix">
-        <nav className="navbar navbar-light navbar-expand-lg bg-dark bg-faded osahan-menu">
+        <nav className="navbar navbar-light navbar-expand-lg bg-faded osahan-menu">
           <div className="container-fluid justify-content-between d-flex gap-20">
             <div>
             
@@ -71,7 +72,7 @@ const Navigation = ({ history }) => {
             >
               <span className="navbar-toggler-icon" />
             </button>
-            <div className="navbar-collapse" id="navbarNavDropdown">
+            <div className="navbar-collapse" id="navbarNavDropdown" style={{flexGrow: 0}}>
             <div className="navbar-nav mr-auto mt-2 mt-lg-0 top-categories-search-main" style={{flex: 1}}>
                       <form
                         className="top-categories-search"
@@ -87,17 +88,18 @@ const Navigation = ({ history }) => {
                             name="searchtxt"
                             value={searchtxt}
                             onChange={handleChange}
+                            style={{borderBottom: "1px solid #000", width: 250}}
                           />
                           <span className="input-group-btn">
-                            <button className="btn btn-secondary" type="submit">
-                              <i className="mdi mdi-file-find" /> Search
+                            <button className="btn btn-secondary d-flex align-items-center" type="submit">
+                              <i style={{fontSize: 22}} className="mdi mdi-magnify" /> Search
                             </button>
                           </span>
                         </div>
                       </form>
                     </div>
               <div className="my-2 my-lg-0">
-                <ul className="list-inline main-nav-right">
+                <ul className="list-inline main-nav-right d-flex align-items-center">
                   <li className="list-inline-item">
                     
                     {!token ? (
@@ -106,21 +108,22 @@ const Navigation = ({ history }) => {
                         data-target="#bd-example-modal"
                         data-toggle="modal"
                         className="btn btn-link"
+                        style={{marginLeft: 12}}
                       >
-                        <i className="mdi mdi-account-circle" /> Login/Sign Up
+                        <Link className="action showcustomer" to="#"></Link>
                       </Link>
                     ) : (
                       <div className="dropdown">
                         <button
-                          className="btn btn-account dropdown-toggle"
+                          className="btn btn-account dropdown-toggle d-flex align-items-center gap-10"
                           type="button"
                           id="dropdownMenuButton"
                           data-toggle="dropdown"
                           aria-haspopup="true"
                           aria-expanded="false"
                         >
-                          <i className="mdi mdi-account-circle" />
-                          {userName}
+                          <Link className="action showcustomer" to="#"></Link>
+                          <span style={{marginLeft: 12, fontSize: 16}}>{userName}</span>
                         </button>
                         <div
                           className="dropdown-menu"
@@ -163,7 +166,7 @@ const Navigation = ({ history }) => {
                     {sessionStorage.getItem("_sid") && (
                       <Link to={"/voucher/gift"}>
                         <span className="btn btn-link border-none">
-                          <i className="mdi mdi-sale"></i> Earn voucher{" "}
+                          <i style={{width: 22}} className="mdi mdi-sale"></i> Earn voucher{" "}
                         </span>
                       </Link>
                     )}

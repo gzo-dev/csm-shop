@@ -132,13 +132,13 @@ const Singleproduct = ({ addToCart }) => {
         </div>
       </section>
 
-      <section className="shop-single section-padding pt-3">
+      <section className="shop-single section-padding pt-3" style={{padding: 10, marginBottom: 50}}>
         <div className="container">
           {product && product.status !== "inactive" ? (
             <div className="row">
                          {product.productphotos && product.productphotos.length > 0 && (
                 <>
-                  <div className="col-md-6" style={{ backgroundColor: "#fff" }}>
+                  <div className="col-md-6" style={{ backgroundColor: "#fff", padding: 10, borderRadius: 10 }}>
                     <div className="shop-detail-left">
                       <Paper className="shop-detail-slider">
                         <Slider {...settings}>
@@ -260,7 +260,7 @@ const Singleproduct = ({ addToCart }) => {
                   </button>
                   <h6 className="mb-3 mt-4">Why shop from csm?</h6>
                   <div className="row">
-                    <div className="col-md-12">
+                    <div className="col-md-12 mt-2 mb-2">
                       <div className="feature-box">
                         <i className="mdi mdi-truck-fast" />
                         <h6 className="text-info">
@@ -305,7 +305,7 @@ const Singleproduct = ({ addToCart }) => {
           ) : (
             // Hiển thị Notice và lớp phủ khi sản phẩm có trạng thái "inactive"
             <div className="inactive-product-overlay">
-              <h2>Sản phẩm không có sẵn</h2>
+              <h2>Product is not available</h2>
             </div>
           )}
         </div>
