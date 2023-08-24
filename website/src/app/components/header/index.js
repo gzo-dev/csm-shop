@@ -47,7 +47,7 @@ const Navigation = ({ history }) => {
     <div>
       <header className="header clearfix">
         <nav className="navbar navbar-light navbar-expand-lg bg-faded osahan-menu">
-          <div className="container-fluid justify-content-between d-flex gap-20">
+          <div className="container-fluid justify-content-between d-flex gap-20" style={{borderBottom: "1px solid #e7e7e7"}}>
             <div>
             
               <Link className="navbar-brand" to="/">
