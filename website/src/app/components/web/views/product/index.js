@@ -53,7 +53,12 @@ const Productview = ({ addToCart }) => {
     let category = await GetProductDetails.getProductBySubcategory(data);
     if (category) {
       setCategoryByProduct(category.data);
-      setList(category.data[0].products);
+      if(category.data?.length > 0 ) {
+        setList(category.data[0].products);
+      }
+      else {
+        setList([])
+      }
       setIsLoaded(true);
       setToggle(true);
     } else {
