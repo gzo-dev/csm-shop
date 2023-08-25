@@ -45,7 +45,7 @@ const Navigation = ({ history }) => {
 
   return (
     <div>
-      <header className="header clearfix">
+      <header className="header clearfix bg-dark">
         <nav className="navbar navbar-light navbar-expand-lg bg-faded osahan-menu">
           <div className="container-fluid justify-content-between d-flex gap-20" style={{borderBottom: "1px solid #e7e7e7"}}>
             <div>
@@ -54,7 +54,7 @@ const Navigation = ({ history }) => {
                 {" "}
                 <img
                   style={{ width: 80 }}
-                  src="https://res.cloudinary.com/cockbook/image/upload/v1691660583/single/z4582436233417_0f8470419bce65bc3911fb17d8586a44-removebg-preview_m9ezon.png"
+                  src="https://res.cloudinary.com/cockbook/image/upload/v1692940937/single/z4632199152859_dad394451a5b88ca2fcee448e0dee6f8_vh4w0p.jpg"
                   alt="logo"
                 />{" "}
               </Link>
@@ -110,7 +110,7 @@ const Navigation = ({ history }) => {
                         className="btn btn-link"
                         style={{marginLeft: 12}}
                       >
-                        <Link className="action showcustomer" to="#"></Link>
+                        <span class="mdi mdi-account" style={{color: "#fff", fontSize: 22}}></span>
                       </Link>
                     ) : (
                       <div className="dropdown">
@@ -122,8 +122,8 @@ const Navigation = ({ history }) => {
                           aria-haspopup="true"
                           aria-expanded="false"
                         >
-                          <Link className="action showcustomer" to="#"></Link>
-                          <span style={{marginLeft: 12, fontSize: 16}}>{userName}</span>
+                          <span class="mdi mdi-account" style={{color: "#fff", fontSize: 22}}></span>
+                          <span style={{marginLeft: 12, fontSize: 16, color: "#fff"}}>{userName}</span>
                         </button>
                         <div
                           className="dropdown-menu"
@@ -165,8 +165,8 @@ const Navigation = ({ history }) => {
                   <li className="list-inline-item">
                     {sessionStorage.getItem("_sid") && (
                       <Link to={"/voucher/gift"}>
-                        <span className="btn btn-link border-none">
-                          <i style={{width: 22}} className="mdi mdi-sale"></i> Earn voucher{" "}
+                        <span className="btn btn-link border-none" style={{color: "#fff"}}>
+                          <i style={{width: 22, color: "#fff"}} className="mdi mdi-sale"></i> Earn voucher{" "}
                         </span>
                       </Link>
                     )}

@@ -29,11 +29,8 @@ const CartSidebar = ({
         className="btn btn-link border-none d-flex align-items-center"
       >
         <a className="action showcart" data-bind="scope: 'minicart_content'">
-          <span
-            className="counter qty empty"
-            data-bind="css: { empty: !!getCartParam('summary_count') == false && !isLoading() },
-                blockLoader: isLoading"
-          ></span>
+          
+          <span class="mdi mdi-cart-outline" style={{fontSize: 20, color: "#fff"}}></span>
         </a>
         <small className="cart-value">{cartItems.length}</small>
       </div>
