@@ -15,7 +15,7 @@ const DeliveryDetails = (props) => {
   const [listDistrict, setListDistrict]= useState([])
   const [listWard, setListWard]= useState([])
 
-  const {city, setCity }= props
+  const {city, setCity, setIsNextStep2 }= props
   useEffect(()=> {
     (async ()=> {
         const result= await axios({
@@ -74,7 +74,7 @@ const DeliveryDetails = (props) => {
   };
 
   const handleSubmit = (event) => {
-    event.preventDefault();
+    setIsNextStep2(true)
     const delivery = {
       name: name,
       phone: phone,
@@ -238,7 +238,10 @@ const DeliveryDetails = (props) => {
           aria-expanded="false"
           aria-controls="collapseThree"
           className="btn btn-secondary mb-2 btn-lg"
-          onClick={handleSubmit}
+          onClick={()=> {
+            handleSubmit();
+            
+          }}
         >
           Next
         </button>

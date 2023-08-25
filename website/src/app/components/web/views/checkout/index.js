@@ -16,6 +16,7 @@ import { API_URL } from "../../../../../config1";
 import Axios from "axios";
 import Cookies from "js-cookie";
 import numberWithCommas from "../../../../../util/number_thousand_separator";
+import "./index.css"
 
 const Checkout = (props) => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -336,6 +337,7 @@ const Checkout = (props) => {
   }, []);
 
   const { cartItems } = props;
+  const [isNextStep2, setIsNextStep2]= useState(false)
 
   return (
     <div>
@@ -387,14 +389,14 @@ const Checkout = (props) => {
                     <div className="card-header" id="headingTwo">
                       <h5 className="mb-0">
                         <button
-                          className="btn btn-link collapsed"
+                          className={`btn btn-link collapsed `}
                           type="button"
                           data-toggle="collapse"
                           data-target="#collapseTwo"
                           aria-expanded="false"
                           aria-controls="collapseTwo"
                         >
-                          <span className="number">2</span> Delivery Address
+                          <span className={`number ${isNextStep2 ? "next-step-2" : "aaa"}`}>2</span> Delivery Address
                         </button>
                       </h5>
                     </div>
@@ -408,6 +410,7 @@ const Checkout = (props) => {
                         onSelectDeliveryAddress={handleDeliveryAddress}
                         city={city}
                         setCity={setCity}
+                        setIsNextStep2={setIsNextStep2}
                       />
                     </div>
                   </div>
