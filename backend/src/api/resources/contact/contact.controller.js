@@ -4,7 +4,7 @@ import { db } from "../../../models"
 export default {
     async submit_contact(req, res) {
         db.contact.create({
-            ...req.body, date_send: new Date()
+            ...req.body
         })
 
         return res.status(200).json({ok: true})

@@ -168,7 +168,7 @@ const View = () => {
                         <td>{row.status}</td>
                         <td className="action-btns">
                           {
-                            row.status === "processed" ? <ReplyContact {...row} setChange={setChange} /> 
+                            row.status === "waiting for reply" ? <ReplyContact {...row} setChange={setChange} /> 
                             :
                             <ViewReply {...row} />
                           }
@@ -213,7 +213,7 @@ const View = () => {
               </Button>
 
               {/* Hiển thị nút chuyển đến trang đầu tiên */}
-              {currentPage > 1 && (
+              {currentPage >= 1 && (
                 <Button onClick={() => goToPage(1)}>
                   1
                 </Button>
