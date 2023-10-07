@@ -103,6 +103,7 @@ const Createshop = () => {
     setSelectedArea(value);
   };
 
+  // g
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = {
@@ -335,7 +336,8 @@ const Createshop = () => {
         <Grid container spacing={4}>
           <div className="card-title-2">
             <h4>
-              <b>Bank Details(Optional)</b>
+              {/* g */}
+              <b>Bank Details(Optional)</b> 
             </h4>
           </div>
           <Grid item xs={4}>
