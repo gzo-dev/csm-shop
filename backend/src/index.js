@@ -15,7 +15,10 @@ const PORT = config.app.port;
 const app = appManager.setup(config);
 
 /*cors handling*/
-app.use(cors());
+app.use(cors({
+	origin:true,
+    credentials:true
+}));
 app.options('*', cors());
 
 /* Route handling */
