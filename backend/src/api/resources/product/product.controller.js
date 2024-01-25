@@ -1,33 +1,6 @@
 import { db } from "../../../models";
 const { Op, Sequelize } = require("sequelize");
 // import { queue } from '../../../kue';
-import config from "../../../config";
-import AWS from "aws-sdk";
-
-const s3 = new AWS.S3({
-  accessKeyId: config.app.AWS_ACCESS_KEY,
-  secretAccessKey: config.app.AWS_SECRET_KEY,
-});
-
-var deleteFileFromS3 = async (imgUrl) => {
-  try {
-    const lastItem = imgUrl.substring(imgUrl.lastIndexOf("/") + 1);
-    var params = {
-      Bucket: "photoabhi",
-      Key: lastItem,
-    };
-    s3.deleteObject(params, (error, data) => {
-      if (error) {
-        console.log(error, error.stack);
-      }
-      return data;
-    });
-  } catch (error) {
-    assert.isNotOk(error, "Promise error");
-    done();
-  }
-};
-
 export default {
   /* Add user api start here................................*/
   async getPhotoProduct(req, res) {

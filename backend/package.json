@@ -28,7 +28,6 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.2.0",
-    "aws-sdk": "^2.700.0",
     "axios": "^1.4.0",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.18.3",
