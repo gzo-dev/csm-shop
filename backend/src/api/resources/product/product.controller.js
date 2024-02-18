@@ -38,6 +38,15 @@ export default {
         image,
         size,
         newaddimage,
+        phoneNumber,
+        province, 
+        district,
+        ward,
+        square,
+        provinceText,
+        districtText,
+        wardText,
+        budget
       } = req.body;
 
       db.product
@@ -60,6 +69,15 @@ export default {
           total: total,
           netPrice: netPrice,
           photo: req.file ? req.file.path : "",
+          phoneNumber: phoneNumber,
+          province: province,
+          district: district,
+          ward: ward,
+          provinceText: provinceText ? provinceText : "",
+          districtText: districtText ? districtText : "",
+          wardText: wardText ? wardText : "",
+          square: square ? square : 0,
+          budget: budget ? budget : 0
         })
         .then((product) => {
           JSON.parse(image)?.map((item) =>
@@ -72,7 +90,7 @@ export default {
             JSON.parse(newaddimage)?.map((item) =>
               db.productphoto.create({
                 imgUrl: item?.imageUrl,
-                productId: productId,
+                productId: product.dataValues.id,
               })
             );
           }
@@ -167,6 +185,7 @@ export default {
         images,
         size,
         newaddimage,
+        phoneNumber
       } = req.body;
       db.product
         .findOne({ where: { id: productId } })
@@ -195,6 +214,7 @@ export default {
                 total: total,
                 netPrice: netPrice,
                 photo: req.file ? req.file.location : product.photo,
+                phoneNumber: phoneNumber
               },
               { where: { id: productId } }
             );
@@ -243,11 +263,56 @@ export default {
     try {
       db.product
         .findAll({
-          order: [["createdAt", "DESC"]],
+          order: [["DESC"]],
           where: {
             categoryId: req.query.categoryId,
             subCategoryId: req.query.subCategoryId,
           },
+          include: [{ model: db.productphoto, attributes: ["id", "imgUrl"] }],
+        })
+        .then((list) => {
+          res.status(200).json({ success: true, data: list });
+        })
+        .catch(function (err) {
+          next(err);
+        });
+    } catch (err) {
+      throw new RequestError("Error");
+    }
+  },
+  async getProductSuggestHotel(req, res, next) {
+    try {
+      db.product
+        .findAll({
+          order: [["DESC"]],
+          where: {
+            categoryId: 12,
+            // subCategoryId: req.query.subCategoryId,
+          },
+          include: [{ model: db.productphoto, attributes: ["id", "imgUrl"] }],
+          limit: 4
+        })
+        .then((list) => {
+          res.status(200).json({ success: true, data: list });
+        })
+        .catch(function (err) {
+          next(err);
+        });
+    } catch (err) {
+      throw new RequestError("Error");
+    }
+  },
+  async getProductSuggestApartment(req, res, next) {
+    try {
+      db.product
+        .findAll({
+          order: [["DESC"]],
+          where: {
+            categoryId: 13,
+            // subCategoryId: req.query.subCategoryId,
+          },
+          include: [{ model: db.productphoto, attributes: ["id", "imgUrl"] }],
+          limit: 4
         })
         .then((list) => {
           res.status(200).json({ success: true, data: list });

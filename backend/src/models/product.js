@@ -19,6 +19,15 @@ module.exports = (sequelize, DataTypes) => {
     photo: DataTypes.STRING,
     sortDesc: DataTypes.TEXT,
     desc: DataTypes.TEXT,
+    phoneNumber: DataTypes.TEXT,
+    square: DataTypes.FLOAT,
+    province: DataTypes.STRING,
+    district: DataTypes.STRING, 
+    ward: DataTypes.STRING,
+    provinceText: DataTypes.STRING,
+    districtText: DataTypes.STRING,
+    wardText: DataTypes.STRING,
+    budget: DataTypes.FLOAT
     
   }, {});
   product.associate = function(models) {
