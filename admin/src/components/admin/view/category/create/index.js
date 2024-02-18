@@ -44,7 +44,7 @@ const MainCategory = (props) => {
     const data = { name: name, slug: slug };
     swal({
       title: "Are you sure?",
-      text: "You want to Add New Location",
+      text: "You want to Add New Categories",
       icon: "warning",
       buttons: true,
       dangerMode: true,
@@ -141,7 +141,7 @@ const MainCategory = (props) => {
               <div className="col-lg-12 col-md-12">
                 <div className="card card-static-2 mb-30">
                   <div className="card-title-2">
-                    <h4>All Main Categories</h4>
+                    <h4>Tất cả thể loại</h4>
                   </div>
                   <div className="card-body-table">
                     <div className="table-responsive">

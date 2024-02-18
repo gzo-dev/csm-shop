@@ -280,7 +280,7 @@ const Createshop = () => {
                         </Grid> */}
           <Grid item xs={4}>
             <div className="form-group">
-              <label className="form-label"> Status*</label>
+              <label className="form-label"> Trạng thái*</label>
               <select
                 id="status"
                 className="form-control"

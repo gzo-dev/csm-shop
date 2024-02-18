@@ -125,7 +125,7 @@ export default class Create extends Component {
                     />
                   </div>
                   <div className="form-group">
-                    <label className="form-label">Status*</label>
+                    <label className="form-label">Trạng thái*</label>
                     <select
                       id="status"
                       name="status"

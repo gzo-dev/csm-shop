@@ -3,7 +3,7 @@ import { Switch, Route } from 'react-router-dom'
 import List from './list';
 import Create from './create';
 
-export default class Areas extends Component {
+export default class Tours extends Component {
     render() {
         const { match } = this.props;
         return (

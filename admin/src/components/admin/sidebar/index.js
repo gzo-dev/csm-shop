@@ -21,10 +21,10 @@ export default class Sidebar extends Component {
                 <div className="sb-nav-link-icon">
                   <i className="fas fa-tachometer-alt" />
                 </div>
-                Dashboard
+                Bảng điều khiển
               </Link>
 
-              <Link
+              {/* <Link
                 className="nav-link collapsed"
                 to="/admin/shop/list"
                 data-toggle="collapse"
@@ -39,7 +39,7 @@ export default class Sidebar extends Component {
                 <div className="sb-sidenav-collapse-arrow">
                   <i className="fas fa-angle-down" />
                 </div>
-              </Link>
+              </Link> */}
               <div
                 className="collapse"
                 id="collapseShops"
@@ -75,7 +75,7 @@ export default class Sidebar extends Component {
                 <div className="sb-nav-link-icon">
                   <i className="fas fa-box" />
                 </div>
-                  Products
+                  Sản phẩm
                 <div className="sb-sidenav-collapse-arrow">
                   <i className="fas fa-angle-down" />
                 </div>
@@ -91,20 +91,20 @@ export default class Sidebar extends Component {
                     className="nav-link sub_nav_link"
                     to="/admin/product/list"
                   >
-                    All Products
+                    Tất cả sản phẩm
                   </Link>
                   <Link
                     className="nav-link sub_nav_link"
                     to="/admin/product/create"
                   >
-                    Add Product
+                    Thêm sản phẩm
                   </Link>
-                  <Link
+                  {/* <Link
                     className="nav-link sub_nav_link"
                     to="/admin/product/more-photo"
                   >
-                    Add More Image
-                  </Link>
+                    Thêm nhiều sản phẩm
+                  </Link> */}
                 </nav>
               </div>
               <Link
@@ -118,7 +118,7 @@ export default class Sidebar extends Component {
                 <div className="sb-nav-link-icon">
                   <i className="fas fa-list" />
                 </div>
-                Categories
+                  Thể loại
                 <div className="sb-sidenav-collapse-arrow">
                   <i className="fas fa-angle-down" />
                 </div>
@@ -134,19 +134,19 @@ export default class Sidebar extends Component {
                     className="nav-link sub_nav_link"
                     to="/admin/category/list"
                   >
-                    All Categories
+                    Tất cả thể loại
                   </Link>
                   <Link
                     className="nav-link sub_nav_link"
                     to="/admin/category/create"
                   >
-                    Add Category
+                    Thêm thể loại
                   </Link>
                   <Link
                     className="nav-link sub_nav_link"
                     to="/admin/category/sub-create"
                   >
-                    Add Sub-Category
+                    Thêm thể loại con
                   </Link>
                   {/* <Link
                     className="nav-link sub_nav_link"
@@ -193,7 +193,7 @@ export default class Sidebar extends Component {
                   </Link>
                 </nav>
               </div> */}
-              {/* <Link
+              <Link
                 className="nav-link collapsed"
                 to="/admin/area/list"
                 data-toggle="collapse"
@@ -204,7 +204,7 @@ export default class Sidebar extends Component {
                 <div className="sb-nav-link-icon">
                   <i className="fas fa-map-marked-alt" />
                 </div>
-                Areas
+                Tour
                 <div className="sb-sidenav-collapse-arrow">
                   <i className="fas fa-angle-down" />
                 </div>
@@ -216,17 +216,17 @@ export default class Sidebar extends Component {
                 data-parent="#sidenavAccordion"
               >
                 <nav className="sb-sidenav-menu-nested nav">
-                  <Link className="nav-link sub_nav_link" to="/admin/area/list">
-                    All Areas
+                  <Link className="nav-link sub_nav_link" to="/admin/tour/list">
+                    Quản lý tour
                   </Link>
                   <Link
                     className="nav-link sub_nav_link"
-                    to="/admin/area/create"
+                    to="/admin/tour/create"
                   >
-                    Add Area
+                    Thêm tour
                   </Link>
                 </nav>
-              </div> */}
+              </div>
               <Link
                 className={role === "admin" ? isActive("/admin/user/list") : "d-none"}
                 to="/admin/user/list"
@@ -234,13 +234,13 @@ export default class Sidebar extends Component {
                 <div className="sb-nav-link-icon">
                   <i className="fas fa-users" />
                 </div>
-                Roles Management
+                Quản lý người dùng hệ thống
               </Link>
               <Link className={isActive("/admin/customer/list")} to="/admin/customer/list">
                 <div className="sb-nav-link-icon">
                   <i className="fas fa-users" />
                 </div>
-                Customers
+                  Quản lý người dùng
               </Link>
               {/* <Link className="nav-link" to="/admin/payment/list">
                 <div className="sb-nav-link-icon">
@@ -248,17 +248,17 @@ export default class Sidebar extends Component {
                 </div>
                 Payment
               </Link> */}
-              <Link className={isActive("/admin/voucher/list")} to="/admin/voucher/list">
+              {/* <Link className={isActive("/admin/voucher/list")} to="/admin/voucher/list">
                 <div className="sb-nav-link-icon">
                   <i className="fas fa-gift" />
                 </div>
                 Voucher
-              </Link>
+              </Link> */}
               <Link className={isActive("/admin/contact/list")} to="/admin/contact/list">
                 <div className="sb-nav-link-icon">
                   <i className="fas fa-gift" />
                 </div>
-                Contact
+                  Liên hệ
               </Link>
             </div>
           </div>

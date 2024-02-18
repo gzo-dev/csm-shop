@@ -57,7 +57,7 @@ export default class SubChildCategory extends Component {
     };
     swal({
       title: "Are you sure?",
-      text: "You want to Add New Location",
+      text: "You want to Add New Child Category",
       icon: "warning",
       buttons: true,
       dangerMode: true,
@@ -126,11 +126,11 @@ export default class SubChildCategory extends Component {
                     />
                   </div>
                   <div className="form-group mb-0">
-                    <label className="form-label">Main Category*</label>
+                    <label className="form-label">Thể loại*</label>
                     <MainCategorylist onSelectCategory={this.handleCategory} />
                   </div>
                   <div className="form-group">
-                    <label className="form-label">Sub Category*</label>
+                    <label className="form-label">Thể loại con*</label>
                     <SubCategorylist
                       state={getList}
                       onSelectSubCategory={this.handleSubCategory}

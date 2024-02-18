@@ -46,7 +46,7 @@ export default class SubCategory extends Component {
     let data = { sub_name: name, categoryId: selectCategory };
     swal({
       title: "Are you sure?",
-      text: "You want to Add New Location",
+      text: "You want to Add Sub Categories",
       icon: "warning",
       buttons: true,
       dangerMode: true,
@@ -114,7 +114,7 @@ export default class SubCategory extends Component {
                     />
                   </div>
                   <div className="form-group mb-0">
-                    <label className="form-label">Main Categories*</label>
+                    <label className="form-label">Chọn thể loại*</label>
                     <MainCategorylist
                       onSelectCategory={this.handleChangeCategoryList}
                     />

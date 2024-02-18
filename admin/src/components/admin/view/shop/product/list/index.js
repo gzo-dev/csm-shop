@@ -137,7 +137,7 @@ export default class List extends Component {
                         <div className="col-lg-12 col-md-12">
                             <div className="card card-static-2 mt-30 mb-30">
                                 <div className="card-title-2">
-                                    <h4>All Products</h4>
+                                    <h4>Tất cả sản phẩm</h4>
                                 </div>
                                 <div className="card-body-table">
                                     <div className="table-responsive">
@@ -149,7 +149,7 @@ export default class List extends Component {
                                                     <th style={{ width: 100 }}>Image</th>
                                                     <th>Name</th>
                                                     <th>Category</th>
-                                                    <th>Brand</th>
+                                                    <th>Tên phụ</th>
                                                     {/* <th>Unit</th> */}
                                                     <th>Price</th>
                                                     <th>Action</th>
@@ -171,7 +171,7 @@ export default class List extends Component {
                                                             <td>{row.brand}</td>
                                                             {/* <td><input type="text" value={row.unitSize} disabled /></td> */}
                                                             <td><input type="text" value={row.buyerPrice} disabled /></td>
-                                                            <td><Modal_box state={row}/></td>
+                                                            {/* <td><Modal_box state={row}/></td> */}
 
                                                         </tr>
                                                     ))

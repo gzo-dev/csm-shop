@@ -200,7 +200,7 @@ export default class Uploadphoto extends Component {
       <div className="container-fluid">
         <div className="row">
           <div className="col-lg-5 col-md-9 col-lg-6">
-            <h2 className="mt-30 page-title">Products</h2>
+            <h2 className="mt-30 page-title">Sản phẩm</h2>
           </div>
           <div className="col-lg-5 col-md-3 col-lg-6 back-btn">
             <Button variant="contained" onClick={(e) => this.handleBack()}>
@@ -303,7 +303,7 @@ export default class Uploadphoto extends Component {
               </div>
 
               <div className="card-title-2">
-                <h4>All Products</h4>
+                <h4>Tất cả sản phẩm</h4>
               </div>
               <div className="card-body-table">
                 <div className="table-responsive">

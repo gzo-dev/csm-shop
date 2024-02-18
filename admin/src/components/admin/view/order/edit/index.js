@@ -275,7 +275,7 @@ const Edit = (props) => {
                           </div>
                         </div>
                         <div className="select-status">
-                          <label htmlFor="status">Status*</label>
+                          <label htmlFor="status">Trạng thái*</label>
                           <div className="input-group">
                             <select
                               id="status"

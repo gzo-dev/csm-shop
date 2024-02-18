@@ -60,7 +60,7 @@ export default class List extends Component {
         <div className="row justify-content-between">
           <div className="col-lg-12">
             <a href="/admin/location/create" className="add-btn hover-btn">
-              Add New
+              Thêm mới
             </a>
           </div>
           <div className="col-lg-3 col-md-4">

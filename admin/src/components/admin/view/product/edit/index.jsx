@@ -40,6 +40,7 @@ const Edit = (props) => {
   const [photo, setPhoto] = useState(self.photo);
   const [photoTemp, setPhotoTemp] = useState("");
   const [newAddImage, setNewAddImage]= useState([])
+  const [phoneNumber, setPhoneNumber]= useState(self.phoneNumber)
   const [newAddImageUrl, setNewAddImageUrl]= useState([])
 
   const handleBack = () => {
@@ -79,6 +80,8 @@ const Edit = (props) => {
       case "discountPer":
         setDiscountPer(value);
         break;
+      case "phoneNumber":
+        setPhoneNumber(value)
       default:
         break;
     }
@@ -141,6 +144,7 @@ const Edit = (props) => {
     formData.append("netPrice", grand_total);
     formData.append("images", JSON.stringify(images));
     formData.append("size", JSON.stringify(size));
+    formData.append("phoneNumber", phoneNumber)
     const config = {
       headers: {
         "content-type": "multipart/form-data",
@@ -244,7 +248,7 @@ const Edit = (props) => {
     <div className="container-fluid">
       <div className="row">
         <div className="col-lg-5 col-md-9 col-lg-6">
-          <h2 className="mt-30 page-title">Products</h2>
+          <h2 className="mt-30 page-title">Sản phẩm</h2>
         </div>
         <div className="col-lg-5 col-md-3 col-lg-6 back-btn">
           <Button variant="contained" onClick={(e) => handleBack()}>
@@ -310,7 +314,7 @@ const Edit = (props) => {
                       />
                     </div>
                   </div>
-                  <div className="col-lg-2 col-md-2">
+                  {/* <div className="col-lg-2 col-md-2">
                     <div className="form-group">
                       <label className="form-label">Size*</label>
                       <input
@@ -323,14 +327,38 @@ const Edit = (props) => {
                       />
                       <AddSize isupdate={true} updateSize={updateSize} size={size} />
                     </div>
-                  </div>
+                  </div> */}
                   <div className="col-lg-2 col-md-2">
                     <div className="form-group">
                       <label className="form-label">Image label*</label>
-                      {photoTemp.length > 0 ? (
-                        <Fragment>
+                      <div>
+                        
+                        {photoTemp.length > 0 ? (
+                          <Fragment>
+                            <img
+                              src={photoTemp}
+                              className={"mr-3 mb-3"}
+                              style={{
+                                width: 130,
+                                height: 130,
+                                borderRadius: 10,
+                                objectFit: "cover",
+                                marginBottom: 12,
+                                marginTop: 12,
+                              }}
+                            />
+                            <Button
+                              onClick={() => setPhotoTemp("")}
+                              style={{ marginTop: 12 }}
+                              variant={"contained"}
+                              color={"#f00"}
+                            >
+                              Delete
+                            </Button>
+                          </Fragment>
+                        ) : (
                           <img
-                            src={photoTemp}
+                            src={photo}
                             className={"mr-3 mb-3"}
                             style={{
                               width: 130,
@@ -341,29 +369,8 @@ const Edit = (props) => {
                               marginTop: 12,
                             }}
                           />
-                          <Button
-                            onClick={() => setPhotoTemp("")}
-                            style={{ marginTop: 12 }}
-                            variant={"contained"}
-                            color={"#f00"}
-                          >
-                            Delete
-                          </Button>
-                        </Fragment>
-                      ) : (
-                        <img
-                          src={photo}
-                          className={"mr-3 mb-3"}
-                          style={{
-                            width: 130,
-                            height: 130,
-                            borderRadius: 10,
-                            objectFit: "cover",
-                            marginBottom: 12,
-                            marginTop: 12,
-                          }}
-                        />
-                      )}
+                        )}
+                      </div>
                       <input
                         type="file"
                         className="form-control"
@@ -376,7 +383,7 @@ const Edit = (props) => {
                 {/* new */}
                 <div className="col-lg-12 col-md-12">
                   <div className="form-group w-100">
-                    <label className="form-label">Product image*</label>
+                    <label className="form-label">Ảnh sản phẩm*</label>
                     <br />
                     <div
                       className={"d-flex align-items-center g-10 mr-2 flex-wrap mb-3"}
@@ -454,7 +461,7 @@ const Edit = (props) => {
                             e.persist()
                             setNewAddImage(prev=> [...prev, {id: v4(), previewUrl: URL.createObjectURL(e.target.files[0]), image: e.target.files[0]}])
                           }} />
-                          Add image
+                          Thêm ảnh
                         </div>
                     </div>
                   </div>
@@ -463,7 +470,7 @@ const Edit = (props) => {
                 <div className="row" style={{ paddingTop: "2rem" }}>
                   <div className="col-lg-2 col-md-2">
                     <div className="form-group">
-                      <label className="form-label">Status*</label>
+                      <label className="form-label">Trạng thái*</label>
                       <select
                         id="status"
                         name="status"
@@ -476,7 +483,7 @@ const Edit = (props) => {
                       </select>
                     </div>
                   </div>
-                  <div className="col-lg-2 col-md-2">
+                  {/* <div className="col-lg-2 col-md-2">
                     <div className="form-group">
                       <label className="form-label">Cost*</label>
                       <input
@@ -487,10 +494,10 @@ const Edit = (props) => {
                         onChange={(e) => handleChange(e)}
                       />
                     </div>
-                  </div>
+                  </div> */}
                   <div className="col-lg-2 col-md-2">
                     <div className="form-group">
-                      <label className="form-label">Price*</label>
+                      <label className="form-label">Giá thuê*</label>
                       <input
                         type="number"
                         className="form-control"
@@ -502,20 +509,18 @@ const Edit = (props) => {
                   </div>
                   <div className="col-lg-2 col-md-2">
                     <div className="form-group">
-                      <label className="form-label">Amount*</label>
+                      <label className="form-label">Số điện thoại liên hệ*</label>
                       <input
-                        style={{ width: 80 }}
-                        readOnly
-                        type="number"
                         className="form-control"
-                        name="qty"
-                        value={_.sumBy(size, "amount")}
+                        name="phoneNumber"
+                        value={phoneNumber}
+                        onChange={(e)=> handleChange(e)}
                       />
                     </div>
                   </div>
                   <div className="col-lg-1 col-md-1">
                     <div className="form-group">
-                      <label className="form-label">Discount(%)*</label>
+                      <label className="form-label">Giảm giá(%)*</label>
                       <input
                         type="number"
                         className="form-control"
@@ -530,7 +535,7 @@ const Edit = (props) => {
                 <div className="row" style={{ paddingTop: "2rem" }}>
                   <div className="col-lg-12 col-md-12">
                     <div className="form-group">
-                      <label className="form-label">Description*</label>
+                      <label className="form-label">Mô tả chi tiết*</label>
                       <RichTextEditor
                         content={content}
                         handleContentChange={handleContentChange}

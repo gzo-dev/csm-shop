@@ -58,7 +58,7 @@ export default class ShopProduct extends Component {
                                         <input type="number" className="form-control" placeholder={0} />
                                     </div>
                                     <div className="form-group mb-0">
-                                        <label className="form-label">Status*</label>
+                                        <label className="form-label">Trạng thái*</label>
                                         <select id="status" name="status" className="form-control">
                                             <option selected>Active</option>
                                             <option value={1}>Inactive</option>

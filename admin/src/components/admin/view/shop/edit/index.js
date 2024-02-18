@@ -87,7 +87,7 @@ const Edit = (props) => {
 
         swal({
             title: "Are you sure?",
-            text: "You want to Add New Location",
+            text: "You want to Add Shop",
             icon: "warning",
             buttons: true,
             dangerMode: true,
@@ -133,7 +133,7 @@ const Edit = (props) => {
                                                 <input type="text" className="form-control" placeholder="store name" name="storename" value={storename} onChange={handleChange} />
                                             </div>
                                             <div className="form-group">
-                                                <label className="form-label"> Status*</label>
+                                                <label className="form-label"> Trạng thái*</label>
                                                 <select id="status" className="form-control" name="status" value={status} onChange={handleChange}>
                                                     <option>--Select Status--</option>
                                                     <option value={1}>active</option>

@@ -51,7 +51,7 @@ export default class Edit extends Component {
                                     <input type="text" className="form-control" name="name"value={this.state.name} onChange={(e) => this.handleChange(e)} />
                                 </div>
                                 <div className="form-group">
-                                    <label className="form-label">Status*</label>
+                                    <label className="form-label">Trạng thái*</label>
                                     <select id="status" name="status" className="form-control" value={this.state.status} onChange={(e) => this.handleChange(e)}>
                                         <option value={1}>Active</option>
                                         <option value={0}>Inactive</option>

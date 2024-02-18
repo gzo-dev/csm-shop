@@ -243,7 +243,7 @@ const View = (props) => {
                       <div className="col-lg-7" />
                       <div className="col-lg-5">
                         <div className="select-status">
-                          <label htmlFor="status">Status*</label>
+                          <label htmlFor="status">Trạng thái*</label>
                           <div className="input-group">
                             <div className="status-active">{self.status}</div>
                           </div>

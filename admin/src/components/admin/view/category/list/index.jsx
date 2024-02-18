@@ -79,7 +79,7 @@ function List(props) {
       <div className="row justify-content-between">
         <div className="col-lg-12">
           <Link to="./create" className="add-btn hover-btn">
-            Add New
+            Thêm mới
           </Link>
         </div>
         <div className="col-lg-3 col-md-4">

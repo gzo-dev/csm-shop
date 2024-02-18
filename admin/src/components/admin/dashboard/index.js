@@ -303,7 +303,7 @@ const Home = () => {
         <div className="container-fluid">
           <div className="d-flex align-items-center justify-content-between small">
             <div className="text-muted-1">
-              © 2023 <b>FPT boutique</b>. by <b>OpenAI</b>
+              © 2023 <b>Minh Khang Group</b>. by <b>OpenAI</b>
             </div>
           </div>
         </div>

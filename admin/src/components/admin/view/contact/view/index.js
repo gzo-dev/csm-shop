@@ -119,7 +119,7 @@ const View = () => {
     <div className="container-fluid">
       <div className="row">
         <div className="col-lg-5 col-md-9 col-lg-6">
-          <h2 className="mt-30 page-title">Contact List</h2>
+          <h2 className="mt-30 page-title">Danh sách liên hệ</h2>
         </div>
         <div className="col-lg-5 col-md-3 col-lg-6 back-btn">
           <Button variant="contained" onClick={handleBack}>
@@ -136,7 +136,7 @@ const View = () => {
           {isLoaded ? <Loader /> : ""}
           <div className="card card-static-2 mt-30 mb-30">
             <div className="card-title-2">
-              <h4>All Contact</h4>
+              <h4>Tất cả liên hệ</h4>
             </div>
             <div className="card-body-table">
               <div className="table-responsive">
@@ -144,13 +144,13 @@ const View = () => {
                   <thead>
                     <tr>
                       <th style={{ width: 60 }}>ID</th>
-                      <th>Customer name</th>
-                      <th>Date send</th>
-                      <th>Content</th>
+                      <th>Tên người liên hệ</th>
+                      <th>Ngày gửi</th>
+                      <th>Nội dung</th>
                       <th>Email</th>
-                      <th>Phone</th>
-                      <th>Status</th>
-                      <th>Action</th>
+                      <th>Số điện thoại</th>
+                      <th>Trạng thái</th>
+                      <th>Hành động</th>
                     </tr>
                   </thead>
                   <tbody>

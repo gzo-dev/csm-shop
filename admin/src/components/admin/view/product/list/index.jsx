@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import swal from "sweetalert";
 import numberWithCommas from "../../../../../util/number_thousand_separator";
-import { v4 as uuidv4 } from 'uuid';
+import axios from "axios"
 
 const Arrays = (data, fieldName, fieldValue) => {
   let arrayItem = [];
@@ -131,7 +131,7 @@ const List = () => {
     <div className="container-fluid">
       <div className="row">
         <div className="col-lg-5 col-md-9 col-lg-6">
-          <h2 className="mt-30 page-title">Products</h2>
+          <h2 className="mt-30 page-title">Sản phẩm</h2>
         </div>
         <div className="col-lg-5 col-md-3 col-lg-6 back-btn">
           <Button variant="contained" onClick={handleBack}>
@@ -148,7 +148,7 @@ const List = () => {
       <div className="row justify-content-between">
         <div className="col-lg-12">
           <a href="/admin/product/create" className="add-btn hover-btn">
-            Add New
+            Thêm mới
           </a>
         </div>
 
@@ -161,7 +161,7 @@ const List = () => {
                 type="text"
                 value={searchText}
                 onChange={handleSearchInputChange}
-                placeholder="Enter product name..."
+                placeholder="Tìm tên sản phẩm..."
               />
             </div>
             <div className="col-lg-2 col-md-2">
@@ -169,7 +169,7 @@ const List = () => {
                 className="save-btn hover-btn"
                 onClick={handleSearch}
               >
-                Search
+                Tìm kiếm
               </button>
             </div>
           </div>
@@ -178,7 +178,7 @@ const List = () => {
         <div className="col-lg-12 col-md-12">
           <div className="card card-static-2 mt-30 mb-30">
             <div className="card-title-2">
-              <h4>All Products</h4> 
+              <h4>Tất cả sản phẩm</h4> 
             </div>
             <div className="card-body-table">
               <div className="table-responsive">
@@ -186,15 +186,15 @@ const List = () => {
                   <thead>
                     <tr>
                       <th style={{ width: 60 }}>Id</th>
-                      <th style={{ width: 100 }}>Image</th>
-                      <th>Name</th>
-                      <th>Sub</th>
-                      <th>Brand</th>
+                      <th style={{ width: 100 }}>Hình ảnh</th>
+                      <th>Tên sản phảm</th>
+                      <th>Thể loại</th>
+                      {/* <th>Tên phụ</th> */}
                       {/* <th>Unit</th> */}
-                      <th>Cost</th>
-                      <th>Price</th>
-                      <th>Discount(%)</th>
-                      <th>Status</th>
+                      {/* <th>Cost</th> */}
+                      <th>Giá</th>
+                      <th>Giảm giá(%)</th>
+                      <th>Trạng thái</th>
                       <th>Action</th>
                     </tr>
                   </thead>
@@ -214,9 +214,9 @@ const List = () => {
                                 ? row.SubCategory.category.name
                                 : ".."}
                             </td>
-                            <td>{row.brand}</td>
+                            {/* <td>{row.brand}</td> */}
                             {/* <td>{row.unitSize}</td> */}
-                            <td>VND{numberWithCommas(row.buyerPrice)}</td>
+                            {/* <td>VND{numberWithCommas(row.buyerPrice)}</td> */}
                             <td>VND{numberWithCommas(row.price)}</td>
                             <td>{row.discountPer}%</td>
                             <td>

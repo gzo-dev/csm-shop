@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { GetLocationDetails } from "../../../../services";
 import { Typography, Button } from "@material-ui/core";
-import Edit from "../edit";
+import Edit from "../../tours/edit";
 import swal from "sweetalert";
 export default class List extends Component {
   constructor(props) {
@@ -59,7 +59,7 @@ export default class List extends Component {
         <div className="row justify-content-between">
           <div className="col-lg-12">
             <a href="/admin/area/create" className="add-btn hover-btn">
-              Add New
+              Thêm mới
             </a>
           </div>
           <div className="col-lg-3 col-md-4">

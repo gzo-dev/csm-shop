@@ -1,142 +1,173 @@
-import React, { Component } from "react";
-import { Button } from "@material-ui/core";
+import React, { useState, useEffect } from "react";
+import { Box, Button, FormControl, InputLabel, MenuItem, Select } from "@material-ui/core";
 import MainCategorylist from "../../../../common/category/main-category";
-import { GetCategoryDetails } from "../../../../services";
+import { GetCategoryDetails, GetProductDetails } from "../../../../services";
 import SubCategorylist from "../../../../common/category/sub-category";
-import ChildCategorylist from "../../../../common/category/child-category";
-import { GetProductDetails } from "../../../../services";
-import RichTextEditor from "../../../../RichTextEditor";
 import Loader from "../../../../loader";
 import { NotificationManager } from "react-notifications";
 import swal from "sweetalert";
 import { toast } from "react-toastify";
-import { Fragment } from "react";
-// import {AiFillCloseCircle } from "react-icons"
 import TextField from '@material-ui/core/TextField';
 import AddSize from "./add_size";
-import _ from "lodash"
+import _ from "lodash";
 import Axios from "axios";
 import { v4 } from "uuid";
+import RichTextEditor from "../../../../RichTextEditor";
+import { apiGetProvince, apiGetWard } from "../../../../../api";
 
-export default class Newproduct extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      files: [],
-      getList: [],
-      getsublist: [{name: ""}],
-      selectedCategory: "",
-      selectedSubCategory: "",
-      selectedChildCategory: "",
-      blockhide: false,
-      toggle: true,
-      isLoaded: false,
-      name: "",
-      slug: "",
-      brand: "",
-      status: 1,
-      unit: "",
-      image: "",
-      content: ``,
-      sortDesc: null,
-      buyerPrice: 0,
-      price: 0,
-      qty: 1,
-      discount: 0,
-      discountPer: 0,
-      total: 0,
-      grand_total: 0,
-      previewImage: [],
-      typeUnit: 0,
-      size: [],
-      newAddImage: []
-    };
-    this.updateSize= this.updateSize.bind(this)
-  }
-  // componentDidMount() {
-  //   if(["short", "Short"].includes(this.state.getsublist[0].name)== true) {
-  //     this.setState({typeUnit: 1})
-  //   }  
-  //   else if(["shirt", "Shirt"].includes(this.state.getsublist[0].name) === true) {
-  //     this.setState({typeUnit: 2})
-  //   } 
-  //   else if(["short", "Short"].includes(this.state.getsublist[0].name) ===
-  //   false ||
-  //   ["shirt", "Shirt"].includes(this.state.getsublist[0].name) ===
-  //     false) {
-  //       this.setState({typeUnit: 3})
-  //     }
-  // }
+const NewProduct = (props) => {
+  const [files, setFiles] = useState([]);
+  const [amount, setAmount]= useState([])
+  const [getList, setGetList] = useState([]);
+  const [getsublist, setGetSublist] = useState([{ name: "" }]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedSubCategory, setSelectedSubCategory] = useState("");
+  const [selectedChildCategory, setSelectedChildCategory] = useState("");
+  const [blockhide, setBlockhide] = useState(false);
+  const [toggle, setToggle] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [name, setName] = useState("");
+  const [slug, setSlug] = useState("");
+  const [brand, setBrand] = useState("");
+  const [status, setStatus] = useState(1);
+  const [unit, setUnit] = useState("");
+  const [image, setImage] = useState("");
+  const [content, setContent] = useState("");
+  const [sortDesc, setSortDesc] = useState(null);
+  const [buyerPrice, setBuyerPrice] = useState(0);
+  const [price, setPrice] = useState(0);
+  const [qty, setQty] = useState(1);
+  const [discount, setDiscount] = useState(0);
+  const [discountPer, setDiscountPer] = useState(0);
+  const [total, setTotal] = useState(0);
+  const [grandTotal, setGrandTotal] = useState(0);
+  const [previewImage, setPreviewImage] = useState([]);
+  const [typeUnit, setTypeUnit] = useState(0);
+  const [size, setSize] = useState([]);
+  const [newAddImage, setNewAddImage] = useState([]);
+  const [phoneNumber, setPhoneNumber]= useState([]);
+  const [listProvince, setListProvince] = useState([]);
+  const [listDictrict, setListDitrict]= useState([])
+  const [listWard, setListWard]= useState([])
+  const [province, setProvince]= useState()
+  const [district, setDistrict]= useState()
+  const [provinceText, setProvinceText]= useState()
+  const [districtText, setDistrictText]= useState()
+  const [wardText, setWardText]= useState()
+  const [provinceDetail, setProvinceDetail] = useState([]);
+  const [ward, setWard]= useState()
+  const [square, setSquare]= useState()
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (prevState.getsublist[0].name != this.state.getsublist[0].name) {
-  //     if(["short", "Short"].includes(this.state.getsublist[0].name)== true) {
-  //       this.setState({typeUnit: 1})
-  //     }  
-  //     else if(["shirt", "Shirt"].includes(this.state.getsublist[0].name) === true) {
-  //       this.setState({typeUnit: 2})
-  //     } 
-  //     else if(["short", "Short"].includes(this.state.getsublist[0].name) ===
-  //     false ||
-  //     ["shirt", "Shirt"].includes(this.state.getsublist[0].name) ===
-  //       false) {
-  //         this.setState({typeUnit: 3})
-  //       }
-  //   }
-  // }
+  useEffect(() => {
+    fetchDataFromApi();
+  }, []);
 
-  handleBack() {
-    this.props.history.goBack();
-  }
-  handleChange(e) {
-    this.setState({ [e.target.name]: e.target.value });
-    if (e.target.name === "name") {
-      this.setState({
-        slug: e.target.value.toLowerCase().replaceAll(" ", "-"),
-      });
-    }
-    if (e.target.name === "content") {
-      this.setState({
-        sortDesc: e.target.value,
-      });
-    }
-  }
-  onFileChange = (event) => {
-    this.setState({ image: event.target.files[0] });
+  const getprovince = async (code) => {
+    const response = await apiGetProvince(code);
+   setProvinceDetail(response.results);
   };
-  handleContentChange = (contentHtml) => {
-    this.setState({
-      content: contentHtml,
-    });
+
+  const getdistrict= async (code) => {
+    const response= await apiGetWard(code)
+    setListWard(response.results)
+  }
+
+  const fetchDataFromApi = () => {
+    Axios.get('https://vapi.vnappmob.com/api/province')
+      .then(response => {
+        setListProvince(response.data.results);
+      })
+      .catch(error => {
+        setListProvince(null);
+      });
   };
-  handleCategory = async (value) => {
-    this.setState({ selectedCategory: value });
+
+  useEffect(() => {
+    if (province) getprovince(province);
+    if (district) getdistrict(district)
+
+  }, [province, district]);
+
+  const handleBack = () => {
+    props.history.goBack();
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "name") {
+      setSlug(value.toLowerCase().replaceAll(" ", "-"));
+    }
+    if (name === "content") {
+      setSortDesc(value);
+    }
+    switch (name) {
+      case "name":
+        setName(value);
+        break;
+      case "brand":
+        setBrand(value);
+        break;
+      case "status":
+        setStatus(value);
+        break;
+      case "unit":
+        setUnit(value);
+        break;
+      case "buyerPrice":
+        setBuyerPrice(value);
+        break;
+      case "price":
+        setPrice(value);
+        break;
+      case "discountPer":
+        setDiscountPer(value);
+        break;
+      case "phoneNumber":
+        setPhoneNumber(value);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const onFileChange = (event) => {
+    setImage(event.target.files[0]);
+  };
+
+  const handleContentChange = (contentHtml) => {
+    setContent(contentHtml);
+  };
+
+  const handleCategory = async (value) => {
+    setSelectedCategory(value);
     let categoryId = value;
     let list = await GetCategoryDetails.getSelectSubCategory(categoryId);
-    this.setState({ getList: list.data });
+    setGetList(list.data);
   };
-  handleSubCategory = async (value) => {
-    this.setState({ selectedSubCategory: value });
+
+  const handleSubCategory = async (value) => {
+    setSelectedSubCategory(value);
     let list = await GetCategoryDetails.getAllSubChildCategory(value);
-    this.setState({ getsublist: list.data, blockhide: true });
+    setGetSublist(list.data);
+    setBlockhide(true);
   };
-  handleChildCategory = async (value) => {
-    this.setState({ selectedChildCategory: value });
+
+  const handleChildCategory = async (value) => {
+    setSelectedChildCategory(value);
   };
-  caculationTable = () => {
-    let price = this.state.price;
-    let qty = this.state.qty;
-    let discountPer = this.state.discountPer;
+
+  const caculationTable = () => {
+    let price = price;
+    let qty = qty;
+    let discountPer = discountPer;
     if (price > 0 && qty > 0 && discountPer >= 0) {
       let discount = Math.round((price * qty * discountPer) / 100);
       let total = Math.round(price * qty);
       let grand_total = Math.round(price * qty - discount);
 
-      this.setState({
-        total: total,
-        grand_total: grand_total,
-        discount: discount,
-      });
+      setTotal(total);
+      setGrandTotal(grand_total);
+      setDiscount(discount);
     } else {
       NotificationManager.error(
         "Negative value & Zero Price not allowed",
@@ -144,37 +175,15 @@ export default class Newproduct extends Component {
       );
     }
   };
-  handleCheckPrice() {
-    this.caculationTable();
-    this.setState({ toggle: !this.state.toggle });
-  }
 
-  handleSubmit = (event, listImage) => {
+  const handleCheckPrice = () => {
+    caculationTable();
+    setToggle(!toggle);
+  };
+
+  const handleSubmit = async (event, listImage) => {
     event.preventDefault();
-    this.setState({ isLoaded: true });
-    const {
-      selectedCategory,
-      selectedSubCategory,
-      selectedChildCategory,
-      image,
-      name,
-      slug,
-      brand,
-      status,
-      unit,
-      content,
-      sortDesc,
-      buyerPrice,
-      price,
-      qty,
-      discount,
-      discountPer,
-      total,
-      grand_total,
-      size,
-      newAddImage,
-
-    } = this.state;
+    setIsLoaded(true);
     const formData = new FormData();
     formData.append("categoryId", selectedCategory);
     formData.append("subCategoryId", selectedSubCategory);
@@ -194,14 +203,23 @@ export default class Newproduct extends Component {
     formData.append("discountPer", discountPer);
     formData.append("discount", discount);
     formData.append("total", total);
-    formData.append("netPrice", grand_total);
+    formData.append("netPrice", grandTotal);
     formData.append("image", JSON.stringify(listImage));
-    formData.append("size", JSON.stringify(size))
+    formData.append("size", JSON.stringify(size));
+    formData.append("province", province)
+    formData.append("district", district)
+    formData.append("ward", ward)
+    formData.append("phoneNumber", phoneNumber)
+    formData.append("provinceText", provinceText)
+    formData.append("districtText", districtText)
+    formData.append("wardText", wardText)
+
     const config = {
       headers: {
         "content-type": "multipart/form-data",
       },
     };
+
     swal({
       title: "Are you sure?",
       text: "You want to Add New Product",
@@ -210,31 +228,31 @@ export default class Newproduct extends Component {
       dangerMode: true,
     }).then(async (success) => {
       if (success) {
-        const imgList= await this.uploadImages(this.state.newAddImage)
-        formData.append("newaddimage", JSON.stringify(imgList))
+        const imgList = await uploadImages(newAddImage);
+        formData.append("newaddimage", JSON.stringify(imgList));
         let list = await GetProductDetails.addProductList(formData, config);
         if (list) {
-          this.setState({ isLoaded: false });
-          this.props.history.push("/admin/product/list");
+          setIsLoaded(false);
+          props.history.push("/admin/product/list");
         } else {
           NotificationManager.error("Please! Check input field", "Input Field");
         }
       }
-    }).catch(()=> NotificationManager.error("Please! Check input field", "Input Field"));
+    }).catch(() => NotificationManager.error("Please! Check input field", "Input Field"));
   };
 
-  fileSelectedHandler = (e) => {
-    this.setState({ files: e.target.files });
+  const fileSelectedHandler = (e) => {
+    setFiles(e.target.files);
     const arr = [];
     Object.values(e.target.files).map((item) => console.log(item));
 
     Object.values(e.target.files).map((item) =>
       arr.push({ preview: URL.createObjectURL(item), id: item.lastModified })
     );
-    this.setState({ previewImage: arr });
+    setPreviewImage(arr);
   };
-  
-  uploadImageToCloudinary = async (imageObject) => {
+
+  const uploadImageToCloudinary = async (imageObject) => {
     const cloudinaryConfig = {
       cloud_name: "cockbook",
       upload_preset: "uem2kud5",
@@ -244,37 +262,37 @@ export default class Newproduct extends Component {
       const formData = new FormData();
       formData.append("file", image);
       formData.append("upload_preset", cloudinaryConfig.upload_preset);
-  
+
       const response = await Axios.post(
         `https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloud_name}/image/upload`,
         formData
       );
-  
+
       const imageUrl = response.data.secure_url;
-  
+
       return {
         ...imageObject,
         imageUrl,
       };
     } catch (error) {
-      console.error("Lỗi khi upload hình ảnh:", error);
+      console.error("Error uploading image:", error);
       return imageObject;
     }
   };
-  
-  uploadImages = async (imageObjects) => {
+
+  const uploadImages = async (imageObjects) => {
     const uploadedImages = await Promise.all(
-      imageObjects.map((imageObject) => this.uploadImageToCloudinary(imageObject))
+      imageObjects.map((imageObject) => uploadImageToCloudinary(imageObject))
     );
-    
+
     return uploadedImages;
   };
-  
-  handleSubmitMoreImage = async (event) => {
-    this.setState({ isLoaded: true });
+
+  const handleSubmitMoreImage = async (event) => {
+    setIsLoaded(true);
     const formData = new FormData();
     formData.append("productId", "-1");
-    for (const file of this.state.files) {
+    for (const file of files) {
       formData.append("file", file);
     }
     const config = {
@@ -282,272 +300,293 @@ export default class Newproduct extends Component {
         "content-type": "multipart/form-data",
       },
     };
-    const imgList= await this.uploadImages(this.state.newAddImage)
-        formData.append("newaddimage", JSON.stringify(imgList))
+    const imgList = await uploadImages(newAddImage);
+    formData.append("newaddimage", JSON.stringify(imgList));
     let list = await GetProductDetails.getUploadProductImage(formData, config);
     if (list) {
-      this.setState({ isLoaded: false });
-      toast.success("successfully added");
+      setIsLoaded(false);
+      toast.success("Thêm thành công");
       return list;
-      // window.location.href = "/admin/product/more-photo";
     } else {
       toast.error("error");
       return [];
     }
   };
-  updateSize(size, amount) {
-    this.setState({size, amount})
-  }
 
-  render() {
-    const { getList, getsublist, isLoaded } = this.state;
-    return (
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-lg-5 col-md-9 col-lg-6">
-            <h2 className="mt-30 page-title">Products</h2>
-          </div>
-          <div className="col-lg-5 col-md-3 col-lg-6 back-btn mb-3">
-            <Button variant="contained" onClick={(e) => this.handleBack()}>
-              <i className="fas fa-arrow-left" /> Back
-            </Button>
-          </div>
-          <br />
+  const updateSize = (size, amount) => {
+    setSize(size);
+    setAmount(amount);
+  };
+
+  return (
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-lg-5 col-md-9 col-lg-6">
+          <h2 className="mt-30 page-title">Sản phẩm</h2>
         </div>
-        <ol className="breadcrumb mb-30">
-          <li className="breadcrumb-item">
-            <a href="/">Dashboard</a>
-          </li>
-          <li className="breadcrumb-item">
-            <a href="/admin/product/create">Products</a>
-          </li>
-          <li className="breadcrumb-item active">Add Product</li>
-        </ol>
+        <div className="col-lg-5 col-md-3 col-lg-6 back-btn mb-3">
+          <Button variant="contained" onClick={(e) => handleBack(e)}>
+            <i className="fas fa-arrow-left" /> Back
+          </Button>
+        </div>
+        <br />
+      </div>
+      <ol className="breadcrumb mb-30">
+        <li className="breadcrumb-item">
+          <a href="/">Dashboard</a>
+        </li>
+        <li className="breadcrumb-item">
+          <a href="/admin/product/create">Products</a>
+        </li>
+        <li className="breadcrumb-item active">Add Product</li>
+      </ol>
 
-        <div className="row">
-          <div className="col-lg-6 col-md-6">
-            <div className="card card-static-2 mb-30">
-              <div className="card-body-table">
-                <div className="news-content-right pd-20">
-                  <div className="form-group">
-                    <label className="form-label">Category*</label>
-                    <MainCategorylist onSelectCategory={this.handleCategory} />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-6 col-md-6">
-            <div className="card card-static-2 mb-30">
-              <div className="card-body-table">
-                <div className="news-content-right pd-20">
-                  <div className="form-group">
-                    <label className="form-label">Sub Category*</label>
-                    <SubCategorylist
-                      state={getList}
-                      onSelectSubCategory={this.handleSubCategory}
-                    />
-                  </div>
+      <div className="row">
+        <div className="col-lg-6 col-md-6">
+          <div className="card card-static-2 mb-30">
+            <div className="card-body-table">
+              <div className="news-content-right pd-20">
+                <div className="form-group">
+                  <label className="form-label">Thể loại*</label>
+                  <MainCategorylist onSelectCategory={handleCategory} />
                 </div>
               </div>
             </div>
           </div>
         </div>
-
-        <div
-          className="row"
-          style={
-            this.state.blockhide ? { display: "block" } : { display: "none" }
-          }
-        >
-          {isLoaded ? <Loader /> : ""}
-          <div className="col-lg-12 col-md-12">
-            <div className="card card-static-2 mb-30">
-              <div className="card-title-2">
-                <h4>Add New Product</h4>
+        <div className="col-lg-6 col-md-6">
+          <div className="card card-static-2 mb-30">
+            <div className="card-body-table">
+              <div className="news-content-right pd-20">
+                <div className="form-group">
+                  <label className="form-label">Thể loại con*</label>
+                  <SubCategorylist
+                    state={getList}
+                    onSelectSubCategory={handleSubCategory}
+                  />
+                </div>
               </div>
-              <div className="card-body-table">
-                <div className="news-content-right pd-20">
-                  <div className="row">
-                    <div className="col-lg-2 col-md-2">
-                      <div className="form-group">
-                        <label className="form-label">Product Name*</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          placeholder="Product Name"
-                          name="name"
-                          value={this.state.name}
-                          onChange={(e) => this.handleChange(e)}
-                        />
-                      </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        className="row"
+        style={
+          blockhide ? { display: "block" } : { display: "none" }
+        }
+      >
+        {isLoaded ? <Loader /> : ""}
+        <div className="col-lg-12 col-md-12">
+          <div className="card card-static-2 mb-30">
+            <div className="card-title-2">
+              <h4>Thêm sản phẩm</h4>
+            </div>
+            <div className="card-body-table">
+              <div className="news-content-right pd-20">
+                <div className="row">
+                  <div className="col-lg-2 col-md-2">
+                    <div className="form-group">
+                      <label className="form-label">Tên sản phẩm*</label>
+                      <input
+                        style={{ marginTop: 12 }}
+                        type="text"
+                        className="form-control"
+                        placeholder="Tên sản phẩm"
+                        name="name"
+                        value={name}
+                        onChange={(e) => handleChange(e)}
+                      />
                     </div>
-                    <div className="col-lg-2 col-md-2">
-                      <div className="form-group" style={{opacity: 0}}>
-                        <label className="form-label">Category*</label>
-                        <ChildCategorylist
-                          state={getsublist}
-                          onSelectchildCategory={this.handleChildCategory}
-                        />
-                      </div>
-                    </div>
-                    <div className="col-lg-2 col-md-2">
-                      <div className="form-group">
-                        <label className="form-label">Brand*</label>
-                        <input
-                          type="text"
-                          className="form-control"
-                          placeholder="Brand Name"
-                          name="brand"
-                          value={this.state.brand}
-                          onChange={(e) => this.handleChange(e)}
-                        />
-                      </div>
-                    </div>
-                    <div className="col-lg-2 col-md-2">
-                      <div className="form-group">
-                        <label className="form-label">Size*</label>
-                        {/* {this.state.typeUnit== 1 && (
-                            <select
-                              value={this.state.unit}
-                              className="form-control"
-                              placeholder="size"
-                              onChange={(e) => this.handleChange(e)}
-                              name="unit"
-                            >
-                              <option value="1">1</option>
-                              <option value="2">2</option>
-                              <option value="3">3</option>
-                            </select>
-                          )}
-                        {this.state.typeUnit== 2 && (
-                          <select
-                            value={this.state.unit}
-                            className="form-control"
-                            placeholder="size"
-                            onChange={(e) => this.handleChange(e)}
-                            name="unit"
+                  </div>
+                  <div className="col-lg-2 col-md-2">
+                    <div className="form-group">
+                      <label className="form-label">Địa chỉ*</label>
+                      <Box sx={{ width: "100%" }}>
+                        <FormControl fullWidth>
+                          <InputLabel id="demo-simple-select-label">Địa chỉ</InputLabel>
+                          <Select
+                            style={{ height: 32 }}
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={province}
+                            // value={age}
+                            onChange={(e)=> setProvince(e.target.value)}
                           >
-                            <option value="X">X</option>
-                            <option value="M">M</option>
-                            <option value="L">L</option>
-                            <option value="XL">XL</option>
-                            <option value="XXL">XXL</option>
-                            <option value="3XL">3XL</option>
-                          </select>
-                        )}
-                        {this.state.typeUnit== 3 && (
-                            <input
-                              type="text"
-                              className="form-control"
-                              placeholder="size"
-                              name="unit"
-                              value={this.state.unit}
-                              onChange={(e) => this.handleChange(e)}
-                            />
-                          )} */}
-                            <input
-                              readOnly
-                              type="size"
-                              className="form-control"
-                              name="image"
-                              value={this.state.size.map(item=> item.size)}
-                              style={{marginBottom: 12}}
-                            />
-                            <AddSize updateSize={this.updateSize} size={this.state.size} />
-                      </div>
+                            {/* eslint-disable-next-line */}
+                            {listProvince.map((item) => ({
+                              ...item,
+                              value: item.province_id,
+                              label: item.province_name,
+                            })).map((item, key) => <MenuItem onClick={()=> setProvinceText(item.label)} value={item.value} key={key}>{item.label}</MenuItem>)}
+                          </Select>
+                        </FormControl>
+                      </Box>
                     </div>
-                    <div className="col-lg-2 col-md-2">
-                      <div className="form-group">
-                        <label className="form-label">Image label*</label>
-                        <input
-                          type="file"
-                          className="form-control"
-                          name="image"
-                          onChange={this.onFileChange}
-                        />
-                      </div>
+                  </div>
+                  {/*  */}
+                  
+                  <div className="col-lg-2 col-md-2">
+                    <div className="form-group">
+                      <label className="form-label">Quận / Huyện*</label>
+                      <Box sx={{ width: "100%" }}>
+                        <FormControl fullWidth>
+                          <InputLabel id="demo-simple-select-label">Quận / Huyện</InputLabel>
+                          <Select
+                            style={{ height: 32 }}
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={district}
+                            // value={age}
+                            onChange={(e)=> setDistrict(e.target.value)}
+                          >
+                            {/* eslint-disable-next-line */}
+                            {provinceDetail.map((el) => ({
+                            ...el,
+                            value: el.district_id,
+                            label: el.district_name,
+                             })).map((item, key) => <MenuItem onClick={()=> setDistrictText(item.label)} value={item.value} key={key}>{item.label}</MenuItem>)}
+                          </Select>
+                        </FormControl>
+                      </Box>
                     </div>
-                    {/* new */}
-                    <div className="col-lg-12 col-md-12">
-                      <div className="form-group">
-                        <label className="form-label">Product image*</label>
-                        <input
-                          className="form-control"
-                          type="file"
-                          multiple
-                          name="files"
-                          onChange={this.fileSelectedHandler}
-                        />
-                        <br />
-                        <div
-                          className={
-                            "d-flex align-items-center g-10 mr-2 flex-wrap mb-3"
-                          }
-                        >
-                          {this.state.previewImage.length > 0 &&
-                            this.state.previewImage.map((item, key) => (
-                              <div style={{ position: "relative" }}>
-                                <img
-                                  key={key}
-                                  src={item.preview}
-                                  className={"mr-3 mb-3"}
-                                  style={{
-                                    width: 130,
-                                    height: 130,
-                                    borderRadius: 10,
-                                    objectFit: "cover",
-                                  }}
-                                />
-                                <button
-                                  onClick={() => {
-                                    this.setState({
-                                      previewImage:
-                                        this.state.previewImage.filter(
-                                          (item2) => item2.id != item.id
-                                        ),
-                                    });
-                                    this.setState({
-                                      files: [...this.state.files].filter(
-                                        (item2) => item2.lastModified != item.id
+                  </div>
+                  <div className="col-lg-2 col-md-2">
+                    <div className="form-group">
+                      <label className="form-label">Xã / Phường*</label>
+                      <Box sx={{ width: "100%" }}>
+                        <FormControl fullWidth>
+                          <InputLabel id="demo-simple-select-label">Xã / Phường</InputLabel>
+                          <Select
+                            style={{ height: 32 }}
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={ward}
+                            // value={age}
+                            onChange={(e)=> setWard(e.target.value)}
+                          >
+                            {/* eslint-disable-next-line */}
+                            {listWard
+                              .map((el) => ({
+                              ...el,
+                              value: el.ward_id,
+                              label: el.ward_name,
+                            })).map((item, key) => <MenuItem  onClick={()=> setWardText(item.label)} value={item.value} key={key}>{item.label}</MenuItem>)}
+                          </Select>
+                        </FormControl>
+                      </Box>
+                    </div>
+                  </div>
+                  {/*  */}
+{/* 
+                  <div className="col-lg-2 col-md-2">
+                    <div className="form-group">
+                      <label className="form-label">Brand*</label>
+                      <input
+                        style={{ marginTop: 12 }}
+                        type="text"
+                        className="form-control"
+                        placeholder="Brand Name"
+                        name="brand"
+                        value={brand}
+                        onChange={(e) => handleChange(e)}
+                      />
+                    </div>
+                  </div> */}
+
+                  <div className="col-lg-2 col-md-2">
+                    <div className="form-group">
+                      <label className="form-label">Ảnh đại diện*</label>
+                      <input
+                        style={{ marginTop: 12 }}
+                        type="file"
+                        className="form-control"
+                        name="image"
+                        onChange={onFileChange}
+                      />
+                    </div>
+                  </div>
+                  {/* new */}
+                  <div className="col-lg-12 col-md-12">
+                    <div className="form-group">
+                      <label className="form-label">Ảnh sản phẩm*</label>
+                      <input
+                        style={{ marginTop: 12 }}
+                        className="form-control"
+                        type="file"
+                        multiple
+                        name="files"
+                        onChange={fileSelectedHandler}
+                      />
+                      <br />
+                      <div
+                        className={
+                          "d-flex align-items-center g-10 mr-2 flex-wrap mb-3"
+                        }
+                      >
+                        {previewImage.length > 0 &&
+                          previewImage.map((item, key) => (
+                            <div style={{ position: "relative" }}>
+                              <img
+                                key={key}
+                                src={item.preview}
+                                className={"mr-3 mb-3"}
+                                style={{
+                                  width: 130,
+                                  height: 130,
+                                  borderRadius: 10,
+                                  objectFit: "cover",
+                                }}
+                              />
+                              <button
+                                onClick={() => {
+                                  setPreviewImage(
+                                      previewImage.filter(
+                                        (item2) => item2.id != item.id
                                       ),
-                                    });
-                                  }}
-                                  style={{
-                                    position: "absolute",
-                                    right: 0,
-                                    top: 0,
-                                  }}
-                                >
-                                  X
-                                </button>
-                              </div>
-                            ))}
-                            
-                          {this.state.newAddImage.map((item, key)=> <div key={key} style={{ position: "relative" }}>
+                                  );
+                                  setFiles(
+                                    [...files].filter(
+                                      (item2) => item2.lastModified != item.id
+                                    ),
+                                  );
+                                }}
+                                style={{
+                                  position: "absolute",
+                                  right: 0,
+                                  top: 0,
+                                }}
+                              >
+                                X
+                              </button>
+                            </div>
+                          ))}
+
+                        {newAddImage.map((item, key) => <div key={key} style={{ position: "relative" }}>
                           <img
-                              src={item.previewUrl}
-                              className={"mr-3 mb-3"}
-                              style={{
-                                width: 130,
-                                height: 130,
-                                borderRadius: 10,
-                                objectFit: "cover",
-                              }}
-                            />
-                            <button
-                              onClick={() => {
-                                this.setState({newAddImage: this.state.newAddImage.filter((item2) => item2.id !== item.id)});
-                              }}
-                              style={{
-                                position: "absolute",
-                                right: 0,
-                                top: 0,
-                              }}
-                            >
-                              X
-                            </button>
-                          </div>)
+                            src={item.previewUrl}
+                            className={"mr-3 mb-3"}
+                            style={{
+                              width: 130,
+                              height: 130,
+                              borderRadius: 10,
+                              objectFit: "cover",
+                            }}
+                          />
+                          <button
+                            onClick={() => {
+                              setNewAddImage(newAddImage.filter((item2) => item2.id !== item.id));
+                            }}
+                            style={{
+                              position: "absolute",
+                              right: 0,
+                              top: 0,
+                            }}
+                          >
+                            X
+                          </button>
+                        </div>)
                         }
                         <div
                           className={"mr-3 mb-3"}
@@ -564,190 +603,149 @@ export default class Newproduct extends Component {
                             position: "relative"
                           }}
                         >
-                          <input style={{width: "100%", height: "100%", position: "absolute", top: 0, left: 0, opacity: 0}} type="file" onChange={(e)=> {
+                          <input style={{ width: "100%", height: "100%", position: "absolute", top: 0, left: 0, opacity: 0 }} type="file" onChange={(e) => {
                             e.persist()
-                            this.setState(prev=> ({newAddImage: [...prev.newAddImage, {id: v4(), previewUrl: URL.createObjectURL(e.target.files[0]), image: e.target.files[0]}]}))
+                            setNewAddImage(prev => ([...prev, { id: v4(), previewUrl: URL.createObjectURL(e.target.files[0]), image: e.target.files[0] }]))
                           }} />
-                          Add image
-                        </div>
+                          Thêm ảnh
                         </div>
                       </div>
                     </div>
-                    {/*  */}
                   </div>
-                  <div className="row" style={{ paddingTop: "2rem" }}>
-                    <div className="col-lg-2 col-md-2">
-                      <div className="form-group">
-                        <label className="form-label">Status*</label>
-                        <select
-                          id="status"
-                          name="status"
-                          className="form-control"
-                          value={this.state.status}
-                          onChange={(e) => this.handleChange(e)}
-                        >
-                          <option value={1}>Active</option>
-                          <option value={0}>Inactive</option>
-                        </select>
-                      </div>
+                  {/*  */}
+                </div>
+                <div className="row" style={{ paddingTop: "2rem" }}>
+                  <div className="col-lg-2 col-md-2">
+                    <div className="form-group">
+                      <label className="form-label">Trạng thái*</label>
+                      <select
+                        style={{ marginTop: 12 }}
+                        id="status"
+                        name="status"
+                        className="form-control"
+                        value={status}
+                        onChange={(e) => handleChange(e)}
+                      >
+                        <option value={1}>Active</option>
+                        <option value={0}>Inactive</option>
+                      </select>
                     </div>
-                    <div className="col-lg-2 col-md-2">
-                      <div className="form-group">
-                        <label className="form-label">Cost*</label>
-                        <input
-                          type="number"
-                          className="form-control"
-                          name="buyerPrice"
-                          value={this.state.buyerPrice}
-                          onChange={(e) => this.handleChange(e)}
-                        />
-                      </div>
+                  </div>
+                  <div className="col-lg-2 col-md-2">
+                    <div className="form-group">
+                      <label className="form-label">Số điện thoại liên hệ*</label>
+                      <input
+                        style={{ marginTop: 12 }}
+                        type="number"
+                        className="form-control"
+                        name="phoneNumber"
+                        value={phoneNumber}
+                        onChange={(e) => handleChange(e)}
+                      />
                     </div>
-                    <div className="col-lg-2 col-md-2">
-                      <div className="form-group">
-                        <label className="form-label">Price*</label>
-                        <input
-                          type="number"
-                          className="form-control"
-                          name="price"
-                          value={this.state.price}
-                          onChange={(e) => this.handleChange(e)}
-                        />
-                      </div>
-                    </div>
-                    <div className="col-lg-1 col-md-1">
-                      <div className="form-group">
-                        <label className="form-label">Amount*</label>
-                        {console.log(_.sumBy(this.state.size, "amount"))}
-                        <input
-                          style={{width: 80}}
-                          readOnly
-                          type="number"
-                          className="form-control"
-                          name="qty"
-                          value={_.sumBy(this.state.size, "amount")}
-                        />
-                      </div>
-                    </div>
-                    <div
-                      className="col-lg-1 col-md-1"
-                      style={{  }}
-                    >
-                      <div className="form-group">
-                        <label className="form-label">Discount(%)*</label>
-                        <input
-                          type="number"
-                          className="form-control"
-                          name="discountPer"
-                          value={this.state.discountPer}
-                          onChange={(e) => this.handleChange(e)}
-                        />
-                      </div>
-                    </div>
-                    <div
-                      className="col-lg-1 col-md-1"
-                      style={{ display: "none" }}
-                    >
-                      <div className="form-group">
-                        <label className="form-label">Discount Price*</label>
-                        <input
-                          type="number"
-                          className="form-control"
-                          disabled
-                          name="discount"
-                          value={this.state.discount}
-                          onChange={(e) => this.handleChange(e)}
-                        />
-                      </div>
-                    </div>
-                    <div
-                      className="col-lg-1 col-md-1"
-                      style={{ display: "none" }}
-                    >
-                      <div className="form-group">
-                        <label className="form-label">Total *</label>
-                        <input
-                          type="number"
-                          className="form-control"
-                          disabled
-                          name="total"
-                          value={this.state.total}
-                          onChange={(e) => this.handleChange(e)}
-                        />
-                      </div>
-                    </div>
-                    <div
-                      className="col-lg-2 col-md-2"
-                      style={{ display: "none" }}
-                    >
-                      <div className="form-group">
-                        <label className="form-label">Grand Total *</label>
-                        <input
-                          type="number"
-                          className="form-control"
-                          disabled
-                          name="grand_total"
-                          value={this.state.grand_total}
-                          onChange={(e) => this.handleChange(e)}
-                        />
-                      </div>
+                  </div>
+                  <div className="col-lg-2 col-md-2">
+                    <div className="form-group">
+                      <label className="form-label">Giá*</label>
+                      <input
+                        style={{ marginTop: 12 }}
+                        type="number"
+                        className="form-control"
+                        name="price"
+                        value={price}
+                        onChange={(e) => handleChange(e)}
+                      />
                     </div>
                   </div>
 
-                  <div className="row" style={{ paddingTop: "2rem"}}>
-                    <div className="form-group" style={{opacity: 0}}>
-                      <label className="form-label">Sort Description*</label>
-                      <textarea
-                        rows="4"
-                        cols="100"
+                  <div
+                    className="col-lg-1 col-md-1"
+                    style={{}}
+                  >
+                    <div className="form-group">
+                      <label className="form-label">Giảm giá(%)*</label>
+                      <input
+                        style={{ marginTop: 12 }}
+                        type="number"
                         className="form-control"
-                        name="sortDesc"
-                        value={this.state.sortDesc}
-                        onChange={(e) => this.handleChange(e)}
+                        name="discountPer"
+                        value={discountPer}
+                        onChange={(e) => handleChange(e)}
                       />
                     </div>
-                    <div className="col-lg-12 col-md-12">
-                      <div className="form-group">
-                        <label className="form-label">Description*</label>
-                        <RichTextEditor
-                          content={this.state.content}
-                          handleContentChange={this.handleContentChange}
-                          placeholder="insert text here..."
-                        />
-                      </div>
+                  </div>
+                  <div
+                    className="col-lg-1 col-md-1"
+                    style={{}}
+                  >
+                    <div className="form-group">
+                      <label className="form-label">Diện tích (nếu có)</label>
+                      <input
+                        style={{ marginTop: 12 }}
+                        type="text"
+                        className="form-control"
+                        name="square"
+                        value={square}
+                        onChange={(e) => setSquare(e.target.value)}
+                      />
                     </div>
                   </div>
-                  <div className="button_price">
-                    {/* <div className="form-group">
+                </div>
+
+                <div className="row" style={{ paddingTop: "2rem" }}>
+                  <div className="form-group" style={{ opacity: 0 }}>
+                    <label className="form-label">Sort Description*</label>
+                    <textarea
+                      style={{ marginTop: 12 }}
+                      rows="4"
+                      cols="100"
+                      className="form-control"
+                      name="sortDesc"
+                      value={sortDesc}
+                      onChange={(e) => handleChange(e)}
+                    />
+                  </div>
+                  <div className="col-lg-12 col-md-12">
+                    <div className="form-group">
+                      <label className="form-label">Mô tả chi tiết*</label>
+                      <RichTextEditor
+                        content={content}
+                        handleContentChange={handleContentChange}
+                        placeholder="insert text here..."
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="button_price">
+                  {/* <div className="form-group">
                       <Button
                         className="checkprice"
                         variant="contained"
-                        onClick={() => this.handleCheckPrice()}
+                        onClick={() => handleCheckPrice()}
                       >
                         Preview
                       </Button>
                     </div> */}
-                    <div
-                      className="form-group"
-                      style={
-                        this.state.toggle
-                          ? { display: "block" }
-                          : { display: "none" }
-                      }
+                  <div
+                    className="form-group"
+                    style={
+                      toggle
+                        ? { display: "block" }
+                        : { display: "none" }
+                    }
+                  >
+                    <button
+                      className="save-btn hover-btn"
+                      type="submit"
+                      onClick={async (e) => {
+                        const result = await handleSubmitMoreImage(e);
+                        setTimeout(() => {
+                          handleSubmit(e, result.data);
+                        }, 5000);
+                      }}
                     >
-                      <button
-                        className="save-btn hover-btn"
-                        type="submit"
-                        onClick={async (e) => {
-                          const result = await this.handleSubmitMoreImage(e);
-                          setTimeout(() => {
-                            this.handleSubmit(e, result.data);
-                          }, 5000);
-                        }}
-                      >
-                        Add New Product
-                      </button>
-                    </div>
+                      Thêm
+                    </button>
                   </div>
                 </div>
               </div>
@@ -755,6 +753,8 @@ export default class Newproduct extends Component {
           </div>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+export default NewProduct;

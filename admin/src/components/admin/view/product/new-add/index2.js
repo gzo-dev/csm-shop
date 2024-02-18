@@ -236,7 +236,7 @@ const NewProduct = () => {
       <div className="container-fluid">
         <div className="row">
           <div className="col-lg-5 col-md-9 col-lg-6">
-            <h2 className="mt-30 page-title">Products</h2>
+            <h2 className="mt-30 page-title">Sản phẩm</h2>
           </div>
           <div className="col-lg-5 col-md-3 col-lg-6 back-btn mb-3">
             <Button variant="contained" onClick={handleBack}>
@@ -260,7 +260,7 @@ const NewProduct = () => {
               <div className="card-body-table">
                 <div className="news-content-right pd-20">
                   <div className="form-group">
-                    <label className="form-label">Category*</label>
+                    <label className="form-label">Thể loại*</label>
                     <MainCategorylist onSelectCategory={handleCategory} />
                   </div>
                 </div>
@@ -272,7 +272,7 @@ const NewProduct = () => {
               <div className="card-body-table">
                 <div className="news-content-right pd-20">
                   <div className="form-group">
-                    <label className="form-label">Sub Category*</label>
+                    <label className="form-label">Thể loại con*</label>
                     <SubCategorylist
                       state={getList}
                       onSelectSubCategory={handleSubCategory}
@@ -312,7 +312,7 @@ const NewProduct = () => {
                     </div>
                     <div className="col-lg-2 col-md-2">
                       <div className="form-group">
-                        <label className="form-label">Category*</label>
+                        <label className="form-label">Thể loại*</label>
                         <ChildCategorylist
                           state={getSublist}
                           onSelectchildCategory={handleChildCategory}
@@ -420,7 +420,7 @@ const NewProduct = () => {
                   <div className="row" style={{ paddingTop: "2rem" }}>
                     <div className="col-lg-2 col-md-2">
                       <div className="form-group">
-                        <label className="form-label">Status*</label>
+                        <label className="form-label">Trạng thái*</label>
                         <select
                           id="status"
                           name="status"
@@ -457,7 +457,7 @@ const NewProduct = () => {
                         />
                       </div>
                     </div>
-                    <div className="col-lg-1 col-md-1">
+                    {/* <div className="col-lg-1 col-md-1">
                       <div className="form-group">
                         <label className="form-label">Amount*</label>
                         <input
@@ -468,7 +468,7 @@ const NewProduct = () => {
                           onChange={(e) => handleChange(e)}
                         />
                       </div>
-                    </div>
+                    </div> */}
                     <div className="col-lg-1 col-md-1" style={{}}>
                       <div className="form-group">
                         <label className="form-label">Discount(%)*</label>
@@ -545,7 +545,7 @@ const NewProduct = () => {
                     </div>
                     <div className="col-lg-12 col-md-12">
                       <div className="form-group">
-                        <label className="form-label">Description*</label>
+                        <label className="form-label">Mô tả chi tiết*</label>
                         <RichTextEditor
                           content={content}
                           handleContentChange={handleContentChange}
@@ -580,7 +580,7 @@ const NewProduct = () => {
                           }, 5000);
                         }}
                       >
-                        Add New Product
+                        Thêm sản phẩm mới
                       </button>
                     </div>
                   </div>

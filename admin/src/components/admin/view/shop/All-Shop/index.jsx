@@ -86,7 +86,7 @@ const Allshop = () => {
             </ol>
             <div className="row justify-content-between">
                 <div className="col-lg-12">
-                    <a href="/admin/shop/create" className="add-btn hover-btn">Add New</a>
+                    <a href="/admin/shop/create" className="add-btn hover-btn">Thêm mới</a>
                 </div>
                 <div className="col-lg-3 col-md-4">
                     {/* <div className="bulk-section mt-30">

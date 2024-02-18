@@ -49,10 +49,10 @@ export default class Edit extends Component {
                                     <label className="form-label">Name*</label>
                                     <input type="text" className="form-control" name="name"value={this.state.name} onChange={(e) => this.handleChange(e)} />
                                 </div>
-                                <div className="form-group">
+                                {/* <div className="form-group">
                                     <label className="form-label">Slug*</label>
                                     <input type="text" className="form-control" name="slug"value={this.state.slug} onChange={(e) => this.handleChange(e)} />
-                                </div>
+                                </div> */}
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={()=>this.handleClose()}>Close</button>

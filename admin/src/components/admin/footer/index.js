@@ -6,7 +6,7 @@ export default class Footer extends Component {
             <footer className="py-4 bg-footer mt-auto">
                 <div className="container-fluid">
                     <div className="d-flex align-items-center justify-content-between small">
-                        <div className="text-muted-1">© 2023 <b>Fpt boutique</b>. by <a href="#">Fpt team</a></div>
+                        <div className="text-muted-1">© {new Date().getFullYear()} <b>Minh Khang Group</b></div>
                         <div className="footer-links">
                             <a href="#">Privacy Policy</a>
                             <a href="#">Terms &amp; Conditions</a>
