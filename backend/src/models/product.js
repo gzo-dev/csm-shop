@@ -27,7 +27,9 @@ module.exports = (sequelize, DataTypes) => {
     provinceText: DataTypes.STRING,
     districtText: DataTypes.STRING,
     wardText: DataTypes.STRING,
-    budget: DataTypes.FLOAT
+    budget: DataTypes.FLOAT,
+    typeRoom: DataTypes.STRING,
+    interior: DataTypes.STRING
     
   }, {});
   product.associate = function(models) {

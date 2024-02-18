@@ -46,7 +46,9 @@ export default {
         provinceText,
         districtText,
         wardText,
-        budget
+        budget,
+        typeRoom,
+        interior
       } = req.body;
 
       db.product
@@ -77,7 +79,9 @@ export default {
           districtText: districtText ? districtText : "",
           wardText: wardText ? wardText : "",
           square: square ? square : 0,
-          budget: budget ? budget : 0
+          budget: budget ? budget : 0,
+          typeRoom: typeRoom ? typeRoom : "",
+          interior: interior ? interior : ""
         })
         .then((product) => {
           JSON.parse(image)?.map((item) =>
@@ -185,7 +189,9 @@ export default {
         images,
         size,
         newaddimage,
-        phoneNumber
+        phoneNumber,
+        typeRoom,
+        interior
       } = req.body;
       db.product
         .findOne({ where: { id: productId } })
@@ -214,7 +220,9 @@ export default {
                 total: total,
                 netPrice: netPrice,
                 photo: req.file ? req.file.location : product.photo,
-                phoneNumber: phoneNumber
+                phoneNumber: phoneNumber,
+                typeRoom,
+                interior
               },
               { where: { id: productId } }
             );

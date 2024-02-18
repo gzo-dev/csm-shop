@@ -10,6 +10,8 @@ import { paymentRouter } from "./resources/payment";
 import { contactRouter } from "./resources/contact";
 import { voucherRouter } from "./resources/voucher";
 import { searchRouter } from "./resources/search";
+import { tourRouter } from "./resources/tour";
+import { blogRouter } from "./resources/blog";
 
 export const restRouter = express.Router();
 restRouter.use("/auth", authRouter);
@@ -26,3 +28,5 @@ restRouter.use("/payment", paymentRouter);
 restRouter.use("/contact", contactRouter);
 restRouter.use("/voucher", voucherRouter);
 restRouter.use("/v1/search", searchRouter)
+restRouter.use("/v1/tour", tourRouter)
+restRouter.use("/v1/blog", blogRouter)
