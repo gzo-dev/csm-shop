@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const SubCategory = sequelize.define('subcategory', {
+  const SubCategory = sequelize.define('SubCategory', {
     sub_name: DataTypes.STRING,
     categoryId: DataTypes.INTEGER,
     
