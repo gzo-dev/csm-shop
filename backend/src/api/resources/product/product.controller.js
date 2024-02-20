@@ -48,7 +48,7 @@ export default {
         wardText,
         budget,
         typeRoom,
-        interior
+        interior,
       } = req.body;
 
       db.product
@@ -191,7 +191,8 @@ export default {
         newaddimage,
         phoneNumber,
         typeRoom,
-        interior
+        interior,
+        square
       } = req.body;
       db.product
         .findOne({ where: { id: productId } })
@@ -222,7 +223,8 @@ export default {
                 photo: req.file ? req.file.location : product.photo,
                 phoneNumber: phoneNumber,
                 typeRoom,
-                interior
+                interior,
+                square: square ? square : 0
               },
               { where: { id: productId } }
             );

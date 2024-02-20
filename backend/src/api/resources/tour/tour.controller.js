@@ -81,7 +81,10 @@ export default {
     },
     async getListSuggestTour(req, res) {
         const tourList = await db.tour.findAll({
-            limit: 4
+            limit: 4,
+            order: [
+                ["createdAt", "DESC"]
+            ]
         })
         return res.status(200).json({ success: true, data: tourList });
     },
@@ -90,7 +93,10 @@ export default {
             const tourList = await db.tour.findAll({
                 where: {
                     type: req.query.type
-                }
+                },
+                order: [
+                    ["createdAt", "DESC"]
+                ]
             })
             return res.status(200).json({ ok: true, data: tourList })
 
