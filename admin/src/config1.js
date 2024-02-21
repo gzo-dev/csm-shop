@@ -1,2 +1,2 @@
-export const API_URL= "https://curious-tuna-garters.cyclic.app"
-// https://curious-tuna-garters.cyclic.app
+export const API_URL= "https://determined-teal-leggings.cyclic.app"
+// `

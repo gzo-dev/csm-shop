@@ -17,7 +17,7 @@ import { apiGetProvince, apiGetWard } from "../../../../../api";
 
 const NewProduct = (props) => {
   const [files, setFiles] = useState([]);
-  const [amount, setAmount]= useState([])
+  const [amount, setAmount] = useState([])
   const [getList, setGetList] = useState([]);
   const [getsublist, setGetSublist] = useState([{ name: "" }]);
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -45,18 +45,20 @@ const NewProduct = (props) => {
   const [typeUnit, setTypeUnit] = useState(0);
   const [size, setSize] = useState([]);
   const [newAddImage, setNewAddImage] = useState([]);
-  const [phoneNumber, setPhoneNumber]= useState([]);
+  const [phoneNumber, setPhoneNumber] = useState([]);
   const [listProvince, setListProvince] = useState([]);
-  const [listDictrict, setListDitrict]= useState([])
-  const [listWard, setListWard]= useState([])
-  const [province, setProvince]= useState()
-  const [district, setDistrict]= useState()
-  const [provinceText, setProvinceText]= useState()
-  const [districtText, setDistrictText]= useState()
-  const [wardText, setWardText]= useState()
+  const [listDictrict, setListDitrict] = useState([])
+  const [listWard, setListWard] = useState([])
+  const [province, setProvince] = useState()
+  const [district, setDistrict] = useState()
+  const [provinceText, setProvinceText] = useState()
+  const [districtText, setDistrictText] = useState()
+  const [wardText, setWardText] = useState()
   const [provinceDetail, setProvinceDetail] = useState([]);
-  const [ward, setWard]= useState()
-  const [square, setSquare]= useState()
+  const [ward, setWard] = useState()
+  const [square, setSquare] = useState()
+  const [interior, setInterior] = useState()
+  const [typeRoom, setTypeRoom] = useState()
 
   useEffect(() => {
     fetchDataFromApi();
@@ -64,11 +66,11 @@ const NewProduct = (props) => {
 
   const getprovince = async (code) => {
     const response = await apiGetProvince(code);
-   setProvinceDetail(response.results);
+    setProvinceDetail(response.results);
   };
 
-  const getdistrict= async (code) => {
-    const response= await apiGetWard(code)
+  const getdistrict = async (code) => {
+    const response = await apiGetWard(code)
     setListWard(response.results)
   }
 
@@ -124,6 +126,9 @@ const NewProduct = (props) => {
         break;
       case "phoneNumber":
         setPhoneNumber(value);
+        break;
+      case "square":
+        setSquare(value);
         break;
       default:
         break;
@@ -213,7 +218,9 @@ const NewProduct = (props) => {
     formData.append("provinceText", provinceText)
     formData.append("districtText", districtText)
     formData.append("wardText", wardText)
-
+    formData.append("typeRoom", typeRoom)
+    formData.append("interior", interior)
+    formData.append("square", square)
     const config = {
       headers: {
         "content-type": "multipart/form-data",
@@ -412,21 +419,21 @@ const NewProduct = (props) => {
                             id="demo-simple-select"
                             value={province}
                             // value={age}
-                            onChange={(e)=> setProvince(e.target.value)}
+                            onChange={(e) => setProvince(e.target.value)}
                           >
                             {/* eslint-disable-next-line */}
                             {listProvince.map((item) => ({
                               ...item,
                               value: item.province_id,
                               label: item.province_name,
-                            })).map((item, key) => <MenuItem onClick={()=> setProvinceText(item.label)} value={item.value} key={key}>{item.label}</MenuItem>)}
+                            })).map((item, key) => <MenuItem onClick={() => setProvinceText(item.label)} value={item.value} key={key}>{item.label}</MenuItem>)}
                           </Select>
                         </FormControl>
                       </Box>
                     </div>
                   </div>
                   {/*  */}
-                  
+
                   <div className="col-lg-2 col-md-2">
                     <div className="form-group">
                       <label className="form-label">Quận / Huyện*</label>
@@ -439,14 +446,14 @@ const NewProduct = (props) => {
                             id="demo-simple-select"
                             value={district}
                             // value={age}
-                            onChange={(e)=> setDistrict(e.target.value)}
+                            onChange={(e) => setDistrict(e.target.value)}
                           >
                             {/* eslint-disable-next-line */}
                             {provinceDetail.map((el) => ({
-                            ...el,
-                            value: el.district_id,
-                            label: el.district_name,
-                             })).map((item, key) => <MenuItem onClick={()=> setDistrictText(item.label)} value={item.value} key={key}>{item.label}</MenuItem>)}
+                              ...el,
+                              value: el.district_id,
+                              label: el.district_name,
+                            })).map((item, key) => <MenuItem onClick={() => setDistrictText(item.label)} value={item.value} key={key}>{item.label}</MenuItem>)}
                           </Select>
                         </FormControl>
                       </Box>
@@ -464,22 +471,22 @@ const NewProduct = (props) => {
                             id="demo-simple-select"
                             value={ward}
                             // value={age}
-                            onChange={(e)=> setWard(e.target.value)}
+                            onChange={(e) => setWard(e.target.value)}
                           >
                             {/* eslint-disable-next-line */}
                             {listWard
                               .map((el) => ({
-                              ...el,
-                              value: el.ward_id,
-                              label: el.ward_name,
-                            })).map((item, key) => <MenuItem  onClick={()=> setWardText(item.label)} value={item.value} key={key}>{item.label}</MenuItem>)}
+                                ...el,
+                                value: el.ward_id,
+                                label: el.ward_name,
+                              })).map((item, key) => <MenuItem onClick={() => setWardText(item.label)} value={item.value} key={key}>{item.label}</MenuItem>)}
                           </Select>
                         </FormControl>
                       </Box>
                     </div>
                   </div>
                   {/*  */}
-{/* 
+                  {/* 
                   <div className="col-lg-2 col-md-2">
                     <div className="form-group">
                       <label className="form-label">Brand*</label>
@@ -508,7 +515,7 @@ const NewProduct = (props) => {
                     </div>
                   </div>
                   {/* new */}
-                  <div className="col-lg-12 col-md-12">
+                  <div className="col-lg-12 col-md-12 mt-3">
                     <div className="form-group">
                       <label className="form-label">Ảnh sản phẩm*</label>
                       <input
@@ -542,9 +549,9 @@ const NewProduct = (props) => {
                               <button
                                 onClick={() => {
                                   setPreviewImage(
-                                      previewImage.filter(
-                                        (item2) => item2.id != item.id
-                                      ),
+                                    previewImage.filter(
+                                      (item2) => item2.id != item.id
+                                    ),
                                   );
                                   setFiles(
                                     [...files].filter(
@@ -644,9 +651,53 @@ const NewProduct = (props) => {
                       />
                     </div>
                   </div>
+                  {/*  */}
                   <div className="col-lg-2 col-md-2">
                     <div className="form-group">
-                      <label className="form-label">Giá*</label>
+                      <label className="form-label">Nội thất*</label>
+                      <input
+                        style={{ marginTop: 12 }}
+                        type="text"
+                        className="form-control"
+                        placeholder="Nội thất"
+                        name="interior"
+                        value={interior}
+                        onChange={(e) => setInterior(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-lg-2 col-md-2">
+                    <div className="form-group">
+                      <label className="form-label">Loại phòng*</label>
+                      <input
+                        style={{ marginTop: 12 }}
+                        type="text"
+                        className="form-control"
+                        placeholder="Tên loại phòng"
+                        name="typeRoom"
+                        value={typeRoom}
+                        onChange={(e) => setTypeRoom(e.target.value)}
+                      />
+
+                    </div>
+                  </div>
+                  {/*  */}
+                  <div className="col-lg-2 col-md-2">
+                    <div className="form-group">
+                      <label className="form-label">Diện tích (m<sup>2</sup>)*</label>
+                      <input
+                        style={{ marginTop: 12 }}
+                        className="form-control"
+                        name="square"
+                        value={square}
+                        onChange={(e) => handleChange(e)}
+                      />
+                    </div>
+                  </div>
+                  {/*  */}
+                  <div className="col-lg-2 col-md-2">
+                    <div className="form-group">
+                      <label className="form-label">Giá (VND)*</label>
                       <input
                         style={{ marginTop: 12 }}
                         type="number"

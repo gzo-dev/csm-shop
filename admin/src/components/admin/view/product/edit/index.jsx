@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "@material-ui/core";
+import { Button, formatMs } from "@material-ui/core";
 import { GetProductDetails } from "../../../../services";
 import RichTextEditor from "../../../../RichTextEditor";
 import Loader from "../../../../loader";
@@ -39,9 +39,12 @@ const Edit = (props) => {
   const [size, setSize] = useState([]);
   const [photo, setPhoto] = useState(self.photo);
   const [photoTemp, setPhotoTemp] = useState("");
-  const [newAddImage, setNewAddImage]= useState([])
-  const [phoneNumber, setPhoneNumber]= useState(self.phoneNumber)
-  const [newAddImageUrl, setNewAddImageUrl]= useState([])
+  const [newAddImage, setNewAddImage] = useState([]);
+  const [phoneNumber, setPhoneNumber] = useState(self.phoneNumber);
+  const [typeRoom, setTypeRoom] = useState(self.typeRoom);
+  const [interior, setInterior] = useState(self.interior);
+  const [square, setSquare] = useState(self.square);
+  const [newAddImageUrl, setNewAddImageUrl] = useState([]);
 
   const handleBack = () => {
     props.history.goBack();
@@ -81,7 +84,18 @@ const Edit = (props) => {
         setDiscountPer(value);
         break;
       case "phoneNumber":
-        setPhoneNumber(value)
+        setPhoneNumber(value);
+        break;
+      case "typeRoom":
+        setTypeRoom(value);
+        break;
+
+      case "interior":
+        setInterior(value);
+        break;
+      case "square":
+        setSquare(value);
+        break;
       default:
         break;
     }
@@ -102,7 +116,9 @@ const Edit = (props) => {
     const newDiscountPer = parseFloat(discountPer);
 
     if (newPrice > 0 && newQty > 0 && newDiscountPer >= 0) {
-      const newDiscount = Math.round((newPrice * newQty * newDiscountPer) / 100);
+      const newDiscount = Math.round(
+        (newPrice * newQty * newDiscountPer) / 100
+      );
       const newTotal = Math.round(newPrice * newQty);
       const newGrandTotal = Math.round(newPrice * newQty - newDiscount);
 
@@ -144,7 +160,10 @@ const Edit = (props) => {
     formData.append("netPrice", grand_total);
     formData.append("images", JSON.stringify(images));
     formData.append("size", JSON.stringify(size));
-    formData.append("phoneNumber", phoneNumber)
+    formData.append("phoneNumber", phoneNumber);
+    formData.append("typeRoom", typeRoom);
+    formData.append("interior", interior);
+    formData.append("square", square)
     const config = {
       headers: {
         "content-type": "multipart/form-data",
@@ -152,15 +171,15 @@ const Edit = (props) => {
     };
 
     swal({
-      title: "Are you sure?",
-      text: "You want to Update Product",
+      title: "Bạn có chắc?",
+      text: "Bạn có chắc muốn cập nhật sản phẩm này ?",
       icon: "warning",
       buttons: true,
       dangerMode: true,
     }).then(async (success) => {
       if (success) {
-        const imgList= await uploadImages(newAddImage)
-        formData.append("newaddimage", JSON.stringify(imgList))
+        const imgList = await uploadImages(newAddImage);
+        formData.append("newaddimage", JSON.stringify(imgList));
         let list = await GetProductDetails.getUpdateProduct(formData, config);
         if (list) {
           setLoading(false);
@@ -213,14 +232,14 @@ const Edit = (props) => {
       const formData = new FormData();
       formData.append("file", image);
       formData.append("upload_preset", cloudinaryConfig.upload_preset);
-  
+
       const response = await Axios.post(
         `https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloud_name}/image/upload`,
         formData
       );
-  
+
       const imageUrl = response.data.secure_url;
-  
+
       return {
         ...imageObject,
         imageUrl,
@@ -230,15 +249,15 @@ const Edit = (props) => {
       return imageObject;
     }
   };
-  
+
   const uploadImages = async (imageObjects) => {
     const uploadedImages = await Promise.all(
       imageObjects.map((imageObject) => uploadImageToCloudinary(imageObject))
     );
-    
+
     return uploadedImages;
   };
-  
+
   useEffect(() => {
     fetchData();
     fetchData2();
@@ -288,7 +307,7 @@ const Edit = (props) => {
                       />
                     </div>
                   </div>
-                  <div className="col-lg-2 col-md-2">
+                  {/* <div className="col-lg-2 col-md-2">
                     <div className="form-group">
                       <label className="form-label">Slug*</label>
                       <input
@@ -300,8 +319,8 @@ const Edit = (props) => {
                         onChange={(e) => handleChange(e)}
                       />
                     </div>
-                  </div>
-                  <div className="col-lg-2 col-md-2">
+                  </div> */}
+                  {/* <div className="col-lg-2 col-md-2">
                     <div className="form-group">
                       <label className="form-label">Brand*</label>
                       <input
@@ -313,7 +332,7 @@ const Edit = (props) => {
                         onChange={(e) => handleChange(e)}
                       />
                     </div>
-                  </div>
+                  </div> */}
                   {/* <div className="col-lg-2 col-md-2">
                     <div className="form-group">
                       <label className="form-label">Size*</label>
@@ -332,7 +351,6 @@ const Edit = (props) => {
                     <div className="form-group">
                       <label className="form-label">Image label*</label>
                       <div>
-                        
                         {photoTemp.length > 0 ? (
                           <Fragment>
                             <img
@@ -382,11 +400,13 @@ const Edit = (props) => {
                 </div>
                 {/* new */}
                 <div className="col-lg-12 col-md-12">
-                  <div className="form-group w-100">
+                  <div className="form-group w-100 mt-3">
                     <label className="form-label">Ảnh sản phẩm*</label>
                     <br />
                     <div
-                      className={"d-flex align-items-center g-10 mr-2 flex-wrap mb-3"}
+                      className={
+                        "d-flex align-items-center g-10 mr-2 flex-wrap mb-3"
+                      }
                     >
                       {images.length > 0 &&
                         images.map((item, key) => (
@@ -404,7 +424,9 @@ const Edit = (props) => {
                             />
                             <button
                               onClick={() => {
-                                setImages(images.filter((item2) => item2.id !== item.id));
+                                setImages(
+                                  images.filter((item2) => item2.id !== item.id)
+                                );
                               }}
                               style={{
                                 position: "absolute",
@@ -416,53 +438,77 @@ const Edit = (props) => {
                             </button>
                           </div>
                         ))}
-                        {
-                          newAddImage.map((item, key)=> <div key={key} style={{ position: "relative" }}>
+                      {newAddImage.map((item, key) => (
+                        <div key={key} style={{ position: "relative" }}>
                           <img
-                              src={item.previewUrl}
-                              className={"mr-3 mb-3"}
-                              style={{
-                                width: 130,
-                                height: 130,
-                                borderRadius: 10,
-                                objectFit: "cover",
-                              }}
-                            />
-                            <button
-                              onClick={() => {
-                                setNewAddImage(newAddImage.filter((item2) => item2.id !== item.id));
-                              }}
-                              style={{
-                                position: "absolute",
-                                right: 0,
-                                top: 0,
-                              }}
-                            >
-                              X
-                            </button>
-                          </div>)
-                        }
-                        <div
-                          className={"mr-3 mb-3"}
-                          style={{
-                            width: 130,
-                            height: 130,
-                            borderRadius: 10,
-                            objectFit: "cover",
-                            backgroundColor: "#f2f0f5",
-                            marginLeft: 12,
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            position: "relative"
-                          }}
-                        >
-                          <input style={{width: "100%", height: "100%", position: "absolute", top: 0, left: 0, opacity: 0}} type="file" onChange={(e)=> {
-                            e.persist()
-                            setNewAddImage(prev=> [...prev, {id: v4(), previewUrl: URL.createObjectURL(e.target.files[0]), image: e.target.files[0]}])
-                          }} />
-                          Thêm ảnh
+                            src={item.previewUrl}
+                            className={"mr-3 mb-3"}
+                            style={{
+                              width: 130,
+                              height: 130,
+                              borderRadius: 10,
+                              objectFit: "cover",
+                            }}
+                          />
+                          <button
+                            onClick={() => {
+                              setNewAddImage(
+                                newAddImage.filter(
+                                  (item2) => item2.id !== item.id
+                                )
+                              );
+                            }}
+                            style={{
+                              position: "absolute",
+                              right: 0,
+                              top: 0,
+                            }}
+                          >
+                            X
+                          </button>
                         </div>
+                      ))}
+                      <div
+                        className={"mr-3 mb-3"}
+                        style={{
+                          width: 130,
+                          height: 130,
+                          borderRadius: 10,
+                          objectFit: "cover",
+                          backgroundColor: "#f2f0f5",
+                          marginLeft: 12,
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          position: "relative",
+                        }}
+                      >
+                        <input
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            opacity: 0,
+                          }}
+                          type="file"
+                          onChange={(e) => {
+                            e.persist();
+                            setNewAddImage((prev) => [
+                              ...prev,
+                              {
+                                id: v4(),
+                                previewUrl: URL.createObjectURL(
+                                  e.target.files[0]
+                                ),
+                                image: e.target.files[0],
+                              },
+                            ]);
+                          }}
+                        />
+                        Thêm ảnh
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -509,12 +555,47 @@ const Edit = (props) => {
                   </div>
                   <div className="col-lg-2 col-md-2">
                     <div className="form-group">
-                      <label className="form-label">Số điện thoại liên hệ*</label>
+                      <label className="form-label">
+                        Số điện thoại liên hệ*
+                      </label>
                       <input
                         className="form-control"
                         name="phoneNumber"
                         value={phoneNumber}
-                        onChange={(e)=> handleChange(e)}
+                        onChange={(e) => handleChange(e)}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-lg-2 col-md-2">
+                    <div className="form-group">
+                      <label className="form-label">Loại phòng*</label>
+                      <input
+                        className="form-control"
+                        name="typeRoom"
+                        value={typeRoom}
+                        onChange={(e) => handleChange(e)}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-lg-2 col-md-2">
+                    <div className="form-group">
+                      <label className="form-label">Diện tích (m<sup>2</sup>)*</label>
+                      <input
+                        className="form-control"
+                        name="square"
+                        value={square}
+                        onChange={(e) => handleChange(e)}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-lg-2 col-md-2">
+                    <div className="form-group">
+                      <label className="form-label">Nội thất*</label>
+                      <input
+                        className="form-control"
+                        name="interior"
+                        value={interior}
+                        onChange={(e) => handleChange(e)}
                       />
                     </div>
                   </div>

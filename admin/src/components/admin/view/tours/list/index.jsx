@@ -1,174 +1,131 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { GetLocationDetails } from "../../../../services";
 import { Typography, Button } from "@material-ui/core";
 import Edit from "../../tours/edit";
 import swal from "sweetalert";
-export default class List extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      getList: [],
-    };
-  }
-  handleBack() {
-    this.props.history.goBack();
-  }
-  async componentDidMount() {
-    this.getLocation();
-  }
-  async getLocation() {
-    let list = await GetLocationDetails.getAreaList();
-    this.setState({ getList: list.data });
-  }
-  async handlDeleteById(id) {
-    swal({
-      title: "Are you sure?",
-      text: "You want to delete area from the List",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    }).then(async (success) => {
+import { apiDeleteTour, apiGetListTour } from "../../../../../api";
+import moment from "moment"
+import {Link } from "react-router-dom"
+
+const List = ({ history }) => {
+  const [getList, setGetList] = useState([]);
+
+  const handleBack = () => {
+    history.goBack();
+  };
+
+  const getData = async () => {
+    try {
+      const list = await apiGetListTour();
+      setGetList(list.data);
+    } catch (error) {
+      console.error("Error fetching location:", error);
+    }
+  };
+
+  const handlDeleteById = async (id) => {
+    try {
+      const success = await swal({
+        title: "Bạn có chắc?",
+        text: "Bạn có chắc muốn xoá khỏi danh sách",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      });
       if (success) {
-        let value = await GetLocationDetails.getAreaDeleteById(id);
+        const value = await apiDeleteTour({tour_id: id});
         if (value) {
-          this.getLocation();
+          getData();
         }
       }
-    });
-  }
-  render() {
-    let self = this.state.getList;
-    return (
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-lg-5 col-md-9 col-lg-6">
-            <h2 className="mt-30 page-title">Areas</h2>
-          </div>
-          <div className="col-lg-5 col-md-3 col-lg-6 back-btn">
-            <Button variant="contained" onClick={(e) => this.handleBack()}>
-              <i className="fas fa-arrow-left" /> Back
-            </Button>
-          </div>
+    } catch (error) {
+      console.error("Error deleting area:", error);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  return (
+    <div className="container-fluid">
+      <div className="row">
+        <div className="col-lg-5 col-md-9 col-lg-6">
+          <h2 className="mt-30 page-title">Tours</h2>
         </div>
-        <ol className="breadcrumb mb-30">
-          <li className="breadcrumb-item">
-            <a href="index.html">Dashboard</a>
-          </li>
-          <li className="breadcrumb-item active">Areas</li>
-        </ol>
-        <div className="row justify-content-between">
-          <div className="col-lg-12">
-            <a href="/admin/area/create" className="add-btn hover-btn">
-              Thêm mới
-            </a>
-          </div>
-          <div className="col-lg-3 col-md-4">
-            <div className="bulk-section mt-30">
-              <div className="input-group">
-                <select id="action" name="action" className="form-control">
-                  <option selected>Bulk Actions</option>
-                  <option value={1}>Active</option>
-                  <option value={2}>Inactive</option>
-                  <option value={3}>Delete</option>
-                </select>
-                <div className="input-group-append">
-                  <button className="status-btn hover-btn" type="submit">
-                    Apply
-                  </button>
-                </div>
-              </div>
+        <div className="col-lg-5 col-md-3 col-lg-6 back-btn">
+          <Button variant="contained" onClick={handleBack}>
+            <i className="fas fa-arrow-left" /> Back
+          </Button>
+        </div>
+      </div>
+      <ol className="breadcrumb mb-30">
+        <li className="breadcrumb-item">
+          <a href="index.html">Dashboard</a>
+        </li>
+        <li className="breadcrumb-item active">Tours</li>
+      </ol>
+      <div className="row justify-content-between">
+        <div className="col-lg-12">
+          <a href="/admin/tour/create" className="add-btn hover-btn">
+            Thêm mới
+          </a>
+        </div>
+        <div className="col-lg-12 col-md-12">
+          <div className="card card-static-2 mt-30 mb-30">
+            <div className="card-title-2">
+              <h4>Tất cả tour</h4>
             </div>
-          </div>
-          <div className="col-lg-5 col-md-6">
-            <div className="bulk-section mt-30">
-              <div className="search-by-name-input">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Search"
-                />
-              </div>
-              <div className="input-group">
-                <select
-                  id="categeory"
-                  name="categeory"
-                  className="form-control"
-                >
-                  <option selected>Active</option>
-                  <option value={1}>Inactive</option>
-                </select>
-                <div className="input-group-append">
-                  <button className="status-btn hover-btn" type="submit">
-                    Search Area
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col-lg-12 col-md-12">
-            <div className="card card-static-2 mt-30 mb-30">
-              <div className="card-title-2">
-                <h4>All Areas</h4>
-              </div>
-              <div className="card-body-table">
-                <div className="table-responsive">
-                  <table className="table ucp-table table-hover">
-                    <thead>
-                      <tr>
-                        <th style={{ width: 60 }}>
-                          <input type="checkbox" className="check-all" />
-                        </th>
-                        <th style={{ width: 60 }}>ID</th>
-                        <th>Name</th>
-                        <th>Location</th>
-                        <th>Status</th>
-                        <th>Action</th>
+            <div className="card-body-table">
+              <div className="table-responsive">
+                <table className="table ucp-table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Mã tour</th>
+                      <th>Tên tour</th>
+                      <th>Điểm đi</th>
+                      <th>Điểm đến</th>
+                      <th>Thời gian tạo</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {getList.map((row, index) => (
+                      <tr key={index}>
+                        <td>{row.tour_id}</td>
+                        <td>{row.name}</td>
+                        <td>{row.departureText || ""}</td>
+                        <td>{row.destinationText || ""}</td>
+                        <td>{moment(row.time_created).format("DD-MM-YYYY HH:MM:ss") || ""}</td>
+                        <td className="action-btns">
+                          <Link
+                                to={{
+                                  pathname: `/admin/tour/edit`,
+                                  state: { row },
+                                }}
+                              >
+                                <Typography className="edit-btn">
+                                  <i className="fas fa-edit" />
+                                </Typography>
+                              </Link>
+                          <Typography
+                            className="delete-btn"
+                            onClick={(e) => handlDeleteById(row.tour_id)}
+                          >
+                            <i className="fas fa-trash-alt" />
+                          </Typography>
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {self.map((row, index) => (
-                        <tr key={index}>
-                          <td>
-                            <input
-                              type="checkbox"
-                              className="check-item"
-                              name="ids[]"
-                              defaultValue={7}
-                            />
-                          </td>
-                          <td>{++index}</td>
-                          <td>{row.name}</td>
-                          <td>{row.location ? row.location.name : ""}</td>
-                          <td>
-                            {row.status === "active" ? (
-                              <span className="badge-item badge-status-success">
-                                {row.status}
-                              </span>
-                            ) : (
-                              <span className="badge-item badge-status">
-                                {row.status}
-                              </span>
-                            )}
-                          </td>
-                          <td className="action-btns">
-                            <Edit state={row} />
-                            <Typography
-                              className="delete-btn"
-                              onClick={(e) => this.handlDeleteById(row.id)}
-                            >
-                              <i className="fas fa-trash-alt" />
-                            </Typography>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+export default List;

@@ -211,7 +211,7 @@ const List = () => {
                             <td>{row.name}</td>
                             <td>
                               {row.SubCategory
-                                ? row.SubCategory.category.name
+                                ? `${row.SubCategory.category.name} | ${row.SubCategory.sub_name}`
                                 : ".."}
                             </td>
                             {/* <td>{row.brand}</td> */}

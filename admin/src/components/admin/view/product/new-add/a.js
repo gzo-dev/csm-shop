@@ -131,7 +131,7 @@
                       </div>
                     </div>
                     {/* new */}
-                    <div className="col-lg-12 col-md-12">
+                    <div className="col-lg-12 col-md-12 mt-3">
                       <div className="form-group">
                         <label className="form-label">Ảnh sản phẩm*</label>
                         <input

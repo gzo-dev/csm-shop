@@ -16,6 +16,7 @@ import VendorProduct from './view/shop/product';
 import Voucher from './view/voucher';
 import Contact from './view/contact';
 import Tours from './view/tours';
+import Blogs from './view/blog';
 
 
 export default class rootRoutes extends Component {
@@ -41,6 +42,7 @@ export default class rootRoutes extends Component {
             <Route path={`${match.path}/vendor`} component={VendorProduct} />
             <Route path={`${match.path}/voucher`} component={Voucher} />
             <Route path={`${match.path}/contact`} component={Contact} />
+            <Route path={`${match.path}/blog`} component={Blogs} />
           </Switch>
         </div>
       </main>
