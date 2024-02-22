@@ -49,6 +49,7 @@ export default {
         budget,
         typeRoom,
         interior,
+        endow,
       } = req.body;
 
       db.product
@@ -81,7 +82,8 @@ export default {
           square: square ? square : 0,
           budget: budget ? budget : 0,
           typeRoom: typeRoom ? typeRoom : "",
-          interior: interior ? interior : ""
+          interior: interior ? interior : "",
+          endow: endow ? endow : 0
         })
         .then((product) => {
           JSON.parse(image)?.map((item) =>
@@ -192,7 +194,8 @@ export default {
         phoneNumber,
         typeRoom,
         interior,
-        square
+        square,
+        endow
       } = req.body;
       db.product
         .findOne({ where: { id: productId } })
@@ -224,7 +227,8 @@ export default {
                 phoneNumber: phoneNumber,
                 typeRoom,
                 interior,
-                square: square ? square : 0
+                square: square ? square : 0,
+                endow: endow ? endow : 0
               },
               { where: { id: productId } }
             );

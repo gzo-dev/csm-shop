@@ -29,7 +29,8 @@ module.exports = (sequelize, DataTypes) => {
     wardText: DataTypes.STRING,
     budget: DataTypes.FLOAT,
     typeRoom: DataTypes.STRING,
-    interior: DataTypes.STRING
+    interior: DataTypes.STRING,
+    endow: DataTypes.INTEGER
     
   }, {});
   product.associate = function(models) {
