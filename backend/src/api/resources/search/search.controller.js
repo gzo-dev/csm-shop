@@ -31,6 +31,9 @@ export default {
             if (budget) {
                 whereConditions.budget = budget
             }
+            if (subCategoryId) {
+                whereConditions.subCategoryId= subCategoryId
+            }
             if (minBudget && maxBudget) {
                 const result = await db.product
                     .findAndCountAll({
@@ -46,7 +49,7 @@ export default {
                         limit: 9,
                         offset: pageOffset
                     })
-                return res.status(200).json({ data: result?.rows, count: result?.count })
+                return res.status(200).json({ data: result?.rows, count: result?.count, success: true })
             }
             else {
                 const result = await db.product
@@ -63,7 +66,7 @@ export default {
                     .count({
                         where: whereConditions,
                     })
-                return res.status(200).json({ data: result?.rows, count: count })
+                return res.status(200).json({ data: result?.rows, count: count, success: true })
             }
 
         }
@@ -104,7 +107,7 @@ export default {
                         ],
                         include: [{ model: db.productphoto, attributes: ["id", "imgUrl"] }],
                     })
-                return res.status(200).json({ data: result?.rows, count: result?.rows?.length })
+                return res.status(200).json({ data: result?.rows, count: result?.rows?.length, success: true })
             }
             else {
                 const result = await db.product
@@ -115,7 +118,7 @@ export default {
                             ["createdAt", "DESC"]
                         ]
                     })
-                return res.status(200).json({ data: result?.rows, count: result?.rows?.length })
+                return res.status(200).json({ data: result?.rows, count: result?.rows?.length, success: true })
             }
         }
         if (parseInt(typeBooking) === 3) {
@@ -143,7 +146,7 @@ export default {
                             ["createdAt", "DESC"]
                         ],
                     })
-                return res.status(200).json({ data: result?.rows, count: result?.rows?.length })
+                return res.status(200).json({ data: result?.rows, count: result?.rows?.length, success: true })
             }
             else {
                 const result = await db.tour
@@ -153,7 +156,7 @@ export default {
                             ["createdAt", "DESC"]
                         ]
                     })
-                return res.status(200).json({ data: result?.rows, count: result?.rows?.length })
+                return res.status(200).json({ data: result?.rows, count: result?.rows?.length, success: true })
             }
 
         }

@@ -52,7 +52,7 @@ function verifyOtp(token) {
 
 export default {
     async addUser(req, res, next) {
-        const { firstName, lastName, phoneNo, email, address, password, role, verify } = req.body;
+        const { firstName, lastName, phone, email, address, password, role, verify } = req.body;
         var passwordHash = md5(password);
         console.log(passwordHash)
         var token = generateOtp();
@@ -66,7 +66,7 @@ export default {
                     firstName: firstName,
                     lastName: lastName,
                     email: email,
-                    phoneNo: phoneNo,
+                    phone: phone,
                     address: address,
                     password: passwordHash,
                     verify: verify,
