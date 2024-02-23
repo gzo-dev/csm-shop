@@ -8,7 +8,9 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     status: DataTypes.STRING,
     reply_text: DataTypes.STRING,
-    user_reply: DataTypes.INTEGER
+    user_reply: DataTypes.INTEGER,
+    type: DataTypes.STRING,
+    product: DataTypes.STRING
   }, {});
   return contact;
 };

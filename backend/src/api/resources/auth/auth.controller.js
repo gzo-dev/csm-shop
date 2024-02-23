@@ -7,7 +7,6 @@ import speakeasy from 'speakeasy';
 // import { validateEmail } from './../../../functions'
 import md5 from "md5"
 import nodemailer from "nodemailer"
-import axios from "axios"
 
 var JWTSign = function (user, date) {
     return JWT.sign({
@@ -44,6 +43,7 @@ export default {
     async addUser(req, res, next) {
         const { firstName, lastName, phoneNo, email, address, password, role, verify } = req.body;
         var passwordHash = md5(password);
+        console.log(passwordHash)
         var token = generateOtp();
         var otp = verifyOtp(token);
         db.user.findOne({ where: { email: email }, paranoid: false })
@@ -109,7 +109,7 @@ export default {
 
      async userUpdate(req,res,next){
         const { id, firstName, lastName, email, address, password, role, verify } = req.body;
-        var passwordHash = bcrypt.hashSync(password);
+        var passwordHash = md5(password);
         db.user.findOne({ where: { email: email }, paranoid: false })
             .then(user => {
                 if (!user) {
