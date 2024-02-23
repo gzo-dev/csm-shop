@@ -30,7 +30,8 @@ module.exports = (sequelize, DataTypes) => {
     budget: DataTypes.FLOAT,
     typeRoom: DataTypes.STRING,
     interior: DataTypes.STRING,
-    endow: DataTypes.INTEGER
+    endow: DataTypes.INTEGER,
+    rating: DataTypes.INTEGER
     
   }, {});
   product.associate = function(models) {
