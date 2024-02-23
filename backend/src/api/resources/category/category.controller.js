@@ -189,9 +189,8 @@ export default {
     async getCategoryById(req, res, next) {
         try {
             let categoryId = req.query.categoryId;
-            db.SubChildCategory.findAll({
+            db.SubCategory.findAll({
                 where: { categoryId: categoryId },
-                include: [{ model: db.SubCategory, attributes: ['id', 'sub_name'], include: [{ model: db.category, attributes: ["id", "name"] }] }]
             })
                 .then(list => {
                     res.status(200).json({ 'success': true, data: list });

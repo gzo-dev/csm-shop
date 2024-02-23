@@ -12,6 +12,7 @@ categoryRouter.route('/getAllSubCategory').get( categoryController.getSubCategor
 categoryRouter.route('/getAllSubChildCategory').get( categoryController.getSubChildCategoryList);
 categoryRouter.route('/create').post(categoryController.addCategory);
 categoryRouter.route('/list').get(categoryController.getList);
+categoryRouter.route('/c').get( categoryController.getCategoryById);
 categoryRouter.route('/getCategoryById').get( categoryController.getCategoryById);
 categoryRouter.route('/create-sub').post( categoryController.addSubCategory);
 categoryRouter.route('/create-sub-child').post(categoryController.addSubChildCategory);
