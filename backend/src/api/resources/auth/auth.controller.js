@@ -18,6 +18,17 @@ var JWTSign = function (user, date) {
     }, process.env.JWT_SECRET);
 }
 
+function generateRandomString(length) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+}
+
+
 function generateOtp() {
     let token = speakeasy.totp({
         secret: process.env.OTP_KEY,
@@ -149,14 +160,52 @@ export default {
     //     return res.status(200).json({ success: true ,token, role: req.user.role});
     // },
     async login(req, res, next) {
-        const {email, password }= req.body
+        const {email, password, deviceCode }= req.body
         // var date = new Date();
         // console.log(password)
         // console.log(bcrypt.hashSync(password))
         const findUser= await db.user.findOne({where: {email, password: md5(password)}})
         if(findUser) {
-            const token= JWT.sign({uid: findUser.dataValues.id, id: findUser.dataValues.id}, process.env.JWT_SECRET)
-            return res.status(200).json({ success: true, token, auid: findUser.dataValues.id, role: findUser.dataValues.role, name: findUser?.firstName + " " + findUser?.lastName });
+            if(findUser?.device1?.length <= 0 && findUser?.device2?.length > 0) {
+                console.log(1)
+                const device1Code= generateRandomString(10)
+                await db.user.update({device1: device1Code}, {where: {email, password: md5(password)}})
+                const token= JWT.sign({uid: findUser.dataValues.id, id: findUser.dataValues.id}, process.env.JWT_SECRET)
+                return res.status(200).json({ success: true, token, auid: findUser.dataValues.id, role: findUser.dataValues.role, name: findUser?.firstName + " " + findUser?.lastName, deviceCode: device1Code });
+            }
+            else if(findUser?.device2?.length <= 0 && findUser?.device1?.length > 0) {
+                console.log(2)
+
+                const device2Code= generateRandomString(10)
+                await db.user.update({device2: device2Code}, {where: {email, password: md5(password)}})
+                const token= JWT.sign({uid: findUser.dataValues.id, id: findUser.dataValues.id}, process.env.JWT_SECRET)
+                return res.status(200).json({ success: true, token, auid: findUser.dataValues.id, role: findUser.dataValues.role, name: findUser?.firstName + " " + findUser?.lastName, deviceCode: device2Code });
+            }
+            else if(findUser?.device1?.length <= 0 && findUser?.device2?.length <= 0) {
+                console.log(3)
+
+                const device1Code= generateRandomString(10)
+                console.log(device1Code)
+                const data= await db.user.update({device1: device1Code}, {where: {email, password: md5(password)}})
+                console.log(data)
+                const token= JWT.sign({uid: findUser.dataValues.id, id: findUser.dataValues.id}, process.env.JWT_SECRET)
+                return res.status(200).json({ success: true, token, auid: findUser.dataValues.id, role: findUser.dataValues.role, name: findUser?.firstName + " " + findUser?.lastName, deviceCode: device1Code });
+            }
+            else if(findUser?.device2?.length > 0 && findUser?.device1?.length > 0) {
+                console.log(4)
+                const findUserdevice1= await db.user.findOne({where: {email, password: md5(password), device1: deviceCode}})
+                const findUserdevice2= await db.user.findOne({where: {email, password: md5(password), device2: deviceCode}})
+                const token= JWT.sign({uid: findUser.dataValues.id, id: findUser.dataValues.id}, process.env.JWT_SECRET)
+                if(findUserdevice1?.email || findUserdevice2?.email) {
+                    console.log(5)
+                    return res.status(200).json({ success: true, token, auid: findUser.dataValues.id, role: findUser.dataValues.role, name: findUser?.firstName + " " + findUser?.lastName, deviceCode });
+                }
+                else {
+                    console.log(6)
+                    return res.status(200).json({success: false, login: false, third: true})
+                }
+            }
+            
         }
         else {
             return res.status(200).json({ success: false });
