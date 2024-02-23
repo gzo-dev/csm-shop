@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     type: DataTypes.INTEGER,
     content: DataTypes.TEXT,
     price: DataTypes.INTEGER,
+    author: DataTypes.STRING
   }, {});
   return tour;
 };

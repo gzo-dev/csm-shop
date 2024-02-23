@@ -156,7 +156,7 @@ export default {
         const findUser= await db.user.findOne({where: {email, password: md5(password)}})
         if(findUser) {
             const token= JWT.sign({uid: findUser.dataValues.id, id: findUser.dataValues.id}, process.env.JWT_SECRET)
-            return res.status(200).json({ success: true, token, auid: findUser.dataValues.id, role: findUser.dataValues.role });
+            return res.status(200).json({ success: true, token, auid: findUser.dataValues.id, role: findUser.dataValues.role, name: findUser?.firstName + " " + findUser?.lastName });
         }
         else {
             return res.status(200).json({ success: false });
