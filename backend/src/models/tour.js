@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     type: DataTypes.INTEGER,
     content: DataTypes.TEXT,
     price: DataTypes.INTEGER,
+    kindof: DataTypes.INTEGER
   }, {});
   return tour;
 };
