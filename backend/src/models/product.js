@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     phoneNumber: DataTypes.TEXT,
     square: DataTypes.FLOAT,
     province: DataTypes.STRING,
-    district: DataTypes.STRING, 
+    district: DataTypes.STRING,
     ward: DataTypes.STRING,
     provinceText: DataTypes.STRING,
     districtText: DataTypes.STRING,
@@ -31,15 +31,26 @@ module.exports = (sequelize, DataTypes) => {
     typeRoom: DataTypes.STRING,
     interior: DataTypes.STRING,
     endow: DataTypes.INTEGER,
-    rating: DataTypes.INTEGER
-    
+    rating: DataTypes.INTEGER,
+    note: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    user_manager: {
+      type: DataTypes.STRING,
+      allowNull: true 
+    },
+    rent: {
+      type: DataTypes.BOOLEAN,
+    }
   }, {});
-  product.associate = function(models) {
+
+  product.associate = function (models) {
     // associations can be defined here
     models.product.belongsTo(models.SubCategory, { foreignKey: 'subCategoryId' });
     models.product.hasMany(models.productphoto, { foreignKey: 'productId' });
     models.product.belongsTo(models.SubChildCategory, { foreignKey: 'childCategoryId' });
-    models.product.hasMany(models.vendor_product, { foreignKey: 'productId' });  
+    models.product.hasMany(models.vendor_product, { foreignKey: 'productId' });
   };
   return product;
 };
