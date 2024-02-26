@@ -39,7 +39,7 @@ export default {
         size,
         newaddimage,
         phoneNumber,
-        province, 
+        province,
         district,
         ward,
         square,
@@ -51,7 +51,7 @@ export default {
         interior,
         endow,
         rating,
-        note, 
+        note,
         user_manager,
         author_phone
       } = req.body;
@@ -89,7 +89,7 @@ export default {
           interior: interior ? interior : "",
           endow: endow ? endow : 0,
           rating: rating ? rating : 0,
-          note: note ? note  : "",
+          note: note ? note : "",
           user_manager: user_manager ? user_manager : "",
           author_phone: author_phone ? author_phone : ""
         })
@@ -135,6 +135,12 @@ export default {
       db.product
         .findAll({
           order: [["createdAt", "DESC"]],
+          include: [
+            {
+              model: db.user,
+              attributes: ["id", "firstName", "lastName"],
+            },
+          ],
           where: {
             supplierId: supplierId,
             categoryId: categoryId,
@@ -162,6 +168,10 @@ export default {
               model: db.SubCategory,
               attributes: ["id", "sub_name"],
               include: [{ model: db.category, attributes: ["id", "name"] }],
+            },
+            {
+              model: db.user,
+              attributes: ["id", "firstName", "lastName"],
             },
           ],
         })
@@ -243,10 +253,10 @@ export default {
                 square: square ? square : 0,
                 endow: endow ? endow : 0,
                 rating: rating ? rating : 0,
-                note: note ? note  : "",
+                note: note ? note : "",
                 user_manager: user_manager ? user_manager : "",
                 rent: rent ? rent : "",
-                author_phone: author_phone  ? author_phone : ""
+                author_phone: author_phone ? author_phone : ""
               },
               { where: { id: productId } }
             );
@@ -361,7 +371,10 @@ export default {
       db.product
         .findAll({
           where: { id: req.query.id },
-          include: [{ model: db.productphoto, attributes: ["id", "imgUrl"] }],
+          include: [{ model: db.productphoto, attributes: ["id", "imgUrl"] }, {
+            model: db.user,
+            attributes: ["id", "firstName", "lastName"],
+          }],
           order: [["createdAt", "DESC"]],
         })
         .then((list) => {
