@@ -166,16 +166,17 @@ export default {
         // console.log(password)
         // console.log(bcrypt.hashSync(password))
         const findUser= await db.user.findOne({where: {phone: email, password: md5(password)}})
-        if(findUser) {
+        if(findUser.verify) {
+            return res.status(200).json({ success: false });
+        }
+        else if(findUser.verify) {
             if(findUser?.device1?.length <= 0 && findUser?.device2?.length > 0) {
-                console.log(1)
                 const device1Code= generateRandomString(10)
                 await db.user.update({device1: device1Code}, {where: {phone: email, password: md5(password)}})
                 const token= JWT.sign({uid: findUser.dataValues.id, id: findUser.dataValues.id}, process.env.JWT_SECRET)
                 return res.status(200).json({ success: true, token, auid: findUser.dataValues.id, role: findUser.dataValues.role, name: findUser?.firstName + " " + findUser?.lastName, deviceCode: device1Code });
             }
             else if(findUser?.device2?.length <= 0 && findUser?.device1?.length > 0) {
-                console.log(2)
 
                 const device2Code= generateRandomString(10)
                 await db.user.update({device2: device2Code}, {where: {phone: email, password: md5(password)}})
@@ -183,8 +184,6 @@ export default {
                 return res.status(200).json({ success: true, token, auid: findUser.dataValues.id, role: findUser.dataValues.role, name: findUser?.firstName + " " + findUser?.lastName, deviceCode: device2Code });
             }
             else if(findUser?.device1?.length <= 0 && findUser?.device2?.length <= 0) {
-                console.log(3)
-
                 const device1Code= generateRandomString(10)
                 console.log(device1Code)
                 const data= await db.user.update({device1: device1Code}, {where: {phone: email, password: md5(password)}})
@@ -193,7 +192,6 @@ export default {
                 return res.status(200).json({ success: true, token, auid: findUser.dataValues.id, role: findUser.dataValues.role, name: findUser?.firstName + " " + findUser?.lastName, deviceCode: device1Code });
             }
             else if(findUser?.device2?.length > 0 && findUser?.device1?.length > 0) {
-                console.log(4)
                 const findUserdevice1= await db.user.findOne({where: {phone: email, password: md5(password), device1: deviceCode}})
                 const findUserdevice2= await db.user.findOne({where: {phone: email, password: md5(password), device2: deviceCode}})
                 const token= JWT.sign({uid: findUser.dataValues.id, id: findUser.dataValues.id}, process.env.JWT_SECRET)
