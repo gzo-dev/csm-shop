@@ -52,7 +52,8 @@ export default {
         endow,
         rating,
         note, 
-        user_manager
+        user_manager,
+        author_phone
       } = req.body;
 
       db.product
@@ -89,7 +90,8 @@ export default {
           endow: endow ? endow : 0,
           rating: rating ? rating : 0,
           note: note ? note  : "",
-          user_manager: user_manager ? user_manager : ""
+          user_manager: user_manager ? user_manager : "",
+          author_phone: author_phone ? author_phone : ""
         })
         .then((product) => {
           JSON.parse(image)?.map((item) =>
@@ -205,7 +207,8 @@ export default {
         rating,
         note,
         user_manager,
-        rent
+        rent,
+        author_phone
       } = req.body;
       db.product
         .findOne({ where: { id: productId } })
@@ -242,7 +245,8 @@ export default {
                 rating: rating ? rating : 0,
                 note: note ? note  : "",
                 user_manager: user_manager ? user_manager : "",
-                rent: rent ? rent : ""
+                rent: rent ? rent : "",
+                author_phone: author_phone  ? author_phone : ""
               },
               { where: { id: productId } }
             );

@@ -42,6 +42,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     rent: {
       type: DataTypes.BOOLEAN,
+    },
+    author_phone: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }, {});
 
