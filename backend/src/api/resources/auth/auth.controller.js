@@ -52,7 +52,7 @@ function verifyOtp(token) {
 
 export default {
     async addUser(req, res, next) {
-        const { firstName, lastName, phone, email, address, password, role, verify } = req.body;
+        const { firstName, lastName, phone, email, address, password, role, verify, note, user_id, avatar } = req.body;
         var passwordHash = md5(password);
         console.log(passwordHash)
         var token = generateOtp();
@@ -70,7 +70,8 @@ export default {
                     address: address,
                     password: passwordHash,
                     verify: verify,
-                    role: role
+                    role: role,
+                    note: note ? note : "", user_id: user_id ? user_id : "", avatar: avatar ? avatar : "    " 
                 })
 
             })
@@ -119,7 +120,7 @@ export default {
     },
 
      async userUpdate(req,res,next){
-        const { id, firstName, lastName, email, address, password, role, verify, phone, status } = req.body;
+        const { id, firstName, lastName, email, address, password, role, verify, phone, status, note, user_id, avatar } = req.body;
         var passwordHash = md5(password);
         db.user.findOne({ where: { email: email }, paranoid: false })
             .then(user => {
@@ -133,7 +134,10 @@ export default {
                     address: address ? address : user.address,
                     role: role ? role: user.role,
                     verify : status? status: user.verify,
-                    phone: phone ? phone : user.phone
+                    phone: phone ? phone : user.phone,
+                    note: note ? note : "",
+                    user_id: user_id ? user_id : "",
+                    avatar: avatar ? avatar : "",
                 }, { where: { id: id } })
 
             })
@@ -169,7 +173,7 @@ export default {
         if(findUser.verify === null) {
             return res.status(200).json({ success: false });
         }
-        else if(findUser.verify) {
+        else if(findUser?.verify) {
             if(findUser?.device1?.length <= 0 && findUser?.device2?.length > 0) {
                 const device1Code= generateRandomString(10)
                 await db.user.update({device1: device1Code}, {where: {phone: email, password: md5(password)}})
@@ -210,8 +214,23 @@ export default {
             return res.status(200).json({ success: false });
         }
     },
+    async findUser(req,res,next){
+        db.user.findOne({ attributes:["firstName","lastName", "email", "avatar", "phone", "address", "role"], where: { id: req.query?.user_id }})
+        .then(user => {
+            if (user) {
+                return res.status(200).json({ success: true, data:user, ok: true});
+            }
+            else
+                res.status(500).json({ 'success': false });
+        })
+        .catch(err => {
+            return res.status(500).json({ 'success': false });
+            console.log(err)
+            next(err);
+        })
+    },
 
-     async deleteUserList(req, res, next) {
+     async deleteUserList(req, res, next) { 
         db.user.findOne({ where: { id: req.body.id} })
             .then(data => {
                 if (data) {

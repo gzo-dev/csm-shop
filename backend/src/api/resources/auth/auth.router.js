@@ -5,7 +5,7 @@ import authController from './auth.controller';
 // import { validateBody, schemas } from '../../../middleware/validator';
 
 export const authRouter = express.Router();
-authRouter.route('/register').post(/*sanitize(),/* validateBody(schemas.registerSchema), */ authController.addUser);
+authRouter.route('/register').post(authController.addUser);
 authRouter.route('/user/getAllUserList').get(authController.getAllUserList);
 authRouter.route('/user/update').post(authController.userUpdate);
 authRouter.route('/user/delete').post(authController.deleteUserList);
