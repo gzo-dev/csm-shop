@@ -45,7 +45,7 @@ export default {
     async addTour(req, res) {
         try {
             await db.tour.create({
-                ...req.body, slug: "", time_created: new Date().toString(), discount: 0, photo: req.body.image, tour_id: generateCode(), content: req.body.content, desc: req.body.desc
+                ...req.body, slug: "", time_created: new Date().toString(), discount: 0, photo: req.body.image, content: req.body.content, desc: req.body.desc
             })
 
             return res.status(200).json({ ok: true })
@@ -58,10 +58,10 @@ export default {
     async updateTour(req, res) {
         try {
             await db.tour.update(
-                { ...req.body },
+                { ...req.body, tour_id: req.body.tour_id },
                 {
                     where: {
-                        tour_id: req.body.tour_id
+                        id: req.body.id
                     }
                 },
             )

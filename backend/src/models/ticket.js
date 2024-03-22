@@ -21,7 +21,13 @@ module.exports = (sequelize, DataTypes) => {
     car: DataTypes.STRING,
     buffe: DataTypes.STRING,
     departure: DataTypes.INTEGER,
-    destination: DataTypes.INTEGER
+    destination: DataTypes.INTEGER,
+    province: DataTypes.STRING,
+    district: DataTypes.STRING,
+    ward: DataTypes.STRING,
+    provinceText: DataTypes.STRING,
+    districtText: DataTypes.STRING,
+    wardText: DataTypes.STRING
   }, {});
   return ticket;
 };
