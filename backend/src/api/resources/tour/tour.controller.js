@@ -109,7 +109,7 @@ export default {
         try {
             const tourList = await db.tour.findAll({
                 where: {
-                    tour_id: req.query.id
+                    id: req.query.id
                 }
             })
             return res.status(200).json({ ok: true, data: tourList })
@@ -121,10 +121,10 @@ export default {
     }
     ,
     async deleteTour(req, res) {
-        const { tour_id } = req.body
+        const { id } = req.body
         db.tour.destroy({
             where: {
-                tour_id: tour_id
+                id: id
             }
         })
         return res.status(200).json({ ok: true })

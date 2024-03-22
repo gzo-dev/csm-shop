@@ -109,7 +109,7 @@ export default {
         try {
             const ticketList = await db.ticket.findAll({
                 where: {
-                    ticket_id: req.query.id
+                    id: req.query.id
                 }
             })
             return res.status(200).json({ ok: true, data: ticketList })
