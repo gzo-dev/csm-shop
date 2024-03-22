@@ -10,7 +10,13 @@ module.exports = (sequelize, DataTypes) => {
     reply_text: DataTypes.STRING,
     user_reply: DataTypes.INTEGER,
     type: DataTypes.STRING,
-    product: DataTypes.STRING
+    product: DataTypes.STRING,
+    price: DataTypes.STRING,
+    kindof: DataTypes.STRING,
+    departureText: DataTypes.STRING,
+    destinationText: DataTypes.STRING,
+    guest: DataTypes.STRING,
+    trip: DataTypes.STRING
   }, {});
   return contact;
 };

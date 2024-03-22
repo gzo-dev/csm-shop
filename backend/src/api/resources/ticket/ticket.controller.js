@@ -61,7 +61,7 @@ export default {
                 { ...req.body },
                 {
                     where: {
-                        ticket_id: req.body.ticket_id
+                        id: req.body.id
                     }
                 },
             )
