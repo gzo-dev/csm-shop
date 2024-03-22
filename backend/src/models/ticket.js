@@ -17,6 +17,11 @@ module.exports = (sequelize, DataTypes) => {
     type: DataTypes.INTEGER,    
     content: DataTypes.TEXT,
     kindof: DataTypes.INTEGER,
+    user_manager: DataTypes.INTEGER,
+    car: DataTypes.STRING,
+    buffe: DataTypes.STRING,
+    departure: DataTypes.INTEGER,
+    destination: DataTypes.INTEGER
   }, {});
   return ticket;
 };

@@ -200,6 +200,7 @@ export default {
                 });
         }
         catch (err) {
+            res.status(200).json({ 'success': false, data: [] });
             throw new RequestError('Error');
         }
     },

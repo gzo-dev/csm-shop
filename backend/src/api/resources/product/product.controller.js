@@ -54,9 +54,8 @@ export default {
         note,
         user_manager,
         author_phone,
-        address
+        address,
       } = req.body;
-
       db.product
         .create({
           categoryId: categoryId,
@@ -221,7 +220,11 @@ export default {
         user_manager,
         rent,
         author_phone,
-        address
+        address,
+        photo,
+        province,
+        district,
+        ward
       } = req.body;
       db.product
         .findOne({ where: { id: productId } })
@@ -249,7 +252,7 @@ export default {
                 discountPer: discountPer,
                 total: total,
                 netPrice: netPrice,
-                photo: req.file ? req.file.location : product.photo,
+                photo: photo,
                 phoneNumber: phoneNumber,
                 typeRoom,
                 interior,
@@ -260,7 +263,10 @@ export default {
                 user_manager: user_manager ? user_manager : "",
                 rent: rent ? rent : "",
                 author_phone: author_phone ? author_phone : "",
-                address: address ? address : ""
+                address: address ? address : "",
+                province,
+                district,
+                ward
               },
               { where: { id: productId } }
             );

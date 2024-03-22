@@ -32,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     interior: DataTypes.STRING,
     endow: DataTypes.INTEGER,
     rating: DataTypes.INTEGER,
+    product_id: DataTypes.STRING,
     note: {
       type: DataTypes.TEXT,
       allowNull: true
