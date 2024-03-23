@@ -11,6 +11,7 @@ productRouter.route("/d").get(productController.getProductListById)
 productRouter.route("/c").get(productController.getProductListByCategory)
 productRouter.route("/s/h").get(productController.getProductSuggestHotel)
 productRouter.route("/s/a").get(productController.getProductSuggestApartment)
+productRouter.route("/sg").get(productController.getProductSuggest2)
 productRouter.route("/photo").get(productController.getPhotoProduct)
 productRouter.route('/add').post(upload.single('photo'), productController.addProduct);
 productRouter.route('/getAllproduct').get( productController.index);

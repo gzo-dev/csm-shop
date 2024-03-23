@@ -381,6 +381,27 @@ export default {
       throw new RequestError("Error");
     }
   },
+  async getProductSuggest2(req, res, next) {
+    try {
+      db.product
+        .findAll({
+          order: [["DESC"]],
+          where: {
+            endow: 1
+          },
+          include: [{ model: db.productphoto, attributes: ["id", "imgUrl"] }],
+          limit: 4
+        })
+        .then((list) => {
+          res.status(200).json({ ok: true, data: list });
+        })
+        .catch(function (err) {
+          next(err);
+        });
+    } catch (err) {
+      throw new RequestError("Error");
+    }
+  },
   async getProductListById(req, res, next) {
     try {
       db.product
