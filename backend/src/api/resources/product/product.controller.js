@@ -55,6 +55,7 @@ export default {
         user_manager,
         author_phone,
         address,
+        product_id
       } = req.body;
       db.product
         .create({
@@ -92,7 +93,9 @@ export default {
           note: note ? note : "",
           user_manager: user_manager ? user_manager : "",
           author_phone: author_phone ? author_phone : "",
-          address: address ? address : ""
+          address: address ? address : "",
+          product_id: product_id ? product_id : ""
+
         })
         .then((product) => {
           JSON.parse(image)?.map((item) =>
@@ -224,7 +227,8 @@ export default {
         photo,
         province,
         district,
-        ward
+        ward,
+        product_id
       } = req.body;
       db.product
         .findOne({ where: { id: productId } })
@@ -266,7 +270,8 @@ export default {
                 address: address ? address : "",
                 province,
                 district,
-                ward
+                ward,
+                product_id: product_id ? product_id : ""
               },
               { where: { id: productId } }
             );
