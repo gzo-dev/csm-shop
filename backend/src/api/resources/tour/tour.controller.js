@@ -76,6 +76,9 @@ export default {
     async getListTour(req, res) {
         const tourList = await db.tour.findAll({
             order: [['createdAt', 'DESC']],
+            attributes: {
+                exclude: ['content'] // Thay 'field1', 'field2' bằng các trường bạn muốn loại bỏ
+            }
         })
         return res.status(200).json({ ok: true, data: tourList })
     },
@@ -84,7 +87,10 @@ export default {
             limit: 4,
             order: [
                 ["createdAt", "DESC"]
-            ]
+            ],
+            attributes: {
+                exclude: ['content'] // Thay 'field1', 'field2' bằng các trường bạn muốn loại bỏ
+            }
         })
         return res.status(200).json({ success: true, data: tourList });
     },
