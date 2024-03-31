@@ -133,11 +133,12 @@ export default {
                     password: password ? passwordHash: user.passwordHash,
                     address: address ? address : user.address,
                     role: role ? role: user.role,
-                    verify : status? status: user.verify,
+                    // verify : status? status: user.verify,
                     phone: phone ? phone : user.phone,
                     note: note ? note : "",
                     user_id: user_id ? user_id : "",
                     avatar: avatar ? avatar : "",
+                    status: status ? parseInt(status) : 0
                 }, { where: { id: id } })
 
             })
