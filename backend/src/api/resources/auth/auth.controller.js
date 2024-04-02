@@ -121,7 +121,7 @@ export default {
 
      async userUpdate(req,res,next){
         const { id, firstName, lastName, email, address, password, role, verify, phone, status, note, user_id, avatar } = req.body;
-        var passwordHash = md5(password);
+        var passwordHash = md5(password ? password : "");
         db.user.findOne({ where: { id: id }, paranoid: false })
             .then(user => {
                 if (!user) {
