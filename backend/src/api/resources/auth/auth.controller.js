@@ -122,7 +122,7 @@ export default {
      async userUpdate(req,res,next){
         const { id, firstName, lastName, email, address, password, role, verify, phone, status, note, user_id, avatar } = req.body;
         var passwordHash = md5(password);
-        db.user.findOne({ where: { email: email }, paranoid: false })
+        db.user.findOne({ where: { id: id }, paranoid: false })
             .then(user => {
                 if (!user) {
                     throw new RequestError('User is not found', 409);
@@ -130,9 +130,10 @@ export default {
                 return db.user.update({
                     firstName: firstName ? firstName: user.firstName,
                     lastName: lastName ? lastName: user.lastName,
-                    password: password ? passwordHash: user.passwordHash,
+                    password: password ? passwordHash: user.password,
                     address: address ? address : user.address,
                     role: role ? role: user.role,
+                    email: email ? email : user.email,
                     // verify : status? status: user.verify,
                     phone: phone ? phone : user.phone,
                     note: note ? note : "",
