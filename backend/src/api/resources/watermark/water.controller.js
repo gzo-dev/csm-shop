@@ -10,7 +10,6 @@ export default {
   async addWaterMark(req, res) {
     // const {  outputFilename } = req.body;
     const uploadedImage = path.join(__dirname, "../../../../", req.file.path);
-    console.log(uploadedImage)
     try {
       const [image, logo] = await Promise.all([
         Jimp.read(uploadedImage),
@@ -18,11 +17,12 @@ export default {
       ]);
 
       // Resize logo
-      const desiredLogoWidth = 500;
-      const desiredLogoHeight = 500;
+      const desiredLogoWidth = 250;
+      const desiredLogoHeight = 250;
       logo.resize(desiredLogoWidth, desiredLogoHeight);
+      const logoWidth = 250; // Đặt kích thước mới của logo ở đây
 
-      const logoX = image.bitmap.width - logo.bitmap.width - 50;
+      const logoX = image.bitmap.width - logoWidth - 50;
       const logoY = 50;
       logo.opacity(0.4)
       image.composite(logo, logoX, logoY, [
