@@ -21,8 +21,8 @@ export default {
     app.use(express.static(path.join(__dirname, "../", "watermark")));
     app.use(logger(config.app.log, { stream: accessLogStream }));
     app.set("view engine", "html");
-    app.use(bodyParser.urlencoded({ extended: true }));
-    app.use(bodyParser.json({ limit: "50mb" }));
+    app.use(bodyParser.urlencoded({ extended: true, limit: "200mb", parameterLimit:100000000 }));
+    app.use(bodyParser.json({ limit: "200mb" }));
 
     app.use(cookieParser(config.app.secret));
     app.use(
