@@ -13,6 +13,7 @@ import { searchRouter } from "./resources/search";
 import { tourRouter } from "./resources/tour";
 import { blogRouter } from "./resources/blog";
 import { ticketRouter } from "./resources/ticket";
+import { watermakRouter } from "./resources/watermark";
 
 export const restRouter = express.Router();
 restRouter.use("/auth", authRouter);
@@ -32,3 +33,4 @@ restRouter.use("/v1/search", searchRouter)
 restRouter.use("/v1/tour", tourRouter)
 restRouter.use("/v1/blog", blogRouter)
 restRouter.use("/v1/ticket", ticketRouter)
+restRouter.use("/v1/watermark", watermakRouter)

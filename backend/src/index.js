@@ -13,7 +13,6 @@ global.appRoot = path.resolve(__dirname);
 
 const PORT = config.app.port;
 const app = appManager.setup(config);
-
 /*cors handling*/
 app.use(cors({
 	origin:true,

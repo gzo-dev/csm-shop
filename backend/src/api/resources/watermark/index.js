@@ -1,0 +1,1 @@
+export {watermakRouter} from "./watermark.router"
