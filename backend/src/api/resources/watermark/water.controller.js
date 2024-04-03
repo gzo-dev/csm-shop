@@ -22,9 +22,9 @@ export default {
       logo.resize(desiredLogoWidth, desiredLogoHeight);
       const logoWidth = 250; // Đặt kích thước mới của logo ở đây
 
-      const logoX = image.bitmap.width - logoWidth - 50;
+      const logoX = 50;
       const logoY = 50;
-      logo.opacity(0.4)
+      logo.opacity(1)
       image.composite(logo, logoX, logoY, [
         {
           mode: Jimp.BLEND_SCREEN,
