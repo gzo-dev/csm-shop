@@ -20,7 +20,6 @@ export default {
       const desiredLogoWidth = 250;
       const desiredLogoHeight = Jimp.AUTO;
       logo.resize(desiredLogoWidth, desiredLogoHeight);
-      const logoWidth = 250; // Đặt kích thước mới của logo ở đây
 
       const logoX = 50;
       const logoY = 50;

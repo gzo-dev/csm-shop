@@ -551,6 +551,15 @@ export default {
         next(err);
       });
   },
+  async productDeleteBulk(req, res, next) {
+    db.product.destroy({ where: { id: req.body.list } })
+      .then((re) => {
+        return res.status(200).json({ ok: true, status: "deleted Product Seccessfully" });
+      })
+      .catch((err) => {
+        next(err);
+      });
+  },
 
   async productOfferDelete(req, res, next) {
     db.ProductOffer.findOne({ where: { id: parseInt(req.params.id) } })
