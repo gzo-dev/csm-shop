@@ -3,8 +3,12 @@ import { Redirect } from 'react-router-dom';
 import { NotificationManager } from 'react-notifications';
 import Loader from '../../loader';
 import { GetUserLogin } from '../../services';
+import LogoImage from "../../../assets/logo.png"
+import { MdOutlinePhone } from "react-icons/md";
+import { CiLock } from "react-icons/ci";
 
 const Signin = () => {
+    const deviceCode= localStorage.getItem("deviceCode") ? localStorage.getItem("deviceCode") : ""
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [emailError, setEmailError] = useState('');
@@ -38,7 +42,7 @@ const Signin = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         setIsLoaded(true);
-        let data = { email: email, password: password };
+        let data = { email: email, password: password, deviceCode };
         let user = await GetUserLogin.getUserLogin(data);
         if (user) {
             if (rememberMe) {
@@ -70,18 +74,24 @@ const Signin = () => {
                             <div className="row justify-content-center">
                                 <div className="col-lg-5">
                                     <div className="card shadow-lg border-0 rounded-lg mt-5">
-                                        <div className="card-header card-sign-header">
-                                            <h3 className="text-center font-weight-light my-4">Login</h3>
+                                        <div className="card-header card-sign-header" style={{backgroundColor: "white"}}>
+                                            <h3 className="text-center font-weight-light my-4">
+                                                <img src={LogoImage} alt="" />
+                                            </h3>
+                                            <div className="text-center" style={{fontSize: 14, color: '#7C7C7C'}}>Dịch vụ bất động sản cho thuê và du lịch - lữ hành</div>
+                                            <div className="mt-2 text-center " style={{fontSize: 25, color :"#F37335", fontWeight: 500}}>Admin Login</div>
                                         </div>
                                         <div className="card-body">
                                             <form>
-                                                <div className="form-group">
-                                                    <label className="form-label" htmlFor="inputEmailAddress">Email*</label>
-                                                    <input className="form-control py-3" id="inputEmailAddress" type="email" placeholder="Enter email address" name="email" value={email} onChange={handleChangeUser} />
+                                                <div className="form-group position-relative">
+                                                    {/* <label className="form-label" htmlFor="inputEmailAddress">Số điện thoại</label> */}
+                                                    <MdOutlinePhone className="position-absolute" style={{top: "50%", transform: "translate(0, -50%)"}} />
+                                                    <input className="form-control py-3 cus-inp-txt pl-4" style={{border: "none", borderBottom: "1px solid #7C7C7C"}} id="inputEmailAddress" type="email" placeholder="Số điện thoại" name="email" value={email} onChange={handleChangeUser} />
                                                 </div>
-                                                <div className="form-group">
-                                                    <label className="form-label" htmlFor="inputPassword">Password*</label>
-                                                    <input className="form-control py-3" id="inputPassword" type="password" placeholder="Enter password" name="password" value={password} onChange={handleChangeUser} />
+                                                <div className="form-group position-relative">
+                                                    {/* <label className="form-label" htmlFor="inputPassword">Password*</label> */}
+                                                    <CiLock className="position-absolute" style={{top: "50%", transform: "translate(0, -50%)"}} />
+                                                    <input className="form-control cus-inp-txt py-3 pl-4" id="inputPassword" type="password" placeholder="Mật khẩu" name="password" value={password} onChange={handleChangeUser} />
                                                 </div>
                                                 <div className="form-group">
                                                     <div className="custom-control custom-checkbox">
@@ -92,8 +102,8 @@ const Signin = () => {
                                                             checked={rememberMe}
                                                             onChange={handleRememberMeChange}
                                                         />
-                                                        <label className="custom-control-label" htmlFor="rememberPasswordCheck">
-                                                            Remember password
+                                                        <label className="custom-control-label" style={{fontSize: 14}} htmlFor="rememberPasswordCheck">
+                                                            Nhớ mật khẩu
                                                         </label>
                                                     </div>
                                                 </div>

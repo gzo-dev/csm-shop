@@ -41,7 +41,7 @@ const View = () => {
 
   const handlDeleteById = async (id) => {
     swal({
-      title: "Are you sure?",
+      title: "Bạn có chắc?",
       text: "You want to delete User from the List",
       icon: "warning",
       buttons: true,

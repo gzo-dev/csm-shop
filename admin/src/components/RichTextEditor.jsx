@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 const RichTextEditor = ({ content, placeholder, handleContentChange }) => {
   const [editorState, setEditorState] = useState(content);
-
+  useEffect(()=> {
+    setEditorState(content)
+  }, [content])
   const handleChange = (value) => {
     setEditorState(value);
     handleContentChange(value);
@@ -15,7 +17,7 @@ const RichTextEditor = ({ content, placeholder, handleContentChange }) => {
     <ReactQuill
       theme="snow"
       onChange={handleChange}
-      value={editorState}
+      value={editorState || " "}
       placeholder={placeholder}
       modules={RichTextEditor.modules}
       formats={RichTextEditor.formats}
@@ -48,7 +50,6 @@ RichTextEditor.modules = {
 RichTextEditor.formats = [
   "align",
   "background",
-  "bold",
   "blockquote",
   "bullet",
   "color",

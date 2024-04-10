@@ -30,6 +30,7 @@ export const apiGetProvince = async (provinceCode) => {
   }
 }
 
+
 export const apiGetWard= async (districtCode)=> {
   try {
     const res= await axios({
@@ -45,7 +46,23 @@ export const apiGetWard= async (districtCode)=> {
 export const apiCreateTour= async (data)=> {
   try {
     const res= await axios({
-      url: API_URL+ "/api/v1/tour",
+      url: API_URL+ "/api/v1/tour/manage",
+      method: "post",
+      data: {
+        ...data
+      }
+    })
+    const result= await res.data
+    return result
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export const apiCreateTicket= async (data)=> {
+  try {
+    const res= await axios({
+      url: API_URL+ "/api/v1/ticket",
       method: "post",
       data: {
         ...data
@@ -62,6 +79,23 @@ export const apiEditTour= async (data)=> {
   try {
     const res= await axios({
       url: API_URL + "/api/v1/tour",
+      method: "put",
+      data: {
+        ...data
+      }
+    })
+    const result= await res.data
+    return result
+  } catch (error) {
+    console.log(error)
+    
+  }
+}
+
+export const apiEditTicket= async (data)=> {
+  try {
+    const res= await axios({
+      url: API_URL + "/api/v1/ticket",
       method: "put",
       data: {
         ...data
@@ -152,6 +186,23 @@ export const apiDeleteTour= async (data)=> {
   }
 }
 
+export const apiDeleteTicket= async (data)=> {
+  try {
+    const res= await axios({
+      url: API_URL + "/api/v1/ticket",
+      method: "delete",
+      data: {
+        ...data
+      }
+    })
+    const result= await res.data
+    return result
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export const apiDeleteBlog= async (data)=> {
   try {
     const res= await axios({
@@ -168,5 +219,55 @@ export const apiDeleteBlog= async (data)=> {
     console.log(error)
   }
 }
+
+export const apiGetChildCategory= async (data)=> {
+  try {
+    const res= await axios({
+      url: API_URL + "/api/v1/category/c",
+      method: "get",
+      params: {
+        ...data
+      }
+    })
+    const result= await res.data
+    return result
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+
+export const apiGetListTicket= async (data)=> {
+  try {
+    const res= await axios({
+      url: API_URL + "/api/v1/ticket",
+      method: "get"
+    })
+    const result= await res.data
+    return result
+
+  } catch (error) {
+    console.log(error)
+  } 
+} 
+
+export const apiGetListTicketCategory= async (data)=> {
+  try {
+    const res= await axios({
+      url: API_URL + "/api/v1/ticket/c",  
+      method: "get",
+      params: {
+        ...data
+      }
+    })
+    const result= await res.data
+    return result
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 
 export { getListProvince }

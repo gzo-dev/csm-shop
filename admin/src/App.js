@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import rootRoutes from './components/admin/rootRoutes';
 import Auth from './components/auth';
 import NoMatch from './components/nomatch';
@@ -7,13 +7,26 @@ import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
 import { getCookie } from './function';
 import { NotificationContainer } from "react-notifications";
 import "react-notifications/lib/notifications.css";
+import get_info_user from './api/get_info_user';
 
-export default class App extends Component {
-	render() {
-		return (
+export const AppContext= createContext()
+const App = () => {
+	const [change, setChange]= useState(false)
+	const [dataUser, setDataUser]= useState({avatar: undefined, address: "", email: "", phone: ""})
+	useEffect(()=> {
+		(async ()=> {
+			const result= await get_info_user()
+			if(result.ok== true) {
+				setDataUser(result.data)
+			}
+		})()
+	}, [change])
+
+    return (
+        <AppContext.Provider value={{user: dataUser, change, setChange}}>
 			<div className="App">
 				<BrowserRouter>
-				<NotificationContainer />
+					<NotificationContainer />
 					<Switch>
 						<Route path='/auth' component={Auth} />
 						{getCookie('token') ? <Route path='/admin' component={rootRoutes} /> : <Redirect to={"/auth/login"} />}
@@ -21,8 +34,9 @@ export default class App extends Component {
 						<Route component={NoMatch} />
 					</Switch>
 				</BrowserRouter>
-			</div>
-		);
-	}
+        	</div>
+		</AppContext.Provider>
+    );
 }
 
+export default App;

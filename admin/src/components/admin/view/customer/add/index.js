@@ -40,7 +40,7 @@ const View = () => {
 
   const handleDeleteById = async (id) => {
     swal({
-      title: "Are you sure?",
+      title: "Bạn có chắc?",
       text: "You want to delete Customer from the List",
       icon: "warning",
       buttons: true,
@@ -156,11 +156,11 @@ const View = () => {
                   <thead>
                     <tr>
                       <th style={{ width: 60 }}>ID</th>
-                      <th>First Name</th>
-                      <th>Last Name</th>
-                      <th>Phone</th>
+                      <th>Họ</th>
+                      <th>Tên</th>
+                      <th>Số điện thoại</th>
                       <th>Email</th>
-                      <th>Action</th>
+                      <th>Hành động</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -194,9 +194,9 @@ const View = () => {
       {isAddPopupOpen && (
         <div className="add-customer-popup">
           <div className="add-customer-content">
-            <h2>Add Customer</h2>
+            <h2>Thêm người dùng</h2>
             <div className="form-group">
-              <label>First Name</label>
+              <label>Họ và tên</label>
               <TextField
                 type="text"
                 className="form-control"
@@ -205,7 +205,7 @@ const View = () => {
                 onChange={handleChangeAddPopup}
               />
             </div>
-            <div className="form-group">
+            {/* <div className="form-group">
               <label>Last Name</label>
               <TextField
                 type="text"
@@ -214,9 +214,9 @@ const View = () => {
                 value={newCustomer.lastName}
                 onChange={handleChangeAddPopup}
               />
-            </div>
+            </div> */}
             <div className="form-group">
-              <label>Phone</label>
+              <label>Số điện thoại</label>
               <TextField
                 type="text"
                 className="form-control"
@@ -236,7 +236,7 @@ const View = () => {
               />
             </div>
             <div className="form-group">
-              <label>Address</label>
+              <label>Địa chỉ</label>
               <TextField
                 type="text"
                 className="form-control"
@@ -246,7 +246,7 @@ const View = () => {
               />
             </div>
             <div className="form-group">
-              <label>Password</label>
+              <label>Mật khẩu</label>
               <TextField
                 type="password"
                 className="form-control"
@@ -255,8 +255,8 @@ const View = () => {
                 onChange={handleChangeAddPopup}
               />
             </div>
-            <div className="form-group">
-              <label>Gender</label>
+            {/* <div className="form-group">
+              <label>Giới tính</label>
               <TextField
                 type="text"
                 className="form-control"
@@ -264,19 +264,19 @@ const View = () => {
                 value={newCustomer.gender}
                 onChange={handleChangeAddPopup}
               />
-            </div>
+            </div> */}
             <div className="form-group">
               <button
                 className="btn btn-primary btn-block"
                 onClick={handleAddCustomer}
               >
-                Add
+                Thêm người dùng
               </button>
               <button
                 className="btn btn-danger btn-block"
                 onClick={handleCloseAddPopup}
               >
-                Cancel
+                Huỷ
               </button>
             </div>
           </div>

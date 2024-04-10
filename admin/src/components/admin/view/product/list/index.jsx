@@ -1,42 +1,140 @@
 import React, { useState, useEffect } from "react";
-import { Button, Typography } from "@material-ui/core";
-import { GetProductDetails } from "../../../../services";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  MenuItem,
+  Select,
+  Typography,
+} from "@material-ui/core";
+import { GetCategoryDetails, GetProductDetails } from "../../../../services";
 import { Link } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import swal from "sweetalert";
 import numberWithCommas from "../../../../../util/number_thousand_separator";
-import axios from "axios"
-
-const Arrays = (data, fieldName, fieldValue) => {
-  let arrayItem = [];
-  if (data && Array.isArray(data)) {
-    data.map((item, key) => {
-      arrayItem.push({
-        label: ++key + "--" + item[fieldName],
-        value: item[fieldValue],
-      });
-      return null;
-    });
-  }
-  return arrayItem;
-};
+import axios from "axios";
+import * as XLSX from "xlsx";
+import {
+  apiGetChildCategory,
+  apiGetProvince,
+  apiGetWard,
+  getListProvince,
+} from "../../../../../api";
+import { getCookie } from "../../../../../function";
+import { useParams } from "react-router-dom";
+import SelectBox3 from "../../../../../util/SelectBox3";
+import {
+  listBedRoom,
+  listPrice,
+  listSquare,
+  listStar,
+} from "../../../../../data/data";
+import moment from "moment";
+import Checkbox from "@material-ui/core/Checkbox";
+import Pagination from "@material-ui/lab/Pagination";
+import delete_bulk_product from "../../../../../api/delete_bulk_product";
 
 const List = () => {
+  const { id, subid } = useParams();
+  const [originList, setOriginList] = useState([]);
   const [getList, setGetList] = useState([]);
-  const [listSearch, setListSearch]= useState([])
+  const [listSearch, setListSearch] = useState([]);
   const [searchText, setSearchText] = useState("");
-  const isSearching= searchText.length > 0 ? true : false
+  const isSearching = searchText.length > 0 ? true : false;
   const [isloaded, setIsLoaded] = useState(false);
   const [limit, setLimit] = useState(20);
   const [offset, setOffset] = useState(0);
   const [perPage, setPerPage] = useState(30);
   const [orgtableData, setOrgtableData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
-
+  const [selectCategory, setSelectCategory] = useState();
+  const [selectSubCategory, setSelectSubCategory] = useState();
+  const [listSubCategory, setListSubCategory] = useState([]);
+  const [provinceDetail, setProvinceDetail] = useState([]);
+  const [listWard, setListWard] = useState([]);
+  const [ward, setWard] = useState();
+  const [typeRoom, setTypeRoom] = useState();
+  const [square, setSquare] = useState();
+  const [price, setPrice] = useState();
+  const [star, setStar] = useState();
+  const [listProvince, setListProvince] = useState([]);
+  const [province, setProvince] = useState();
+  const [district, setDistrict] = useState();
+  const [listCheck, setListCheck] = useState([]);
+  const [listCategory, setListCategory] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = getList.slice(indexOfFirstItem, indexOfLastItem);
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
   const handleBack = () => {
     // your code here
     // For example:
     // props.history.goBack();
+  };
+  const handleSearchFilter = () => {
+    if (id == 13) {
+      let data = [];
+      data = originList;
+      // typeRoom, square, price, province, district, ward
+      if (typeRoom) {
+        data = data.filter((item) => item.typeRoom == typeRoom);
+      }
+      if (province) {
+        data = data.filter((item) => item.province == province);
+      }
+      if (district) {
+        data = data.filter((item) => item.district == district);
+      }
+      if (ward) {
+        data = data.filter((item) => item.ward == ward);
+      }
+      setGetList(data);
+    }
+    //
+    if (id == 12) {
+      let data = [];
+      data = originList;
+      // typeRoom, square, price, province, district, ward
+      if (typeRoom) {
+        data = data.filter((item) => item.typeRoom == typeRoom);
+      }
+      if (star) {
+        data = data.filter((item) => item.rating == star);
+      }
+      if (province) {
+        data = data.filter((item) => item.province == province);
+      }
+      if (district) {
+        data = data.filter((item) => item.district == district);
+      }
+      if (ward) {
+        data = data.filter((item) => item.ward == ward);
+      }
+      setGetList(data);
+    }
+  };
+
+  const handleChange = (item) => {
+    if (listCheck.includes(item)) {
+      setListCheck(listCheck.filter((item1) => item1 != item));
+    } else {
+      setListCheck((prev) => [...prev, item]);
+    }
+  };
+
+  const getListCategory = async () => {
+    const list = await GetCategoryDetails.getCategoryList();
+    setListCategory(list.data);
+  };
+
+  const getListChildCategory = async () => {
+    const list = await apiGetChildCategory({ categoryId: selectCategory });
+    setListSubCategory(list.data);
   };
 
   const formatDate = (date) => {
@@ -54,8 +152,17 @@ const List = () => {
     let list = await GetProductDetails.getAllProductList();
     if (list) {
       var tdata = list.product;
-      var slice = tdata.slice(offset, offset + perPage);
-      setGetList(slice);
+      var slice = tdata;
+      setGetList(
+        slice.filter(
+          (item) => item.categoryId == id && item.subCategoryId == subid
+        )
+      );
+      setOriginList(
+        slice.filter(
+          (item) => item.categoryId == id && item.subCategoryId == subid
+        )
+      );
       setOrgtableData(tdata);
       setIsLoaded(true);
     }
@@ -63,22 +170,60 @@ const List = () => {
 
   useEffect(() => {
     getProductList();
+  }, [id, subid]);
+
+  useEffect(() => {
+    getListCategory();
   }, []);
+
+  useEffect(() => {
+    getListChildCategory();
+  }, [selectCategory]);
+
+  useEffect(() => {
+    if (selectCategory && selectSubCategory) {
+      setGetList(
+        originList.filter(
+          (item) =>
+            item.categoryId == selectCategory &&
+            item.subCategoryId == selectSubCategory
+        )
+      );
+    } else if (selectCategory) {
+      setGetList(
+        originList.filter((item) => item.categoryId == selectCategory)
+      );
+    } else if (selectSubCategory) {
+    }
+
+    // setGetList(originList?.filter(item))
+  }, [selectCategory, selectSubCategory]);
 
   const handleSearchInputChange = (event) => {
     setSearchText(event.target.value);
-    if(event.target.value.length <= 0) {
-
+    if (event.target.value.length <= 0) {
     }
     if (!searchText) {
-      setGetList(orgtableData); // Hiển thị toàn bộ danh sách nếu không có từ khóa tìm kiếm
+      console.log(orgtableData);
+      setGetList(
+        orgtableData.filter(
+          (item) => item.categoryId == id && item.subCategoryId == subid
+        )
+      ); // Hiển thị toàn bộ danh sách nếu không có từ khóa tìm kiếm
       return;
     }
-  
-    const filteredList = orgtableData.filter((item) =>
-      item.name.toLowerCase().includes(searchText.toLowerCase())
-    );
-  
+
+    const filteredList = originList
+      .filter((item) => item.categoryId == id && item.subCategoryId == subid)
+      .filter((item) =>
+        item.name
+          .toLowerCase()
+          .includes(
+            searchText.toLowerCase() ||
+              item.product_id.toLowerCase().includes(searchText.toLowerCase())
+          )
+      );
+
     setListSearch(filteredList);
   };
 
@@ -87,17 +232,17 @@ const List = () => {
       setGetList(orgtableData); // Hiển thị toàn bộ danh sách nếu không có từ khóa tìm kiếm
       return;
     }
-  
+
     const filteredList = orgtableData.filter((item) =>
       item.name.toLowerCase().includes(searchText.toLowerCase())
     );
-  
+
     setListSearch(filteredList);
   };
 
   const handlDeleteById = async (id) => {
     swal({
-      title: "Are you sure?",
+      title: "Bạn có chắc?",
       text: "You want to delete Category from the List",
       icon: "warning",
       buttons: true,
@@ -123,103 +268,660 @@ const List = () => {
 
   const loadMoreData = () => {
     const data = orgtableData;
-    const slice = data.slice(offset, offset + perPage);
+    const slice = data;
     setGetList(slice);
+  };
+
+  const exportToExcel = (e) => {
+    e.preventDefault();
+    const headers = ["Tên sản phẩm", "Thể loại", "Giá", "Giảm giá"];
+
+    // Thêm tiêu đề cột vào mảng dữ liệu
+
+    const worksheet = XLSX.utils.json_to_sheet(
+      getList.map((product) => [
+        product.name,
+        product.SubCategory
+          ? `${product.SubCategory.category.name} | ${product.SubCategory.sub_name}`
+          : "..",
+        product.price,
+        product.discountPer,
+      ])
+    );
+    getList.unshift(headers);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Danh sách sản phẩm");
+    XLSX.writeFile(workbook, "product.xlsx");
+  };
+
+  const refreshProduct = () => {
+    setGetList(originList);
+    setSelectCategory();
+    setSelectSubCategory();
+  };
+
+  const getprovince = async (code) => {
+    const response = await apiGetProvince(code);
+    setProvinceDetail(response.results);
+  };
+
+  const getdistrict = async (code) => {
+    const response = await apiGetWard(code);
+    setListWard(response.results);
+  };
+
+  useEffect(() => {
+    if (province) getprovince(province);
+    if (district) getdistrict(district);
+  }, [province, district]);
+  useEffect(() => {
+    (async () => {
+      const result = await getListProvince();
+      setListProvince(result);
+    })();
+  }, []);
+
+  const bulkDelete = async () => {
+    try {
+      const result = await delete_bulk_product({ list: listCheck });
+      if (result.ok === true) {
+        swal("Thông báo", "Đã xoá thành công", "success")
+          .then(() => {
+            setListCheck([]);
+          })
+          .then(() => {
+            getProductList();
+          });
+      }
+    } catch (error) {
+      swal("Thông báo", "Đã có lỗi xảy ra", "error");
+      console.log(error);
+    }
+    // const result= await res.data
   };
 
   return (
     <div className="container-fluid">
-      <div className="row">
-        <div className="col-lg-5 col-md-9 col-lg-6">
-          <h2 className="mt-30 page-title">Sản phẩm</h2>
-        </div>
-        <div className="col-lg-5 col-md-3 col-lg-6 back-btn">
-          <Button variant="contained" onClick={handleBack}>
-            <i className="fas fa-arrow-left" /> Back
-          </Button>
-        </div>
-      </div>
-      <ol className="breadcrumb mb-30">
-        <li className="breadcrumb-item">
-          <a href="index.html">Dashboard</a>
-        </li>
-        <li className="breadcrumb-item active">Products</li>
-      </ol>
-      <div className="row justify-content-between">
-        <div className="col-lg-12">
-          <a href="/admin/product/create" className="add-btn hover-btn">
-            Thêm mới
-          </a>
-        </div>
+      <div className="row justify-content-between mt-3">
+        <div className="w-100 d-flex justify-content-between">
+          <div className="d-flex align-items-center" style={{ gap: 20 }}>
+            <Link
+              to={"/admin/p/" + id + "/" + subid + "/create"}
+              className="add-btn hover-btn"
+              style={{
+                background: "#F37335",
+                borderRadius: 15,
+                width: "auto",
+                whiteSpace: "nowrap",
+                alignSelf: "end",
+              }}
+            >
+              Thêm sản phẩm
+            </Link>
+            <input
+              style={{
+                width: "100%",
+                height: "42px",
+                border: "1px solid #e7e7e7",
+                borderRadius: 15,
+                padding: 10,
+                background: "#F37335",
+                alignSelf: "end",
+                color: "white",
+              }}
+              type="text"
+              value={searchText}
+              className="inp-mk"
+              onChange={handleSearchInputChange}
+              placeholder="Tìm kiếm..."
+            />
+          </div>
+          <div className="d-flex align-items-center" style={{ gap: 20 }}>
+            <a
+              href={`/admin/p/${id}/${subid}/edit`}
+              onClick={(e) => {
+                e.preventDefault();
+                getProductList();
+              }}
+              className="add-btn hover-btn"
+              style={{
+                background: "#F37335",
+                borderRadius: 80,
+                width: "auto",
+                whiteSpace: "nowrap",
+                alignSelf: "end",
+              }}
+            >
+              Đặt lại bộ lọc
+            </a>
+            <a
+              href={`/admin/p/${id}/${subid}/edit`}
+              onClick={(e) => {
+                e.preventDefault();
+                handleSearchFilter();
+              }}
+              className="add-btn hover-btn"
+              style={{
+                background: "#F37335",
+                borderRadius: 80,
+                width: "auto",
+                whiteSpace: "nowrap",
+                alignSelf: "end",
+              }}
+            >
+              Tìm kiếm
+            </a>
 
-        <div className="col-lg-12">
+            <div style={{ borderRadius: 10 }}>
+              <div
+                style={{
+                  padding: 5,
+                  borderTopLeftRadius: 10,
+                  borderTopRightRadius: 10,
+                  gap: 40,
+                }}
+                className="bg-gra d-flex align-items-center"
+              >
+                <div
+                  style={{
+                    color: "#fff",
+                    fontSize: 16,
+                    fontWeight: 600,
+                    textTransform: "uppercase",
+                    textAlign: "center",
+                    width: 200,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Loại phòng
+                </div>
+                <div
+                  style={{
+                    color: "#fff",
+                    fontSize: 16,
+                    fontWeight: 600,
+                    textTransform: "uppercase",
+                    textAlign: "center",
+                    width: 200,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Địa điểm, vị trí
+                </div>
+              </div>
+              <div
+                className="d-flex"
+                style={{
+                  padding: 5,
+                  background: "white",
+                  width: "100%",
+                  borderBottomLeftRadius: 10,
+                  borderBottomRightRadius: 10,
+                  gap: 40,
+                }}
+              >
+                <div style={{ width: 200 }}>
+                  {id == 13 && (
+                    <div
+                      style={{
+                        width: "100%",
+                        borderRadius: 10,
+                        border: "1px solid #e7e7e7",
+                        background: "#fff",
+                        padding: 5,
+                        marginBottom: 12,
+                      }}
+                    >
+                      <SelectBox3
+                        size={"small"}
+                        value={typeRoom}
+                        setValue={setTypeRoom}
+                        label={"Hạng phòng"}
+                        list={listBedRoom.filter(
+                          (item) => parseInt(item.value) <= 11
+                        )}
+                      />
+                    </div>
+                  )}
+                  {id == 12 && (
+                    <div
+                      style={{
+                        width: "100%",
+                        borderRadius: 10,
+                        border: "1px solid #e7e7e7",
+                        background: "#fff",
+                        padding: 5,
+                        marginBottom: 12,
+                      }}
+                    >
+                      <SelectBox3
+                        size={"small"}
+                        value={typeRoom}
+                        setValue={setTypeRoom}
+                        label={"Hạng phòng"}
+                        list={listBedRoom.filter(
+                          (item) => parseInt(item.value) > 11
+                        )}
+                      />
+                    </div>
+                  )}
+                  {/*  */}
+                  {id == 13 && (
+                    <div
+                      style={{
+                        width: "100%",
+                        borderRadius: 10,
+                        border: "1px solid #e7e7e7",
+                        background: "#fff",
+                        padding: 5,
+                        marginBottom: 12,
+                      }}
+                    >
+                      <SelectBox3
+                        size={"small"}
+                        value={square}
+                        setValue={setSquare}
+                        label={"Diện tích"}
+                        list={listSquare}
+                      />
+                    </div>
+                  )}
+                  {id == 12 && (
+                    <div
+                      style={{
+                        width: "100%",
+                        borderRadius: 10,
+                        border: "1px solid #e7e7e7",
+                        background: "#fff",
+                        padding: 5,
+                        marginBottom: 12,
+                      }}
+                    >
+                      <SelectBox3
+                        size={"small"}
+                        value={star}
+                        setValue={setStar}
+                        label={"Số sao"}
+                        list={listStar}
+                      />
+                    </div>
+                  )}
+                  {/*  */}
+                  {id == 13 && (
+                    <div
+                      style={{
+                        width: "100%",
+                        borderRadius: 10,
+                        border: "1px solid #e7e7e7",
+                        background: "#fff",
+                        padding: 5,
+                        marginBottom: 12,
+                      }}
+                    >
+                      <SelectBox3
+                        size={"small"}
+                        value={price}
+                        setValue={setPrice}
+                        label={"Giá tiền"}
+                        list={listPrice}
+                      />
+                    </div>
+                  )}
+                  {id == 12 && (
+                    <div
+                      style={{
+                        width: "100%",
+                        borderRadius: 10,
+                        border: "1px solid #e7e7e7",
+                        background: "#fff",
+                        padding: 5,
+                        marginBottom: 12,
+                      }}
+                    >
+                      <SelectBox3
+                        size={"small"}
+                        value={price}
+                        setValue={setPrice}
+                        label={"Giá tiền"}
+                        list={listPrice}
+                      />
+                    </div>
+                  )}
+                </div>
+                <div style={{ width: 200 }}>
+                  <div
+                    style={{
+                      width: "100%",
+                      borderRadius: 10,
+                      border: "1px solid #e7e7e7",
+                      background: "#fff",
+                      padding: 5,
+                      marginBottom: 12,
+                    }}
+                  >
+                    <SelectBox3
+                      size={"small"}
+                      value={province}
+                      setValue={setProvince}
+                      label={"Tỉnh / Thành phố"}
+                      list={listProvince.map((item) => ({
+                        ...item,
+                        value: item.province_id,
+                        label: item.province_name,
+                      }))}
+                    />
+                  </div>
+                  <div
+                    style={{
+                      width: "100%",
+                      borderRadius: 10,
+                      border: "1px solid #e7e7e7",
+                      background: "#fff",
+                      padding: 5,
+                      marginBottom: 12,
+                    }}
+                  >
+                    <SelectBox3
+                      size={"small"}
+                      value={district}
+                      setValue={setDistrict}
+                      label={"Quận / Huyện"}
+                      list={provinceDetail.map((el) => ({
+                        ...el,
+                        value: el.district_id,
+                        label: el.district_name,
+                      }))}
+                    />
+                  </div>
+                  <div
+                    style={{
+                      width: "100%",
+                      borderRadius: 10,
+                      border: "1px solid #e7e7e7",
+                      background: "#fff",
+                      padding: 5,
+                      marginBottom: 12,
+                    }}
+                  >
+                    <SelectBox3
+                      size={"small"}
+                      value={ward}
+                      setValue={setWard}
+                      label={"Xã / Phường"}
+                      list={listWard.map((el) => ({
+                        ...el,
+                        value: el.ward_id,
+                        label: el.ward_name,
+                      }))}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* {getCookie("role") === "admin" && (
+          <div
+            onClick={exportToExcel}
+            className="col-lg-12 mt-3"
+            style={{ cursor: "pointer" }}
+          >
+            <a style={{ color: "#fff" }} className="add-btn hover-btn">
+              Xuất file excel
+            </a>
+          </div>
+        )} */}
+        {/* <div className="col-lg-12">
           <div className="row">
             <div className="col-lg-8 col-md-8">
               <br />
-              <input
-                style={{width: "100%", height: "42px", border: "1px solid #e7e7e7", borderRadius: 10, padding: 10}}
-                type="text"
-                value={searchText}
-                onChange={handleSearchInputChange}
-                placeholder="Tìm tên sản phẩm..."
-              />
+              
             </div>
             <div className="col-lg-2 col-md-2">
-              <button
-                className="save-btn hover-btn"
-                onClick={handleSearch}
-              >
+              <button className="save-btn hover-btn" onClick={handleSearch}>
                 Tìm kiếm
               </button>
             </div>
           </div>
-        </div>
-
+        </div> */}
+        {/* <div className="col-lg-12 col-md-12 mt-2">
+          <Box sx={{ width: "100%" }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Thể loại</InputLabel>
+              <Select
+                style={{ height: 32 }}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={selectCategory}
+                onChange={(e) => setSelectCategory(e.target.value)}
+              >
+                {listCategory
+                  .map((item) => ({
+                    ...item,
+                    value: item.id,
+                    label: item.name,
+                  }))
+                  .map((item, key) => (
+                    <MenuItem
+                      value={item.value}
+                      key={key}
+                    >
+                      {item.label}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          </Box>
+        </div> */}
+        {/*  */}
+        {/* <br /> */}
+        {/* <br /> */}
+        {/*  */}
+        {/* <div className="col-lg-12 col-md-12">
+          <Box sx={{ width: "100%" }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">
+                Thể loại con
+              </InputLabel>
+              <Select
+                style={{ height: 32 }}
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={selectSubCategory}
+                onChange={(e) => setSelectSubCategory(e.target.value)}
+              >
+                {listSubCategory
+                  .map((item) => ({
+                    ...item,
+                    value: item.id,
+                    label: item.sub_name,
+                  }))
+                  .map((item, key) => (
+                    <MenuItem
+                      value={item.value}
+                      key={key}
+                    >
+                      {item.label}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
+          </Box>
+        </div> */}
+        {/* <br />
+        <br /> */}
+        {/* <div className="col-lg-12 col-md-12 mt-2">
+          <Button
+            onClick={refreshProduct}
+            color={"primary"}
+            variant="contained"
+          >
+            Đặt lại
+          </Button>
+        </div> */}
+        {/*  */}
         <div className="col-lg-12 col-md-12">
           <div className="card card-static-2 mt-30 mb-30">
-            <div className="card-title-2">
-              <h4>Tất cả sản phẩm</h4> 
-            </div>
+            {/* <div className="card-title-2">
+              <h4>Tất cả sản phẩm</h4>
+            </div> */}
             <div className="card-body-table">
-              <div className="table-responsive">
+              <div className="table-responsive position-relative">
                 <table className="table ucp-table table-hover">
                   <thead>
-                    <tr>
-                      <th style={{ width: 60 }}>Id</th>
-                      <th style={{ width: 100 }}>Hình ảnh</th>
-                      <th>Tên sản phảm</th>
-                      <th>Thể loại</th>
-                      {/* <th>Tên phụ</th> */}
-                      {/* <th>Unit</th> */}
-                      {/* <th>Cost</th> */}
-                      <th>Giá</th>
-                      <th>Giảm giá(%)</th>
-                      <th>Trạng thái</th>
-                      <th>Action</th>
-                    </tr>
+                    {id == 13 && (
+                      <tr>
+                        {/* <th style={{ width: 60 }}>Mã SP</th> */}
+                        <th>
+                          {/* <Checkbox /> */}
+                          {listCheck.length > 0 && (
+                            <Button
+                              onClick={bulkDelete}
+                              variant={"contained"}
+                              color={"primary"}
+                            >
+                              Xoá
+                            </Button>
+                          )}
+                        </th>
+                        <th style={{ width: 100 }}>Hình ảnh</th>
+                        <th style={{ whiteSpace: "nowrap" }}>Mã sản phẩm</th>
+
+                        <th style={{ whiteSpace: "nowrap" }}>Tên sản phẩm</th>
+                        <th style={{ whiteSpace: "nowrap" }}>Thời gian tạo</th>
+
+                        <th style={{ whiteSpace: "nowrap" }}>Người quản lý</th>
+                        {/* <th style={{ whiteSpace: "nowrap" }}>SĐT liên hệ</th> */}
+                        <th style={{ whiteSpace: "nowrap" }}>SĐT chủ nhà</th>
+                        <th style={{ whiteSpace: "nowrap" }}>Địa chỉ chủ</th>
+
+                        <th style={{ whiteSpace: "nowrap" }}>Giá bán</th>
+                        <th style={{ whiteSpace: "nowrap" }}>Ghi chú</th>
+                        {/* <th>Giá</th> */}
+                        <th style={{ whiteSpace: "nowrap" }}>Trạng thái</th>
+                        <th>Action</th>
+                      </tr>
+                    )}
+                    {id == 12 && (
+                      <tr>
+                        <th>
+                          {/* <Checkbox /> */}
+                          {listCheck.length > 0 && (
+                            <Button
+                              onClick={bulkDelete}
+                              variant={"contained"}
+                              color={"primary"}
+                            >
+                              Xoá
+                            </Button>
+                          )}
+                        </th>
+                        {/* <th style={{ width: 60 }}>Mã SP</th> */}
+                        <th style={{ width: 100 }}>Hình ảnh</th>
+                        <th style={{ whiteSpace: "nowrap" }}>Tên sản phẩm</th>
+                        <th style={{ whiteSpace: "nowrap" }}>Khu vực</th>
+
+                        <th style={{ whiteSpace: "nowrap" }}>Giá bán</th>
+                        {/* <th style={{ whiteSpace: "nowrap" }}>SĐT liên hệ</th> */}
+                        <th style={{ whiteSpace: "nowrap" }}>Giá đại lý</th>
+                        <th style={{ whiteSpace: "nowrap" }}>Địa chỉ</th>
+                        <th style={{ whiteSpace: "nowrap" }}>Ghi chú</th>
+                        {/* <th>Giá</th> */}
+                        {/* <th style={{ whiteSpace: "nowrap" }}>Trạng thái</th> */}
+                        <th>Action</th>
+                      </tr>
+                    )}
                   </thead>
-                  <tbody>
-                    {!isSearching
-                      && getList.map((row, index) => (
+                  {id == 13 && (
+                    <tbody>
+                      {!isSearching &&
+                        currentItems.map((row, index) => (
                           <tr key={index}>
-                            <td>{row.id}</td>
                             <td>
-                              <div className="cate-img-5">
-                                <img src={row.photo} alt="product-name" />
-                              </div>
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    checked={
+                                      listCheck.filter((item) => item == row.id)
+                                        .length > 0
+                                        ? true
+                                        : false
+                                    }
+                                    onChange={() => handleChange(row.id)}
+                                    inputProps={{
+                                      "aria-label": "primary checkbox",
+                                    }}
+                                  />
+                                }
+                              />
                             </td>
+                            <td>
+                              <img
+                                style={{
+                                  width: 130,
+                                  borderRadius: 10,
+                                  aspectRatio: 4 / 3,
+                                  height: 100,
+                                }}
+                                src={row.photo ? row.photo : "Can't display"}
+                                alt=""
+                              />
+                            </td>
+                            <td>{row.product_id}</td>
                             <td>{row.name}</td>
                             <td>
-                              {row.SubCategory
-                                ? `${row.SubCategory.category.name} | ${row.SubCategory.sub_name}`
-                                : ".."}
+                              {moment(row.createdAt).format(
+                                "DD-MM-YYYY HH:mm:ss"
+                              )}
                             </td>
+
+                            <td>
+                              {row.user ? row.user.firstName : "Chưa thiết lập"}
+                            </td>
+                            {/* <td>
+                              {row.phoneNumber
+                                ? row.phoneNumber
+                                : "Chưa thiết lập"}
+                            </td> */}
+                            <td>
+                              {row.author_phone
+                                ? row.author_phone
+                                : "Chưa thiết lập"}
+                            </td>
+                            <td>
+                              {row.address +
+                                " " +
+                                row.wardText +
+                                " " +
+                                row.districtText +
+                                " " +
+                                row.provinceText}
+                            </td>
+                            <td>
+                              VND&nbsp;
+                              {numberWithCommas(
+                                Math.ceil(
+                                  (row.price *
+                                    (100 - parseInt(row.discountPer || 0))) /
+                                    100
+                                )
+                              )}
+                            </td>
+                            <td>{row.note ? row.note : "Chưa thiếp lập"}</td>
                             {/* <td>{row.brand}</td> */}
                             {/* <td>{row.unitSize}</td> */}
                             {/* <td>VND{numberWithCommas(row.buyerPrice)}</td> */}
-                            <td>VND{numberWithCommas(row.price)}</td>
-                            <td>{row.discountPer}%</td>
-                            <td>
+                            {/* <td>
+                              VND
+                              {numberWithCommas(
+                                Math.ceil(
+                                  (row.price *
+                                    (100 - parseInt(row.discountPer || 0))) /
+                                    100
+                                )
+                              )}
+                            </td> */}
+                            {/* <td>
                               {row.status === "active" ? (
                                 <span className="badge-item badge-status-success">
                                   {row.status}
@@ -229,11 +931,22 @@ const List = () => {
                                   {row.status}
                                 </span>
                               )}
+                            </td> */}
+                            <td>
+                              {row.rent == 1 ? (
+                                <span className="badge-item badge-status-success">
+                                  Đã thuê
+                                </span>
+                              ) : (
+                                <span className="badge-item badge-status">
+                                  Chưa thuê
+                                </span>
+                              )}
                             </td>
                             <td className="action-btns">
                               <Link
                                 to={{
-                                  pathname: `/admin/product/edit`,
+                                  pathname: `/admin/p/${id}/${subid}/edit`,
                                   state: { row },
                                 }}
                               >
@@ -249,30 +962,219 @@ const List = () => {
                               </Typography>
                             </td>
                           </tr>
-                        ))
-                        }
-                      {
-                        isSearching 
-                      && listSearch.map((row, index) => (
+                        ))}
+                      {isSearching &&
+                        listSearch.map((row, index) => (
                           <tr key={index}>
-                            <td>{row.id}</td>
                             <td>
-                              <div className="cate-img-5">
-                                <img src={row.photo} alt="product-name" />
-                              </div>
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    // checked={listCheck.filter(item=> item== row.id)}
+                                    onChange={() => handleChange(row.id)}
+                                    inputProps={{
+                                      "aria-label": "primary checkbox",
+                                    }}
+                                  />
+                                }
+                              />
+                            </td>
+                            <td>
+                              <img
+                                style={{
+                                  width: 130,
+                                  borderRadius: 10,
+                                  aspectRatio: 4 / 3,
+                                  height: 100,
+                                }}
+                                src={row.photo ? row.photo : "Can't display"}
+                                alt=""
+                              />
+                            </td>
+                            <td>{row.product_id}</td>
+                            <td>{row.name}</td>
+                            <td>
+                              {moment(row.createdAt).format(
+                                "DD-MM-YYYY HH:mm:ss"
+                              )}
+                            </td>
+
+                            <td>
+                              {row.user
+                                ? row.user.firstName + " " + row.user.lastName
+                                : "Chưa thiết lập"}
+                            </td>
+                            {/* <td>
+                              {row.phoneNumber
+                                ? row.phoneNumber
+                                : "Chưa thiết lập"}
+                            </td> */}
+                            <td>
+                              {row.author_phone
+                                ? row.author_phone
+                                : "Chưa thiết lập"}
+                            </td>
+                            <td>
+                              {row.wardText +
+                                " " +
+                                row.districtText +
+                                " " +
+                                row.provinceText}
+                            </td>
+                            <td>
+                              VND&nbsp;
+                              {numberWithCommas(
+                                Math.ceil(
+                                  (row.price *
+                                    (100 - parseInt(row.discountPer || 0))) /
+                                    100
+                                )
+                              )}
+                            </td>
+                            <td>{row.note ? row.note : "Chưa thiếp lập"}</td>
+                            {/* <td>{row.brand}</td> */}
+                            {/* <td>{row.unitSize}</td> */}
+                            {/* <td>VND{numberWithCommas(row.buyerPrice)}</td> */}
+                            {/* <td>
+                              VND
+                              {numberWithCommas(
+                                Math.ceil(
+                                  (row.price *
+                                    (100 - parseInt(row.discountPer || 0))) /
+                                    100
+                                )
+                              )}
+                            </td> */}
+                            {/* <td>
+                              {row.status === "active" ? (
+                                <span className="badge-item badge-status-success">
+                                  {row.status}
+                                </span>
+                              ) : (
+                                <span className="badge-item badge-status">
+                                  {row.status}
+                                </span>
+                              )}
+                            </td> */}
+                            <td>
+                              {row.rent == 1 ? (
+                                <span className="badge-item badge-status-success">
+                                  Đã thuê
+                                </span>
+                              ) : (
+                                <span className="badge-item badge-status">
+                                  Chưa thuê
+                                </span>
+                              )}
+                            </td>
+                            <td className="action-btns">
+                              <Link
+                                to={{
+                                  pathname: `/admin/p/${id}/${subid}/edit`,
+                                  state: { row },
+                                }}
+                              >
+                                <Typography className="edit-btn">
+                                  <i className="fas fa-edit" />
+                                </Typography>
+                              </Link>
+                              <Typography
+                                className="delete-btn"
+                                onClick={() => handlDeleteById(row.id)}
+                              >
+                                <i className="fas fa-trash-alt" />
+                              </Typography>
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  )}
+                  {/*  */}
+                  {id == 12 && (
+                    <tbody>
+                      {!isSearching &&
+                        currentItems.map((row, index) => (
+                          <tr key={index}>
+                            <td>
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    // checked={listCheck.filter(item=> item== row.id)}
+                                    onChange={() => handleChange(row.id)}
+                                    inputProps={{
+                                      "aria-label": "primary checkbox",
+                                    }}
+                                  />
+                                }
+                              />
+                            </td>
+                            <td>
+                              <img
+                                style={{
+                                  width: 130,
+                                  borderRadius: 10,
+                                  aspectRatio: 4 / 3,
+                                  height: 100,
+                                }}
+                                src={row.photo ? row.photo : "Can't display"}
+                                alt=""
+                              />
                             </td>
                             <td>{row.name}</td>
                             <td>
-                              {row.SubCategory
-                                ? row.SubCategory.category.name
-                                : ".."}
+                              {row.wardText +
+                                " " +
+                                row.districtText +
+                                " " +
+                                row.provinceText}
                             </td>
-                            <td>{row.brand}</td>
-                            <td>{row.unitSize}</td>
-                            <td>VND{numberWithCommas(row.buyerPrice)}</td>
-                            <td>VND{numberWithCommas(row.price)}</td>
-                            <td>{row.discountPer}%</td>
                             <td>
+                              VND&nbsp;
+                              {numberWithCommas(
+                                Math.ceil(
+                                  (row.price *
+                                    (100 - parseInt(row.discountPer || 0))) /
+                                    100
+                                )
+                              )}
+                            </td>
+                            <td>
+                              VND&nbsp;
+                              {numberWithCommas(
+                                Math.ceil(
+                                  (row.price *
+                                    (100 - parseInt(row.discountPer || 0))) /
+                                    100
+                                )
+                              )}
+                            </td>
+                            <td>
+                              {row.wardText +
+                                " " +
+                                row.districtText +
+                                " " +
+                                row.provinceText}
+                            </td>
+                            {/* <td>
+                              {row.phoneNumber
+                                ? row.phoneNumber
+                                : "Chưa thiết lập"}
+                            </td> */}
+                            <td>{row.note ? row.note : "Chưa thiếp lập"}</td>
+                            {/* <td>{row.brand}</td> */}
+                            {/* <td>{row.unitSize}</td> */}
+                            {/* <td>VND{numberWithCommas(row.buyerPrice)}</td> */}
+                            {/* <td>
+                              VND
+                              {numberWithCommas(
+                                Math.ceil(
+                                  (row.price *
+                                    (100 - parseInt(row.discountPer || 0))) /
+                                    100
+                                )
+                              )}
+                            </td> */}
+                            {/* <td>
                               {row.status === "active" ? (
                                 <span className="badge-item badge-status-success">
                                   {row.status}
@@ -282,11 +1184,11 @@ const List = () => {
                                   {row.status}
                                 </span>
                               )}
-                            </td>
+                            </td> */}
                             <td className="action-btns">
                               <Link
                                 to={{
-                                  pathname: `/admin/product/edit`,
+                                  pathname: `/admin/p/${id}/${subid}/edit`,
                                   state: { row },
                                 }}
                               >
@@ -302,25 +1204,133 @@ const List = () => {
                               </Typography>
                             </td>
                           </tr>
-                        ))
-                      }
-                  </tbody>
+                        ))}
+                      {isSearching &&
+                        listSearch.map((row, index) => (
+                          <tr key={index}>
+                            <td>
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    // checked={listCheck.filter(item=> item== row.id)}
+                                    onChange={() => handleChange(row.id)}
+                                    inputProps={{
+                                      "aria-label": "primary checkbox",
+                                    }}
+                                  />
+                                }
+                              />
+                            </td>
+                            <td>
+                              <img
+                                style={{
+                                  width: 130,
+                                  borderRadius: 10,
+                                  aspectRatio: 4 / 3,
+                                  height: 100,
+                                }}
+                                src={row.photo ? row.photo : "Can't display"}
+                                alt=""
+                              />
+                            </td>
+                            <td>{row.name}</td>
+                            <td>
+                              {row.wardText +
+                                " " +
+                                row.districtText +
+                                " " +
+                                row.provinceText}
+                            </td>
+                            <td>
+                              VND&nbsp;
+                              {numberWithCommas(
+                                Math.ceil(
+                                  (row.price *
+                                    (100 - parseInt(row.discountPer || 0))) /
+                                    100
+                                )
+                              )}
+                            </td>
+                            <td>
+                              VND&nbsp;
+                              {numberWithCommas(
+                                Math.ceil(
+                                  (row.price *
+                                    (100 - parseInt(row.discountPer || 0))) /
+                                    100
+                                )
+                              )}
+                            </td>
+                            <td>
+                              {row.wardText +
+                                " " +
+                                row.districtText +
+                                " " +
+                                row.provinceText}
+                            </td>
+                            {/* <td>
+                              {row.phoneNumber
+                                ? row.phoneNumber
+                                : "Chưa thiết lập"}
+                            </td> */}
+                            <td>{row.note ? row.note : "Chưa thiếp lập"}</td>
+                            {/* <td>{row.brand}</td> */}
+                            {/* <td>{row.unitSize}</td> */}
+                            {/* <td>VND{numberWithCommas(row.buyerPrice)}</td> */}
+                            {/* <td>
+                              VND
+                              {numberWithCommas(
+                                Math.ceil(
+                                  (row.price *
+                                    (100 - parseInt(row.discountPer || 0))) /
+                                    100
+                                )
+                              )}
+                            </td> */}
+                            {/* <td>
+                              {row.status === "active" ? (
+                                <span className="badge-item badge-status-success">
+                                  {row.status}
+                                </span>
+                              ) : (
+                                <span className="badge-item badge-status">
+                                  {row.status}
+                                </span>
+                              )}
+                            </td> */}
+                            <td className="action-btns">
+                              <Link
+                                to={{
+                                  pathname: `/admin/p/${id}/${subid}/edit`,
+                                  state: { row },
+                                }}
+                              >
+                                <Typography className="edit-btn">
+                                  <i className="fas fa-edit" />
+                                </Typography>
+                              </Link>
+                              <Typography
+                                className="delete-btn"
+                                onClick={() => handlDeleteById(row.id)}
+                              >
+                                <i className="fas fa-trash-alt" />
+                              </Typography>
+                            </td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  )}
                 </table>
               </div>
-              <ReactPaginate
-                previousLabel={"prev"}
-                nextLabel={"next"}
-                breakLabel={"..."}
-                breakClassName={"break-me"}
-                pageCount={Math.ceil(orgtableData.length / perPage)}
-                marginPagesDisplayed={2}
-                pageRangeDisplayed={5}
-                onPageChange={handlePageClick}
-                containerClassName={"pagination"}
-                subContainerClassName={"pages pagination"}
-                activeClassName={"active"}
-              />
             </div>
+          </div>
+          <div className="d-flex w-100 flex-row-reverse">
+            <Pagination
+              count={Math.ceil(getList.length / itemsPerPage)}
+              page={currentPage}
+              onChange={handlePageChange}
+              color="primary"
+            />
           </div>
         </div>
       </div>

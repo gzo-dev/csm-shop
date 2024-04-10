@@ -8,12 +8,9 @@ const Apis = {
   GetUserUpdate: `${API_URL}/api/auth/user/update`,
   GetDeleteUserList: `${API_URL}/api/auth/user/delete`,
 
-
   //Dashboard
   GetOrderByStatus: `${API_URL}/api/order/status`,
   GetAllStatusOrder: `${API_URL}/api/order/count`,
-
-
 
   //Vendor api
   CreateSupplierList: `${API_URL}/api/supplier/create`,

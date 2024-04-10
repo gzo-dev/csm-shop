@@ -33,7 +33,7 @@ const Allshop = () => {
     const handleDeleteById = async (id) => {
         try {
             const success = await swal({
-                title: "Are you sure?",
+                title: "Bạn có chắc?",
                 text: "You want to delete Category from the List",
                 icon: "warning",
                 buttons: true,

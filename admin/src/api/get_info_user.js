@@ -8,6 +8,9 @@ const get_info_user= async ()=> {
         method: "get",
         params: {
             user_id: getCookie("auid")
+        },
+        headers: {
+            "Authorization": "Bearer "+ getCookie("token")
         }
     })
     const result= await res.data

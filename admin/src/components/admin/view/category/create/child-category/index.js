@@ -56,7 +56,7 @@ export default class SubChildCategory extends Component {
       subcategoryId: this.state.selectedSubCategory,
     };
     swal({
-      title: "Are you sure?",
+      title: "Bạn có chắc?",
       text: "You want to Add New Child Category",
       icon: "warning",
       buttons: true,
@@ -72,7 +72,7 @@ export default class SubChildCategory extends Component {
   };
   async handlDeleteById(id) {
     swal({
-      title: "Are you sure?",
+      title: "Bạn có chắc?",
       text: "You want to delete Category from the List",
       icon: "warning",
       buttons: true,

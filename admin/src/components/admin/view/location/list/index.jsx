@@ -22,7 +22,7 @@ export default class List extends Component {
   }
   async handlDeleteById(id) {
     swal({
-      title: "Are you sure?",
+      title: "Bạn có chắc?",
       text: "You want to delete Location from the List",
       icon: "warning",
       buttons: true,

@@ -6,9 +6,12 @@ import swal from "sweetalert";
 import { apiDeleteBlog, apiDeleteTour, apiGetListBlog } from "../../../../../api";
 import moment from "moment"
 import {Link } from "react-router-dom"
+import { useParams } from "react-router-dom";
+import Pagination from "@material-ui/lab/Pagination";
 
 const List = ({ history }) => {
   const [getList, setGetList] = useState([]);
+  const {id }= useParams()
 
   const handleBack = () => {
     history.goBack();
@@ -17,12 +20,20 @@ const List = ({ history }) => {
   const getData = async () => {
     try {
       const list = await apiGetListBlog();
-      setGetList(list.data);
+      setGetList(list.data.filter(item=> item.type== id));
     } catch (error) {
       console.error("Error fetching location:", error);
     }
   };
-
+  
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = getList.slice(indexOfFirstItem, indexOfLastItem);
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  };
   const handlDeleteById = async (id) => {
     try {
       const success = await swal({
@@ -95,6 +106,7 @@ const List = ({ history }) => {
       case 4: 
         return "Khác"
       default:
+        return "Không xác định"
         break
     }
   }
@@ -106,33 +118,33 @@ const List = ({ history }) => {
 
   return (
     <div className="container-fluid">
-      <div className="row">
+      {/* <div className="row">
         <div className="col-lg-5 col-md-9 col-lg-6">
-          <h2 className="mt-30 page-title">Tours</h2>
+          <h2 className="mt-30 page-title">Blogs</h2>
         </div>
         <div className="col-lg-5 col-md-3 col-lg-6 back-btn">
           <Button variant="contained" onClick={handleBack}>
             <i className="fas fa-arrow-left" /> Back
           </Button>
         </div>
-      </div>
-      <ol className="breadcrumb mb-30">
+      </div> */}
+      {/* <ol className="breadcrumb mb-30">
         <li className="breadcrumb-item">
           <a href="index.html">Dashboard</a>
         </li>
-        <li className="breadcrumb-item active">Tours</li>
-      </ol>
+        <li className="breadcrumb-item active">Blogs</li>
+      </ol> */}
       <div className="row justify-content-between">
         <div className="col-lg-12">
-          <a href="/admin/tour/create" className="add-btn hover-btn">
+          <Link to={"/admin/b/"+ id +"/create"} className="add-btn hover-btn" style={{borderRadius: 15, backgroundColor: "#F37335"}}>
             Thêm mới
-          </a>
+          </Link>
         </div>
         <div className="col-lg-12 col-md-12">
           <div className="card card-static-2 mt-30 mb-30">
-            <div className="card-title-2">
-              <h4>Tất cả tour</h4>
-            </div>
+            {/* <div className="card-title-2">
+              <h4>Tất cả blog</h4>
+            </div> */}
             <div className="card-body-table">
               <div className="table-responsive">
                 <table className="table ucp-table table-hover">
@@ -140,30 +152,32 @@ const List = ({ history }) => {
                     <tr>
                       <th style={{whiteSpace: "nowrap"}}>Mã blog</th>
                       <th>Tên blog</th>
-                      <th style={{whiteSpace: "nowrap"}}>Loại blog</th>
+                      {/* <th style={{whiteSpace: "nowrap"}}>Loại blog</th> */}
                       <th>Mô tả</th>
                       <th>Nội dung</th>
+                      <th style={{whiteSpace: "nowrap"}}>Người đăng</th>
                       <th style={{whiteSpace: "nowrap"}}>Thời gian tạo</th>
                       <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {getList.map((row, index) => (
+                    {currentItems.map((row, index) => (
                       <tr key={index}>
                         <td>{row.id}</td>
                         <td>{row.name}</td>
-                        <td>
+                        {/* <td>
                           {renderTypeBlog(row.type)}
-                        </td>
-                        <td>{row.desc || ""}</td>
+                        </td> */}
+                        <td>{row.desc ? row.desc : "Chưa thiết lập"}</td>
                         <td>
                           <div className="tr-2l" dangerouslySetInnerHTML={{__html: summarizeContent(row.content)}}></div>
                         </td>
+                        <td>{row.author}</td>
                         <td>{moment(row.time_created).format("DD-MM-YYYY HH:MM:ss") || ""}</td>
                         <td className="action-btns">
                           <Link
                                 to={{
-                                  pathname: `/admin/blog/edit`,
+                                  pathname: `/admin/b/` + id + `/edit`,
                                   state: { row },
                                 }}
                               >
@@ -184,6 +198,9 @@ const List = ({ history }) => {
                 </table>
               </div>
             </div>
+          </div>
+          <div className="d-flex w-100 flex-row-reverse">
+            <Pagination count={Math.ceil(getList.length / itemsPerPage)} page={currentPage} onChange={handlePageChange} color="primary" />
           </div>
         </div>
       </div>

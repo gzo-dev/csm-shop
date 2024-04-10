@@ -128,7 +128,7 @@ const Createshop = () => {
     };
     try {
       const success = await swal({
-        title: "Are you sure?",
+        title: "Bạn có chắc?",
         text: "You want to Add New Vendor",
         icon: "warning",
         buttons: true,

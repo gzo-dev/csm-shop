@@ -45,7 +45,7 @@ export default class SubCategory extends Component {
     const { name, selectCategory } = this.state;
     let data = { sub_name: name, categoryId: selectCategory };
     swal({
-      title: "Are you sure?",
+      title: "Bạn có chắc?",
       text: "You want to Add Sub Categories",
       icon: "warning",
       buttons: true,
@@ -61,7 +61,7 @@ export default class SubCategory extends Component {
   };
   async handlDeleteById(id) {
     swal({
-      title: "Are you sure?",
+      title: "Bạn có chắc?",
       text: "You want to delete Category from the List",
       icon: "warning",
       buttons: true,

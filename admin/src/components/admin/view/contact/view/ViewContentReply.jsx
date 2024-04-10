@@ -20,7 +20,7 @@ export default function ViewContentReply(props) {
 
   return (
     <div>
-      <Link onClick={handleClickOpen} className="edit-btn" title={"View content"}>
+      <Link onClick={handleClickOpen} className="edit-btn" title={"Xem nội dung trả lời"}>
         <i className="fas fa-info-circle" />
       </Link>
       <Dialog
@@ -29,7 +29,7 @@ export default function ViewContentReply(props) {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"View content"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{"Xem nội dung trả lời"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             <textarea rows={40} cols={40} value={content} style={{width: 500, height: 200, marginTop: 12, marginBottom: 12, fontSize: 16, resize: "none", border: "1px solid #555", padding: 5, borderRadius: 5}} placeholder={"Content"} readOnly />
@@ -37,7 +37,7 @@ export default function ViewContentReply(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
-            Close
+            Đóng
           </Button>
         </DialogActions>
       </Dialog>

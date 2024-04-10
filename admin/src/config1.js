@@ -1,2 +1,1 @@
-export const API_URL= "https://determined-teal-leggings.cyclic.app"
-// `
+export const API_URL= "http://localhost:4000"

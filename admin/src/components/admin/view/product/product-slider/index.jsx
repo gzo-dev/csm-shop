@@ -143,7 +143,7 @@ export default class Uploadphoto extends Component {
     };
 
     swal({
-      title: "Are you sure?",
+      title: "Bạn có chắc?",
       text: "You want to add Images",
       icon: "warning",
       buttons: true,
@@ -169,7 +169,7 @@ export default class Uploadphoto extends Component {
     this.setState({ isLoaded: true });
     let list = { id: data.id, imgUrl: data.imgUrl };
     swal({
-      title: "Are you sure?",
+      title: "Bạn có chắc?",
       text: "You want to delete Image from the List",
       icon: "warning",
       buttons: true,

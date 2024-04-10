@@ -10,7 +10,7 @@ export default class Create extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isLoaded: false, id: null, email: null, firstName: null, lastName: null, address: null, phone:'',
+            isLoaded: false, id: null, email: null, firstName: null, lastName: null, address: null, phone: '',
             password: null, confirmPassword: null, status: 0, role: null
         }
 
@@ -30,7 +30,7 @@ export default class Create extends Component {
         if (password !== confirmPassword) {
             alert("Passwords don't match");
         } else {
-            let {  firstName, lastName, phone, email, address, password, status, role } = this.state;
+            let { firstName, lastName, phone, email, address, password, status, role } = this.state;
             let data = { firstName: firstName, lastName: lastName, phoneNo: phone, address: address, password: password, email: email, verify: status, role: role }
             // make API call
             let user = await GetUserLogin.getUserRegister(data);
@@ -74,14 +74,14 @@ export default class Create extends Component {
                             <label>Last Name</label>
                             <input type="text" className="form-control " name="lastName" value={lastName} onChange={(e) => this.handleChange(e)} />
                         </div>
-                         <div className="col-md-6 form-group">
+                        <div className="col-md-6 form-group">
                             <label>Phone</label>
-                            <input type="nubmer" className="form-control " name="phone" value={phone} onChange={(e) => this.handleChange(e)} maxlength="10"/>
+                            <input type="nubmer" className="form-control " name="phone" value={phone} onChange={(e) => this.handleChange(e)} maxlength="10" />
                         </div>
-                        
+
                         <div className="col-md-6 form-group">
                             <label>Email</label>
-                            <input type="text" className="form-control " name="email" value={email}  onChange={(e) => this.handleChange(e)}/>
+                            <input type="text" className="form-control " name="email" value={email} onChange={(e) => this.handleChange(e)} />
                         </div>
 
                         <div className="col-md-12 form-group">
@@ -89,8 +89,8 @@ export default class Create extends Component {
                             <input type="text" className="form-control " name="address" value={address} onChange={(e) => this.handleChange(e)} />
                         </div>
 
-                       
-                        <div className="col-md-6 form-group">
+
+                        <div className="col-md-12 form-group">
                             <label>Status</label>
                             <select className="form-control" name="status" defaultValue={status} onChange={(e) => this.handleChange(e)} >
                                 <option >Select Status</option>
@@ -100,25 +100,22 @@ export default class Create extends Component {
                             </select>
                         </div>
 
-                        <div className="col-md-6 form-group">
+                        <div className="col-md-12 form-group">
                             <label>Role</label>
                             <select id="role" className="form-control" name="role" defaultValue={role} onChange={(e) => this.handleChange(e)} >
                                 <option >Select Role</option>
                                 <option value="admin">Admin</option>
-                                <option value="HR">HR</option>
-                                <option value="customercare">Customer Care</option>
-                                <option value="operation">Operation</option>
-                                <option value="emp">Emp</option>
-
+                                <option value="fulltime">Fulltime</option>
+                                <option value="parttime">Part time</option>
                             </select>
                         </div>
-                        
-                        <div className="col-md-6 form-group">
-                            <label>Password</label>
+
+                        <div className="col-md-12 form-group">
+                            <label>Mật khẩu</label>
                             <input type="password" className="form-control " name="password" value={password} onChange={(e) => this.handleChange(e)} />
                         </div>
-                        <div className="col-md-6 form-group">
-                            <label>Confirm Password</label>
+                        <div className="col-md-12 form-group">
+                            <label>Xác nhận mật khẩu</label>
                             <input type="password" className="form-control " name="confirmPassword" value={confirmPassword} onChange={(e) => this.handleChange(e)} />
                         </div>
                     </div>

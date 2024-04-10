@@ -43,7 +43,7 @@ const MainCategory = (props) => {
     event.preventDefault();
     const data = { name: name, slug: slug };
     swal({
-      title: "Are you sure?",
+      title: "Bạn có chắc?",
       text: "You want to Add New Categories",
       icon: "warning",
       buttons: true,
@@ -61,7 +61,7 @@ const MainCategory = (props) => {
 
   const handlDeleteById = async (id) => {
     swal({
-      title: "Are you sure?",
+      title: "Bạn có chắc?",
       text: "You want to delete Category from the List",
       icon: "warning",
       buttons: true,

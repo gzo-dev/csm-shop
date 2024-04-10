@@ -86,7 +86,7 @@ const Edit = (props) => {
         };
 
         swal({
-            title: "Are you sure?",
+            title: "Bạn có chắc?",
             text: "You want to Add Shop",
             icon: "warning",
             buttons: true,

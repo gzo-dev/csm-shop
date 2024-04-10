@@ -28,7 +28,7 @@ const Home = () => {
 
   const loadMoreData = () => {
     const data = orgtableData;
-    const slice = data.slice(offset, offset + perPage);
+    const slice = data;
     setGetList(slice);
   };
 
@@ -37,7 +37,7 @@ const Home = () => {
     const list = await GetOrderDetails.getAllOrderList({page: currentPage});
     if (list) {
       const tdata = list.order;
-      const slice = tdata.slice(offset, offset + perPage);
+      const slice = tdata;
       setPageCount(Math.ceil(tdata.length / perPage));
       setOrgtableData(tdata);
       setGetList(slice);

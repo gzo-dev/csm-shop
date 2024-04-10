@@ -41,7 +41,7 @@ export default function ViewReply(props) {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Replied"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{"Đã trả lời qua email của khách"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             <TextField
@@ -64,8 +64,8 @@ export default function ViewReply(props) {
               <Fragment>
                 <div style={{fontSize: 18, fontWeight: 600, marginBottom: 12}}>User reply</div>
                 <div style={{marginBottom: 12}}>Email: {userData.data.email}</div>
-                <div style={{marginBottom: 12}}>First name: {userData.data.firstName}</div>
-                <div style={{marginBottom: 12}}>Last name: {userData.data.lastName}</div>
+                <div style={{marginBottom: 12}}>Họ: {userData.data.firstName}</div>
+                <div style={{marginBottom: 12}}>Tên: {userData.data.lastName}</div>
               </Fragment>
               
             }
@@ -74,7 +74,7 @@ export default function ViewReply(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
-            Close
+            Đóng
           </Button>
         </DialogActions>
       </Dialog>

@@ -37,7 +37,7 @@ const View = () => {
 
   const handleDeleteById = async (id) => {
     swal({
-      title: "Are you sure?",
+      title: "Bạn có chắc?",
       text: "You want to delete Customer from the List",
       icon: "warning",
       buttons: true,
@@ -258,7 +258,7 @@ const View = () => {
               />
             </div>
             <div className="form-group">
-              <label>Password</label>
+              <label>Mật khẩu</label>
               <TextField
                 type="password"
                 className="form-control"

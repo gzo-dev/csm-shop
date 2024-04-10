@@ -39,7 +39,7 @@ export default class Edit extends Component {
             if (user) {
                 this.setState({ isLoaded: false })
                 this.props.history.goBack();                
-                NotificationManager.success("Update success", 'Message');
+                NotificationManager.success("Cập nhật thành công", 'Message');
             } else {
                 NotificationManager.error("Check field", 'Input');
             }
@@ -52,7 +52,7 @@ export default class Edit extends Component {
             <div className="container-fluid">
                 <div className="row">
                     <div className="col-lg-5 col-md-9 col-lg-6">
-                        <h2 className="mt-30 page-title">Update User</h2>
+                        <h2 className="mt-30 page-title">Cập nhật người dùng</h2>
                     </div>
                     <div className="col-lg-5 col-md-3 col-lg-6 back-btn">
                         <Button variant="contained" onClick={(e) => this.handleBack()}><i className="fas fa-arrow-left" /> Back</Button>
@@ -81,6 +81,10 @@ export default class Edit extends Component {
                             <label>Address</label>
                             <input type="text" className="form-control " name="address" value={address} onChange={(e) => this.handleChange(e)} />
                         </div>
+                        <div className="col-md-6 form-group">
+                            <label>Số điện thoại</label>
+                            <input type="text" className="form-control " name="address" value={address} onChange={(e) => this.handleChange(e)} />
+                        </div>
 
                         <div className="col-md-6 form-group">
                             <label>Status</label>
@@ -102,19 +106,17 @@ export default class Edit extends Component {
                             <select id="role" className="form-control" name="role" defaultValue={role} onChange={(e) => this.handleChange(e)} >
                                 <option >Select Role</option>
                                 <option value="admin">Admin</option>
-                                <option value="HR">HR</option>
-                                <option value="customercare">Customer Care</option>
-                                <option value="operation">Operation</option>
-                                <option value="emp">Emp</option>
+                                <option value="fulltime">Fulltime</option>
+                                <option value="parttime">Part time</option>
 
                             </select>
                         </div>
-                        <div className="col-md-6 form-group">
-                            <label>Password</label>
+                        <div className="col-md-12 form-group">
+                            <label>Mật khẩu</label>
                             <input type="password" className="form-control " name="password" value={password} onChange={(e) => this.handleChange(e)} />
                         </div>
-                        <div className="col-md-6 form-group">
-                            <label>Confirm Password</label>
+                        <div className="col-md-12 form-group">
+                            <label>Xác nhận mật khẩu</label>
                             <input type="password" className="form-control " name="confirmPassword" value={confirmPassword} onChange={(e) => this.handleChange(e)} />
                         </div>
                     </div>

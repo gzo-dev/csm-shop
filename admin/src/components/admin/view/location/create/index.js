@@ -23,7 +23,7 @@ export default class Create extends Component {
     const { name, status } = this.state;
 
     swal({
-      title: "Are you sure?",
+      title: "Bạn có chắc?",
       text: "You want to Add New Location",
       icon: "warning",
       buttons: true,

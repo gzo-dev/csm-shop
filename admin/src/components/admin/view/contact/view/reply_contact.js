@@ -34,7 +34,7 @@ export default function ReplyContact(props) {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Reply contact"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{"Trả lời qua email khách"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             <TextField
@@ -46,13 +46,13 @@ export default function ReplyContact(props) {
                 marginTop: 12,
                 marginBottom: 12,
               }}
-              placeholder={"Reply contact"}
+              placeholder={"Trả lời qua email khách"}
             />
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
-            Close
+            Đóng
           </Button>
           <Button
             onClick={async ()=> {
@@ -71,7 +71,7 @@ export default function ReplyContact(props) {
             variant={"contained"}
             autoFocus
           >
-            Send
+            Gửi
           </Button>
         </DialogActions>
       </Dialog>
