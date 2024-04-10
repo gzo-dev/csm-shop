@@ -6,13 +6,6 @@ export default {
         const data = req.query
         const { typeBooking, realEstateType, province, district, ward, budget, subCategoryId, minBudget, maxBudget, departurePoint, destinationPoint, type, page } = data
         if (parseInt(typeBooking) == 1) {
-            let pageOffset
-            if (parseInt(page) > 1) {
-                pageOffset = parseInt(page)
-            }
-            else {
-                pageOffset = 0
-            }
             let whereConditions = {
                 categoryId: 13
             }
@@ -46,8 +39,6 @@ export default {
                         order: [
                             ["createdAt", "DESC"]
                         ],
-                        limit: 9,
-                        offset: pageOffset
                     })
                 return res.status(200).json({ data: result?.rows, count: result?.count, success: true })
             }
@@ -59,8 +50,6 @@ export default {
                         order: [
                             ["createdAt", "DESC"]
                         ],
-                        limit: 9,
-                        offset: pageOffset
                     })
                 const count = await db.product
                     .count({
