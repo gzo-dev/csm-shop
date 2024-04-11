@@ -7,6 +7,7 @@ import authController from './auth.controller';
 export const authRouter = express.Router();
 authRouter.route('/register').post(authController.addUser);
 authRouter.route('/user/getAllUserList').get(authController.getAllUserList);
+authRouter.route('/user/leader').get(authController.getAllLeader);
 authRouter.route('/user/update').post(authController.userUpdate);
 authRouter.route('/user/delete').post(authController.deleteUserList);
 authRouter.route('/info').get(authController.findUser);

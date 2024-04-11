@@ -15,10 +15,12 @@ module.exports = (sequelize, DataTypes) => {
     avatar: DataTypes.STRING,
     user_id: DataTypes.STRING,
     status: DataTypes.INTEGER,
+    user_manager: DataTypes.INTEGER 
       
   }, {});
   user.associate = function(models) {
     // associations can be defined here
+    // models.user.hasOne(models.SubCategory, { foreignKey: 'subCategoryId' });
   };
   return user;
 };

@@ -52,7 +52,7 @@ function verifyOtp(token) {
 
 export default {
     async addUser(req, res, next) {
-        const { firstName, lastName, phone, email, address, password, role, verify, note, user_id, avatar } = req.body;
+        const { firstName, lastName, phone, email, address, password, role, verify, note, user_id, avatar, user_manager } = req.body;
         var passwordHash = md5(password);
         console.log(passwordHash)
         var token = generateOtp();
@@ -71,7 +71,8 @@ export default {
                     password: passwordHash,
                     verify: verify,
                     role: role,
-                    note: note ? note : "", user_id: user_id ? user_id : "", avatar: avatar ? avatar : "    " 
+                    note: note ? note : "", user_id: user_id ? user_id : "", avatar: avatar ? avatar : "",
+                    user_manager: user_manager ? user_manager : null 
                 })
 
             })
@@ -88,22 +89,6 @@ export default {
                 next(err);
             })
     },
-
-    async findUser(req,res,next){
-        db.user.findOne({ attributes:["firstName","lastName", "email"], where: { id: req.query.user_id }})
-        .then(user => {
-            if (user) {
-                return res.status(200).json({ success: true, data:user, ok: true});
-            }
-            else
-                res.status(500).json({ 'success': false });
-        })
-        .catch(err => {
-            console.log(err)
-            next(err);
-        })
-    },
-
      async getAllUserList(req,res,next){
         db.user.findAll()
         .then(user => {
@@ -118,9 +103,23 @@ export default {
             next(err);
         })
     },
+    async getAllLeader(req,res,next){
+        db.user.findAll({where: {role: "leader"}})
+        .then(user => {
+            if (user) {
+                return res.status(200).json({ success: true, data:user});
+            }
+            else
+                res.status(500).json({ 'success': false });
+        })
+        .catch(err => {
+            console.log(err)
+            next(err);
+        })
+    },
 
      async userUpdate(req,res,next){
-        const { id, firstName, lastName, email, address, password, role, verify, phone, status, note, user_id, avatar } = req.body;
+        const { id, firstName, lastName, email, address, password, role, verify, phone, status, note, user_id, avatar, user_manager } = req.body;
         var passwordHash = md5(password ? password : "");
         db.user.findOne({ where: { id: id }, paranoid: false })
             .then(user => {
@@ -139,7 +138,8 @@ export default {
                     note: note ? note : "",
                     user_id: user_id ? user_id : "",
                     avatar: avatar ? avatar : "",
-                    status: status ? parseInt(status) : 0
+                    status: status ? parseInt(status) : 0,
+                    user_manager: user_manager ? user_manager : null
                 }, { where: { id: id } })
 
             })
@@ -217,17 +217,21 @@ export default {
         }
     },
     async findUser(req,res,next){
-        db.user.findOne({ attributes:["firstName","lastName", "email", "avatar", "phone", "address", "role"], where: { id: req.query?.user_id }})
-        .then(user => {
+        db.user.findOne({ attributes:["firstName","lastName", "email", "avatar", "phone", "address", "role", "user_manager"], where: { id: req.query?.user_id }})
+        .then(async user => {
             if (user) {
-                return res.status(200).json({ success: true, data:user, ok: true});
+                if(user.dataValues?.user_manager) {
+                    const userManager= await db.user.findOne({where: {id: user.dataValues.user_manager}})
+                    return res.status(200).json({ success: true, data: user, dataManager: userManager, ok: true});
+                }
+                return res.status(200).json({ success: true, data: user, ok: true, dataManager: null});
             }
             else
                 res.status(500).json({ 'success': false });
         })
         .catch(err => {
-            return res.status(500).json({ 'success': false });
             console.log(err)
+            return res.status(500).json({ 'success': false });
             next(err);
         })
     },
