@@ -133,6 +133,33 @@ export default {
     }
   },
 
+  async getAllProductCategory(req, res, next) {
+    try {
+      const { subid, id } = req.query;
+      db.product
+        .findAll({
+          order: [["createdAt", "DESC"]],
+          include: [
+            {
+              model: db.user,
+              attributes: ["id", "firstName", "lastName"],
+            },
+          ],
+          where: {
+            categoryId: id,
+            subCategoryId: subid,
+          },
+        })
+        .then((product) => {
+          res.status(200).json({ success: true, data: product });
+        })
+        .catch(function (err) {
+          next(err);
+        });
+    } catch (err) {
+      throw new RequestError("Error");
+    }
+  },
   async index(req, res, next) {
     try {
       const { supplierId, categoryId, subCategoryId } = req.query;
@@ -161,6 +188,7 @@ export default {
       throw new RequestError("Error");
     }
   },
+  
 
   async getAllProductList(req, res, next) {
     try {
