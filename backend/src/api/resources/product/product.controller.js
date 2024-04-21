@@ -306,7 +306,7 @@ export default {
           }
           throw new RequestError("Not Found Product", 409);
         })
-        .then((p) => {
+        .then(async (p) => {
           if (newaddimage) {
             JSON.parse(newaddimage)?.map((item) =>
               db.productphoto.create({
@@ -328,7 +328,7 @@ export default {
             );
           }
           if (images) {
-            db.productphoto.destroy({
+            await db.productphoto.destroy({
               where: { productId: productId },
             });
             db.productphoto.bulkCreate(
