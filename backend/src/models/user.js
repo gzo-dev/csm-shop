@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       avatar: DataTypes.STRING,
       user_id: DataTypes.STRING,
       status: DataTypes.INTEGER,
+      hidden: DataTypes.INTEGER,
       user_manager: {
         type: DataTypes.INTEGER,
         allowNull: true,

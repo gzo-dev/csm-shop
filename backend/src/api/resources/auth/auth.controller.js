@@ -116,6 +116,7 @@ export default {
   async getAllUserList(req, res, next) {
     db.user
       .findAll({
+        where: {hidden: 0},
         include: {
           model: db.user, // Include thông tin của người quản lý (user manager) từ cùng bảng User
           as: "userManager", // Alias cho mối quan hệ

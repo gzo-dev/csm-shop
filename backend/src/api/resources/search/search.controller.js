@@ -131,6 +131,7 @@ export default {
                                 [Op.between]: [minBudget, maxBudget]
                             }
                         },
+                        attributes: {exclude: ['content']},
                         order: [
                             ["createdAt", "DESC"]
                         ],
