@@ -241,7 +241,7 @@ export default {
             token,
             auid: findUser.dataValues.id,
             role: findUser.dataValues.role,
-            name: findUser?.firstName + " " + findUser?.lastName,
+            name: findUser?.firstName,
             deviceCode: device1Code,
           });
       } else if (
