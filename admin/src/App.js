@@ -8,22 +8,25 @@ import { getCookie } from './function';
 import { NotificationContainer } from "react-notifications";
 import "react-notifications/lib/notifications.css";
 import get_info_user from './api/get_info_user';
+import "./index.css"
 
 export const AppContext= createContext()
 const App = () => {
 	const [change, setChange]= useState(false)
 	const [dataUser, setDataUser]= useState({avatar: undefined, address: "", email: "", phone: ""})
+	const [dataUserManager, setDataUserManager]= useState({avatar: undefined, address: "", email: "", phone: ""})
 	useEffect(()=> {
 		(async ()=> {
 			const result= await get_info_user()
 			if(result.ok== true) {
 				setDataUser(result.data)
+				setDataUserManager(result.dataManager)
 			}
 		})()
 	}, [change])
 
     return (
-        <AppContext.Provider value={{user: dataUser, change, setChange}}>
+        <AppContext.Provider value={{user: dataUser, userManager: dataUserManager, change, setChange}}>
 			<div className="App">
 				<BrowserRouter>
 					<NotificationContainer />

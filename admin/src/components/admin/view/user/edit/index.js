@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Paper, Typography } from "@material-ui/core";
 import { GetUserLogin } from "../../../../services";
 import { NotificationManager } from "react-notifications";
 import Loader from "../../../../loader";
 import Axios from "axios";
+import get_list_leader from "../../../../../api/get_list_leader";
 
 const Edit = (props) => {
   const [userData, setUserData] = useState(props.location.state);
@@ -11,8 +12,18 @@ const Edit = (props) => {
   const [image, setImage] = useState();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [userManager, setUserManager]= useState()
+  const [listLeader, setListLeader]= useState([])
+
+  useEffect(()=> {
+    (async ()=> {
+      const result= await get_list_leader()
+      setListLeader(result.data)
+    })()
+  }, []) 
 
   const handleChange = (e) => {
+    console.log(e.target.value)
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };
 
@@ -24,22 +35,28 @@ const Edit = (props) => {
     setIsLoaded(true);
 
     // Perform all necessary validations
-    if ((password !== confirmPassword)) {
+    if (password !== confirmPassword) {
       alert("Mật khẩu không khớp");
       setIsLoaded(false);
     } else {
       const data = { ...userData };
-      let finalData
-      if(password.trim().length > 0 && confirmPassword.trim().length > 0 && password === confirmPassword ) {
-        finalData= {...data, password: password }
-      }
-      else {
-        finalData= {...data, password: undefined}
+      let finalData;
+      if (
+        password.trim().length > 0 &&
+        confirmPassword.trim().length > 0 &&
+        password === confirmPassword
+      ) {
+        finalData = { ...data, password: password };
+      } else {
+        finalData = { ...data, password: undefined };
       }
       // Make API call
       const imageApi = await handleUpload(e);
       if (imageApi) {
-        const user = await GetUserLogin.getUserUpdate({...finalData, avatar: imageApi.file_path});
+        const user = await GetUserLogin.getUserUpdate({
+          ...finalData,
+          avatar: imageApi.file_path,
+        });
         if (user) {
           setIsLoaded(false);
           props.history.goBack();
@@ -65,7 +82,7 @@ const Edit = (props) => {
   };
   const handleUpload = async (event) => {
     try {
-      if(image) {
+      if (image) {
         var formData = new FormData();
         formData.append("file", image);
         const res = await Axios.post(
@@ -79,9 +96,8 @@ const Edit = (props) => {
         );
         const imageUrl = await res.data;
         return imageUrl;
-      }
-      else {
-        return null
+      } else {
+        return null;
       }
     } catch (error) {
       return null;
@@ -212,10 +228,34 @@ const Edit = (props) => {
               value={role}
               onChange={handleChange}
             >
-              <option value="fulltime">Quản lý</option>
-              <option value="parttime">Nhân viên</option>
+              <option>Chọn chức vụ</option>
+              <option value="ceo">CEO</option>
+              <option value="hr">HR</option>
+              <option value="marketing">Marketing</option>
+              <option value="operator">Tổng đài viên</option>
+              <option value="parttime">Part time</option>
+              <option value="leader">Quản lý</option>
+              <option value="employee">Nhân viên</option>
             </select>
           </div>
+          {role=== "employee" &&
+            <div className="col-md-6 form-group">
+              <label>Người quản lý</label>
+              <select
+                className="form-control"
+                name="user_manager"
+                value={userManager}
+                onChange={handleChange}
+              >
+                <option value="" selected disabled hidden>Chọn người quản lý</option>
+               {
+                listLeader.map((item, key)=> 
+                  <option value={item.id} key={key}>{item.firstName}</option>
+                )
+               }
+              </select>
+            </div>
+          }
           <div className="col-md-6 form-group">
             <label>Mật khẩu</label>
             <input

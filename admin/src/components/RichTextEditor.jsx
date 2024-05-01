@@ -69,6 +69,7 @@ RichTextEditor.formats = [
   "script",
   "underline",
   "video",
+  "bold"
 ];
 
 RichTextEditor.propTypes = {

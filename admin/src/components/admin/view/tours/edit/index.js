@@ -35,6 +35,7 @@ const Edit = (props) => {
   const [files, setFiles] = useState([]);
   const [type, setType] = useState(self.type);
   const [departure, setDeparture] = useState(self.departure);
+  console.log(departure)
   const [departureText, setDepartureText] = useState(self.departureText);
   const [destination, setDestination] = useState(self.destination);
   const [destinationText, setDestinationText] = useState(self.destinationText);
@@ -53,6 +54,8 @@ const Edit = (props) => {
   const [agentPrice, setAgentPrice] = useState(self.agent_price);
   const [tourId, setTourId] = useState(self.tour_id);
   const [uid, setUid]= useState(self.id)
+  const [car, setCar]= useState(self.car)
+  const [timeText, setTimeText]= useState(self.timeText)
   const [loading, setLoading] = useState(false);
   const history = useHistory();
   // const [photo, setPhoto]= useState()
@@ -76,6 +79,8 @@ const Edit = (props) => {
     if (name === "children_price") setChildrenPrice(value);
     if (name === "agent_price") setAgentPrice(value);
     if (name === "tour_id") setTourId(value);
+    if (name === "car") setCar(value);
+    if (name === "timeText") setTimeText(value);
   };
 
   const handleSubmit = async (event) => {
@@ -116,13 +121,13 @@ const Edit = (props) => {
           image: imageUrl.file_path,
           photo: imageUrl.file_path,
           kindof,
+          car, timeText
         };
         const result = await apiEditTour({ ...data });
         setLoading(false);
         swal("Thông báo", "Cập nhật thành công", "success").then(() =>
           history.goBack()
         );
-        console.log(result);
       } else {
         const data = {
           id: uid,
@@ -141,6 +146,7 @@ const Edit = (props) => {
           content,
           type,
           kindof,
+          car, timeText
         };
         const result = await apiEditTour({ ...data });
         swal("Thông báo", "Cập nhật thành công", "success");
@@ -237,6 +243,19 @@ const Edit = (props) => {
                       />
                     </div>
                   </div>
+                  <div className="col-lg-4 col-md-4">
+                    <div className="form-group">
+                      <label className="form-label">Phương tiện</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Phương tiện"
+                        name="car"
+                        value={car}
+                        onChange={(e) => handleChange(e)}
+                      />
+                    </div>
+                  </div>
                 </div>
                 <div className="row mt-4">
                   <div className="col-lg-4 col-md-4">
@@ -265,7 +284,7 @@ const Edit = (props) => {
                               .map((item, key) => (
                                 <MenuItem
                                   onClick={() => setDepartureText(item.label)}
-                                  value={item.value}
+                                  value={parseInt(item.value)}
                                   key={key}
                                 >
                                   {item.label}
@@ -312,6 +331,19 @@ const Edit = (props) => {
                           </Select>
                         </FormControl>
                       </Box>
+                    </div>
+                  </div>
+                  <div className="col-lg-4 col-md-4">
+                    <div className="form-group">
+                      <label className="form-label">Thời gian</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Thời gian"
+                        name="timeText"
+                        value={timeText}
+                        onChange={(e) => handleChange(e)}
+                      />
                     </div>
                   </div>
                 </div>

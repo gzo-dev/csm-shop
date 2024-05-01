@@ -28,13 +28,13 @@ const Blogs = () => {
         case 3:
           setTitle("Đi muôn nơi");
           break;
+        // case 4:
+        //   setTitle("Tư tưởng cốt lõi");
+        //   break;
         case 4:
-          setTitle("Tư tưởng cốt lõi");
-          break;
-        case 5:
           setTitle("Tuyển dụng");
           break;
-        case 6:
+        case 5:
             setTitle("Hoạt động nội bộ");
             break;
         default:

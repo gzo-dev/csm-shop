@@ -102,7 +102,206 @@ const RootRoutes = () => {
                             <Route path={`${match.path}/custom`} component={IndexAlertAirplane} />
                         </Fragment>
                     )}
+                    {getCookie("role") === "ceo" && (
+                        <Fragment>
+                            <Route exact path={[`${match.path}/home`, `${match.path}`]} component={Index} />
+                            {/* <Route path={`${match.path}/shop`} component={Shop} /> */}
+                            <Route path={`${match.path}/product`} component={Product} />
+                            <Route path={`${match.path}/category`} component={Category} />
+                            <Route path={`${match.path}/area`} component={Areas} />
+                            <Route path={`${match.path}/location`} component={Location} />
+                            <Route path={`${match.path}/order`} component={Order} />
+                            <Route path={`${match.path}/customer`} component={Customer} />
+                            <Route path={`${match.path}/payment`} component={Payment} />
+                            <Route path={`${match.path}/vendor`} component={VendorProduct} />
+                            <Route path={`${match.path}/voucher`} component={Voucher} />
+                            <Route path={`${match.path}/realestate`} component={RealEstate} />
+                            <Route path={`${match.path}/hotel`} component={Hotel} />
+                            <Route path={`${match.path}/ticket`} component={Ticket} />
+                            <Route path={`${match.path}/tour`} component={WrapTour} />
+                            <Route path={`${match.path}/blog`} component={WrapBlog} />
+                            <Route path={`${match.path}/contact`} component={WrapContact} />
+                            <Route path={`${match.path}/p/:id/:subid`} component={Product} />
+                            <Route path={`${match.path}/t/:id`} component={Tours} />
+                            <Route path={`${match.path}/tk/:id`} component={Tickets} />
+                            <Route path={`${match.path}/b/:id`} component={Blogs} />
+                            <Route path={`${match.path}/c/:id`} component={Contact} />
+                            <Route path={`${match.path}/profile`} component={Profile} />
+                            <Route path={`${match.path}/custom`} component={IndexAlertAirplane} />
+                        </Fragment>
+                    )}
+                    {getCookie("role") === "manager" && (
+                        <Fragment>
+                            <Route exact path={[`${match.path}/home`, `${match.path}`]} component={Index} />
+                            {/* <Route path={`${match.path}/shop`} component={Shop} /> */}
+                            <Route path={`${match.path}/product`} component={Product} />
+                            <Route path={`${match.path}/category`} component={Category} />
+                            <Route path={`${match.path}/area`} component={Areas} />
+                            <Route path={`${match.path}/location`} component={Location} />
+                            <Route path={`${match.path}/order`} component={Order} />
+                            <Route path={`${match.path}/customer`} component={Customer} />
+                            <Route path={`${match.path}/payment`} component={Payment} />
+                            <Route path={`${match.path}/vendor`} component={VendorProduct} />
+                            <Route path={`${match.path}/voucher`} component={Voucher} />
+                            <Route path={`${match.path}/realestate`} component={RealEstate} />
+                            <Route path={`${match.path}/hotel`} component={Hotel} />
+                            <Route path={`${match.path}/ticket`} component={Ticket} />
+                            <Route path={`${match.path}/tour`} component={WrapTour} />
+                            <Route path={`${match.path}/blog`} component={WrapBlog} />
+                            <Route path={`${match.path}/contact`} component={WrapContact} />
+                            <Route path={`${match.path}/p/:id/:subid`} component={Product} />
+                            <Route path={`${match.path}/t/:id`} component={Tours} />
+                            <Route path={`${match.path}/tk/:id`} component={Tickets} />
+                            <Route path={`${match.path}/b/:id`} component={Blogs} />
+                            <Route path={`${match.path}/c/:id`} component={Contact} />
+                            <Route path={`${match.path}/profile`} component={Profile} />
+                            <Route path={`${match.path}/custom`} component={IndexAlertAirplane} />
+                        </Fragment>
+                    )}
+                    {getCookie("role") === "marketing" && (
+                        <Fragment>
+                            <Route exact path={[`${match.path}/home`, `${match.path}`]} component={Index} />
+                            {/* <Route path={`${match.path}/shop`} component={Shop} /> */}
+                            <Route path={`${match.path}/product`} component={Product} />
+                            <Route path={`${match.path}/category`} component={Category} />
+                            <Route path={`${match.path}/area`} component={Areas} />
+                            <Route path={`${match.path}/location`} component={Location} />
+                            <Route path={`${match.path}/order`} component={Order} />
+                            <Route path={`${match.path}/customer`} component={Customer} />
+                            <Route path={`${match.path}/payment`} component={Payment} />
+                            <Route path={`${match.path}/vendor`} component={VendorProduct} />
+                            <Route path={`${match.path}/voucher`} component={Voucher} />
+                            <Route path={`${match.path}/realestate`} component={RealEstate} />
+                            <Route path={`${match.path}/hotel`} component={Hotel} />
+                            <Route path={`${match.path}/ticket`} component={Ticket} />
+                            <Route path={`${match.path}/tour`} component={WrapTour} />
+                            <Route path={`${match.path}/blog`} component={WrapBlog} />
+                            <Route path={`${match.path}/contact`} component={WrapContact} />
+                            <Route path={`${match.path}/p/:id/:subid`} component={Product} />
+                            <Route path={`${match.path}/t/:id`} component={Tours} />
+                            <Route path={`${match.path}/tk/:id`} component={Tickets} />
+                            <Route path={`${match.path}/b/:id`} component={Blogs} />
+                            <Route path={`${match.path}/c/:id`} component={Contact} />
+                            <Route path={`${match.path}/profile`} component={Profile} />
+                            <Route path={`${match.path}/custom`} component={IndexAlertAirplane} />
+                        </Fragment>
+                    )}
+                    {getCookie("role") === "operator" && (
+                        <Fragment>
+                            <Route exact path={[`${match.path}/home`, `${match.path}`]} component={Index} />
+                            {/* <Route path={`${match.path}/shop`} component={Shop} /> */}
+                            <Route path={`${match.path}/product`} component={Product} />
+                            <Route path={`${match.path}/category`} component={Category} />
+                            <Route path={`${match.path}/area`} component={Areas} />
+                            <Route path={`${match.path}/location`} component={Location} />
+                            <Route path={`${match.path}/order`} component={Order} />
+                            <Route path={`${match.path}/customer`} component={Customer} />
+                            <Route path={`${match.path}/payment`} component={Payment} />
+                            <Route path={`${match.path}/vendor`} component={VendorProduct} />
+                            <Route path={`${match.path}/voucher`} component={Voucher} />
+                            <Route path={`${match.path}/realestate`} component={RealEstate} />
+                            <Route path={`${match.path}/hotel`} component={Hotel} />
+                            <Route path={`${match.path}/ticket`} component={Ticket} />
+                            <Route path={`${match.path}/tour`} component={WrapTour} />
+                            <Route path={`${match.path}/blog`} component={WrapBlog} />
+                            <Route path={`${match.path}/contact`} component={WrapContact} />
+                            <Route path={`${match.path}/p/:id/:subid`} component={Product} />
+                            <Route path={`${match.path}/t/:id`} component={Tours} />
+                            <Route path={`${match.path}/tk/:id`} component={Tickets} />
+                            <Route path={`${match.path}/b/:id`} component={Blogs} />
+                            <Route path={`${match.path}/c/:id`} component={Contact} />
+                            <Route path={`${match.path}/profile`} component={Profile} />
+                            <Route path={`${match.path}/custom`} component={IndexAlertAirplane} />
+                        </Fragment>
+                    )}
+                    {getCookie("role") === "leader" && (
+                        <Fragment>
+                            <Route exact path={[`${match.path}/home`, `${match.path}`]} component={Index} />
+                            {/* <Route path={`${match.path}/shop`} component={Shop} /> */}
+                            <Route path={`${match.path}/product`} component={Product} />
+                            <Route path={`${match.path}/category`} component={Category} />
+                            <Route path={`${match.path}/area`} component={Areas} />
+                            <Route path={`${match.path}/location`} component={Location} />
+                            <Route path={`${match.path}/order`} component={Order} />
+                            <Route path={`${match.path}/customer`} component={Customer} />
+                            <Route path={`${match.path}/payment`} component={Payment} />
+                            <Route path={`${match.path}/vendor`} component={VendorProduct} />
+                            <Route path={`${match.path}/voucher`} component={Voucher} />
+                            <Route path={`${match.path}/realestate`} component={RealEstate} />
+                            <Route path={`${match.path}/hotel`} component={Hotel} />
+                            <Route path={`${match.path}/ticket`} component={Ticket} />
+                            <Route path={`${match.path}/tour`} component={WrapTour} />
+                            <Route path={`${match.path}/blog`} component={WrapBlog} />
+                            <Route path={`${match.path}/contact`} component={WrapContact} />
+                            <Route path={`${match.path}/p/:id/:subid`} component={Product} />
+                            <Route path={`${match.path}/t/:id`} component={Tours} />
+                            <Route path={`${match.path}/tk/:id`} component={Tickets} />
+                            <Route path={`${match.path}/b/:id`} component={Blogs} />
+                            <Route path={`${match.path}/c/:id`} component={Contact} />
+                            <Route path={`${match.path}/profile`} component={Profile} />
+                            <Route path={`${match.path}/custom`} component={IndexAlertAirplane} />
+                        </Fragment>
+                    )}
+                    {getCookie("role") === "employee" && (
+                        <Fragment>
+                            <Route exact path={[`${match.path}/home`, `${match.path}`]} component={Index} />
+                            {/* <Route path={`${match.path}/shop`} component={Shop} /> */}
+                            <Route path={`${match.path}/product`} component={Product} />
+                            <Route path={`${match.path}/category`} component={Category} />
+                            <Route path={`${match.path}/area`} component={Areas} />
+                            <Route path={`${match.path}/location`} component={Location} />
+                            <Route path={`${match.path}/order`} component={Order} />
+                            <Route path={`${match.path}/customer`} component={Customer} />
+                            <Route path={`${match.path}/payment`} component={Payment} />
+                            <Route path={`${match.path}/vendor`} component={VendorProduct} />
+                            <Route path={`${match.path}/voucher`} component={Voucher} />
+                            <Route path={`${match.path}/realestate`} component={RealEstate} />
+                            <Route path={`${match.path}/hotel`} component={Hotel} />
+                            <Route path={`${match.path}/ticket`} component={Ticket} />
+                            <Route path={`${match.path}/tour`} component={WrapTour} />
+                            <Route path={`${match.path}/blog`} component={WrapBlog} />
+                            <Route path={`${match.path}/contact`} component={WrapContact} />
+                            <Route path={`${match.path}/p/:id/:subid`} component={Product} />
+                            <Route path={`${match.path}/t/:id`} component={Tours} />
+                            <Route path={`${match.path}/tk/:id`} component={Tickets} />
+                            <Route path={`${match.path}/b/:id`} component={Blogs} />
+                            <Route path={`${match.path}/c/:id`} component={Contact} />
+                            <Route path={`${match.path}/profile`} component={Profile} />
+                            <Route path={`${match.path}/custom`} component={IndexAlertAirplane} />
+                        </Fragment>
+                    )}
                     {getCookie("role") === "parttime" && (
+                        <Fragment>
+                            <Route exact path={[`${match.path}/home`, `${match.path}`]} component={Index} />
+                            {/* <Route path={`${match.path}/shop`} component={Shop} /> */}
+                            <Route path={`${match.path}/product`} component={Product} />
+                            <Route path={`${match.path}/category`} component={GuardPage} />
+                            <Route path={`${match.path}/area`} component={GuardPage} />
+                            {/* <Route path={`${match.path}/tour`} component={GuardPage} /> */}
+                            <Route path={`${match.path}/location`} component={GuardPage} />
+                            <Route path={`${match.path}/order`} component={GuardPage} />
+                            <Route path={`${match.path}/customer`} component={GuardPage} />
+                            <Route path={`${match.path}/payment`} component={GuardPage} />
+                            <Route path={`${match.path}/vendor`} component={GuardPage} />
+                            <Route path={`${match.path}/voucher`} component={GuardPage} />
+                            <Route path={`${match.path}/user`} component={GuardPage} />
+                            <Route path={`${match.path}/b/:id`} component={GuardPage} />
+                            <Route path={`${match.path}/c/:id`} component={Contact} />
+                            <Route path={`${match.path}/contact`} component={WrapContact} />
+                            <Route path={`${match.path}/profile`} component={Profile} />
+                            <Route path={`${match.path}/blog`} component={GuardPage} />
+                            <Route path={`${match.path}/realestate`} component={RealEstate} />
+                            <Route path={`${match.path}/hotel`} component={Hotel} />
+                            <Route path={`${match.path}/ticket`} component={Ticket} />
+                            <Route path={`${match.path}/tour`} component={WrapTour} />
+                            <Route path={`${match.path}/p/:id/:subid`} component={Product} />
+                            <Route path={`${match.path}/t/:id`} component={Tours} />
+                            <Route path={`${match.path}/tk/:id`} component={Tickets} />
+
+                        </Fragment>
+                    )}
+                    {/*  */}
+                    {getCookie("role") === "hr" && (
                         <Fragment>
                             <Route exact path={[`${match.path}/home`, `${match.path}`]} component={Index} />
                             {/* <Route path={`${match.path}/shop`} component={Shop} /> */}
@@ -117,7 +316,7 @@ const RootRoutes = () => {
                             <Route path={`${match.path}/vendor`} component={GuardPage} />
                             <Route path={`${match.path}/voucher`} component={GuardPage} />
                             <Route path={`${match.path}/contact`} component={GuardPage} />
-                            <Route path={`${match.path}/user`} component={GuardPage} />
+                            <Route path={`${match.path}/user`} component={User} />
                             <Route path={`${match.path}/t/:id`} component={Tours} />
                             <Route path={`${match.path}/tk/:id`} component={Tickets} />
                             <Route path={`${match.path}/b/:id`} component={Blogs} />

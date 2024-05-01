@@ -15,9 +15,11 @@ import { Link } from "react-router-dom";
 import SelectBox3 from "../../../../../util/SelectBox3";
 import { useParams } from "react-router-dom";
 import Pagination from "@material-ui/lab/Pagination";
+import useQuery from "../../../../../util/useQuery";
 
 const List = ({ history }) => {
   const { id } = useParams();
+  const query= useQuery()
   const [getList, setGetList] = useState([]);
   const [provinceDetail, setProvinceDetail] = useState([]);
   const [listWard, setListWard] = useState([]);
@@ -30,6 +32,18 @@ const List = ({ history }) => {
   const [province, setProvince] = useState();
 
   const [district, setDistrict] = useState();
+  const handlePageChange = (event, value) => {
+    // setCurrentPage(value);
+    history.push("/admin/tk/"+ id + "/list?page="+ value)
+  };
+  useEffect(()=> {
+    if(parseInt(query.get("page")) >= 1) {
+      setCurrentPage(parseInt(query.get("page")))
+    }
+    else {
+      setCurrentPage(1)
+    }
+  }, [query.get("page"), currentPage])
   const handleBack = () => {
     history.goBack();
   };
@@ -47,9 +61,7 @@ const List = ({ history }) => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = getList.slice(indexOfFirstItem, indexOfLastItem);
-  const handlePageChange = (event, value) => {
-    setCurrentPage(value);
-  };
+ 
 
   const handlDeleteById = async (id) => {
     try {

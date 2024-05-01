@@ -123,7 +123,6 @@ const Edit = (props) => {
       event.preventDefault();
       setLoading(true);
       if (image) {
-        console.log(1);
         var formData = new FormData();
         formData.append("file", image);
         const res = await Axios.post(
@@ -162,7 +161,7 @@ const Edit = (props) => {
         const result = await apiEditTicket({ ...data });
         setLoading(false);
         swal("Thông báo", "Cập nhật thành công", "success").then(() =>
-          history.push(`/admin/tk/${id}/list`)
+          history.goBack()
         );
       } else {
         const data = {
@@ -187,7 +186,7 @@ const Edit = (props) => {
         };
         const result = await apiEditTicket({ ...data });
         swal("Thông báo", "Cập nhật thành công", "success");
-        setLoading(false).then(() => history.push(`/admin/tk/${id}/list`));
+        setLoading(false).then(() => history.goBack());
       }
     } catch (error) {
       setLoading(false);
@@ -263,7 +262,7 @@ const Edit = (props) => {
                           >
                             {listUser.map((item, key) => (
                               <option value={item.id} key={key}>
-                                {item.firstName + " " + item.lastName}
+                                {item.firstName}
                               </option>
                             ))}
                           </select>
@@ -676,7 +675,7 @@ const Edit = (props) => {
                           >
                             {listUser.map((item, key) => (
                               <option value={item.id} key={key}>
-                                {item.firstName + " " + item.lastName}
+                                {item.firstName}
                               </option>
                             ))}
                           </select>

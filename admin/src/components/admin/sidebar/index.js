@@ -38,9 +38,9 @@ const Sidebar = () => {
       var tdata = list.product;
       // setGetList(tdata);
       const headers = ["Tên sản phẩm", "Thể loại", "Giá", "Giảm giá"];
-  
+
       // Thêm tiêu đề cột vào mảng dữ liệu
-  
+
       const worksheet = XLSX.utils.json_to_sheet(
         tdata.map((product) => [
           product.name,
@@ -104,7 +104,7 @@ const Sidebar = () => {
             />
           </div>
           <div className="nav">
-            {role === "admin" && (
+            {(role === "admin" || role === "hr") && (
               <Link className={"nav-link cus-text-mk"} to="/admin/user/list">
                 <div className="sb-nav-link-icon">
                   <img src={UserLogo} alt="" />
@@ -127,53 +127,69 @@ const Sidebar = () => {
               </div>
               Bảng điều khiển
             </Link> */}
-            {(role === "admin" || role === "fulltime") && (
-              <Fragment>
-                <Link className="nav-link cus-text-mk" to="/admin/realestate">
-                  <div className="sb-nav-link-icon">
-                    <img src={RealEstateLogo} alt="" />
-                  </div>
-                  Bất động sản cho thuê
-                </Link>
-                <Link className="nav-link cus-text-mk" to="/admin/hotel">
-                  <div className="sb-nav-link-icon">
-                    <img src={HotelLogo} alt="" />
-                  </div>
-                  Hotel/Villa/Homestay
-                </Link>
-                <Link className="nav-link cus-text-mk" to="/admin/ticket">
-                  <div className="sb-nav-link-icon">
-                    <img src={TicketLogo} alt="" />
-                  </div>
-                  Vé tham quan
-                </Link>
-                <Link className="nav-link cus-text-mk" to="/admin/tk/4/list">
-                  <div className="sb-nav-link-icon">
-                    <img src={TicketLogo} alt="" />
-                  </div>
-                  Vé máy bay
-                </Link>
-                <Link className="nav-link cus-text-mk" to="/admin/tk/5/list">
-                  <div className="sb-nav-link-icon">
-                    <img src={TicketLogo} alt="" />
-                  </div>
-                  Vé tàu/xe
-                </Link>
-                <Link className="nav-link cus-text-mk" to="/admin/tour">
-                  <div className="sb-nav-link-icon">
-                    <img src={TourLogo} alt="" />
-                  </div>
-                  Tour du lịch
-                </Link>
-              </Fragment>
+            {(role === "admin" ||
+              role === "fulltime" ||
+              role === "ceo" ||
+              role === "marketing" ||
+              role === "manager" ||
+              role === "leader" ||
+              role === "employee" ||
+              role === "parttime") && (
+                <Fragment>
+                  <Link className="nav-link cus-text-mk" to="/admin/realestate">
+                    <div className="sb-nav-link-icon">
+                      <img src={RealEstateLogo} alt="" />
+                    </div>
+                    Bất động sản cho thuê
+                  </Link>
+                  <Link className="nav-link cus-text-mk" to="/admin/hotel">
+                    <div className="sb-nav-link-icon">
+                      <img src={HotelLogo} alt="" />
+                    </div>
+                    Hotel/Villa/Homestay
+                  </Link>
+                  <Link className="nav-link cus-text-mk" to="/admin/ticket">
+                    <div className="sb-nav-link-icon">
+                      <img src={TicketLogo} alt="" />
+                    </div>
+                    Vé tham quan
+                  </Link>
+                  <Link className="nav-link cus-text-mk" to="/admin/tk/4/list">
+                    <div className="sb-nav-link-icon">
+                      <img src={TicketLogo} alt="" />
+                    </div>
+                    Vé máy bay
+                  </Link>
+                  <Link className="nav-link cus-text-mk" to="/admin/tk/5/list">
+                    <div className="sb-nav-link-icon">
+                      <img src={TicketLogo} alt="" />
+                    </div>
+                    Vé tàu/xe
+                  </Link>
+                  <Link className="nav-link cus-text-mk" to="/admin/tour">
+                    <div className="sb-nav-link-icon">
+                      <img src={TourLogo} alt="" />
+                    </div>
+                    Tour du lịch
+                  </Link>
+                </Fragment>
+              )}
+            {role !== "parttime" && (
+              <Link className="nav-link cus-text-mk" to="/admin/blog">
+                <div className="sb-nav-link-icon">
+                  <img src={BlogLogo} alt="" />
+                </div>
+                Blog
+              </Link>
             )}
-            <Link className="nav-link cus-text-mk" to="/admin/blog">
-              <div className="sb-nav-link-icon">
-                <img src={BlogLogo} alt="" />
-              </div>
-              Blog
-            </Link>
-            {(role === "admin" || role === "fulltime") && (
+            {(role === "admin" ||
+              role === "fulltime" ||
+              role === "ceo" ||
+              role === "marketing" ||
+              role === "manager" ||
+              role === "leader" ||
+              role === "employee" ||
+              role === "parttime") && (
               <Fragment>
                 <Link className="nav-link cus-text-mk" to="/admin/contact">
                   <div className="sb-nav-link-icon">
@@ -201,7 +217,11 @@ const Sidebar = () => {
               Đăng xuất
             </Link>
             {role === "admin" && (
-              <Link onClick={exportToExcel} className="nav-link cus-text-mk" to="/admin/contact">
+              <Link
+                onClick={exportToExcel}
+                className="nav-link cus-text-mk"
+                to="/admin/contact"
+              >
                 <div className="sb-nav-link-icon">
                   <img src={ExportLogo} alt="" />
                 </div>

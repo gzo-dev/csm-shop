@@ -46,7 +46,7 @@ export const apiGetWard= async (districtCode)=> {
 export const apiCreateTour= async (data)=> {
   try {
     const res= await axios({
-      url: API_URL+ "/api/v1/tour/manage",
+      url: API_URL+ "/api/v1/tour",
       method: "post",
       data: {
         ...data
@@ -144,7 +144,7 @@ export const apiEditBlog= async (data)=> {
 export const apiGetListTour= async (data)=> {
   try {
     const res= await axios({
-      url: API_URL + "/api/v1/tour",
+      url: API_URL + "/api/v1/tour/manage",
       method: "get"
     })
     const result= await res.data

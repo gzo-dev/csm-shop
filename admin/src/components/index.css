@@ -1,0 +1,35 @@
+/* Thanh công cụ */
+.quill .ql-toolbar {
+  position: sticky;
+  top: 0px;
+  background-color: #fff;
+  z-index: 2;
+}
+
+
+img {
+  max-width: 100% !important;
+}
+
+.cus-inp-txt {
+  border: none !important;
+  border-bottom: 1px solid rgb(124, 124, 124) !important;
+  border-radius: 0 !important
+}
+
+.cus-inp-txt:focus {
+  border: none !important;
+  border-bottom: 1px solid #e5e5e5 !important;
+}
+
+.wrap-item-product .form-control {
+  border-color: #000 !important
+}
+
+#container-table-transform {
+  transform: rotate(180deg);
+}
+
+#table-transform {
+  transform: rotate(180deg)
+}

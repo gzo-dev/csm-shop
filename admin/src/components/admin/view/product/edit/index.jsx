@@ -22,6 +22,7 @@ import _ from "lodash";
 import { v4 } from "uuid";
 import { apiGetProvince, apiGetWard } from "../../../../../api";
 import { useParams } from "react-router-dom";
+import RichTextEditor2 from "../../../../RichTextEditor2";
 
 const Edit = (props) => {
   const { id, subid } = useParams();
@@ -199,15 +200,11 @@ const Edit = (props) => {
     var formData = new FormData();
     formData.append("file", image);
     setLoading(true);
-    const res = await Axios.post(
-      API_URL+  "/api/v1/watermark",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
+    const res = await Axios.post(API_URL + "/api/v1/watermark", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     const imageUrl = await res.data;
     return imageUrl;
   };
@@ -270,19 +267,31 @@ const Edit = (props) => {
       icon: "warning",
       buttons: true,
       dangerMode: true,
-    }).then(async (success) => {
-      if (success) {
-        const imgList = await uploadImages(newAddImage);
-        formData.append("newaddimage", JSON.stringify(imgList));
-        let list = await GetProductDetails.getUpdateProduct(formData, config);
-        if (list) {
+    })
+      .then(async (success) => {
+        console.log(success);
+        if (success === null) {
           setLoading(false);
-          props.history.push(`/admin/p/${id}/${subid}/list`);
-        } else {
-          NotificationManager.error("Please! Check input field", "Input Field");
+
+          return null;
         }
-      }
-    });
+        if (success) {
+          const imgList = await uploadImages(newAddImage);
+          formData.append("newaddimage", JSON.stringify(imgList));
+          let list = await GetProductDetails.getUpdateProduct(formData, config);
+          if (list) {
+            setLoading(false);
+            swal("Thông báo", "Cập nhật thành công", "success").then(() =>
+              props.history.goBack()
+            );
+          } else {
+            NotificationManager.error("Có lỗi xảy ra, Vui lòng thử lại");
+          }
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
   const fetchData = async () => {
@@ -319,40 +328,38 @@ const Edit = (props) => {
   };
   const uploadImageToCloudinary = async (imageObject) => {
     try {
-      if(parseInt(id) === 13) {
+      if (parseInt(id) === 13) {
         const { image } = imageObject;
         const formData = new FormData();
         formData.append("file", image);
         formData.append("upload_preset", cloudinaryConfig.upload_preset);
-  
+
         const response = await Axios.post(
           // `https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloud_name}/image/upload`,
-          API_URL+  "/api/v1/watermark",
+          API_URL + "/api/v1/watermark",
           formData
         );
-  
+
         const imageUrl = response.data.file_path;
-  
+
         return {
           ...imageObject,
           imageUrl,
         };
-
       }
-      if(parseInt(id)=== 12) {
+      if (parseInt(id) === 12) {
         const { image } = imageObject;
         const formData = new FormData();
         formData.append("file", image);
-        formData.append("upload_preset", cloudinaryConfig.upload_preset);
-  
+
         const response = await Axios.post(
-          `https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloud_name}/image/upload`,
+          `https://api.gzomedia.net/upload.php`,
           // API_URL+  "/api/v1/watermark",
           formData
         );
-  
-        const imageUrl = response.data.secure_url;
-  
+
+        const imageUrl = response.data.file_path;
+
         return {
           ...imageObject,
           imageUrl,
@@ -448,7 +455,7 @@ const Edit = (props) => {
                         >
                           {listUser.map((item, key) => (
                             <option value={item.id} key={key}>
-                              {item.firstName + " " + item.lastName}
+                              {item.firstName}
                             </option>
                           ))}
                         </select>
@@ -530,7 +537,7 @@ const Edit = (props) => {
                                   onClick={() => setProvinceText(item.label)}
                                   value={item.value}
                                   key={key}
-                                >	
+                                >
                                   {item.label}
                                 </MenuItem>
                               ))}
@@ -791,17 +798,17 @@ const Edit = (props) => {
                     <div className="form-group">
                       <label className="form-label">Danh mục</label>
                       <select
-                          id="endow"
-                          name="endow"
-                          className="form-control"
-                          value={endow}
-                          onChange={(e) => setEndow(e.target.value)}
-                        >
-                          <option value={0}>Không</option>
-                          <option value={1}>Hot</option>
-                          <option value={2}>Ưu đãi</option>
-                          <option value={3}>Bán chạy</option>
-                        </select>
+                        id="endow"
+                        name="endow"
+                        className="form-control"
+                        value={endow}
+                        onChange={(e) => setEndow(e.target.value)}
+                      >
+                        <option value={0}>Không</option>
+                        <option value={1}>Hot</option>
+                        <option value={2}>Ưu đãi</option>
+                        <option value={3}>Bán chạy</option>
+                      </select>
                     </div>
                   </div>
                 </div>
@@ -1059,19 +1066,22 @@ const Edit = (props) => {
                                   left: 0,
                                   opacity: 0,
                                 }}
+                                multiple
                                 type="file"
                                 onChange={(e) => {
                                   e.persist();
+                                  const files = e.target.files; // Lấy danh sách các tệp được chọn
+                                  const newImages = Array.from(files).map(
+                                    (file) => ({
+                                      id: v4(),
+                                      previewUrl: URL.createObjectURL(file),
+                                      image: file,
+                                    })
+                                  );
                                   setNewAddImage((prev) => [
                                     ...prev,
-                                    {
-                                      id: v4(),
-                                      previewUrl: URL.createObjectURL(
-                                        e.target.files[0]
-                                      ),
-                                      image: e.target.files[0],
-                                    },
-                                  ]);
+                                    ...newImages,
+                                  ]); 
                                 }}
                               />
                               Thêm ảnh
@@ -1087,7 +1097,7 @@ const Edit = (props) => {
                   <div className="col-lg-12 col-md-12">
                     <div className="form-group">
                       <label className="form-label">Mô tả chi tiết</label>
-                      <RichTextEditor
+                      <RichTextEditor2
                         content={content}
                         handleContentChange={handleContentChange}
                         placeholder="insert text here..."

@@ -41,6 +41,8 @@ const Create = () => {
   const [listProvince, setListProvince] = useState([]);
   const [childrenPrice, setChildrenPrice] = useState();
   const [agentPrice, setAgentPrice] = useState();
+  const [car, setCar]= useState()
+  const [timeText, setTimeText]= useState()
   const [desc, setDesc] = useState();
   const [tourId, setTourId]= useState()
   // const [photo, setPhoto]= useState()
@@ -57,6 +59,8 @@ const Create = () => {
     if (name === "discountPer") setDiscountPer(value);
     if (name === "children_price") setChildrenPrice(value);
     if (name === "agent_price") setAgentPrice(value);
+    if (name === "car") setCar(value);
+    if (name === "timeText") setTimeText(value);
     if(name === "tour_id") {
       setTourId(value)
     }
@@ -104,7 +108,9 @@ const Create = () => {
         type,
         image: imageUrl.file_path,
         kindof,
-        tour_id: tourId
+        tour_id: tourId,
+        car, timeText
+
       };
       console.log(data)
       const result = await apiCreateTour({ ...data });
@@ -188,6 +194,19 @@ const Create = () => {
                       />
                     </div>
                   </div>
+                  <div className="col-lg-4 col-md-4">
+                    <div className="form-group">
+                      <label className="form-label">Phương tiện</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Phương tiện"
+                        name="car"
+                        value={car}
+                        onChange={(e) => handleChange(e)}
+                      />
+                    </div>
+                  </div>
                 </div>
                 <div className="row mt-4">
                   <div className="col-lg-4 col-md-4">
@@ -263,6 +282,19 @@ const Create = () => {
                           </Select>
                         </FormControl>
                       </Box>
+                    </div>
+                  </div>
+                  <div className="col-lg-4 col-md-4">
+                    <div className="form-group">
+                      <label className="form-label">Thời gian</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Thời gian"
+                        name="timeText"
+                        value={timeText}
+                        onChange={(e) => handleChange(e)}
+                      />
                     </div>
                   </div>
                 </div>

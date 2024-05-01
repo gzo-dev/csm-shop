@@ -10,12 +10,13 @@ import Checkout from "./views/checkout";
 import Shopdetails from "./views/shop-details";
 import Login from "./views/checkout/login";
 import Register from "./views/checkout/register";
-import NotFound from "../../NotFound";
+// import NotFound from "../../NotFound";
 import Complete from "./views/checkout/complete";
 import Account from "./views/account";
 import Failed from "./views/checkout/failed";
 import VoucherGift from "./views/voucher-gift/VoucherGift";
 import SignUpSuccess from "./views/checkout/signupsuccess/SignupSuccess";
+import NotFound from "../../../../../admin/src/components/notfound";
 
 const RootRoutes = () => {
   return (

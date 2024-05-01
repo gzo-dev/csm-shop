@@ -40,7 +40,7 @@ const Footer = () => {
             <div className="col-lg-3 col-md-3">
               <h4 className="mb-5 mt-0">
                 <a className="logo" href="index.html">
-                  <img style={{width: 50}} src="https://res.cloudinary.com/cockbook/image/upload/v1692940937/single/z4632199152859_dad394451a5b88ca2fcee448e0dee6f8_vh4w0p.jpg" alt="FPT boutique" />
+                  <img style={{width: 50}} src="https://res.cloudinary.com/cockbook/image/upload/v1692940937/single/z4632199152859_dad394451a5b88ca2fcee448e0dee6f8_vh4w0p.jpg" alt="Minh Khang boutique" />
                 </a>
               </h4>
               <p className="mb-0">

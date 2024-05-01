@@ -7,7 +7,7 @@ import PhoneLogo from "../../../../assets/profile/phone.png"
 import { AppContext } from "../../../../App";
 
 const Profile = () => {
-  const {user }= useContext(AppContext)
+  const {user, userManager }= useContext(AppContext)
   return (
     <div id="layoutSidenav_content">
       <div style={{ width: "100%", position: "relative", marginBottom: 50 }}>
@@ -82,6 +82,13 @@ const Profile = () => {
                 <div style={{width: 140, fontSize: 22, fontWeight: 600, color: "#303972"}}>Họ và tên:</div>
                 <div style={{fontSize: 22, fontWeight: 600}}>{user.firstName} {user.lastName}</div>
             </div>
+            <br />
+            {user.role=== "employee" && userManager &&
+              <div className="d-flex">
+                  <div style={{width: 140, fontSize: 22, fontWeight: 600, color: "#303972"}}>Người quản lý:</div>
+                  <div style={{fontSize: 22, fontWeight: 600}}>{userManager.firstName}</div>
+              </div>
+            }
         </div>
       </main>
     </div>

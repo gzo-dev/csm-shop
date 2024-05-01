@@ -135,7 +135,7 @@ const Create = () => {
       formData.append("file", image);
       setLoading(true);
       const res = await Axios.post(
-        API_URL+  "/api/v1/watermark",
+        "https://api.gzomedia.net/upload.php",
         formData,
         {
           headers: {
@@ -274,7 +274,7 @@ const Create = () => {
                           >
                             {listUser.map((item, key) => (
                               <option value={item.id} key={key}>
-                                {item.firstName + " " + item.lastName}
+                                {item.firstName}
                               </option>
                             ))}
                           </select>
@@ -687,7 +687,7 @@ const Create = () => {
                           >
                             {listUser.map((item, key) => (
                               <option value={item.id} key={key}>
-                                {item.firstName + " " + item.lastName}
+                                {item.firstName}
                               </option>
                             ))}
                           </select>

@@ -1,1 +1,2 @@
-export const API_URL= "http://localhost:4000"
+export const API_URL= "https://trouytin.online:8443"
+export const CLIENT_URL= "https://minhkhanggroup.vn"

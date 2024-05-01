@@ -109,7 +109,7 @@ const Shopdetails = () => {
             <div className="col-lg-12">
               <div className="product-top-dt">
                 <div className="product-left-title">
-                  <h2>All Products</h2>
+                  <h2>Tất cả sản phẩm</h2>
                 </div>
                 {/* <Filterbycategory
                   onSelectFilterCategory={handleChangeByCategory}
