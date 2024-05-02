@@ -129,7 +129,7 @@ const View = ({ history }) => {
     console.log(orgtableData);
     setGetList(
       orgtableData.filter(
-        (item) => item.role.toLowerCase() == e.target.value.toLowerCase()
+        (item) => item.role == e.target.value
       )
     );
   };

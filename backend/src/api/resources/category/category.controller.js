@@ -188,7 +188,7 @@ export default {
 
     async getCategoryById(req, res, next) {
         try {
-            let categoryId = req.query.categoryId;
+            let categoryId = req.query.categoryId || -1;
             db.SubCategory.findAll({
                 where: { categoryId: categoryId },
             })

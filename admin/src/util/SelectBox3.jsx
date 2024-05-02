@@ -25,9 +25,13 @@ export default function SelectBox3(props) {
           onChange={handleChange}
           MenuProps={{disableScrollLock: true}}
         >
-          {props.list.map((item, key)=> 
-            <MenuItem onClick={handleType} key={key} value={item.value}>{item.label} {item.unit && (item.unit== "meter" ? <span>m<sup>2</sup></span> : "")}</MenuItem>
-          )}
+          {props.list.map((item, key) => (
+            <MenuItem onClick={handleType} key={key} value={item.value}>
+              {item.label} {item.unit && (item.unit === "meter" ? <span>m<sup>2</sup></span> : "")}
+            </MenuItem>
+          ))}
+          {/* Render một MenuItem ẩn nếu props.value là undefined */}
+          
         </Select>
       </FormControl>
     </Box>

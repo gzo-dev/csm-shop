@@ -55,7 +55,8 @@ export default {
         user_manager,
         author_phone,
         address,
-        product_id
+        product_id,
+        rent
       } = req.body;
       db.product
         .create({
@@ -94,7 +95,8 @@ export default {
           user_manager: user_manager ? user_manager : "",
           author_phone: author_phone ? author_phone : "",
           address: address ? address : "",
-          product_id: product_id ? product_id : ""
+          product_id: product_id ? product_id : "",
+          rent: rent ? rent : 0
 
         })
         .then((product) => {

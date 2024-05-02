@@ -30,6 +30,7 @@ import {
   listPrice,
   listSquare,
   listStar,
+  listStatusRoom,
 } from "../../../../../data/data";
 import moment from "moment";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -72,6 +73,7 @@ const List = () => {
   const [listProvince, setListProvince] = useState([]);
   const [province, setProvince] = useState();
   const [district, setDistrict] = useState();
+  const [rent, setRent]= useState()
   const [listCheck, setListCheck] = useState([]);
   const [listCategory, setListCategory] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -106,6 +108,57 @@ const List = () => {
       if (typeRoom) {
         data = data.filter((item) => item.typeRoom == typeRoom);
       }
+      
+      if (rent && rent.toString().length > 0) {
+        switch (parseInt(rent)) { 
+          case 0:
+            console.log(0)
+            data = data.filter((item) => item.rent=== false);
+            break;
+          case 1:
+            console.log(1)
+            data = data.filter((item) => item.rent=== true);
+            break;
+          
+        }
+      }
+      if (square) {
+        switch (square) { 
+          case 1:
+            data = data.filter((item) => parseInt(item.square) >= 0 && parseInt(item.square) <= 20);
+            break;
+          case 2:
+            data = data.filter((item) => parseInt(item.square) >= 20 && parseInt(item.square) <= 40);
+            break;
+          case 3:
+            data = data.filter((item) => parseInt(item.square) >= 40);
+            break;
+          default:
+            break;
+        }
+      }
+      if (price) {
+        switch (price) {
+          case 1:
+            data = data.filter((item) => parseInt(item.price) >= 0 && parseInt(item.price) <= 1000000);
+            break;
+          case 2:
+            data = data.filter((item) => parseInt(item.price) >= 1000000 && parseInt(item.price) <= 3000000);
+            break;
+          case 3:
+            data = data.filter((item) => parseInt(item.price) >= 3000000 && parseInt(item.price) <= 5000000);
+            break;
+          case 4:
+            data = data.filter((item) => parseInt(item.price) >= 5000000 && parseInt(item.price) <= 10000000);
+            break;
+          case 5:
+            data = data.filter((item) => parseInt(item.price) >= 10000000);
+            break;
+          default:
+            break;
+        }
+      }
+
       if (province) {
         data = data.filter((item) => item.province == province);
       }
@@ -237,15 +290,18 @@ const List = () => {
       const categoryMatches = item.categoryId == id && item.subCategoryId == subid;
     
       // Điều kiện lọc theo product_id và tên sản phẩm (item.name)
-      const productIdMatches = item.product_id.toLowerCase().trim() === event.target.value.toLowerCase().trim();
-      const nameMatches = item.name.toLowerCase().includes(event.target.value.toLowerCase().trim());
-      const addressMatches= item.address.toLowerCase().includes(event.target.value.toLowerCase())
+      const productIdMatches = item.product_id.toLowerCase().includes(event.target.value.toLowerCase());
+      const nameMatches = item.name.includes(event.target.value);
+      const addressMatches= item.address.includes(event.target.value)
 
-      const wardMathes= item.wardText.toLowerCase().includes(event.target.value.toLowerCase())
-      const districtMatches= item.districtText.toLowerCase().includes(event.target.value.toLowerCase())
-      const provinceMathces= item.provinceText.toLowerCase().includes(event.target.value.toLowerCase())
+      const wardMathes= item.wardText.includes(event.target.value)
+      const districtMatches= item.districtText.includes(event.target.value)
+      const provinceMacthes= item.provinceText.includes(event.target.value)
+      const priceMatches= item.price.toString().includes(event.target.value)
+      const updatedAtMatches= moment(item.updatedAt).format("DD-MM-YYYY HH:mm:ss").includes(event.target.value)
+      const createdAtMatches= moment(item.createdAt).format("DD-MM-YYYY HH:mm:ss").includes(event.target.value)
       // Kết hợp cả hai điều kiện
-      return categoryMatches && (productIdMatches || nameMatches || wardMathes || districtMatches || provinceMathces || addressMatches);
+      return categoryMatches && (productIdMatches || nameMatches || wardMathes || districtMatches || provinceMacthes || addressMatches || priceMatches || updatedAtMatches || createdAtMatches);
 
     });
 
@@ -517,6 +573,7 @@ const List = () => {
               href={`/admin/p/${id}/${subid}/edit`}
               onClick={(e) => {
                 e.preventDefault();
+                setTypeRoom(null)
                 getProductList();
               }}
               className="add-btn hover-btn"
@@ -583,6 +640,19 @@ const List = () => {
                   }}
                 >
                   Địa điểm, vị trí
+                </div>
+                <div
+                  style={{
+                    color: "#fff",
+                    fontSize: 16,
+                    fontWeight: 600,
+                    textTransform: "uppercase",
+                    textAlign: "center",
+                    width: 200,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Trạng thái
                 </div>
               </div>
               <div
@@ -724,6 +794,7 @@ const List = () => {
                     </div>
                   )}
                 </div>
+                {/*  */}
                 <div style={{ width: 200 }}>
                   <div
                     style={{
@@ -789,6 +860,27 @@ const List = () => {
                         value: el.ward_id,
                         label: el.ward_name,
                       }))}
+                    />
+                  </div>
+                </div>
+                {/*  */}
+                <div style={{ width: 200 }}>
+                    <div
+                    style={{
+                      width: "100%",
+                      borderRadius: 10,
+                      border: "1px solid #e7e7e7",
+                      background: "#fff",
+                      padding: 5,
+                      marginBottom: 12,
+                    }}
+                  >
+                    <SelectBox3
+                      size={"small"}
+                      value={rent}
+                      setValue={setRent}
+                      label={"Trạng thái sản phẩm"}
+                      list={listStatusRoom}
                     />
                   </div>
                 </div>
@@ -929,6 +1021,7 @@ const List = () => {
                         <th style={{ whiteSpace: "nowrap" }}>Mã sản phẩm</th>
 
                         <th style={{ whiteSpace: "nowrap" }}>Tên sản phẩm</th>
+                        <th style={{ whiteSpace: "nowrap" }}>Cập nhật lần cuối</th>
                         <th style={{ whiteSpace: "nowrap" }}>Thời gian tạo</th>
 
                         <th style={{ whiteSpace: "nowrap" }}>Người quản lý</th>
@@ -960,6 +1053,8 @@ const List = () => {
                         {/* <th style={{ width: 60 }}>Mã SP</th> */}
                         <th style={{ width: 100 }}>Hình ảnh</th>
                         <th style={{ whiteSpace: "nowrap" }}>Tên sản phẩm</th>
+                        <th style={{ whiteSpace: "nowrap" }}>Cập nhật lần cuối</th>
+
                         <th style={{ whiteSpace: "nowrap" }}>Khu vực</th>
 
                         <th style={{ whiteSpace: "nowrap" }}>Giá bán</th>
@@ -1012,6 +1107,9 @@ const List = () => {
                             </td>
                             <td>{row.product_id}</td>
                             <td>{row.name}</td>
+                            <td>{moment(row.updatedAt).format(
+                                "DD-MM-YYYY HH:mm:ss"
+                              )}</td>
                             <td>
                               {moment(row.createdAt).format(
                                 "DD-MM-YYYY HH:mm:ss"
@@ -1143,6 +1241,9 @@ const List = () => {
                             </td>
                             <td>{row.product_id}</td>
                             <td>{row.name}</td>
+                            <td>{moment(row.updatedAt).format(
+                                "DD-MM-YYYY HH:mm:ss"
+                              )}</td>
                             <td>
                               {moment(row.createdAt).format(
                                 "DD-MM-YYYY HH:mm:ss"
@@ -1271,6 +1372,9 @@ const List = () => {
                               />
                             </td>
                             <td>{row.name}</td>
+                            <td>{moment(row.updatedAt).format(
+                                "DD-MM-YYYY HH:mm:ss"
+                              )}</td>
                             <td>
                               {row.wardText +
                                 " " +
@@ -1384,6 +1488,9 @@ const List = () => {
                               />
                             </td>
                             <td>{row.name}</td>
+                            <td>{moment(row.updatedAt).format(
+                                "DD-MM-YYYY HH:mm:ss"
+                              )}</td>
                             <td>
                               {row.wardText +
                                 " " +

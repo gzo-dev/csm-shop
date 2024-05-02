@@ -83,6 +83,7 @@ const NewProduct = (props) => {
   const [user, setUser] = useState();
   const [listUser, setListUser] = useState([]);
   const [author_phone, setAuthorPhone] = useState();
+  const [rent, setRent] = useState();
   const [endow, setEndow] = useState();
 
   const getCustomer = async () => {
@@ -177,6 +178,8 @@ const NewProduct = (props) => {
         setNote(value);
       case "endow":
         setEndow(value);
+      case "rent":
+        setRent(value);
       default:
         break;
     }
@@ -274,6 +277,7 @@ const NewProduct = (props) => {
     formData.append("address", address);
     formData.append("product_id", productId);
     formData.append("note", note);
+    formData.append("rent", rent);
 
     const config = {
       headers: {
@@ -326,34 +330,34 @@ const NewProduct = (props) => {
       upload_preset: "uem2kud5",
     };
     try {
-      if(parseInt(id)=== 13) {
+      if (parseInt(id) === 13) {
         const { image } = imageObject;
         const formData = new FormData();
         formData.append("file", image);
-  
+
         const response = await Axios.post(
-          API_URL+  "/api/v1/watermark",
+          API_URL + "/api/v1/watermark",
           formData
         );
-  
+
         const imageUrl = response.data.file_path;
-  
+
         return {
           ...imageObject,
           imageUrl,
         };
       }
-      if(parseInt(id)=== 12) {
+      if (parseInt(id) === 12) {
         const { image } = imageObject;
         const formData = new FormData();
-        formData.append("file", image); 
+        formData.append("file", image);
         const response = await Axios.post(
           `https://api.gzomedia.net/upload.php`,
           formData
         );
-  
+
         const imageUrl = response.data.file_path;
-  
+
         return {
           ...imageObject,
           imageUrl,
@@ -859,7 +863,7 @@ const NewProduct = (props) => {
                   )}
                 </div>
                 <div className="row mt-4">
-                  {id== 13 &&
+                  {id == 13 && (
                     <div className="col-lg-4 col-md-4">
                       <div className="form-group">
                         <label className="form-label">Người quản lý</label>
@@ -878,7 +882,24 @@ const NewProduct = (props) => {
                         </select>
                       </div>
                     </div>
-                  }
+                  )}
+                  {id == 13 && (
+                    <div className="col-lg-4 col-md-4" style={{}}>
+                      <div className="form-group">
+                        <label className="form-label">Tình trạng</label>
+                        <select
+                          id="rent"
+                          name="rent"
+                          className="form-control"
+                          value={rent}
+                          onChange={(e) => handleChange(e)}
+                        >
+                          <option value={0}>Chưa thuê</option>
+                          <option value={1}>Đã thuê</option>
+                        </select>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div className="row mt-4">
                   <div className="col-lg-6 col-md-6">

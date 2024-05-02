@@ -134,46 +134,47 @@ const Sidebar = () => {
               role === "manager" ||
               role === "leader" ||
               role === "employee" ||
+              role === "operator" ||
               role === "parttime") && (
-                <Fragment>
-                  <Link className="nav-link cus-text-mk" to="/admin/realestate">
-                    <div className="sb-nav-link-icon">
-                      <img src={RealEstateLogo} alt="" />
-                    </div>
-                    Bất động sản cho thuê
-                  </Link>
-                  <Link className="nav-link cus-text-mk" to="/admin/hotel">
-                    <div className="sb-nav-link-icon">
-                      <img src={HotelLogo} alt="" />
-                    </div>
-                    Hotel/Villa/Homestay
-                  </Link>
-                  <Link className="nav-link cus-text-mk" to="/admin/ticket">
-                    <div className="sb-nav-link-icon">
-                      <img src={TicketLogo} alt="" />
-                    </div>
-                    Vé tham quan
-                  </Link>
-                  <Link className="nav-link cus-text-mk" to="/admin/tk/4/list">
-                    <div className="sb-nav-link-icon">
-                      <img src={TicketLogo} alt="" />
-                    </div>
-                    Vé máy bay
-                  </Link>
-                  <Link className="nav-link cus-text-mk" to="/admin/tk/5/list">
-                    <div className="sb-nav-link-icon">
-                      <img src={TicketLogo} alt="" />
-                    </div>
-                    Vé tàu/xe
-                  </Link>
-                  <Link className="nav-link cus-text-mk" to="/admin/tour">
-                    <div className="sb-nav-link-icon">
-                      <img src={TourLogo} alt="" />
-                    </div>
-                    Tour du lịch
-                  </Link>
-                </Fragment>
-              )}
+              <Fragment>
+                <Link className="nav-link cus-text-mk" to="/admin/realestate">
+                  <div className="sb-nav-link-icon">
+                    <img src={RealEstateLogo} alt="" />
+                  </div>
+                  Bất động sản cho thuê
+                </Link>
+                <Link className="nav-link cus-text-mk" to="/admin/hotel">
+                  <div className="sb-nav-link-icon">
+                    <img src={HotelLogo} alt="" />
+                  </div>
+                  Hotel/Villa/Homestay
+                </Link>
+                <Link className="nav-link cus-text-mk" to="/admin/ticket">
+                  <div className="sb-nav-link-icon">
+                    <img src={TicketLogo} alt="" />
+                  </div>
+                  Vé tham quan
+                </Link>
+                <Link className="nav-link cus-text-mk" to="/admin/tk/4/list">
+                  <div className="sb-nav-link-icon">
+                    <img src={TicketLogo} alt="" />
+                  </div>
+                  Vé máy bay
+                </Link>
+                <Link className="nav-link cus-text-mk" to="/admin/tk/5/list">
+                  <div className="sb-nav-link-icon">
+                    <img src={TicketLogo} alt="" />
+                  </div>
+                  Vé tàu/xe
+                </Link>
+                <Link className="nav-link cus-text-mk" to="/admin/tour">
+                  <div className="sb-nav-link-icon">
+                    <img src={TourLogo} alt="" />
+                  </div>
+                  Tour du lịch
+                </Link>
+              </Fragment>
+            )}
             {role !== "parttime" && (
               <Link className="nav-link cus-text-mk" to="/admin/blog">
                 <div className="sb-nav-link-icon">
@@ -189,6 +190,7 @@ const Sidebar = () => {
               role === "manager" ||
               role === "leader" ||
               role === "employee" ||
+              role === "operator" ||
               role === "parttime") && (
               <Fragment>
                 <Link className="nav-link cus-text-mk" to="/admin/contact">

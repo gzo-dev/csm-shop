@@ -16,7 +16,8 @@ export default {
         Jimp.read(uploadedImage),
         Jimp.read(logoPath),
       ]);
-
+      const imageWidth= image.getWidth()
+      const imageHeight= image.getHeight()
       // Resize logo bằng Jimp
       const desiredLogoWidth = 250;
       const desiredLogoHeight = Jimp.AUTO;
@@ -43,20 +44,24 @@ export default {
       // Thêm văn bản có màu vào ảnh bằng Sharp
       const text =
         "Minh Khang Group Minh Khang Group Minh Khang Group Minh Khang Group Minh Khang Group Minh Khang Group Minh Khang Group Minh Khang Group";
-      const textColor = "#F37335"; // Màu xanh dương
+      const textColor = "#F37335"; 
       await addTextToImage(
         outputImagePath,
         outputImagePath,
         text,
         textColor,
-        "30%"
+        "30%",
+        imageWidth,
+        imageHeight
       );
       await addTextToImage(
         outputImagePath,
         outputImagePath,
         text,
         textColor,
-        "70%"
+        "70%",
+        imageWidth,
+        imageHeight
       );
 
       // Trả về đường dẫn ảnh đã xử lý
@@ -76,7 +81,9 @@ async function addTextToImage(
   outputImagePath,
   text,
   textColor,
-  y
+  y,
+  imageWidth,
+  imageHeight
 ) {
   try {
     // Tạo một bản sao của ảnh để tránh lỗi "Cannot use same file for input and output"
@@ -87,11 +94,12 @@ async function addTextToImage(
 
     // Tạo lớp văn bản mới với màu sắc tùy chỉnh
     const textLayer = Buffer.from(
-      `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600">
-         <text x="50%" y="${y}" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="30" fill="${textColor}">
-           ${text}
-         </text>
-       </svg>`
+      `<svg xmlns="http://www.w3.org/2000/svg" width="${imageWidth}" height="${imageHeight}">
+        <text x="0" y="${y}" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="60" fill="${textColor}" font-weight="bold">
+            ${text}
+          </text>
+        </svg>
+      `
     );
 
     // Ghép lớp văn bản vào ảnh bằng Sharp

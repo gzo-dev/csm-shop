@@ -4,7 +4,7 @@ import Auth from './components/auth';
 import NoMatch from './components/nomatch';
 import { Switch, Route, BrowserRouter, Redirect } from 'react-router-dom';
 // import PrivateRoute from './components/auth/PrivateRoute';
-import { getCookie } from './function';
+import { getCookie, setCookie } from './function';
 import { NotificationContainer } from "react-notifications";
 import "react-notifications/lib/notifications.css";
 import get_info_user from './api/get_info_user';
@@ -21,6 +21,7 @@ const App = () => {
 			if(result.ok== true) {
 				setDataUser(result.data)
 				setDataUserManager(result.dataManager)
+				setCookie('role', result.data.role, 30);
 			}
 		})()
 	}, [change])
