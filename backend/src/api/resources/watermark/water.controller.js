@@ -16,8 +16,8 @@ export default {
         Jimp.read(uploadedImage),
         Jimp.read(logoPath),
       ]);
-      const imageWidth= image.getWidth()
-      const imageHeight= image.getHeight()
+      const imageWidth = image.getWidth();
+      const imageHeight = image.getHeight();
       // Resize logo bằng Jimp
       const desiredLogoWidth = 250;
       const desiredLogoHeight = Jimp.AUTO;
@@ -43,8 +43,8 @@ export default {
 
       // Thêm văn bản có màu vào ảnh bằng Sharp
       const text =
-        "Minh Khang Group Minh Khang Group Minh Khang Group Minh Khang Group Minh Khang Group Minh Khang Group Minh Khang Group Minh Khang Group";
-      const textColor = "#F37335"; 
+        "MINHKHANG.GROUPMINHKHANG.GROUPMINHKHANG.GROUPMINHKHANG.GROUPMINHKHANG.GROUPMINHKHANG.GROUPMINHKHANG.GROUPMINHKHANG.GROUPMINHKHANG.GROUPMINHKHANG.GROUPMINHKHANG.GROUPMINHKHANG.GROUP";
+      const textColor = "#F37335";
       await addTextToImage(
         outputImagePath,
         outputImagePath,
@@ -95,10 +95,10 @@ async function addTextToImage(
     // Tạo lớp văn bản mới với màu sắc tùy chỉnh
     const textLayer = Buffer.from(
       `<svg xmlns="http://www.w3.org/2000/svg" width="${imageWidth}" height="${imageHeight}">
-        <text x="0" y="${y}" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="60" fill="${textColor}" font-weight="bold">
-            ${text}
+          <text x="0" y="${y}" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="60" fill="${textColor}" font-weight="bold" opacity="0.5">
+              ${text}
           </text>
-        </svg>
+      </svg>
       `
     );
 
