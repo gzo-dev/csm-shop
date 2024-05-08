@@ -9,8 +9,6 @@ module.exports = (sequelize, DataTypes) => {
     models.category.hasMany(models.product, { foreignKey: 'categoryId' });
     models.category.hasMany(models.SubCategory, { foreignKey: 'categoryId' });
     models.category.hasMany(models.SubChildCategory, { foreignKey: 'categoryId' });
-
-
   };
   return category;
 };

@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const tour = sequelize.define('blog', {
+  const blog = sequelize.define('blog', {
     name: DataTypes.STRING,
     status: DataTypes.STRING,
     discountPer: DataTypes.INTEGER,
@@ -10,7 +10,12 @@ module.exports = (sequelize, DataTypes) => {
     type: DataTypes.INTEGER,
     content: DataTypes.TEXT,
     price: DataTypes.INTEGER,
-    author: DataTypes.STRING
+    author: DataTypes.STRING, 
+    user_author: DataTypes.INTEGER
   }, {});
-  return tour;
+  blog.associate = function(models) {
+    // associations can be defined here
+    models.user.hasOne(models.blog, { foreignKey: 'user_author' });
+  };
+  return blog;
 };

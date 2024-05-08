@@ -43,7 +43,7 @@ export default {
 
       // Thêm văn bản có màu vào ảnh bằng Sharp
       const text =
-        "MINHKHANG.GROUPMINHKHANG.GROUPMINHKHANG.GROUPMINHKHANG.GROUPMINHKHANG.GROUPMINHKHANG.GROUPMINHKHANG.GROUPMINHKHANG.GROUPMINHKHANG.GROUPMINHKHANG.GROUPMINHKHANG.GROUPMINHKHANG.GROUP";
+        "Minhkhanggroup.vn Minhkhanggroup.vn Minhkhanggroup.vn Minhkhanggroup.vn Minhkhanggroup.vn Minhkhanggroup.vn Minhkhanggroup.vn Minhkhanggroup.vn Minhkhanggroup.vn Minhkhanggroup.vn";
       const textColor = "#e60123";
       await addTextToImage(
         outputImagePath,

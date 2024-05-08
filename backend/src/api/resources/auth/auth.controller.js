@@ -15,7 +15,7 @@ var JWTSign = function (user, date) {
       sub: user.id,
       iam: user.type,
       iat: date.getTime(),
-      exp: new Date().setMinutes(date.getMinutes() + 30),
+      exp: "24h",
     },
     process.env.JWT_SECRET
   );
@@ -232,7 +232,8 @@ export default {
         );
         const token = JWT.sign(
           { uid: findUser.dataValues.id, id: findUser.dataValues.id },
-          process.env.JWT_SECRET
+          process.env.JWT_SECRET,
+          
         );
         return res
           .status(200)
@@ -255,7 +256,8 @@ export default {
         );
         const token = JWT.sign(
           { uid: findUser.dataValues.id, id: findUser.dataValues.id },
-          process.env.JWT_SECRET
+          process.env.JWT_SECRET,
+          { expiresIn: 24 * 60 * 60 }
         );
         return res
           .status(200)

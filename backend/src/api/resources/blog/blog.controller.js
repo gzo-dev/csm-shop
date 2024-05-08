@@ -98,7 +98,7 @@ export default {
             return res.status(500).json({ok: false})
         }
     },
-    async getTourDetail(req, res) {
+    async getBlogDetail(req, res) {
         try {
             const blogList= await db.blog.findAll({
                 where: {

@@ -19,6 +19,7 @@ productRouter.route('/c/s').get( productController.getAllProductCategory);
 productRouter.route('/getAllproductList').get( productController.getAllProductList);
 productRouter.route('/update').post( upload.single('photo'), productController.update);
 productRouter.route('/getProductByCategory').get( productController.getProductListByCategory);
+productRouter.route('/filter').get( productController.getProductListByFilter);
 productRouter.route('/getProductById').get( productController.getProductListById);
 productRouter.route('/getWebProductById').get( productController.getWebProductListById);
 productRouter.route('/product-offer').post( productController.addProductOffer);

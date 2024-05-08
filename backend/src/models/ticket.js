@@ -27,7 +27,8 @@ module.exports = (sequelize, DataTypes) => {
     ward: DataTypes.STRING,
     provinceText: DataTypes.STRING,
     districtText: DataTypes.STRING,
-    wardText: DataTypes.STRING
+    wardText: DataTypes.STRING, 
+    bonus: DataTypes.STRING
   }, {});
   return ticket;
 };
