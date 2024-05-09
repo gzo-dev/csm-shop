@@ -385,6 +385,47 @@ export default {
       throw new RequestError("Error");
     }
   },
+  async getProductListByCategoryClient(req, res, next) {
+    const {  categoryId, pageSize= 10 } = req.query;
+
+    const whereConditions = {
+      categoryId: categoryId,
+    };
+
+    try {
+      // Thực hiện truy vấn dữ liệu với Sequelize
+      const { count, rows: filteredList } = await db.product.findAndCountAll({
+        where: whereConditions,
+        order: [["DESC"]],
+        include: [
+          {
+            model: db.user,
+            attributes: ["id", "firstName", "lastName"],
+          },
+        ],
+        // limit: pageSize,
+        // offset: (page - 1) * pageSize,
+      });
+
+      // Tính toán tổng số trang dựa trên số lượng dữ liệu và kích thước trang
+      const totalPages = Math.ceil(count / pageSize);
+
+      // Trả về kết quả với thông tin phân trang
+      res.status(200).json({
+        success: true,
+        results: filteredList,
+        pagination: {
+          // currentPage: parseInt(page),
+          pageSize: parseInt(pageSize),
+          totalItems: count,
+          totalPages: totalPages,
+        },
+      });
+    } catch (error) {
+      console.error("Error searching products:", error);
+      res.status(500).json({ success: false, error: "Internal Server Error" });
+    }
+  },
   async getProductListByCategory(req, res, next) {
     const { searchText, id, subid, page = 1, pageSize = 10 } = req.query;
     let searchTextValid
