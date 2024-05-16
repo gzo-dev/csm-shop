@@ -9,6 +9,7 @@ export const productRouter = express.Router();
 
 productRouter.route("/d").get(productController.getProductListById)
 productRouter.route("/c").get(productController.getProductListByCategoryClient)
+productRouter.route("/c/c").get(productController.getProductListByCategoryClientWeb)
 productRouter.route("/s/h").get(productController.getProductSuggestHotel)
 productRouter.route("/s/a").get(productController.getProductSuggestApartment)
 productRouter.route("/sg").get(productController.getProductSuggest2)

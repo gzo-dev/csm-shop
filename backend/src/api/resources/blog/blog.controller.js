@@ -72,7 +72,7 @@ export default {
         }
     },
 
-    async getListTour(req, res) {
+    async getListBlog(req, res) {
         const blogList = await db.blog.findAll({
             order: [['createdAt', 'DESC']],
         })
@@ -122,6 +122,13 @@ export default {
         })
         return res.status(200).json({ ok: true })
     },
+    async getListBlogAdmin(req, res) {
+        const blogList = await db.blog.findAll({
+            order: [['createdAt', 'DESC']],
+            attributes: {exclude: ['content']},
 
+        })
+        return res.status(200).json({ ok: true, data: blogList })
+    },
 
 }
