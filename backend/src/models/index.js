@@ -12,7 +12,7 @@ let sequelize = new Sequelize(config.db.database, config.db.username, config.db.
     logging: false,
     underscored: true,
     pool: {
-        max: 20,
+        max: 10000,
         min: 1,
         idle: 20000,
         acquire: 1000000

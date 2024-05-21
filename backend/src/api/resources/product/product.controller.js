@@ -136,7 +136,22 @@ export default {
   },
 
   async getAllProductCategory(req, res, next) {
-    const { searchText, id, subid, page = 1, pageSize = 10 } = req.query;
+    const {
+      searchText,
+      id,
+      subid,
+      page = 1,
+      pageSize = 10,
+      typeRoom,
+      rent,
+      square,
+      price,
+      province,
+      district,
+      ward,
+      star,
+      reset
+    } = req.query;
 
     const whereConditions = {
       categoryId: id,
@@ -162,6 +177,93 @@ export default {
         { "$user.firstName$": { [Op.substring]: searchText } },
       ],
     };
+    if (!reset) {
+      if (id == 13) {
+        if (typeRoom) {
+          whereConditions.typeRoom = typeRoom;
+        }
+
+        if (rent !== undefined && rent.toString().length > 0) {
+          switch (parseInt(rent)) {
+            case 0:
+              whereConditions.rent = { [Op.or]: [0, false] };
+              break;
+            case 1:
+              whereConditions.rent = { [Op.or]: [1, true] };
+              break;
+            case 2:
+              whereConditions.rent = 2;
+              break;
+          }
+        }
+
+        if (square) {
+          switch (parseInt(square)) {
+            case 1:
+              whereConditions.square = { [Op.between]: [0, 20] };
+              break;
+            case 2:
+              whereConditions.square = { [Op.between]: [20, 40] };
+              break;
+            case 3:
+              whereConditions.square = { [Op.gte]: 40 };
+              break;
+          }
+        }
+
+        if (price) {
+          switch (parseInt(price)) {
+            case 1:
+              whereConditions.price = { [Op.between]: [0, 1000000] };
+              break;
+            case 2:
+              whereConditions.price = { [Op.between]: [1000000, 3000000] };
+              break;
+            case 3:
+              whereConditions.price = { [Op.between]: [3000000, 5000000] };
+              break;
+            case 4:
+              whereConditions.price = { [Op.between]: [5000000, 10000000] };
+              break;
+            case 5:
+              whereConditions.price = { [Op.gte]: 10000000 };
+              break;
+          }
+        }
+
+        if (province) {
+          whereConditions.province = province;
+        }
+
+        if (district) {
+          whereConditions.district = district;
+        }
+
+        if (ward) {
+          whereConditions.ward = ward;
+        }
+      } else if (id == 12) {
+        if (typeRoom) {
+          whereConditions.typeRoom = typeRoom;
+        }
+
+        if (star) {
+          whereConditions.rating = star;
+        }
+
+        if (province) {
+          whereConditions.province = province;
+        }
+
+        if (district) {
+          whereConditions.district = district;
+        }
+
+        if (ward) {
+          whereConditions.ward = ward;
+        }
+      }
+    }
 
     try {
       // Thực hiện truy vấn dữ liệu với Sequelize
@@ -386,7 +488,7 @@ export default {
     }
   },
   async getProductListByCategoryClient(req, res, next) {
-    const {  categoryId, pageSize= 10 } = req.query;
+    const { categoryId, pageSize = 10 } = req.query;
 
     const whereConditions = {
       categoryId: categoryId,
@@ -427,11 +529,11 @@ export default {
     }
   },
   async getProductListByCategoryClientWeb(req, res, next) {
-    const {  categoryId, pageSize= 10, subCategoryId } = req.query;
+    const { categoryId, pageSize = 10, subCategoryId } = req.query;
 
     const whereConditions = {
       categoryId: categoryId,
-      subCategoryId: subCategoryId
+      subCategoryId: subCategoryId,
     };
 
     try {
@@ -469,13 +571,27 @@ export default {
     }
   },
   async getProductListByCategory(req, res, next) {
-    const { searchText, id, subid, page = 1, pageSize = 10 } = req.query;
-    let searchTextValid
-    if(searchText=== undefined || searchText== null) {
-        searchTextValid= ""
-    }
-    else {
-        searchTextValid= searchText
+    const {
+      searchText,
+      id,
+      subid,
+      page = 1,
+      pageSize = 10,
+      typeRoom,
+      rent,
+      square,
+      price,
+      province,
+      district,
+      ward,
+      star,
+      reset
+    } = req.query;
+    let searchTextValid;
+    if (searchText === undefined || searchText == null) {
+      searchTextValid = "";
+    } else {
+      searchTextValid = searchText;
     }
 
     const whereConditions = {
@@ -502,61 +618,7 @@ export default {
         { "$user.firstName$": { [Op.substring]: searchTextValid } },
       ],
     };
-
-    try {
-      // Thực hiện truy vấn dữ liệu với Sequelize
-      const { count, rows: filteredList } = await db.product.findAndCountAll({
-        where: whereConditions,
-        order: [["DESC"]],
-        include: [
-          {
-            model: db.user,
-            attributes: ["id", "firstName", "lastName"],
-          },
-        ],
-        limit: pageSize,
-        offset: (page - 1) * pageSize,
-      });
-
-      // Tính toán tổng số trang dựa trên số lượng dữ liệu và kích thước trang
-      const totalPages = Math.ceil(count / pageSize);
-
-      // Trả về kết quả với thông tin phân trang
-      res.status(200).json({
-        success: true,
-        data: filteredList,
-        pagination: {
-          currentPage: parseInt(page),
-          pageSize: parseInt(pageSize),
-          totalItems: count,
-          totalPages: totalPages,
-        },
-      });
-    } catch (error) {
-      console.error("Error searching products:", error);
-      res.status(500).json({ success: false, error: "Internal Server Error" });
-    }
-  },
-  async getProductListByFilter(req, res, next) {
-    try {
-      const {
-        id,
-        subid,
-        typeRoom,
-        rent,
-        square,
-        price,
-        province,
-        district,
-        ward,
-        star,
-        pageSize = 10,
-        page,
-      } = req.query;
-      let whereConditions = {
-        categoryId: id,
-        subCategoryId: subid,
-      };
+    if (!reset) {
       if (id == 13) {
         if (typeRoom) {
           whereConditions.typeRoom = typeRoom;
@@ -642,23 +704,151 @@ export default {
           whereConditions.ward = ward;
         }
       }
-      if (id == 12) {
-        if (typeRoom) {
-          whereConditions.typeRoom = typeRoom;
-        }
-        if (star) {
-          whereConditions.star = star;
-        }
-        if (province) {
-          whereConditions.province = province;
-        }
-        if (district) {
-          whereConditions.district = district;
-        }
-        if (ward) {
-          whereConditions.ward = ward;
-        }
+    }
+
+    try {
+      // Thực hiện truy vấn dữ liệu với Sequelize
+      const { count, rows: filteredList } = await db.product.findAndCountAll({
+        where: whereConditions,
+        order: [["DESC"]],
+        include: [
+          {
+            model: db.user,
+            attributes: ["id", "firstName", "lastName"],
+          },
+        ],
+        limit: pageSize,
+        offset: (page - 1) * pageSize,
+      });
+
+      // Tính toán tổng số trang dựa trên số lượng dữ liệu và kích thước trang
+      const totalPages = Math.ceil(count / pageSize);
+
+      // Trả về kết quả với thông tin phân trang
+      res.status(200).json({
+        success: true,
+        data: filteredList,
+        pagination: {
+          currentPage: parseInt(page),
+          pageSize: parseInt(pageSize),
+          totalItems: count,
+          totalPages: totalPages,
+        },
+      });
+    } catch (error) {
+      console.error("Error searching products:", error);
+      res.status(500).json({ success: false, error: "Internal Server Error" });
+    }
+  },
+  async getProductListByFilter(req, res, next) {
+    try {
+      const {
+        id,
+        subid,
+        typeRoom,
+        rent,
+        square,
+        price,
+        province,
+        district,
+        ward,
+        star,
+        pageSize = 10,
+        page,
+        reset
+      } = req.query;
+      let whereConditions = {
+        categoryId: id,
+        subCategoryId: subid,
+      };
+      if(!reset ) {
+        if (id == 13) {
+          if (typeRoom) {
+            whereConditions.typeRoom = typeRoom;
+          }
+  
+          if (rent !== undefined && rent.toString().length > 0) {
+            switch (parseInt(rent)) {
+              case 0:
+                whereConditions.rent = { [Op.or]: [0, false] };
+                break;
+              case 1:
+                whereConditions.rent = { [Op.or]: [1, true] };
+                break;
+              case 2:
+                whereConditions.rent = 2;
+                break;
+            }
+          }
+  
+          if (square) {
+            switch (parseInt(square)) {
+              case 1:
+                whereConditions.square = { [Op.between]: [0, 20] };
+                break;
+              case 2:
+                whereConditions.square = { [Op.between]: [20, 40] };
+                break;
+              case 3:
+                whereConditions.square = { [Op.gte]: 40 };
+                break;
+            }
+          }
+  
+          if (price) {
+            switch (parseInt(price)) {
+              case 1:
+                whereConditions.price = { [Op.between]: [0, 1000000] };
+                break;
+              case 2:
+                whereConditions.price = { [Op.between]: [1000000, 3000000] };
+                break;
+              case 3:
+                whereConditions.price = { [Op.between]: [3000000, 5000000] };
+                break;
+              case 4:
+                whereConditions.price = { [Op.between]: [5000000, 10000000] };
+                break;
+              case 5:
+                whereConditions.price = { [Op.gte]: 10000000 };
+                break;
+            }
+          }
+  
+          if (province) {
+            whereConditions.province = province;
+          }
+  
+          if (district) {
+            whereConditions.district = district;
+          }
+  
+          if (ward) {
+            whereConditions.ward = ward;
+          }
+        } else if (id == 12) {
+          if (typeRoom) {
+            whereConditions.typeRoom = typeRoom;
+          }
+  
+          if (star) {
+            whereConditions.rating = star;
+          }
+  
+          if (province) {
+            whereConditions.province = province;
+          }
+  
+          if (district) {
+            whereConditions.district = district;
+          }
+  
+          if (ward) {
+            whereConditions.ward = ward;
+          }
+        } 
       }
+
       const { count, rows: productList } = await db.product.findAndCountAll({
         where: whereConditions,
         order: [["DESC"]],
@@ -684,7 +874,7 @@ export default {
         },
       });
     } catch (err) {
-      console.log(err)
+      console.log(err);
       throw new RequestError("Error");
     }
   },

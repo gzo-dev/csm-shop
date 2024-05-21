@@ -16,9 +16,9 @@ productRouter.route("/sg").get(productController.getProductSuggest2)
 productRouter.route("/photo").get(productController.getPhotoProduct)
 productRouter.route('/add').post(upload.single('photo'), productController.addProduct);
 productRouter.route('/getAllproduct').get( productController.index);
-productRouter.route('/c/s').get( productController.getAllProductCategory);
 productRouter.route('/getAllproductList').get( productController.getAllProductList);
 productRouter.route('/update').post( upload.single('photo'), productController.update);
+productRouter.route('/c/s').get( productController.getAllProductCategory);
 productRouter.route('/getProductByCategory').get( productController.getProductListByCategory);
 productRouter.route('/filter').get( productController.getProductListByFilter);
 productRouter.route('/getProductById').get( productController.getProductListById);
