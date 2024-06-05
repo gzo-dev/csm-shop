@@ -90,7 +90,8 @@ export default {
             const blogList= await db.blog.findAll({
                 where: {
                     type: req.query.type
-                }
+                },
+                attributes: {exclude: ['content']}
             })
             return res.status(200).json({ok: true, data: blogList})
             

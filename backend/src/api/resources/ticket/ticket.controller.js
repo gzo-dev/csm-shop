@@ -95,6 +95,7 @@ export default {
           type: req.query.type,
         },
         order: [["createdAt", "DESC"]],
+        attributes: {exclude: ['content']}
       });
       return res.status(200).json({ ok: true, data: ticketList });
     } catch (error) {
