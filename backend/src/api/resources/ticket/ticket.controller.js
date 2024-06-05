@@ -77,6 +77,7 @@ export default {
   async getListTicket(req, res) {
     const ticketList = await db.ticket.findAll({
       order: [["createdAt", "DESC"]],
+      attributes: { exclude: ["content"] },
     });
     return res.status(200).json({ ok: true, data: ticketList });
   },
