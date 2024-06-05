@@ -100,6 +100,21 @@ export default {
             return res.status(500).json({ok: false})
         }
     },
+    async getDetailBlogCategory(req, res) {
+        try {
+            const blogList= await db.blog.findAll({
+                where: {
+                    type: req.query.type
+                },
+                // attributes: {exclude: ['content']}
+            })
+            return res.status(200).json({ok: true, data: blogList})
+            
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ok: false})
+        }
+    },
     async getBlogDetail(req, res) {
         try {
             const blogList= await db.blog.findAll({
@@ -128,7 +143,13 @@ export default {
         const blogList = await db.blog.findAll({
             order: [['createdAt', 'DESC']],
             attributes: {exclude: ['content']},
-
+            include: [
+                {
+                  model: db.user,
+                  attributes: ["id", "firstName", "lastName"],
+                  required: false,
+                },
+              ],
         })
         return res.status(200).json({ ok: true, data: blogList })
     },

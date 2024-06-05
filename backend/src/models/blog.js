@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   blog.associate = function(models) {
     // associations can be defined here
-    models.user.hasOne(models.blog, { foreignKey: 'user_author' });
+    models.blog.belongsTo(models.user, { foreignKey: 'user_author' });
   };
   return blog;
 };
