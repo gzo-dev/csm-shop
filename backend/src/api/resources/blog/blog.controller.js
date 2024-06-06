@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import { db } from "../../../models"
 
 
@@ -102,6 +103,15 @@ export default {
     },
     async getDetailBlogCategory(req, res) {
         try {
+            if(req.query.type== 15) {
+                const blogList= await db.blog.findAll({
+                    where: {
+                        [Op.or]: [5, 14]
+                    },
+                    // attributes: {exclude: ['content']}
+                })
+                return res.status(200).json({ok: true, data: blogList})
+            }
             const blogList= await db.blog.findAll({
                 where: {
                     type: req.query.type
