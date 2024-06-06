@@ -106,7 +106,9 @@ export default {
             if(req.query.type== 15) {
                 const blogList= await db.blog.findAll({
                     where: {
-                        [Op.or]: [5, 14]
+                        type: {
+                            [Op.or]: [5, 14]
+                        }
                     },
                     // attributes: {exclude: ['content']}
                 })
