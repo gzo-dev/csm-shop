@@ -3,7 +3,7 @@ import path from "path";
 import { v4 } from "uuid";
 import sharp from "sharp"; // Import thư viện Sharp
 import fs from "fs";
-const serverHost = `https://trouytin.online:8443`;
+const serverHost = `https://api.minhkhanggroup.vn`;
 const logoPath = path.join(__dirname, "../../..", "/logo.png");
 const outputFilename = path.join(__dirname, "../../../../", "watermark");
 
@@ -109,8 +109,7 @@ async function addTextToImage(
     await image.toFile(tempOutputPath);
 
     // Sao chép ảnh từ tệp tạm thời sang tệp đầu ra
-    await sharp(tempOutputPath).toFile(outputImagePath);
-
+    await sharp(tempOutputPath).webp({ quality: 70, force: true }).resize({ fit: 'inside', width: 1280 }).toFile(outputImagePath);
     // Xóa tệp tạm thời sau khi hoàn thành
     await fs.promises.unlink(tempOutputPath);
   } catch (error) {

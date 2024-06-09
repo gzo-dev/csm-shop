@@ -14,6 +14,7 @@ import { tourRouter } from "./resources/tour";
 import { blogRouter } from "./resources/blog";
 import { ticketRouter } from "./resources/ticket";
 import { watermakRouter } from "./resources/watermark";
+import { uploadRouter } from "./resources/upload";
 
 export const restRouter = express.Router();
 restRouter.use("/auth", authRouter);
@@ -34,3 +35,4 @@ restRouter.use("/v1/tour", tourRouter)
 restRouter.use("/v1/blog", blogRouter)
 restRouter.use("/v1/ticket", ticketRouter)
 restRouter.use("/v1/watermark", watermakRouter)
+restRouter.use("/v1/upload", uploadRouter)

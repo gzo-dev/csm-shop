@@ -150,28 +150,28 @@ export default {
       district,
       ward,
       star,
-      reset
+      reset,
     } = req.query;
-    if(typeRoom==0 ) {
-      typeRoom= undefined
+    if (typeRoom == 0) {
+      typeRoom = undefined;
     }
-    if(square== 0) {
-      square= undefined
+    if (square == 0) {
+      square = undefined;
     }
-    if(price== 0 ) {
-      price= undefined
+    if (price == 0) {
+      price = undefined;
     }
-    if(rent== -1) {
-      rent= undefined
+    if (rent == -1) {
+      rent = undefined;
     }
-    if(province== -1) {
-      province= undefined
+    if (province == -1) {
+      province = undefined;
     }
-    if(district== -1) {
-      district= undefined
+    if (district == -1) {
+      district = undefined;
     }
-    if(ward== -1) {
-      ward= undefined
+    if (ward == -1) {
+      ward = undefined;
     }
     const whereConditions = {
       categoryId: id,
@@ -197,92 +197,92 @@ export default {
         { "$user.firstName$": { [Op.substring]: searchText } },
       ],
     };
-      if (id == 13) {
-        if (typeRoom) {
-          whereConditions.typeRoom = typeRoom;
-        }
+    if (id == 13) {
+      if (typeRoom) {
+        whereConditions.typeRoom = typeRoom;
+      }
 
-        if (rent !== undefined && rent.toString().length > 0) {
-          switch (parseInt(rent)) {
-            case 0:
-              whereConditions.rent = { [Op.or]: [0, false] };
-              break;
-            case 1:
-              whereConditions.rent = { [Op.or]: [1, true] };
-              break;
-            case 2:
-              whereConditions.rent = 2;
-              break;
-          }
-        }
-
-        if (square) {
-          console.log(square)
-          switch (parseInt(square)) {
-            case 1:
-              whereConditions.square = { [Op.between]: [0, 20] };
-              break;
-            case 2:
-              whereConditions.square = { [Op.between]: [20, 40] };
-              break;
-            case 3:
-              whereConditions.square = { [Op.gte]: 40 };
-              break;
-          }
-        }
-
-        if (price) {
-          switch (parseInt(price)) {
-            case 1:
-              whereConditions.price = { [Op.between]: [0, 1000000] };
-              break;
-            case 2:
-              whereConditions.price = { [Op.between]: [1000000, 3000000] };
-              break;
-            case 3:
-              whereConditions.price = { [Op.between]: [3000000, 5000000] };
-              break;
-            case 4:
-              whereConditions.price = { [Op.between]: [5000000, 10000000] };
-              break;
-            case 5:
-              whereConditions.price = { [Op.gte]: 10000000 };
-              break;
-          }
-        }
-
-        if (province) {
-          whereConditions.province = province;
-        }
-
-        if (district) {
-          whereConditions.district = district;
-        }
-
-        if (ward) {
-          whereConditions.ward = ward;
-        }
-      } else if (id == 12) {
-        if (typeRoom) {
-          whereConditions.typeRoom = typeRoom;
-        }
-
-        if (star) {
-          whereConditions.rating = star;
-        }
-
-        if (province) {
-          whereConditions.province = province;
-        }
-
-        if (district) {
-          whereConditions.district = district;
-        }
-
-        if (ward) {
-          whereConditions.ward = ward;
+      if (rent !== undefined && rent.toString().length > 0) {
+        switch (parseInt(rent)) {
+          case 0:
+            whereConditions.rent = { [Op.or]: [0, false] };
+            break;
+          case 1:
+            whereConditions.rent = { [Op.or]: [1, true] };
+            break;
+          case 2:
+            whereConditions.rent = 2;
+            break;
         }
       }
+
+      if (square) {
+        console.log(square);
+        switch (parseInt(square)) {
+          case 1:
+            whereConditions.square = { [Op.between]: [0, 20] };
+            break;
+          case 2:
+            whereConditions.square = { [Op.between]: [20, 40] };
+            break;
+          case 3:
+            whereConditions.square = { [Op.gte]: 40 };
+            break;
+        }
+      }
+
+      if (price) {
+        switch (parseInt(price)) {
+          case 1:
+            whereConditions.price = { [Op.between]: [0, 1000000] };
+            break;
+          case 2:
+            whereConditions.price = { [Op.between]: [1000000, 3000000] };
+            break;
+          case 3:
+            whereConditions.price = { [Op.between]: [3000000, 5000000] };
+            break;
+          case 4:
+            whereConditions.price = { [Op.between]: [5000000, 10000000] };
+            break;
+          case 5:
+            whereConditions.price = { [Op.gte]: 10000000 };
+            break;
+        }
+      }
+
+      if (province) {
+        whereConditions.province = province;
+      }
+
+      if (district) {
+        whereConditions.district = district;
+      }
+
+      if (ward) {
+        whereConditions.ward = ward;
+      }
+    } else if (id == 12) {
+      if (typeRoom) {
+        whereConditions.typeRoom = typeRoom;
+      }
+
+      if (star) {
+        whereConditions.rating = star;
+      }
+
+      if (province) {
+        whereConditions.province = province;
+      }
+
+      if (district) {
+        whereConditions.district = district;
+      }
+
+      if (ward) {
+        whereConditions.ward = ward;
+      }
+    }
 
     try {
       // Thực hiện truy vấn dữ liệu với Sequelize
@@ -604,28 +604,28 @@ export default {
       district,
       ward,
       star,
-      reset
+      reset,
     } = req.query;
-    if(typeRoom==0 ) {
-      typeRoom= undefined
+    if (typeRoom == 0) {
+      typeRoom = undefined;
     }
-    if(square== 0) {
-      square= undefined
+    if (square == 0) {
+      square = undefined;
     }
-    if(price== 0 ) {
-      price= undefined
+    if (price == 0) {
+      price = undefined;
     }
-    if(rent== -1) {
-      rent= undefined
+    if (rent == -1) {
+      rent = undefined;
     }
-    if(province== -1) {
-      province= undefined
+    if (province == -1) {
+      province = undefined;
     }
-    if(district== -1) {
-      district= undefined
+    if (district == -1) {
+      district = undefined;
     }
-    if(ward== -1) {
-      ward= undefined
+    if (ward == -1) {
+      ward = undefined;
     }
     let searchTextValid;
     if (searchText === undefined || searchText == null) {
@@ -754,6 +754,11 @@ export default {
             model: db.user,
             attributes: ["id", "firstName", "lastName"],
           },
+          {
+            model: db.user_manager_product,
+            // attributes: ["id", "firstName", "lastName"],
+            required: false,
+          },
         ],
         limit: pageSize,
         offset: (page - 1) * pageSize,
@@ -793,130 +798,137 @@ export default {
         star,
         pageSize = 10,
         page,
-        reset
+        reset,
       } = req.query;
-      if(typeRoom==0 ) {
-        typeRoom= undefined
+      if (typeRoom == 0) {
+        typeRoom = undefined;
       }
-      if(square== 0) {
-        square= undefined
+      if (square == 0) {
+        square = undefined;
       }
-      if(price== 0 ) {
-        price= undefined
+      if (price == 0) {
+        price = undefined;
       }
-      if(rent== -1) {
-        rent= undefined
+      if (rent == -1) {
+        rent = undefined;
       }
-      if(province== -1) {
-        province= undefined
+      if (province == -1) {
+        province = undefined;
       }
-      if(district== -1) {
-        district= undefined
+      if (district == -1) {
+        district = undefined;
       }
-      if(ward== -1) {
-        ward= undefined
+      if (ward == -1) {
+        ward = undefined;
       }
       let whereConditions = {
         categoryId: id,
         subCategoryId: subid,
       };
-        if (id == 13) {
-          if (typeRoom) {
-            whereConditions.typeRoom = typeRoom;
+      if (id == 13) {
+        if (typeRoom) {
+          whereConditions.typeRoom = typeRoom;
+        }
+
+        if (rent !== undefined && rent.toString().length > 0) {
+          switch (parseInt(rent)) {
+            case 0:
+              whereConditions.rent = { [Op.or]: [0, false] };
+              break;
+            case 1:
+              whereConditions.rent = { [Op.or]: [1, true] };
+              break;
+            case 2:
+              whereConditions.rent = 2;
+              break;
           }
-  
-          if (rent !== undefined && rent.toString().length > 0) {
-            switch (parseInt(rent)) {
-              case 0:
-                whereConditions.rent = { [Op.or]: [0, false] };
-                break;
-              case 1:
-                whereConditions.rent = { [Op.or]: [1, true] };
-                break;
-              case 2:
-                whereConditions.rent = 2;
-                break;
-            }
+        }
+
+        if (square) {
+          switch (parseInt(square)) {
+            case 1:
+              whereConditions.square = Sequelize.literal(
+                "CAST(square AS INT) BETWEEN 0 AND 20"
+              );
+              break;
+            case 2:
+              whereConditions.square = { [Op.between]: [20, 40] };
+              break;
+            case 3:
+              whereConditions.square = { [Op.gte]: 40 };
+              break;
           }
-  
-          if (square) {
-            console.log(square)
-            switch (parseInt(square)) {
-              case 1:
-                whereConditions.square = Sequelize.literal('CAST(square AS INT) BETWEEN 0 AND 20');
-                break;
-              case 2:
-                whereConditions.square = { [Op.between]: [20, 40] };
-                break;
-              case 3:
-                whereConditions.square = { [Op.gte]: 40 };
-                break;
-            }
+        }
+
+        if (price) {
+          switch (parseInt(price)) {
+            case 1:
+              whereConditions.price = { [Op.between]: [0, 1000000] };
+              break;
+            case 2:
+              whereConditions.price = { [Op.between]: [1000000, 3000000] };
+              break;
+            case 3:
+              whereConditions.price = { [Op.between]: [3000000, 5000000] };
+              break;
+            case 4:
+              whereConditions.price = { [Op.between]: [5000000, 10000000] };
+              break;
+            case 5:
+              whereConditions.price = { [Op.gte]: 10000000 };
+              break;
           }
-  
-          if (price) {
-            switch (parseInt(price)) {
-              case 1:
-                whereConditions.price = { [Op.between]: [0, 1000000] };
-                break;
-              case 2:
-                whereConditions.price = { [Op.between]: [1000000, 3000000] };
-                break;
-              case 3:
-                whereConditions.price = { [Op.between]: [3000000, 5000000] };
-                break;
-              case 4:
-                whereConditions.price = { [Op.between]: [5000000, 10000000] };
-                break;
-              case 5:
-                whereConditions.price = { [Op.gte]: 10000000 };
-                break;
-            }
-          }
-  
-          if (province) {
-            whereConditions.province = province;
-          }
-  
-          if (district) {
-            whereConditions.district = district;
-          }
-  
-          if (ward) {
-            whereConditions.ward = ward;
-          }
-        } else if (id == 12) {
-          if (typeRoom) {
-            whereConditions.typeRoom = typeRoom;
-          }
-  
-          if (star) {
-            whereConditions.rating = star;
-          }
-  
-          if (province) {
-            whereConditions.province = province;
-          }
-  
-          if (district) {
-            whereConditions.district = district;
-          }
-  
-          if (ward) {
-            whereConditions.ward = ward;
-          }
-        } 
+        }
+
+        if (province) {
+          whereConditions.province = province;
+        }
+
+        if (district) {
+          whereConditions.district = district;
+        }
+
+        if (ward) {
+          whereConditions.ward = ward;
+        }
+      } else if (id == 12) {
+        if (typeRoom) {
+          whereConditions.typeRoom = typeRoom;
+        }
+
+        if (star) {
+          whereConditions.rating = star;
+        }
+
+        if (province) {
+          whereConditions.province = province;
+        }
+
+        if (district) {
+          whereConditions.district = district;
+        }
+
+        if (ward) {
+          whereConditions.ward = ward;
+        }
+      }
 
       const { count, rows: productList } = await db.product.findAndCountAll({
         where: whereConditions,
-        order: [["DESC"]],
+        order: [["createdAt", "DESC"]],
         include: [
           {
             model: db.user,
             attributes: ["id", "firstName", "lastName"],
             required: false,
           },
+          {
+            model: db.user_manager_product,
+            // attributes: ["id", "firstName", "lastName"],
+            required: false,
+          },
         ],
+        attributes: { exclude: ["desc"] },
         limit: pageSize,
         offset: (page - 1) * pageSize,
       });
@@ -940,12 +952,13 @@ export default {
     try {
       db.product
         .findAll({
-          order: [["DESC"]],
+          order: [["createdAt","DESC"]],
           where: {
             categoryId: 12,
             // subCategoryId: req.query.subCategoryId,
           },
           include: [{ model: db.productphoto, attributes: ["id", "imgUrl"] }],
+          attributes: {exclude: ["desc"]},
           limit: 4,
         })
         .then((list) => {
@@ -962,12 +975,13 @@ export default {
     try {
       db.product
         .findAll({
-          order: [["DESC"]],
+          order: [["createdAt", "DESC"]],
           where: {
             categoryId: 13,
             // subCategoryId: req.query.subCategoryId,
           },
           include: [{ model: db.productphoto, attributes: ["id", "imgUrl"] }],
+          attributes: {exclude: ["desc"]},
           limit: 4,
         })
         .then((list) => {
@@ -984,11 +998,12 @@ export default {
     try {
       db.product
         .findAll({
-          order: [["DESC"]],
+          order: [["createdAt", "DESC"]],
           where: {
             endow: 1,
           },
-          include: [{ model: db.productphoto, attributes: ["id", "imgUrl"] }],
+          // include: [{ model: db.productphoto, attributes: ["id", "imgUrl"] }],
+          attributes: {exclude: ["desc"]},
           limit: 4,
         })
         .then((list) => {

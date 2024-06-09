@@ -59,6 +59,7 @@ module.exports = (sequelize, DataTypes) => {
     models.product.hasMany(models.productphoto, { foreignKey: 'productId' });
     models.product.belongsTo(models.SubChildCategory, { foreignKey: 'childCategoryId' });
     models.product.hasMany(models.vendor_product, { foreignKey: 'productId' });
+    models.product.hasMany(models.user_manager_product, { foreignKey: 'product_id' });
     models.product.belongsTo(models.user, { foreignKey: 'user_manager' });
   };
   return product;

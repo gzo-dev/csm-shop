@@ -66,7 +66,7 @@ app.use((error, req, res, next) => {
   let contype = req.headers["content-type"];
   var json = !(!contype || contype.indexOf("application/json") !== 0);
   if (json) {
-    return res.json({ errors: error.errorList });
+    return res.json({ errors: error.errorList });   
   } else {
     res.render(error.status.toString(), { layout: null });
   }
@@ -75,8 +75,8 @@ app.use((error, req, res, next) => {
 // kue.init();
 /* Database Connection */
 db.sequelize
-  .authenticate()
-  .then(function () {
+  .authenticate() 
+  .then(function () { 
     console.log("Nice! Database looks fine");
     scheduler.init();
   })

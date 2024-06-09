@@ -13,5 +13,8 @@ authRouter.route('/user/delete').post(authController.deleteUserList);
 authRouter.route('/info').get(authController.findUser);
 authRouter.route('/rootLogin').post(authController.login);
 authRouter.route('/verification').post(authController.verifyMail)
+authRouter.route('/leader/list/employee').get(authController.getListEmployeeOfLeader)
+authRouter.route('/leader/list/employee').put(authController.updateEmployeeOfLeader)
+
 
 

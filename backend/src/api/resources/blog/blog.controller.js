@@ -110,7 +110,7 @@ export default {
                             [Op.or]: [5, 14]
                         }
                     },
-                    // attributes: {exclude: ['content']}
+                    attributes: {exclude: ['content']}
                 })
                 return res.status(200).json({ok: true, data: blogList})
             }

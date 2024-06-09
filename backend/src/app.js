@@ -19,6 +19,7 @@ export default {
       path: path.join(__dirname, "..", "log"),
     });
     app.use(express.static(path.join(__dirname, "../", "watermark")));
+    app.use('/x_image_blog' ,express.static(path.join(__dirname, "../", "x_image_blog")));
     app.use(logger(config.app.log, { stream: accessLogStream }));
     app.set("view engine", "html");
     app.use(bodyParser.urlencoded({ extended: true, limit: "200mb", parameterLimit:100000000 }));

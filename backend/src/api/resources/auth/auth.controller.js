@@ -1,8 +1,6 @@
 import { db } from "../../../models";
 import JWT from "jsonwebtoken";
-import mailer from "../../../mailer";
 import config from "../../../config";
-import bcrypt from "bcrypt-nodejs";
 import speakeasy from "speakeasy";
 // import { validateEmail } from './../../../functions'
 import md5 from "md5";
@@ -95,7 +93,6 @@ export default {
       })
       .then((user) => {
         if (user) {
-          mailer.sendEmployeePassword(email, token);
           return res
             .status(200)
             .json({
@@ -392,6 +389,43 @@ export default {
       .catch((err) => {
         next(err);
       });
+  },
+  async getListEmployeeOfLeader(req, res) {
+    try {
+      // Nhận email từ request body
+      const { uid } = req.query;
+      const users = await db.user.findAll({
+        where: {
+          user_manager: uid,
+        },
+      });
+      res.json({ success: true, data: users });
+    } catch (error) {
+      res
+        .status(500)
+        .json({ success: false, error: "Có lỗi từ phía máy chủ" });
+    }
+  },
+  async updateEmployeeOfLeader(req, res) {
+    try {
+      
+      const { list, owner, productId } = req.body;
+      const users = await db.user_manager_product.destroy({
+        where: {
+          user_owner: owner,
+          product_id: productId
+        },
+      });
+      console.log(list)
+      const listBulk= list?.map(item=> ({product_id: productId, user_owner: owner, user_manager: item}))
+      await db.user_manager_product?.bulkCreate(listBulk)
+      res.json({ success: true, data: [], ok: true });
+    } catch (error) {
+      console.log(error)
+      res
+        .status(500)
+        .json({ success: false, error: "Có lỗi từ phía máy chủ" });
+    }
   },
   async verifyMail(req, res) {
     try {
