@@ -63,9 +63,14 @@ export default {
         imageWidth,
         imageHeight
       );
-
+      const finalOutputImagePath = path.join(outputFilename, `${uuid}.jpg`);
+      await sharp(outputImagePath)
+        .jpeg({ quality: 70 })
+        .resize({fit: "inside", width: 720})
+        .toFile(finalOutputImagePath);
+      fs.unlinkSync(outputImagePath);
       // Trả về đường dẫn ảnh đã xử lý
-      return res.status(200).send({ file_path: `${serverHost}/${uuid}.png` });
+      return res.status(200).send({ file_path: `${serverHost}/${uuid}.jpg` });
     } catch (error) {
       console.error("Error:", error);
       res
@@ -103,13 +108,13 @@ async function addTextToImage(
     );
 
     // Ghép lớp văn bản vào ảnh bằng Sharp
-    await image.composite([{ input: textLayer, blend: "over" }]);
+    image.composite([{ input: textLayer, blend: "over" }]);
 
     // Lưu ảnh đã xử lý vào tệp tạm thời
     await image.toFile(tempOutputPath);
 
     // Sao chép ảnh từ tệp tạm thời sang tệp đầu ra
-    await sharp(tempOutputPath).webp({ quality: 70, force: true }).resize({ fit: 'inside', width: 1280 }).toFile(outputImagePath);
+    await sharp(tempOutputPath).toFile(outputImagePath);
     // Xóa tệp tạm thời sau khi hoàn thành
     await fs.promises.unlink(tempOutputPath);
   } catch (error) {

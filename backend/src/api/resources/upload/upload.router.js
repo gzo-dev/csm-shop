@@ -15,3 +15,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 uploadRouter.route("/").post(upload.single("image"), uploadController.uploadImage)
+uploadRouter.route("/change-host").post(uploadController.changeHost)
+uploadRouter.route("/change-mime-type").post(uploadController.changeMimeType)
+uploadRouter.route("/change-mime-type-db").post(uploadController.changeMimeTypeDb)
+uploadRouter.route("/change-mime-type-db-1").post(uploadController.changeMimeTypeDb1)

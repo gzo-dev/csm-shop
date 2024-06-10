@@ -2,7 +2,7 @@ import express from 'express';
 import productController from './product.controller';
 // import { sanitize } from '../../../middleware/sanitizer';
 // import { jwtStrategy } from '../../../middleware/strategy';
-import upload from '../../../awsbucket';
+import upload, { compressAndConvertToJpg, compressAndConvertToJpgSingle } from '../../../awsbucket';
 
 
 export const productRouter = express.Router();
@@ -14,10 +14,10 @@ productRouter.route("/s/h").get(productController.getProductSuggestHotel)
 productRouter.route("/s/a").get(productController.getProductSuggestApartment)
 productRouter.route("/sg").get(productController.getProductSuggest2)
 productRouter.route("/photo").get(productController.getPhotoProduct)
-productRouter.route('/add').post(upload.single('photo'), productController.addProduct);
+productRouter.route('/add').post(upload.single('photo'), compressAndConvertToJpgSingle, productController.addProduct);
+productRouter.route('/update').post( upload.single('photo'), compressAndConvertToJpgSingle, productController.update);
 productRouter.route('/getAllproduct').get( productController.index);
 productRouter.route('/getAllproductList').get( productController.getAllProductList);
-productRouter.route('/update').post( upload.single('photo'), productController.update);
 productRouter.route('/c/s').get( productController.getAllProductCategory);
 productRouter.route('/getProductByCategory').get( productController.getProductListByCategory);
 productRouter.route('/filter').get( productController.getProductListByFilter);
@@ -28,7 +28,7 @@ productRouter.route('/getAllProductOffer').get( productController.getProductOffe
 productRouter.route('/delete').delete( productController.productDelete);
 productRouter.route("/d/bulk").post(productController.productDeleteBulk)
 productRouter.route('/deleteOfferById/:id').get( productController.productOfferDelete);
-productRouter.route('/upload-img').post(upload.array('file', 10), productController.multiplePhotoUpload);
+productRouter.route('/upload-img').post(upload.array('file', 10), compressAndConvertToJpg, productController.multiplePhotoUpload);
 productRouter.route('/getAllPhoto').get( productController.getAllPhoto);
 productRouter.route('/slider-photo/delete').delete( productController.deleteSliderPhoto);
 productRouter.route("/size").get(productController.getSizeProduct)

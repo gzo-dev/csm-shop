@@ -1226,7 +1226,7 @@ export default {
         }
       })
       .then((r) => {
-        res.status(200).json({ success: true, data: req.files });
+        res.status(200).json({ success: true, data: req.files, ok: true });
       })
       .catch(function (error) {
         console.log(error);
