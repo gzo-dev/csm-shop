@@ -230,7 +230,7 @@ export default {
         const token = JWT.sign(
           { uid: findUser.dataValues.id, id: findUser.dataValues.id },
           process.env.JWT_SECRET,
-          
+          { expiresIn: 24 * 60 * 60 }
         );
         return res
           .status(200)
@@ -279,7 +279,8 @@ export default {
         console.log(data);
         const token = JWT.sign(
           { uid: findUser.dataValues.id, id: findUser.dataValues.id },
-          process.env.JWT_SECRET
+          process.env.JWT_SECRET,
+          { expiresIn: 24 * 60 * 60 }
         );
         return res
           .status(200)
@@ -303,7 +304,8 @@ export default {
         });
         const token = JWT.sign(
           { uid: findUser.dataValues.id, id: findUser.dataValues.id },
-          process.env.JWT_SECRET
+          process.env.JWT_SECRET,
+          { expiresIn: 24 * 60 * 60 }
         );
         if (findUserdevice1?.email || findUserdevice2?.email) {
           console.log(5);
@@ -318,7 +320,6 @@ export default {
               deviceCode,
             });
         } else {
-          console.log(6);
           return res
             .status(200)
             .json({ success: false, login: false, third: true });
