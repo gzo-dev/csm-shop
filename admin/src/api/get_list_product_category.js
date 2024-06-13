@@ -16,8 +16,7 @@ const getAllProductListCategory = async (data) => {
             NotificationManager.error(result.data.error);
             return null;
         }
-        console.log(result.data)
-        return result.data;
+        return result;
     } catch (error) {
         console.log(error);
         return null;

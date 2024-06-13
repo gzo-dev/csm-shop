@@ -314,34 +314,34 @@ const View = ({ history }) => {
                   <table className="table ucp-table table-hover">
                     <thead>
                       <tr>
-                        <th>Mã NV</th>
-                        <th>Tên NV</th>
-                        <th>Chức vụ</th>
+                        <th style={{ whiteSpace: "nowrap" }}>Mã NV</th>
+                        <th style={{ whiteSpace: "nowrap" }}>Tên NV</th>
+                        <th style={{ whiteSpace: "nowrap" }}>Chức vụ</th>
                         <th style={{ whiteSpace: "nowrap" }}>Số điện thoại</th>
-                        <th>Email</th>
-                        <th>Địa chỉ</th>
-                        <th>Thông tin chung</th>
-                        <th>Trạng thái</th>
-                        <th>Hành động</th>
+                        <th style={{ whiteSpace: "nowrap" }}>Email</th>
+                        <th style={{ whiteSpace: "nowrap" }}>Địa chỉ</th>
+                        <th style={{ whiteSpace: "nowrap" }}>Thông tin chung</th>
+                        <th style={{ whiteSpace: "nowrap" }}>Trạng thái</th>
+                        <th style={{ whiteSpace: "nowrap" }}>Hành động</th>
                       </tr>
                     </thead>
                     <tbody>
                       {currentItems.map((row, index) => (
                         <tr key={index}>
-                          <td>
+                          <td style={{ whiteSpace: "nowrap" }}>
                             {row.user_id ? row.user_id : "Chưa thiết lập"}
                           </td>
-                          <td>{renderName(row)}</td>
+                          <td style={{ whiteSpace: "nowrap" }}>{renderName(row)}</td>
                           <td style={{ textTransform: "uppercase" }}>
                             {renderRole(row.role)}
                           </td>
-                          <td>{row.phone ? row.phone : "Chưa thiết lập"}</td>
-                          <td>{row.email ? row.email : "Chưa thiết lập"}</td>
+                          <td style={{ whiteSpace: "nowrap" }}>{row.phone ? row.phone : "Chưa thiết lập"}</td>
+                          <td style={{ whiteSpace: "nowrap" }}>{row.email ? row.email : "Chưa thiết lập"}</td>
                           <th>
                             {row.address ? row.address : "Chưa thiết lập"}
                           </th>
                           <th>{row.note ? row.note : "Chưa thiết lập"}</th>
-                          <td>
+                          <td style={{ whiteSpace: "nowrap" }}>
                             {row.verify ? (
                               <span className="text-success">Đã xác thực</span>
                             ) : (
@@ -384,20 +384,20 @@ const View = ({ history }) => {
                     <tbody>
                       {listSearch.map((row, index) => (
                         <tr key={index}>
-                          <td>
+                          <td style={{ whiteSpace: "nowrap" }}>
                             {row.user_id ? row.user_id : "Chưa thiết lập"}
                           </td>
-                          <td>{renderName(row)}</td>
+                          <td style={{ whiteSpace: "nowrap" }}>{renderName(row)}</td>
                           <td style={{ textTransform: "uppercase" }}>
                             {renderRole(row.role)}
                           </td>
-                          <td>{row.phone ? row.phone : "Chưa thiết lập"}</td>
-                          <td>{row.email ? row.email : "Chưa thiết lập"}</td>
+                          <td style={{ whiteSpace: "nowrap" }}>{row.phone ? row.phone : "Chưa thiết lập"}</td>
+                          <td style={{ whiteSpace: "nowrap" }}>{row.email ? row.email : "Chưa thiết lập"}</td>
                           <th>
                             {row.address ? row.address : "Chưa thiết lập"}
                           </th>
                           <th>{row.note ? row.note : "Chưa thiết lập"}</th>
-                          <td>
+                          <td style={{ whiteSpace: "nowrap" }}>
                             {row.verify ? (
                               <span className="text-success">Đã xác thực</span>
                             ) : (

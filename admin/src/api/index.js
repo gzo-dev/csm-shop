@@ -4,7 +4,7 @@ import { API_URL } from "../config1"
 const getListProvince = async () => {
   try {
     const res = await axios({
-      url: "https://vapi.vnappmob.com/api/province",
+      url: "https://province.minhkhanggroup.vn/api/v1/province",
       method: "get"
     })
     const result = await res.data.results
@@ -20,7 +20,7 @@ const getListProvince = async () => {
 export const apiGetProvince = async (provinceCode) => {
   try {
     const res= await axios({
-      url: `https://vapi.vnappmob.com/api/province/district/${provinceCode}`,
+      url: `https://province.minhkhanggroup.vn/api/v1/province/district/${provinceCode}`,
       method: "get",
     })
     const result= await res.data
@@ -34,7 +34,7 @@ export const apiGetProvince = async (provinceCode) => {
 export const apiGetWard= async (districtCode)=> {
   try {
     const res= await axios({
-      url: `https://vapi.vnappmob.com/api/province/ward/${districtCode}`
+      url: `https://province.minhkhanggroup.vn/api/v1/province/ward/${districtCode}`
     })
     const result= await res.data
     return result
@@ -158,7 +158,7 @@ export const apiGetListTour= async (data)=> {
 export const apiGetListBlog= async (data)=> {
   try {
     const res= await axios({
-      url: API_URL + "/api/v1/blog",
+      url: API_URL + "/api/v1/blog/admin",
       method: "get"
     })
     const result= await res.data

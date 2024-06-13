@@ -135,18 +135,34 @@ const View = () => {
     }
   };
 
-  const renderStatus= (type)=> {
+  const renderStatus = (type) => {
     switch (type) {
       case "waiting for reply":
-        return "Chờ phản hồi"
+        return "Chờ phản hồi";
         break;
-      case "replied": 
-        return "Đã phản hồi"
+      case "replied":
+        return "Đã phản hồi";
       default:
-        return "Không xác định"
+        return "Không xác định";
         break;
     }
-  }
+  };
+
+  const renderTrip = (type) => {
+    switch (type) {
+      case 1:
+        return "Một chiều";
+        break;
+      case 2:
+        return "Khứ hồi";
+      case 3:
+        return "Nhiều chawnjg";
+
+      default:
+        return "Không xác định";
+        break;
+    }
+  };
 
   return (
     <div className="container-fluid">
@@ -226,72 +242,73 @@ const View = () => {
             <div className="card-body-table">
               <div className="table-responsive">
                 <table className="table ucp-table table-hover">
-                  <thead>
+                  <thead >
                     {(parseInt(id) == 4 || parseInt(id) == 6) && (
                       <tr>
-                        <th></th>
-                        <th>Tên khách hàng</th>
-                        <th>Ngày gửi</th>
-                        {/* <th>Loại hình liên hệ</th> */}
-                        <th>Ngày đi</th>
-                        <th>Ngày đến</th>
-                        <th>Điểm đi</th>
-                        <th>Điểm đến</th>
-                        <th>Số lượng khách</th>
-                        <th>Hành trình</th>
-                        <th>Trạng thái</th>
-                        <th>Hành động</th>
+                        <th style={{whiteSpace: "nowrap"}} ></th>
+                        <th style={{whiteSpace: "nowrap"}} >Tên khách hàng</th>
+                        <th style={{whiteSpace: "nowrap"}} >Ngày gửi</th>
+                        {/* <th style={{whiteSpace: "nowrap"}} >Loại hình liên hệ</th> */}
+                        <th style={{whiteSpace: "nowrap"}} >Ngày đi</th>
+                        <th style={{whiteSpace: "nowrap"}} >Ngày đến</th>
+                        <th style={{whiteSpace: "nowrap"}} >Điểm đi</th>
+                        <th style={{whiteSpace: "nowrap"}} >Điểm đến</th>
+                        <th style={{whiteSpace: "nowrap"}} >Số điện thoại</th>
+                        <th style={{whiteSpace: "nowrap"}} >Số lượng khách</th>
+                        <th style={{whiteSpace: "nowrap"}} >Hành trình</th>
+                        <th style={{whiteSpace: "nowrap"}} >Trạng thái</th>
+                        <th style={{whiteSpace: "nowrap"}} >Hành động</th>
                       </tr>
                     )}
                     {(parseInt(id) == 1 || parseInt(id) == 3) && (
                       <tr>
-                        <th></th>
-                        <th>Tên khách hàng</th>
-                        <th>Ngày liên hệ</th>
-                        {/* <th>Loại hình liên hệ</th> */}
-                        <th>Sản phẩm liên hệ</th>
-                        <th>Nội dung</th>
-                        <th>Email</th>
-                        <th>Số điện thoại</th>
-                        <th>Người xử lý</th>
-                        <th>Trạng thái</th>
-                        <th>Hành động</th>
+                        <th style={{whiteSpace: "nowrap"}} ></th>
+                        <th style={{whiteSpace: "nowrap"}} >Tên khách hàng</th>
+                        <th style={{whiteSpace: "nowrap"}} >Ngày liên hệ</th>
+                        {/* <th style={{whiteSpace: "nowrap"}} >Loại hình liên hệ</th> */}
+                        <th style={{whiteSpace: "nowrap"}} >Sản phẩm liên hệ</th>
+                        <th style={{whiteSpace: "nowrap"}} >Nội dung</th>
+                        <th style={{whiteSpace: "nowrap"}} >Email</th>
+                        <th style={{whiteSpace: "nowrap"}} >Số điện thoại</th>
+                        <th style={{whiteSpace: "nowrap"}} >Người xử lý</th>
+                        <th style={{whiteSpace: "nowrap"}} >Trạng thái</th>
+                        <th style={{whiteSpace: "nowrap"}} >Hành động</th>
                       </tr>
                     )}
                     {parseInt(id) == 2 && (
                       <tr>
-                        <th></th>
-                        <th>Tên khách hàng</th>
-                        <th>Ngày gửi</th>
-                        {/* <th>Loại hình liên hệ</th> */}
-                        <th>Loại hình</th>
-                        <th>Sản phẩm liên hệ</th>
-                        <th>Nội dung</th>
-                        <th>SĐT</th>
-                        <th>Email</th>
-                        <th>Trạng thái</th>
-                        <th>Hành động</th>
+                        <th style={{whiteSpace: "nowrap"}} ></th>
+                        <th style={{whiteSpace: "nowrap"}} >Tên khách hàng</th>
+                        <th style={{whiteSpace: "nowrap"}} >Ngày gửi</th>
+                        {/* <th style={{whiteSpace: "nowrap"}} >Loại hình liên hệ</th> */}
+                        <th style={{whiteSpace: "nowrap"}} >Loại hình</th>
+                        <th style={{whiteSpace: "nowrap"}} >Sản phẩm liên hệ</th>
+                        <th style={{whiteSpace: "nowrap"}} >Nội dung</th>
+                        <th style={{whiteSpace: "nowrap"}} >SĐT</th>
+                        <th style={{whiteSpace: "nowrap"}} >Email</th>
+                        <th style={{whiteSpace: "nowrap"}} >Trạng thái</th>
+                        <th style={{whiteSpace: "nowrap"}} >Hành động</th>
                       </tr>
                     )}
                     {parseInt(id) == 5 && (
                       <tr>
-                        <th></th>
-                        <th>Tên khách hàng</th>
-                        <th>Ngày gửi</th>
-                        {/* <th>Loại hình liên hệ</th> */}
-                        <th>Sản phẩm liên hệ</th>
-                        <th>Giá vé</th>
-                        <th>SĐT</th>
-                        <th>Ghi chú</th>
-                        <th>Người xử lý</th>
-                        <th>Trạng thái</th>
-                        <th>Hành động</th>
+                        <th style={{whiteSpace: "nowrap"}} ></th>
+                        <th style={{whiteSpace: "nowrap"}} >Tên khách hàng</th>
+                        <th style={{whiteSpace: "nowrap"}} >Ngày gửi</th>
+                        {/* <th style={{whiteSpace: "nowrap"}} >Loại hình liên hệ</th> */}
+                        <th style={{whiteSpace: "nowrap"}} >Sản phẩm liên hệ</th>
+                        <th style={{whiteSpace: "nowrap"}} >Giá vé</th>
+                        <th style={{whiteSpace: "nowrap"}} >SĐT</th>
+                        <th style={{whiteSpace: "nowrap"}} >Ghi chú</th>
+                        <th style={{whiteSpace: "nowrap"}} >Người xử lý</th>
+                        <th style={{whiteSpace: "nowrap"}} >Trạng thái</th>
+                        <th style={{whiteSpace: "nowrap"}} >Hành động</th>
                       </tr>
                     )}
                   </thead>
                   <tbody>
                     {/* Hiển thị danh sách item của trang hiện tại */}
-                    {currentItems.map((row, index) => (
+                    {currentItems?.map((row, index) => (
                       <tr key={index}>
                         {(parseInt(id) == 1 || parseInt(id) == 3) && (
                           <Fragment>
@@ -326,7 +343,10 @@ const View = () => {
                             </td>
                             <td>{row.email}</td>
                             <td>{row.phone || "Không xác định"}</td>
-                            <td>{row.user && row.user.firstName || "Không xác định"}</td>
+                            <td>
+                              {(row.user && row.user.firstName) ||
+                                "Không xác định"}
+                            </td>
                             <td>{renderStatus(row.status)}</td>
                             <td className="action-btns">
                               {row.status === "waiting for reply" ? (
@@ -377,7 +397,7 @@ const View = () => {
                             </td>
                           </Fragment>
                         )}
-                        {( parseInt(id) == 5) && (
+                        {parseInt(id) == 5 && (
                           <Fragment>
                             <td>
                               <FormControlLabel
@@ -396,12 +416,13 @@ const View = () => {
                             <td>{row.createdAt}</td>
                             {/* <td>{renderType(parseInt(row.type))}</td> */}
                             <td>{row.product}</td>
-                            <td>
-                              {row.price}
-                            </td>
+                            <td>{row.price}</td>
                             <td>{row.phone}</td>
                             <td>{row.content || "Không xác định"}</td>
-                            <td>{row.user && row.user.firstName || "Không xác định"}</td>
+                            <td>
+                              {(row.user && row.user.firstName) ||
+                                "Không xác định"}
+                            </td>
                             <td>{row.status}</td>
                             <td className="action-btns">
                               {row.status === "waiting for reply" ? (
@@ -452,7 +473,7 @@ const View = () => {
                             </td>
                           </Fragment>
                         )}
-                        {( parseInt(id) == 2) && (
+                        {parseInt(id) == 2 && (
                           <Fragment>
                             <td>
                               <FormControlLabel
@@ -471,17 +492,20 @@ const View = () => {
                             <td>{row.createdAt}</td>
                             {/* <td>{renderType(parseInt(row.type))}</td> */}
                             <td>
-                              {row.kindof== 1 && "Tour daily"}
-                              {row.kindof== 2 && "Tour miền bắc"}
-                              {row.kindof== 3 && "Tour miền trung"}
-                              {row.kindof== 4 && "Tour miền nam"}
-                              {row.kindof== 5 && "Tour tây nguyên"}
-                              {row.kindof== 6 && "Tour biển đảo"}
+                              {row.kindof == 1 && "Tour daily"}
+                              {row.kindof == 2 && "Tour miền bắc"}
+                              {row.kindof == 3 && "Tour miền trung"}
+                              {row.kindof == 4 && "Tour miền nam"}
+                              {row.kindof == 5 && "Tour tây nguyên"}
+                              {row.kindof == 6 && "Tour biển đảo"}
                             </td>
                             <td>{row.product}</td>
                             <td>{row.phone}</td>
                             <td>{row.content || "Không xác định"}</td>
-                            <td>{row.user && row.user.firstName || "Không xác định"}</td>
+                            <td>
+                              {(row.user && row.user.firstName) ||
+                                "Không xác định"}
+                            </td>
                             <td>{row.status}</td>
                             <td className="action-btns">
                               {row.status === "waiting for reply" ? (
@@ -532,7 +556,7 @@ const View = () => {
                             </td>
                           </Fragment>
                         )}
-                        {( parseInt(id) == 4 || parseInt(id)== 6) && (
+                        {(parseInt(id) == 4 || parseInt(id) == 6) && (
                           <Fragment>
                             <td>
                               <FormControlLabel
@@ -547,29 +571,30 @@ const View = () => {
                                 }
                               />
                             </td>
-                            <td style={{whiteSpace: "nowrap"}}>{row.name}</td>
+                            <td style={{ whiteSpace: "nowrap" }}>{row.name}</td>
                             <td>{row.createdAt}</td>
                             {/* <td>{renderType(parseInt(row.type))}</td> */}
                             <td>
-                              {row.kindof== 1 && "Tour daily"}
-                              {row.kindof== 2 && "Tour miền bắc"}
-                              {row.kindof== 3 && "Tour miền trung"}
-                              {row.kindof== 4 && "Tour miền nam"}
-                              {row.kindof== 5 && "Tour tây nguyên"}
-                              {row.kindof== 6 && "Tour biển đảo"}
+                              {row.kindof == 1 && "Tour daily"}
+                              {row.kindof == 2 && "Tour miền bắc"}
+                              {row.kindof == 3 && "Tour miền trung"}
+                              {row.kindof == 4 && "Tour miền nam"}
+                              {row.kindof == 5 && "Tour tây nguyên"}
+                              {row.kindof == 6 && "Tour biển đảo"}
                             </td>
                             <td>
-                            {row.kindof== 1 && "Tour daily"}
-                              {row.kindof== 2 && "Tour miền bắc"}
-                              {row.kindof== 3 && "Tour miền trung"}
-                              {row.kindof== 4 && "Tour miền nam"}
-                              {row.kindof== 5 && "Tour tây nguyên"}
-                              {row.kindof== 6 && "Tour biển đảo"}
+                              {row.kindof == 1 && "Tour daily"}
+                              {row.kindof == 2 && "Tour miền bắc"}
+                              {row.kindof == 3 && "Tour miền trung"}
+                              {row.kindof == 4 && "Tour miền nam"}
+                              {row.kindof == 5 && "Tour tây nguyên"}
+                              {row.kindof == 6 && "Tour biển đảo"}
                             </td>
                             <td>{row.departureText}</td>
                             <td>{row.destinationText}</td>
+                            <td>{row.phone}</td>
                             <td>{row.guest}</td>
-                            <td>{row.trip || "Không xác định"}</td>
+                            <td>{renderTrip(parseInt(row.trip)) || "Không xác định"}</td>
                             <td>{row.status}</td>
                             <td className="action-btns">
                               {row.status === "waiting for reply" ? (

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ReactQuill, { Quill } from "react-quill";
-import "react-quill/dist/quill.snow.css";
+// import "react-quill/dist/quill.snow.css";
 import MaskingImage from "../../../../assets/Masking.png";
 import WrapTextImage from "../../../../assets/wrap-text.png";
 

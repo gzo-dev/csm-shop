@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import ReactQuill, { Quill } from "react-quill";
+// import "react-quill/dist/quill.snow.css";
+
 
 const RichTextEditor2 = ({ content, placeholder, handleContentChange }) => {
   const [editorState, setEditorState] = useState(content);
@@ -27,7 +28,7 @@ const RichTextEditor2 = ({ content, placeholder, handleContentChange }) => {
 
 RichTextEditor2.modules = {
   toolbar: [
-    [{ font: [] }],
+    [{ 'font': ['sofia  ', 'times-new-roman', 'arial'] }],
     [{ size: ["small", false, "large", "huge"] }], // custom dropdown
     [{ header: [1, 2, 3, 4, 5, 6, false] }],
     ["bold", "italic", "underline", "strike"],
@@ -48,6 +49,7 @@ RichTextEditor2.modules = {
 };
 
 RichTextEditor2.formats = [
+  "font",
   "align",
   "background",
   "blockquote",
@@ -57,7 +59,7 @@ RichTextEditor2.formats = [
   "code-block",
   "clean",
   "direction",
-  "font",
+  
   "header",
   "italic",
   "indent",

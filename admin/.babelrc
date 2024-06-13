@@ -1,1 +1,7 @@
-    
+{
+    "presets": [
+      "@babel/preset-env", // Sử dụng preset @babel/preset-env để biên dịch ES6+
+      "@babel/preset-react" // Sử dụng preset @babel/preset-react để biên dịch JSX
+    ]
+  }
+  

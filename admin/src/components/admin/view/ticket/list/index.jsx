@@ -36,14 +36,7 @@ const List = ({ history }) => {
     // setCurrentPage(value);
     history.push("/admin/tk/"+ id + "/list?page="+ value)
   };
-  useEffect(()=> {
-    if(parseInt(query.get("page")) >= 1) {
-      setCurrentPage(parseInt(query.get("page")))
-    }
-    else {
-      setCurrentPage(1)
-    }
-  }, [query.get("page"), currentPage])
+  
   const handleBack = () => {
     history.goBack();
   };
@@ -107,6 +100,14 @@ const List = ({ history }) => {
       setListProvince(result);
     })();
   }, []);
+  useEffect(()=> {
+    if(parseInt(query.get("page")) >= 1) {
+      setCurrentPage(parseInt(query.get("page")))
+    }
+    else {
+      setCurrentPage(1)
+    }
+  }, [query.get("page"), currentPage])
 
   return (
     <div className="container-fluid">
@@ -212,7 +213,7 @@ const List = ({ history }) => {
                     value={province}
                     setValue={setProvince}
                     label={"Tỉnh / Thành phố"}
-                    list={listProvince.map((item) => ({
+                    list={listProvince?.map((item) => ({
                       ...item,
                       value: item.province_id,
                       label: item.province_name,
@@ -234,7 +235,7 @@ const List = ({ history }) => {
                     value={district}
                     setValue={setDistrict}
                     label={"Quận / Huyện"}
-                    list={provinceDetail.map((el) => ({
+                    list={provinceDetail?.map((el) => ({
                       ...el,
                       value: el.district_id,
                       label: el.district_name,
@@ -256,7 +257,7 @@ const List = ({ history }) => {
                     value={ward}
                     setValue={setWard}
                     label={"Xã / Phường"}
-                    list={listWard.map((el) => ({
+                    list={listWard?.map((el) => ({
                       ...el,
                       value: el.ward_id,
                       label: el.ward_name,
@@ -307,7 +308,7 @@ const List = ({ history }) => {
                   <tbody>
                     {parseInt(id) >= 4 && (
                       <Fragment>
-                        {currentItems.map((row, index) => (
+                        {currentItems?.map((row, index) => (
                           <tr key={index}>
                             <td>{row.ticket_id}</td>
                             <td>{row.name}</td>
@@ -343,11 +344,11 @@ const List = ({ history }) => {
                     {/*  */}
                     {parseInt(id) < 4 && (
                       <Fragment>
-                        {currentItems.map((row, index) => (
+                        {currentItems?.map((row, index) => (
                           <tr key={index}>
                             <td>{row.ticket_id}</td>
                             <td>{row.name}</td>
-                            <td>{row.departureText || ""}</td>
+                            <td>{row.provinceText || ""}</td>
                             {/* <td>{row.destinationText || ""}</td> */}
                             <td>{row.price || ""}</td>
                             <td>{row.children_price || ""}</td>

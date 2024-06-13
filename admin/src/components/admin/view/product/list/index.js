@@ -1,4 +1,11 @@
-import React, { useState, useEffect, useContext, Fragment, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  Fragment,
+  useRef,
+  useCallback,
+} from "react";
 import {
   Box,
   Button,
@@ -41,17 +48,20 @@ import { useHistory } from "react-router-dom";
 import useQuery from "../../../../../util/useQuery";
 import { CLIENT_URL } from "../../../../../config1";
 import getAllProductListCategory from "../../../../../api/get_list_product_category";
-
-
+import search_product from "../../../../../api/searchProduct";
+import search_product_filter from "../../../../../api/searchProductFilter";
+import _, { debounce } from "lodash";
+import MangeEmployeeProduct from "./MangeEmployeeProduct";
 
 const List = () => {
   const { id, subid } = useParams();
   // const
   const query = useQuery();
-  const history= useHistory()
+  const history = useHistory();
   const { user } = useContext(AppContext);
   const [originList, setOriginList] = useState([]);
   const [getList, setGetList] = useState([]);
+  const [totalPage, setTotalPage] = useState();
   const [listSearch, setListSearch] = useState([]);
   const [searchText, setSearchText] = useState("");
   const isSearching = searchText.length > 0 ? true : false;
@@ -73,125 +83,68 @@ const List = () => {
   const [listProvince, setListProvince] = useState([]);
   const [province, setProvince] = useState();
   const [district, setDistrict] = useState();
-  const [rent, setRent]= useState()
+  const [rent, setRent] = useState();
   const [listCheck, setListCheck] = useState([]);
   const [listCategory, setListCategory] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = getList.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = getList;
   const role = getCookie("role");
   const auid = getCookie("auid");
+
   const handlePageChange = (event, value) => {
     // setCurrentPage(value);
-    history.push("/admin/p/"+ id + "/" + subid + "/list?page="+ value)
+    const searchText =
+      new URLSearchParams(window.location.search).get("search") || "";
+    history.push(
+      "/admin/p/" +
+        id +
+        "/" +
+        subid +
+        "/list?page=" +
+        value +
+        "&search=" +
+        searchText
+    );
   };
-  useEffect(()=> {
-    if(parseInt(query.get("page")) >= 1) {
-      setCurrentPage(parseInt(query.get("page")))
-    }
-    else {
-      setCurrentPage(1)
-    }
-  }, [query.get("page"), currentPage])
-  const handleBack = () => {
-    // your code here
-    // For example:
-    // props.history.goBack();
-  };
-  const handleSearchFilter = () => {
-    if (id == 13) {
-      let data = [];
-      data = originList;
-      // typeRoom, square, price, province, district, ward
-      if (typeRoom) {
-        data = data.filter((item) => item.typeRoom == typeRoom);
-      }
-      
-      if (rent && rent.toString().length > 0) {
-        switch (parseInt(rent)) { 
-          case 0:
-            console.log(0)
-            data = data.filter((item) => item.rent=== false);
-            break;
-          case 1:
-            console.log(1)
-            data = data.filter((item) => item.rent=== true);
-            break;
-          
-        }
-      }
-      if (square) {
-        switch (square) { 
-          case 1:
-            data = data.filter((item) => parseInt(item.square) >= 0 && parseInt(item.square) <= 20);
-            break;
-          case 2:
-            data = data.filter((item) => parseInt(item.square) >= 20 && parseInt(item.square) <= 40);
-            break;
-          case 3:
-            data = data.filter((item) => parseInt(item.square) >= 40);
-            break;
-          default:
-            break;
-        }
-      }
-      if (price) {
-        switch (price) {
-          case 1:
-            data = data.filter((item) => parseInt(item.price) >= 0 && parseInt(item.price) <= 1000000);
-            break;
-          case 2:
-            data = data.filter((item) => parseInt(item.price) >= 1000000 && parseInt(item.price) <= 3000000);
-            break;
-          case 3:
-            data = data.filter((item) => parseInt(item.price) >= 3000000 && parseInt(item.price) <= 5000000);
-            break;
-          case 4:
-            data = data.filter((item) => parseInt(item.price) >= 5000000 && parseInt(item.price) <= 10000000);
-            break;
-          case 5:
-            data = data.filter((item) => parseInt(item.price) >= 10000000);
-            break;
-          default:
-            break;
-        }
-      }
 
-      if (province) {
-        data = data.filter((item) => item.province == province);
-      }
-      if (district) {
-        data = data.filter((item) => item.district == district);
-      }
-      if (ward) {
-        data = data.filter((item) => item.ward == ward);
-      }
-      setGetList(data);
+  useEffect(() => {
+    if (parseInt(query.get("page")) >= 1) {
+      setCurrentPage(parseInt(query.get("page")));
+    } else {
+      setCurrentPage(1);
     }
-    //
-    if (id == 12) {
-      let data = [];
-      data = originList;
-      // typeRoom, square, price, province, district, ward
-      if (typeRoom) {
-        data = data.filter((item) => item.typeRoom == typeRoom);
-      }
-      if (star) {
-        data = data.filter((item) => item.rating == star);
-      }
-      if (province) {
-        data = data.filter((item) => item.province == province);
-      }
-      if (district) {
-        data = data.filter((item) => item.district == district);
-      }
-      if (ward) {
-        data = data.filter((item) => item.ward == ward);
-      }
-      setGetList(data);
-    }
+  }, [query.get("page"), currentPage]);
+
+  const handleSearchFilter = async () => {
+    const dataTemp = {
+      typeRoom,
+      rent,
+      square,
+      price,
+      province,
+      district,
+      ward,
+      star,
+    };
+    // localStorage.setItem("data_temp_filter", JSON.stringify(dataTemp));
+    const result = await search_product_filter({
+      id,
+      subid,
+      typeRoom,
+      rent,
+      square,
+      price,
+      province,
+      district,
+      ward,
+      star,
+      page: currentPage,
+    });
+    setGetList(result.data);
+    setTotalPage(result.pagination.totalPages);
   };
 
   const handleChange = (item) => {
@@ -212,21 +165,27 @@ const List = () => {
     setListSubCategory(list.data);
   };
 
-  const formatDate = (date) => {
-    var d = new Date(date),
-      month = "" + (d.getMonth() + 1),
-      day = "" + d.getDate(),
-      year = d.getFullYear();
-    if (month.length < 2) month = "0" + month;
-    if (day.length < 2) day = "0" + day;
-    return [year, month, day].join("-");
-  };
-
-  const getProductList = async () => {
+  const getProductList = async (data) => {
     setIsLoaded(false);
-    let list = await getAllProductListCategory({id, subid});
+    let list = await getAllProductListCategory({
+      id,
+      subid,
+      typeRoom,
+      rent,
+      square,
+      price,
+      province,
+      district,
+      ward,
+      star,
+      page: currentPage,
+      searchText:
+        new URLSearchParams(window.location.search).get("search") || "",
+      searchText:
+        new URLSearchParams(window.location.search).get("search") || "",
+    });
     if (list) {
-      var tdata = list;
+      var tdata = list.data;
       var slice = tdata;
       setGetList(
         slice.filter(
@@ -239,13 +198,35 @@ const List = () => {
         )
       );
       setOrgtableData(tdata);
+      setTotalPage(list.pagination.totalPages);
       setIsLoaded(true);
     }
   };
 
+  const getProductFilterList = async () => {
+    const dataTempFilter = JSON.parse(localStorage.getItem("data_temp_filter"));
+    const result = await search_product_filter({
+      id,
+      subid,
+      ...dataTempFilter,
+      page: currentPage,
+    });
+    setGetList(result.data);
+    setTotalPage(result.pagination.totalPages);
+  };
+
   useEffect(() => {
     getProductList();
-  }, [id, subid]);
+  }, [
+    id,
+    subid,
+    currentPage,
+    new URLSearchParams(window.location.search).get("search"),
+  ]);
+
+  useEffect(() => {
+    getProductFilterList();
+  }, []);
 
   useEffect(() => {
     getListCategory();
@@ -254,6 +235,12 @@ const List = () => {
   useEffect(() => {
     getListChildCategory();
   }, [selectCategory]);
+
+  useEffect(() => {
+    setSearchText(
+      new URLSearchParams(window.location.search).get("search") || ""
+    );
+  }, [new URLSearchParams(window.location.search).get("search")]);
 
   useEffect(() => {
     if (selectCategory && selectSubCategory) {
@@ -274,53 +261,43 @@ const List = () => {
     // setGetList(originList?.filter(item))
   }, [selectCategory, selectSubCategory]);
 
-  const handleSearchInputChange = (event) => {
-    setSearchText(event.target.value);
-    if (!searchText) {
-      setGetList(
-        orgtableData.filter(
-          (item) => item.categoryId == id && item.subCategoryId == subid
-        )
-      ); 
+  const handleSearchInputChange = async (value) => {
+    if (value.length <= 0 || !value) {
+      let list = await search_product({
+        id,
+        subid,
+        page: currentPage,
+        search: value,
+      });
+      const data = list.data;
+      setGetList(data);
+      setTotalPage(list.pagination.totalPages);
       return;
     }
-
-    const filteredList = originList.filter((item) => {
-      // Điều kiện lọc theo categoryId và subCategoryId
-      const categoryMatches = item.categoryId == id && item.subCategoryId == subid;
-    
-      // Điều kiện lọc theo product_id và tên sản phẩm (item.name)
-      const productIdMatches = item.product_id.toLowerCase().includes(event.target.value.toLowerCase());
-      const nameMatches = item.name.includes(event.target.value);
-      const addressMatches= item.address.includes(event.target.value)
-
-      const wardMathes= item.wardText.includes(event.target.value)
-      const districtMatches= item.districtText.includes(event.target.value)
-      const provinceMacthes= item.provinceText.includes(event.target.value)
-      const priceMatches= item.price.toString().includes(event.target.value)
-      const updatedAtMatches= moment(item.updatedAt).format("DD-MM-YYYY HH:mm:ss").includes(event.target.value)
-      const createdAtMatches= moment(item.createdAt).format("DD-MM-YYYY HH:mm:ss").includes(event.target.value)
-      // Kết hợp cả hai điều kiện
-      return categoryMatches && (productIdMatches || nameMatches || wardMathes || districtMatches || provinceMacthes || addressMatches || priceMatches || updatedAtMatches || createdAtMatches);
-
+    const result = await search_product({
+      searchText: value,
+      id,
+      subid,
+      search: value,
     });
-
-    setListSearch(filteredList);
+    setGetList(result.data);
+    setTotalPage(result.pagination.totalPages);
+    history.push(location.pathname + "?page=" + 1 + "&search=" + value);
   };
 
-  const handleSearch = () => {
-    if (!searchText) {
-      setGetList(orgtableData); // Hiển thị toàn bộ danh sách nếu không có từ khóa tìm kiếm
-      return;
+  const debouncedSearch = useCallback(
+    debounce(handleSearchInputChange, 1500),
+    []
+  );
+
+  const handleChangeSearch = (event) => {
+    if (event.target.value?.length <= 0 || !event.target.value.length) {
+      history.push(location.pathname + "?page=" + 1 + "&search=");
     }
 
-    const filteredList = orgtableData.filter((item) =>
-      item.name.toLowerCase().includes(searchText.toLowerCase())
-    );
-
-    setListSearch(filteredList);
+    setSearchText(event.target.value);
+    debouncedSearch(event.target.value);
   };
-
   const handlDeleteById = async (id) => {
     swal({
       title: "Bạn có chắc?",
@@ -338,15 +315,6 @@ const List = () => {
     });
   };
 
-  const handlePageClick = (e) => {
-    const selectedPage = e.selected;
-    const newOffset = selectedPage * perPage;
-
-    setCurrentPage(selectedPage);
-    setOffset(newOffset);
-    loadMoreData();
-  };
-
   const loadMoreData = () => {
     const data = orgtableData;
     const slice = data;
@@ -360,7 +328,7 @@ const List = () => {
     // Thêm tiêu đề cột vào mảng dữ liệu
 
     const worksheet = XLSX.utils.json_to_sheet(
-      getList.map((product) => [
+      getList?.map((product) => [
         product.name,
         product.SubCategory
           ? `${product.SubCategory.category.name} | ${product.SubCategory.sub_name}`
@@ -401,6 +369,20 @@ const List = () => {
       setListProvince(result);
     })();
   }, []);
+
+  // useEffect(() => {
+  //   const dataTempFilter = JSON.parse(localStorage.getItem("data_temp_filter"));
+  //   if (dataTempFilter) {
+  //     setTypeRoom(dataTempFilter.typeRoom || undefined);
+  //     setRent(dataTempFilter.rent || undefined);
+  //     setSquare(dataTempFilter.square || undefined);
+  //     setPrice(dataTempFilter.price || undefined);
+  //     setProvince(dataTempFilter.province) || undefined;
+  //     setWard(dataTempFilter.ward || undefined);
+  //     setDistrict(dataTempFilter.district || undefined);
+  //     setStar(dataTempFilter.star || undefined);
+  //   }
+  // }, []);
 
   const bulkDelete = async () => {
     try {
@@ -451,32 +433,33 @@ const List = () => {
   };
 
   const renderAuthorNote = (row) => {
-    if (
-      role === "manager" ||
-      role === "admin" ||
-      role === "ceo" ||
-      role === "operator" ||
-      role === "marketing" ||
-      role === "leader"
-    ) {
-      return row.note ? row.note : "Chưa thiết lập";
-    }
-    if (row.user) {
-      if (role === "employee" && user.user_manager == row.user.id) {
-        return row.note ? row.note : "Chưa thiết lập";
-      } else if (role === "employee" && user.user_manager != row.user.id) {
-        return "Đã ẩn";
-      } else if (role === "parttime") {
-        return "Đã ẩn";
-      } else {
-        return row.note ? row.note : "Chưa thiết lập";
-      }
-    } else {
-      return row.note ? row.note : "Chưa thiết lập";
-    }
+    // if (
+    //   role === "manager" ||
+    //   role === "admin" ||
+    //   role === "ceo" ||
+    //   role === "operator" ||
+    //   role === "marketing" ||
+    //   role === "leader"
+    // ) {
+    //   return row.note ? row.note : "Chưa thiết lập";
+    // }
+    // if (row.user) {
+    //   if (role === "employee" && user.user_manager == row.user.id) {
+    //     return row.note ? row.note : "Chưa thiết lập";
+    //   } else if (role === "employee" && user.user_manager != row.user.id) {
+    //     return "Đã ẩn";
+    //   } else if (role === "parttime") {
+    //     return "Đã ẩn";
+    //   } else {
+    //     return row.note ? row.note : "Chưa thiết lập";
+    //   }
+    // } else {
+    //   return row.note ? row.note : "Chưa thiết lập";
+    // }
+    return row.note ? row.note : "Chưa thiết lập";
   };
 
-  const checkAuthorProduct = (row) => {
+  const checkPermissionActionP = (row) => {
     if (
       role === "manager" ||
       role === "admin" ||
@@ -489,22 +472,43 @@ const List = () => {
     if (row.user) {
       if (role === "leader" && auid == row.user.id) {
         return true;
-      } else if (role === "employee" && user.user_manager == row.user.id) {
-        return true;
-      } else if (role === "leader" && auid != row.user.id) {
+      } 
+      else if (role === "employee") {
+        // console.log(_.some(row.user_manager_products, {user_manager: parseInt(auid)}))
+        if(_.some(row.user_manager_products, {user_manager: parseInt(auid)})=== true) {
+          return true;
+        }
+        // else {
+        //   return false
+        // }
+        return false
+        console.log(row.user_manager_products)
+      } 
+      else if (role === "leader" && auid != row.user.id) {
         return false;
-      } else if (role === "employee" && user.user_manager != row.user.id) {
+      } 
+      else if (role === "employee" && user.user_manager != row.user.id) {
         return false;
-      } else if (role === "parttime") {
+      } 
+      else if (role === "parttime") {
         return false;
-      } else {
+      } 
+      else {
         return true;
       }
     } else {
       return true;
     }
   };
-  
+
+  const checkIsManagerProduct = (row) => {
+    if (role === "leader" && auid == row?.user?.id) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const tableRef = useRef(null);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [startX, setStartX] = useState(0);
@@ -518,7 +522,7 @@ const List = () => {
 
   const handleMouseMove = (event) => {
     if (!isMouseDown) return;
-    
+
     const x = event.pageX - tableRef.current.offsetLeft;
     const distance = x - startX;
     tableRef.current.scrollLeft = scrollLeft - distance;
@@ -564,16 +568,23 @@ const List = () => {
               type="text"
               value={searchText}
               className="inp-mk"
-              onChange={handleSearchInputChange}
+              onChange={handleChangeSearch}
               placeholder="Tìm kiếm..."
             />
           </div>
           <div className="d-flex align-items-center" style={{ gap: 20 }}>
             <a
               href={`/admin/p/${id}/${subid}/edit`}
-              onClick={(e) => {
+              onClick={async (e) => {
                 e.preventDefault();
-                setTypeRoom(null)
+                setTypeRoom(0);
+                setSquare(0);
+                setPrice(0);
+                setRent(-1);
+                setProvince(-1);
+                setDistrict(-1);
+                setWard(-1);
+                localStorage.removeItem("data_temp_filter");
                 getProductList();
               }}
               className="add-btn hover-btn"
@@ -582,7 +593,7 @@ const List = () => {
                 borderRadius: 80,
                 width: "auto",
                 whiteSpace: "nowrap",
-                alignSelf: "end",
+                alignSelf: "end", 
               }}
             >
               Đặt lại bộ lọc
@@ -678,15 +689,22 @@ const List = () => {
                         marginBottom: 12,
                       }}
                     >
-                      <SelectBox3
-                        size={"small"}
+                      <select
+                        className="custom-select-p"
                         value={typeRoom}
-                        setValue={setTypeRoom}
-                        label={"Hạng phòng"}
-                        list={listBedRoom.filter(
-                          (item) => parseInt(item.value) <= 11
-                        )}
-                      />
+                        onChange={(e) => setTypeRoom(e.target.value)}
+                      >
+                        <option selected disabled value={0}>
+                          Chọn hạng phòng
+                        </option>
+                        {listBedRoom
+                          .filter((item) => parseInt(item.value) <= 11)
+                          ?.map((item, key) => (
+                            <option key={key} value={item.value}>
+                              {item.label}
+                            </option>
+                          ))}
+                      </select>
                     </div>
                   )}
                   {id == 12 && (
@@ -700,15 +718,22 @@ const List = () => {
                         marginBottom: 12,
                       }}
                     >
-                      <SelectBox3
-                        size={"small"}
+                      <select
+                        className="custom-select-p"
                         value={typeRoom}
-                        setValue={setTypeRoom}
-                        label={"Hạng phòng"}
-                        list={listBedRoom.filter(
-                          (item) => parseInt(item.value) > 11
-                        )}
-                      />
+                        onChange={(e) => setTypeRoom(e.target.value)}
+                      >
+                        <option selected disabled value={0}>
+                          Chọn hạng phòng
+                        </option>
+                        {listBedRoom
+                          .filter((item) => parseInt(item.value) > 11)
+                          ?.map((item, key) => (
+                            <option key={key} value={item.value}>
+                              {item.label}
+                            </option>
+                          ))}
+                      </select>
                     </div>
                   )}
                   {/*  */}
@@ -723,13 +748,20 @@ const List = () => {
                         marginBottom: 12,
                       }}
                     >
-                      <SelectBox3
-                        size={"small"}
+                      <select
+                        className="custom-select-p"
                         value={square}
-                        setValue={setSquare}
-                        label={"Diện tích"}
-                        list={listSquare}
-                      />
+                        onChange={(e) => setSquare(e.target.value)}
+                      >
+                        <option selected disabled value={0}>
+                          Chọn diện tích
+                        </option>
+                        {listSquare?.map((item, key) => (
+                          <option key={key} value={item.value}>
+                            {item.label} m<sub>2</sub>
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   )}
                   {id == 12 && (
@@ -743,13 +775,20 @@ const List = () => {
                         marginBottom: 12,
                       }}
                     >
-                      <SelectBox3
-                        size={"small"}
+                      <select
+                        className="custom-select-p"
                         value={star}
-                        setValue={setStar}
-                        label={"Số sao"}
-                        list={listStar}
-                      />
+                        onChange={(e) => setStar(e.target.value)}
+                      >
+                        <option selected disabled value={0}>
+                          Chọn số sao
+                        </option>
+                        {listStar?.map((item, key) => (
+                          <option key={key} value={item.value}>
+                            {item.label}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   )}
                   {/*  */}
@@ -764,13 +803,20 @@ const List = () => {
                         marginBottom: 12,
                       }}
                     >
-                      <SelectBox3
-                        size={"small"}
+                      <select
+                        className="custom-select-p"
                         value={price}
-                        setValue={setPrice}
-                        label={"Giá tiền"}
-                        list={listPrice}
-                      />
+                        onChange={(e) => setPrice(e.target.value)}
+                      >
+                        <option selected disabled value={0}>
+                          Chọn giá phòng
+                        </option>
+                        {listPrice?.map((item, key) => (
+                          <option key={key} value={parseInt(item.value)}>
+                            {item.label}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   )}
                   {id == 12 && (
@@ -784,13 +830,20 @@ const List = () => {
                         marginBottom: 12,
                       }}
                     >
-                      <SelectBox3
-                        size={"small"}
+                      <select
+                        className="custom-select-p"
                         value={price}
-                        setValue={setPrice}
-                        label={"Giá tiền"}
-                        list={listPrice}
-                      />
+                        onChange={(e) => setPrice(e.target.value)}
+                      >
+                        <option selected disabled value={0}>
+                          Chọn giá phòng
+                        </option>
+                        {listPrice?.map((item, key) => (
+                          <option key={key} value={item.value}>
+                            {item.label}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   )}
                 </div>
@@ -806,17 +859,37 @@ const List = () => {
                       marginBottom: 12,
                     }}
                   >
-                    <SelectBox3
+                    {/* <SelectBox3
                       size={"small"}
                       value={province}
                       setValue={setProvince}
                       label={"Tỉnh / Thành phố"}
-                      list={listProvince.map((item) => ({
+                      list={listProvince??.map((item) => ({
                         ...item,
                         value: item.province_id,
                         label: item.province_name,
                       }))}
-                    />
+                    /> */}
+                    <select
+                      className="custom-select-p"
+                      value={province}
+                      onChange={(e) => setProvince(e.target.value)}
+                    >
+                      <option selected disabled value={-1}>
+                        Tỉnh / Thành phố
+                      </option>
+                      {listProvince
+                        ?.map((item) => ({
+                          ...item,
+                          value: item.province_id,
+                          label: item.province_name,
+                        }))
+                        ?.map((item, key) => (
+                          <option key={key} value={item.value}>
+                            {item.label}
+                          </option>
+                        ))}
+                    </select>
                   </div>
                   <div
                     style={{
@@ -828,17 +901,26 @@ const List = () => {
                       marginBottom: 12,
                     }}
                   >
-                    <SelectBox3
-                      size={"small"}
+                    <select
+                      className="custom-select-p"
                       value={district}
-                      setValue={setDistrict}
-                      label={"Quận / Huyện"}
-                      list={provinceDetail.map((el) => ({
-                        ...el,
-                        value: el.district_id,
-                        label: el.district_name,
-                      }))}
-                    />
+                      onChange={(e) => setDistrict(e.target.value)}
+                    >
+                      <option selected disabled value={-1}>
+                        Quận / Huyện
+                      </option>
+                      {provinceDetail
+                        ?.map((el) => ({
+                          ...el,
+                          value: el.district_id,
+                          label: el.district_name,
+                        }))
+                        ?.map((item, key) => (
+                          <option key={key} value={item.value}>
+                            {item.label}
+                          </option>
+                        ))}
+                    </select>
                   </div>
                   <div
                     style={{
@@ -850,22 +932,31 @@ const List = () => {
                       marginBottom: 12,
                     }}
                   >
-                    <SelectBox3
-                      size={"small"}
+                    <select
+                      className="custom-select-p"
                       value={ward}
-                      setValue={setWard}
-                      label={"Xã / Phường"}
-                      list={listWard.map((el) => ({
-                        ...el,
-                        value: el.ward_id,
-                        label: el.ward_name,
-                      }))}
-                    />
+                      onChange={(e) => setWard(e.target.value)}
+                    >
+                      <option selected disabled value={-1}>
+                        Xã / Phường
+                      </option>
+                      {listWard
+                        ?.map((el) => ({
+                          ...el,
+                          value: el.ward_id,
+                          label: el.ward_name,
+                        }))
+                        ?.map((item, key) => (
+                          <option key={key} value={item.value}>
+                            {item.label}
+                          </option>
+                        ))}
+                    </select>
                   </div>
                 </div>
                 {/*  */}
                 <div style={{ width: 200 }}>
-                    <div
+                  <div
                     style={{
                       width: "100%",
                       borderRadius: 10,
@@ -875,13 +966,20 @@ const List = () => {
                       marginBottom: 12,
                     }}
                   >
-                    <SelectBox3
-                      size={"small"}
+                    <select
+                      className="custom-select-p"
                       value={rent}
-                      setValue={setRent}
-                      label={"Trạng thái sản phẩm"}
-                      list={listStatusRoom}
-                    />
+                      onChange={(e) => setRent(e.target.value)}
+                    >
+                      <option selected disabled value={-1}>
+                        Chọn trạng thái phòng
+                      </option>
+                      {listStatusRoom?.map((item, key) => (
+                        <option key={key} value={item.value}>
+                          {item.label}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
               </div>
@@ -924,12 +1022,12 @@ const List = () => {
                 onChange={(e) => setSelectCategory(e.target.value)}
               >
                 {listCategory
-                  .map((item) => ({
+                  ?.map((item) => ({
                     ...item,
                     value: item.id,
                     label: item.name,
                   }))
-                  .map((item, key) => (
+                  ?.map((item, key) => (
                     <MenuItem
                       value={item.value}
                       key={key}
@@ -959,12 +1057,12 @@ const List = () => {
                 onChange={(e) => setSelectSubCategory(e.target.value)}
               >
                 {listSubCategory
-                  .map((item) => ({
+                  ?.map((item) => ({
                     ...item,
                     value: item.id,
                     label: item.sub_name,
                   }))
-                  .map((item, key) => (
+                  ?.map((item, key) => (
                     <MenuItem
                       value={item.value}
                       key={key}
@@ -994,13 +1092,19 @@ const List = () => {
               <h4>Tất cả sản phẩm</h4>
             </div> */}
             <div className="card-body-table">
-              <div className="table-responsive position-relative" id="container-table-transform">
-                <table ref={tableRef}
-                id="table-transform"
-              onMouseDown={handleMouseDown}
-              onMouseMove={handleMouseMove}
-              onMouseUp={handleMouseUp}
-              onMouseOut={handleMouseOut} className="table ucp-table table-hover">
+              <div
+                className="table-responsive position-relative"
+                id="container-table-transform"
+              >
+                <table
+                  ref={tableRef}
+                  id="table-transform"
+                  onMouseDown={handleMouseDown}
+                  onMouseMove={handleMouseMove}
+                  onMouseUp={handleMouseUp}
+                  onMouseOut={handleMouseOut}
+                  className="table ucp-table table-hover"
+                >
                   <thead>
                     {id == 13 && (
                       <tr>
@@ -1017,11 +1121,15 @@ const List = () => {
                             </Button>
                           )}
                         </th>
-                        <th style={{ width: 100 }}>Hình ảnh</th>
+                        <th style={{ width: 100, whiteSpace: "nowrap" }}>
+                          Hình ảnh
+                        </th>
                         <th style={{ whiteSpace: "nowrap" }}>Mã sản phẩm</th>
 
                         <th style={{ whiteSpace: "nowrap" }}>Tên sản phẩm</th>
-                        <th style={{ whiteSpace: "nowrap" }}>Cập nhật lần cuối</th>
+                        <th style={{ whiteSpace: "nowrap" }}>
+                          Cập nhật lần cuối
+                        </th>
                         <th style={{ whiteSpace: "nowrap" }}>Thời gian tạo</th>
 
                         <th style={{ whiteSpace: "nowrap" }}>Người quản lý</th>
@@ -1038,7 +1146,7 @@ const List = () => {
                     )}
                     {id == 12 && (
                       <tr>
-                        <th>
+                        <th style={{ whiteSpace: "nowrap" }}>
                           {/* <Checkbox /> */}
                           {listCheck.length > 0 && (
                             <Button
@@ -1053,7 +1161,9 @@ const List = () => {
                         {/* <th style={{ width: 60 }}>Mã SP</th> */}
                         <th style={{ width: 100 }}>Hình ảnh</th>
                         <th style={{ whiteSpace: "nowrap" }}>Tên sản phẩm</th>
-                        <th style={{ whiteSpace: "nowrap" }}>Cập nhật lần cuối</th>
+                        <th style={{ whiteSpace: "nowrap" }}>
+                          Cập nhật lần cuối
+                        </th>
 
                         <th style={{ whiteSpace: "nowrap" }}>Khu vực</th>
 
@@ -1064,14 +1174,14 @@ const List = () => {
                         <th style={{ whiteSpace: "nowrap" }}>Ghi chú</th>
                         {/* <th>Giá</th> */}
                         {/* <th style={{ whiteSpace: "nowrap" }}>Trạng thái</th> */}
-                        <th>Action</th>
+                        <th style={{ whiteSpace: "nowrap" }}>Action</th>
                       </tr>
                     )}
                   </thead>
                   {id == 13 && (
                     <tbody>
                       {!isSearching &&
-                        currentItems.map((row, index) => (
+                        currentItems?.map((row, index) => (
                           <tr key={index}>
                             <td>
                               <FormControlLabel
@@ -1092,7 +1202,10 @@ const List = () => {
                               />
                             </td>
                             <td>
-                              <a href={CLIENT_URL + "/product/" + row.id} target="_blank">
+                              <a
+                                href={CLIENT_URL + "/product/" + row.id}
+                                target="_blank"
+                              >
                                 <img
                                   style={{
                                     width: 130,
@@ -1107,9 +1220,11 @@ const List = () => {
                             </td>
                             <td>{row.product_id}</td>
                             <td>{row.name}</td>
-                            <td>{moment(row.updatedAt).format(
+                            <td>
+                              {moment(row.updatedAt).format(
                                 "DD-MM-YYYY HH:mm:ss"
-                              )}</td>
+                              )}
+                            </td>
                             <td>
                               {moment(row.createdAt).format(
                                 "DD-MM-YYYY HH:mm:ss"
@@ -1119,11 +1234,6 @@ const List = () => {
                             <td>
                               {row.user ? row.user.firstName : "Chưa thiết lập"}
                             </td>
-                            {/* <td>
-                              {row.phoneNumber
-                                ? row.phoneNumber
-                                : "Chưa thiết lập"}
-                            </td> */}
                             <td>{renderAuthorPhone(row)}</td>
                             <td>
                               {row.address +
@@ -1145,48 +1255,36 @@ const List = () => {
                               )}
                             </td>
                             <td>{renderAuthorNote(row)}</td>
-                            {/* <td>{row.brand}</td> */}
-                            {/* <td>{row.unitSize}</td> */}
-                            {/* <td>VND{numberWithCommas(row.buyerPrice)}</td> */}
-                            {/* <td>
-                              VND
-                              {numberWithCommas(
-                                Math.ceil(
-                                  (row.price *
-                                    (100 - parseInt(row.discountPer || 0))) /
-                                    100
-                                )
-                              )}
-                            </td> */}
-                            {/* <td>
-                              {row.status === "active" ? (
-                                <span className="badge-item badge-status-success">
-                                  {row.status}
-                                </span>
-                              ) : (
-                                <span className="badge-item badge-status">
-                                  {row.status}
-                                </span>
-                              )}
-                            </td> */}
                             <td>
-                              {row.rent == 1 ? (
+                              {row.rent == 1 && (
                                 <span className="badge-item badge-status-success">
                                   Đã thuê
                                 </span>
-                              ) : (
+                              )}
+                              {row.rent == 0 && (
                                 <span className="badge-item badge-status">
                                   Chưa thuê
                                 </span>
                               )}
+                              {row.rent == 2 && (
+                                <span className="badge-item badge-primary">
+                                  Sắp trống
+                                </span>
+                              )}
                             </td>
                             <td className="action-btns">
-                              {checkAuthorProduct(row) === true && (
+                              {checkPermissionActionP(row) === true && (
                                 <Fragment>
                                   <Link
                                     to={{
                                       pathname: `/admin/p/${id}/${subid}/edit`,
-                                      state: { row },
+                                      state: {
+                                        row: {
+                                          ...row,
+                                          search: searchText,
+                                          page: currentPage,
+                                        },
+                                      },
                                     }}
                                   >
                                     <Typography className="edit-btn">
@@ -1201,11 +1299,16 @@ const List = () => {
                                   </Typography>
                                 </Fragment>
                               )}
+                              {checkIsManagerProduct(row) === true && (
+                                <>
+                                  <MangeEmployeeProduct {...row} />
+                                </>
+                              )}
                             </td>
                           </tr>
                         ))}
                       {isSearching &&
-                        listSearch.map((row, index) => (
+                        currentItems?.map((row, index) => (
                           <tr key={index}>
                             <td>
                               <FormControlLabel
@@ -1226,7 +1329,10 @@ const List = () => {
                               />
                             </td>
                             <td>
-                              <a href={CLIENT_URL + "/product/" + row.id} target="_blank">
+                              <a
+                                href={CLIENT_URL + "/product/" + row.id}
+                                target="_blank"
+                              >
                                 <img
                                   style={{
                                     width: 130,
@@ -1241,9 +1347,11 @@ const List = () => {
                             </td>
                             <td>{row.product_id}</td>
                             <td>{row.name}</td>
-                            <td>{moment(row.updatedAt).format(
+                            <td>
+                              {moment(row.updatedAt).format(
                                 "DD-MM-YYYY HH:mm:ss"
-                              )}</td>
+                              )}
+                            </td>
                             <td>
                               {moment(row.createdAt).format(
                                 "DD-MM-YYYY HH:mm:ss"
@@ -1253,7 +1361,7 @@ const List = () => {
                             <td>
                               {row.user ? row.user.firstName : "Chưa thiết lập"}
                             </td>
-                            {/* <td>
+                            {/* <td >
                               {row.phoneNumber
                                 ? row.phoneNumber
                                 : "Chưa thiết lập"}
@@ -1279,10 +1387,10 @@ const List = () => {
                               )}
                             </td>
                             <td>{renderAuthorNote(row)}</td>
-                            {/* <td>{row.brand}</td> */}
-                            {/* <td>{row.unitSize}</td> */}
-                            {/* <td>VND{numberWithCommas(row.buyerPrice)}</td> */}
-                            {/* <td>
+                            {/* <td >{row.brand}</td> */}
+                            {/* <td >{row.unitSize}</td> */}
+                            {/* <td >VND{numberWithCommas(row.buyerPrice)}</td> */}
+                            {/* <td >
                               VND
                               {numberWithCommas(
                                 Math.ceil(
@@ -1292,7 +1400,7 @@ const List = () => {
                                 )
                               )}
                             </td> */}
-                            {/* <td>
+                            {/* <td >
                               {row.status === "active" ? (
                                 <span className="badge-item badge-status-success">
                                   {row.status}
@@ -1304,23 +1412,35 @@ const List = () => {
                               )}
                             </td> */}
                             <td>
-                              {row.rent == 1 ? (
+                              {row.rent == 1 && (
                                 <span className="badge-item badge-status-success">
                                   Đã thuê
                                 </span>
-                              ) : (
+                              )}
+                              {row.rent == 0 && (
                                 <span className="badge-item badge-status">
                                   Chưa thuê
                                 </span>
                               )}
+                              {row.rent == 2 && (
+                                <span className="badge-item badge-primary">
+                                  Sắp trống
+                                </span>
+                              )}
                             </td>
                             <td className="action-btns">
-                              {checkAuthorProduct(row) === true && (
+                              {checkPermissionActionP(row) === true && (
                                 <Fragment>
                                   <Link
                                     to={{
                                       pathname: `/admin/p/${id}/${subid}/edit`,
-                                      state: { row },
+                                      state: {
+                                        row: {
+                                          ...row,
+                                          search: searchText,
+                                          page: currentPage,
+                                        },
+                                      },
                                     }}
                                   >
                                     <Typography className="edit-btn">
@@ -1344,7 +1464,7 @@ const List = () => {
                   {id == 12 && (
                     <tbody>
                       {!isSearching &&
-                        currentItems.map((row, index) => (
+                        currentItems?.map((row, index) => (
                           <tr key={index}>
                             <td>
                               <FormControlLabel
@@ -1372,9 +1492,11 @@ const List = () => {
                               />
                             </td>
                             <td>{row.name}</td>
-                            <td>{moment(row.updatedAt).format(
+                            <td>
+                              {moment(row.updatedAt).format(
                                 "DD-MM-YYYY HH:mm:ss"
-                              )}</td>
+                              )}
+                            </td>
                             <td>
                               {row.wardText +
                                 " " +
@@ -1409,16 +1531,16 @@ const List = () => {
                                 " " +
                                 row.provinceText}
                             </td>
-                            {/* <td>
+                            {/* <td >
                               {row.phoneNumber
                                 ? row.phoneNumber
                                 : "Chưa thiết lập"}
                             </td> */}
                             <td>{row.note ? row.note : "Chưa thiếp lập"}</td>
-                            {/* <td>{row.brand}</td> */}
-                            {/* <td>{row.unitSize}</td> */}
-                            {/* <td>VND{numberWithCommas(row.buyerPrice)}</td> */}
-                            {/* <td>
+                            {/* <td >{row.brand}</td> */}
+                            {/* <td >{row.unitSize}</td> */}
+                            {/* <td >VND{numberWithCommas(row.buyerPrice)}</td> */}
+                            {/* <td >
                               VND
                               {numberWithCommas(
                                 Math.ceil(
@@ -1428,7 +1550,7 @@ const List = () => {
                                 )
                               )}
                             </td> */}
-                            {/* <td>
+                            {/* <td >
                               {row.status === "active" ? (
                                 <span className="badge-item badge-status-success">
                                   {row.status}
@@ -1443,7 +1565,13 @@ const List = () => {
                               <Link
                                 to={{
                                   pathname: `/admin/p/${id}/${subid}/edit`,
-                                  state: { row },
+                                  state: {
+                                    row: {
+                                      ...row,
+                                      search: searchText,
+                                      page: currentPage,
+                                    },
+                                  },
                                 }}
                               >
                                 <Typography className="edit-btn">
@@ -1460,7 +1588,7 @@ const List = () => {
                           </tr>
                         ))}
                       {isSearching &&
-                        listSearch.map((row, index) => (
+                        currentItems?.map((row, index) => (
                           <tr key={index}>
                             <td>
                               <FormControlLabel
@@ -1488,9 +1616,11 @@ const List = () => {
                               />
                             </td>
                             <td>{row.name}</td>
-                            <td>{moment(row.updatedAt).format(
+                            <td>
+                              {moment(row.updatedAt).format(
                                 "DD-MM-YYYY HH:mm:ss"
-                              )}</td>
+                              )}
+                            </td>
                             <td>
                               {row.wardText +
                                 " " +
@@ -1525,41 +1655,18 @@ const List = () => {
                                 " " +
                                 row.provinceText}
                             </td>
-                            {/* <td>
-                              {row.phoneNumber
-                                ? row.phoneNumber
-                                : "Chưa thiết lập"}
-                            </td> */}
                             <td>{row.note ? row.note : "Chưa thiếp lập"}</td>
-                            {/* <td>{row.brand}</td> */}
-                            {/* <td>{row.unitSize}</td> */}
-                            {/* <td>VND{numberWithCommas(row.buyerPrice)}</td> */}
-                            {/* <td>
-                              VND
-                              {numberWithCommas(
-                                Math.ceil(
-                                  (row.price *
-                                    (100 - parseInt(row.discountPer || 0))) /
-                                    100
-                                )
-                              )}
-                            </td> */}
-                            {/* <td>
-                              {row.status === "active" ? (
-                                <span className="badge-item badge-status-success">
-                                  {row.status}
-                                </span>
-                              ) : (
-                                <span className="badge-item badge-status">
-                                  {row.status}
-                                </span>
-                              )}
-                            </td> */}
                             <td className="action-btns">
                               <Link
                                 to={{
                                   pathname: `/admin/p/${id}/${subid}/edit`,
-                                  state: { row },
+                                  state: {
+                                    row: {
+                                      ...row,
+                                      search: searchText,
+                                      page: currentPage,
+                                    },
+                                  },
                                 }}
                               >
                                 <Typography className="edit-btn">
@@ -1583,7 +1690,7 @@ const List = () => {
           </div>
           <div className="d-flex w-100 flex-row-reverse">
             <Pagination
-              count={Math.ceil(getList.length / itemsPerPage)}
+              count={totalPage}
               page={currentPage}
               onChange={handlePageChange}
               color="primary"

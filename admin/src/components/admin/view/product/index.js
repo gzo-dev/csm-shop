@@ -39,7 +39,7 @@ const Product = () => {
           return "Mặt bằng";
           break;
         case 22:
-          return "Cho thuê văn phofng";
+          return "Cho thuê văn phòng";
           break;
         default:
           break;
@@ -107,7 +107,7 @@ const Product = () => {
       <main>
         <Switch>
           <Route path={[`${match.path}/list`]} component={List} />
-          <Route path={[`${match.path}/edit`]} component={Edit} />
+          <Route path={`${match.path}/edit`} component={Edit} />
           <Route path={[`${match.path}/create`]} component={Createproduct} />
           <Route path={[`${match.path}/more-photo`]} component={Uploadphoto} />
         </Switch>

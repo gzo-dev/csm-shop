@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import ReactQuill, { Quill } from "react-quill";
+// import "react-quill/dist/quill.snow.css";
 
+let Font = Quill.import('formats/font');
+Font.whitelist = ['times-new-roman', 'arial'];
+Quill.register(Font, true);
 const RichTextEditor = ({ content, placeholder, handleContentChange }) => {
   const [editorState, setEditorState] = useState(content);
   useEffect(()=> {
@@ -27,7 +30,7 @@ const RichTextEditor = ({ content, placeholder, handleContentChange }) => {
 
 RichTextEditor.modules = {
   toolbar: [
-    [{ font: [] }],
+    [{ 'font': ['', 'times-new-roman', 'arial'] }],
     [{ size: ["small", false, "large", "huge"] }], // custom dropdown
     [{ header: [1, 2, 3, 4, 5, 6, false] }],
     ["bold", "italic", "underline", "strike"],

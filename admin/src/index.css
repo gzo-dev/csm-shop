@@ -28,3 +28,10 @@
 #table-transform {
   transform: rotate(180deg)
 }
+
+.custom-select-p {
+  width: 100%;
+  height: 45px;
+  border: none;
+  outline: none;
+}

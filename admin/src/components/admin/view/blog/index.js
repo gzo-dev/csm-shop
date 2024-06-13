@@ -37,6 +37,30 @@ const Blogs = () => {
         case 5:
             setTitle("Hoạt động nội bộ");
             break;
+        case 7:
+            setTitle("Quản lý căn hộ")
+            break;
+            case 8:
+              setTitle("Quản lý khách sạn")
+              break;
+        case 9:
+              setTitle("Quản lý văn phòng")
+              break;
+        case 10:
+          setTitle("Tư vấn đầu tư")
+          break;
+          case 11:
+            setTitle("Nhân sự")
+            break;
+          case 12:
+            setTitle("Vé máy bay")
+            break;
+        case 13:
+          setTitle("Vé tàu lửa")
+          break;
+        case 14:
+          setTitle("Tin tức nổi bật")
+          break;
         default:
             setTitle("Blog")
           break;

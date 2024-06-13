@@ -9,6 +9,8 @@ import { NotificationContainer } from "react-notifications";
 import "react-notifications/lib/notifications.css";
 import get_info_user from './api/get_info_user';
 import "./index.css"
+import SocketContainer from './SocketContainer/SocketContainer';
+import { API_URL } from './config1';
 
 export const AppContext= createContext()
 const App = () => {
@@ -17,29 +19,35 @@ const App = () => {
 	const [dataUserManager, setDataUserManager]= useState({avatar: undefined, address: "", email: "", phone: ""})
 	useEffect(()=> {
 		(async ()=> {
-			const result= await get_info_user()
-			if(result.ok== true) {
-				setDataUser(result.data)
-				setDataUserManager(result.dataManager)
-				setCookie('role', result.data.role, 30);
+			try {
+				const result= await get_info_user()
+				if(result.ok== true) {
+					setDataUser(result.data)
+					setDataUserManager(result.dataManager)
+					setCookie('role', result.data.role, 30);
+				}
+			} catch (error) {
+				console.log(error)
 			}
 		})()
 	}, [change])
 
     return (
-        <AppContext.Provider value={{user: dataUser, userManager: dataUserManager, change, setChange}}>
-			<div className="App">
-				<BrowserRouter>
-					<NotificationContainer />
-					<Switch>
-						<Route path='/auth' component={Auth} />
-						{getCookie('token') ? <Route path='/admin' component={rootRoutes} /> : <Redirect to={"/auth/login"} />}
-						{getCookie('token') ? <Redirect to={"/admin"} /> : <Redirect to={"/auth/login"} />}
-						<Route component={NoMatch} />
-					</Switch>
-				</BrowserRouter>
-        	</div>
-		</AppContext.Provider>
+		<SocketContainer serverUrl={API_URL}>
+			<AppContext.Provider value={{user: dataUser, userManager: dataUserManager, change, setChange}}>
+				<div className="App">
+					<BrowserRouter>
+						<NotificationContainer />
+						<Switch>
+							<Route path='/auth' component={Auth} />
+							{getCookie('token') ? <Route path='/admin' component={rootRoutes} /> : <Redirect to={"/auth/login"} />}
+							{getCookie('token') ? <Redirect to={"/admin"} /> : <Redirect to={"/auth/login"} />}
+							<Route component={NoMatch} />
+						</Switch>
+					</BrowserRouter>
+				</div>
+			</AppContext.Provider>
+		</SocketContainer>
     );
 }
 

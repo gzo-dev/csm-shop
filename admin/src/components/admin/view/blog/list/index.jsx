@@ -154,7 +154,7 @@ const List = ({ history }) => {
                       <th>Tên blog</th>
                       {/* <th style={{whiteSpace: "nowrap"}}>Loại blog</th> */}
                       <th>Mô tả</th>
-                      <th>Nội dung</th>
+                      {/* <th>Nội dung</th> */}
                       <th style={{whiteSpace: "nowrap"}}>Người đăng</th>
                       <th style={{whiteSpace: "nowrap"}}>Thời gian tạo</th>
                       <th>Action</th>
@@ -169,10 +169,10 @@ const List = ({ history }) => {
                           {renderTypeBlog(row.type)}
                         </td> */}
                         <td>{row.desc ? row.desc : "Chưa thiết lập"}</td>
-                        <td>
+                        {/* <td>
                           <div className="tr-2l" dangerouslySetInnerHTML={{__html: summarizeContent(row.content)}}></div>
-                        </td>
-                        <td>{row.author}</td>
+                        </td> */}
+                        <td>{row?.user?.firstName || "-"}</td>
                         <td>{moment(row.time_created).format("DD-MM-YYYY HH:MM:ss") || ""}</td>
                         <td className="action-btns">
                           <Link

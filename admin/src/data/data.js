@@ -44,6 +44,7 @@ export const listStar = [
 export const listStatusRoom = [
   { value: 0, label: "Chưa thuê" },
   { value: 1, label: "Đã thuê" },
+  { value: 2, label: "Sắp trống" },
 ];
 
 export const listEstate = [

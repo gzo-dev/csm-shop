@@ -357,6 +357,32 @@ const View = () => {
                 Hoạt động nội bộ
               </div>
             </div>
+            <div
+              onClick={() => {
+                handleClick("/admin/b/14/list");
+              }}
+              className="d-flex justify-content-center align-items-center"
+              style={{
+                padding: "20px 0px",
+                background: "#fff",
+                borderRadius: 10,
+                boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                width: 350,
+                cursor: "pointer",
+              }}
+            >
+              <div
+                style={{
+                  color: "#F37335",
+                  fontSize: 24,
+                  fontWeight: 600,
+                  textAlign: "center",
+                  textTransform: "uppercase",
+                }}
+              >
+                Tin tức nổi bật
+              </div>
+            </div>
           </div>
           {/* <div
             style={{

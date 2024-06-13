@@ -32,6 +32,11 @@ const List = ({ history }) => {
   const [listProvince, setListProvince] = useState([]);
   const [province, setProvince] = useState();
   const [district, setDistrict] = useState();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = getList.slice(indexOfFirstItem, indexOfLastItem);
   const handlePageChange = (event, value) => {
     // setCurrentPage(value);
     history.push("/admin/t/"+ id + "/list?page="+ value)
@@ -59,11 +64,7 @@ const List = ({ history }) => {
     }
   };
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(10);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = getList.slice(indexOfFirstItem, indexOfLastItem);
+  
   
 
   const handlDeleteById = async (id) => {
@@ -235,7 +236,7 @@ const List = ({ history }) => {
                     value={province}
                     setValue={setProvince}
                     label={"Tỉnh / Thành phố"}
-                    list={listProvince.map((item) => ({
+                    list={listProvince?.map((item) => ({
                       ...item,
                       value: item.province_id,
                       label: item.province_name,
@@ -257,7 +258,7 @@ const List = ({ history }) => {
                     value={district}
                     setValue={setDistrict}
                     label={"Quận / Huyện"}
-                    list={provinceDetail.map((el) => ({
+                    list={provinceDetail?.map((el) => ({
                       ...el,
                       value: el.district_id,
                       label: el.district_name,
@@ -279,7 +280,7 @@ const List = ({ history }) => {
                     value={ward}
                     setValue={setWard}
                     label={"Xã / Phường"}
-                    list={listWard.map((el) => ({
+                    list={listWard?.map((el) => ({
                       ...el,
                       value: el.ward_id,
                       label: el.ward_name,
