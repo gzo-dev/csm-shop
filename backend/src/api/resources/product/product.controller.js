@@ -287,7 +287,7 @@ export default {
       // Thực hiện truy vấn dữ liệu với Sequelize
       const { count, rows: filteredList } = await db.product.findAndCountAll({
         where: whereConditions,
-        order: [["createdAt","DESC"]],
+        order: [["createdAt", "DESC"]],
         include: [
           {
             model: db.user_manager_product,
@@ -299,7 +299,6 @@ export default {
             attributes: ["id", "firstName", "lastName"],
             required: false,
           },
-         
         ],
         limit: pageSize,
         offset: (page - 1) * pageSize,
@@ -496,7 +495,7 @@ export default {
       // Thực hiện truy vấn dữ liệu với Sequelize
       const { count, rows: filteredList } = await db.product.findAndCountAll({
         where: whereConditions,
-        order: [["createdAt","DESC"]],
+        order: [["createdAt", "DESC"]],
         include: [
           {
             model: db.user,
@@ -527,16 +526,23 @@ export default {
     }
   },
   async getProductListByCategoryClientWeb(req, res, next) {
-    const { categoryId, pageSize = 10, subCategoryId } = req.query;
-
-    const whereConditions = {
-      categoryId: categoryId,
-      subCategoryId: subCategoryId,
-    };
-
+    
     try {
-      // Thực hiện truy vấn dữ liệu với Sequelize
-      const { count, rows: filteredList } = await db.product.findAndCountAll({
+      const { categoryId, subCategoryId, page = 1, pageSize = 12 } = req.query;
+  
+      const currentPage = parseInt(page);
+      const size = parseInt(pageSize);
+  
+      const whereConditions = {}; 
+      if (categoryId) whereConditions.categoryId = categoryId;
+      if (subCategoryId) whereConditions.subCategoryId = subCategoryId;
+      // Đếm số lượng bản ghi
+      const count = await db.product.count({
+        where: whereConditions,
+      });
+
+      // Lấy danh sách bản ghi với phân trang
+      const filteredList = await db.product.findAll({
         where: whereConditions,
         order: [["createdAt", "DESC"]],
         include: [
@@ -544,21 +550,34 @@ export default {
             model: db.user,
             attributes: ["id", "firstName", "lastName"],
           },
+          { model: db.productphoto, attributes: ["id", "imgUrl"] },
         ],
-        // limit: pageSize,
-        // offset: (page - 1) * pageSize,
+        attributes: {
+          exclude: [
+            "desc",
+            "slug",
+            "updatedAt",
+            "phoneNumber",
+            "author_phone",
+            "sortDesc",
+            "interior",
+            "note",
+          ],
+        },
+        limit: size,
+        offset: (currentPage - 1) * size,
       });
 
       // Tính toán tổng số trang dựa trên số lượng dữ liệu và kích thước trang
-      const totalPages = Math.ceil(count / pageSize);
+      const totalPages = Math.ceil(count / size);
 
       // Trả về kết quả với thông tin phân trang
       res.status(200).json({
         success: true,
         results: filteredList,
         pagination: {
-          // currentPage: parseInt(page),
-          pageSize: parseInt(pageSize),
+          currentPage: currentPage,
+          pageSize: size,
           totalItems: count,
           totalPages: totalPages,
         },
@@ -727,7 +746,7 @@ export default {
       // Thực hiện truy vấn dữ liệu với Sequelize
       const { count, rows: filteredList } = await db.product.findAndCountAll({
         where: whereConditions,
-        order: [["createdAt","DESC"]],
+        order: [["createdAt", "DESC"]],
         include: [
           {
             model: db.user,
@@ -894,7 +913,7 @@ export default {
 
       const { count, rows: productList } = await db.product.findAndCountAll({
         where: whereConditions,
-        order: [["createdAt","DESC"]],
+        order: [["createdAt", "DESC"]],
         include: [
           {
             model: db.user,
@@ -931,13 +950,13 @@ export default {
     try {
       db.product
         .findAll({
-          order: [["createdAt","DESC"]],
+          order: [["createdAt", "DESC"]],
           where: {
             categoryId: 12,
             // subCategoryId: req.query.subCategoryId,
           },
           include: [{ model: db.productphoto, attributes: ["id", "imgUrl"] }],
-          attributes: {exclude: ["desc"]},
+          attributes: { exclude: ["desc"] },
           limit: 4,
         })
         .then((list) => {
@@ -960,7 +979,7 @@ export default {
             // subCategoryId: req.query.subCategoryId,
           },
           include: [{ model: db.productphoto, attributes: ["id", "imgUrl"] }],
-          attributes: {exclude: ["desc"]},
+          attributes: { exclude: ["desc"] },
           limit: 4,
         })
         .then((list) => {
@@ -982,7 +1001,7 @@ export default {
             endow: 1,
           },
           // include: [{ model: db.productphoto, attributes: ["id", "imgUrl"] }],
-          attributes: {exclude: ["desc"]},
+          attributes: { exclude: ["desc"] },
           limit: 4,
         })
         .then((list) => {
@@ -998,7 +1017,7 @@ export default {
   async getProductListById(req, res, next) {
     try {
       db.product
-        .findAll({
+        .findOne({
           where: { id: req.query.id },
           include: [
             { model: db.productphoto, attributes: ["id", "imgUrl"] },
@@ -1010,7 +1029,7 @@ export default {
           order: [["createdAt", "DESC"]],
         })
         .then((list) => {
-          res.status(200).json({ success: true, data: list });
+          res.status(200).json({ success: true, data: [list] });
         })
         .catch(function (err) {
           next(err);
