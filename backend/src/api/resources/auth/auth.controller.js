@@ -93,16 +93,14 @@ export default {
       })
       .then((user) => {
         if (user) {
-          return res
-            .status(200)
-            .json({
-              success: true,
-              key: otp,
-              msg:
-                "New Registration added and password has been sent to " +
-                email +
-                " .",
-            });
+          return res.status(200).json({
+            success: true,
+            key: otp,
+            msg:
+              "New Registration added and password has been sent to " +
+              email +
+              " .",
+          });
         } else res.status(500).json({ success: false });
       })
       .catch((err) => {
@@ -113,7 +111,7 @@ export default {
   async getAllUserList(req, res, next) {
     db.user
       .findAll({
-        where: {hidden: 0},
+        where: { hidden: 0 },
         include: {
           model: db.user, // Include thông tin của người quản lý (user manager) từ cùng bảng User
           as: "userManager", // Alias cho mối quan hệ
@@ -232,16 +230,14 @@ export default {
           process.env.JWT_SECRET,
           { expiresIn: 24 * 60 * 60 }
         );
-        return res
-          .status(200)
-          .json({
-            success: true,
-            token,
-            auid: findUser.dataValues.id,
-            role: findUser.dataValues.role,
-            name: findUser?.firstName,
-            deviceCode: device1Code,
-          });
+        return res.status(200).json({
+          success: true,
+          token,
+          auid: findUser.dataValues.id,
+          role: findUser.dataValues.role,
+          name: findUser?.firstName,
+          deviceCode: device1Code,
+        });
       } else if (
         findUser?.device2?.length <= 0 &&
         findUser?.device1?.length > 0
@@ -256,16 +252,14 @@ export default {
           process.env.JWT_SECRET,
           { expiresIn: 24 * 60 * 60 }
         );
-        return res
-          .status(200)
-          .json({
-            success: true,
-            token,
-            auid: findUser.dataValues.id,
-            role: findUser.dataValues.role,
-            name: findUser?.firstName + " " + findUser?.lastName,
-            deviceCode: device2Code,
-          });
+        return res.status(200).json({
+          success: true,
+          token,
+          auid: findUser.dataValues.id,
+          role: findUser.dataValues.role,
+          name: findUser?.firstName + " " + findUser?.lastName,
+          deviceCode: device2Code,
+        });
       } else if (
         findUser?.device1?.length <= 0 &&
         findUser?.device2?.length <= 0
@@ -282,16 +276,14 @@ export default {
           process.env.JWT_SECRET,
           { expiresIn: 24 * 60 * 60 }
         );
-        return res
-          .status(200)
-          .json({
-            success: true,
-            token,
-            auid: findUser.dataValues.id,
-            role: findUser.dataValues.role,
-            name: findUser?.firstName + " " + findUser?.lastName,
-            deviceCode: device1Code,
-          });
+        return res.status(200).json({
+          success: true,
+          token,
+          auid: findUser.dataValues.id,
+          role: findUser.dataValues.role,
+          name: findUser?.firstName + " " + findUser?.lastName,
+          deviceCode: device1Code,
+        });
       } else if (
         findUser?.device2?.length > 0 &&
         findUser?.device1?.length > 0
@@ -309,16 +301,14 @@ export default {
         );
         if (findUserdevice1?.email || findUserdevice2?.email) {
           console.log(5);
-          return res
-            .status(200)
-            .json({
-              success: true,
-              token,
-              auid: findUser.dataValues.id,
-              role: findUser.dataValues.role,
-              name: findUser?.firstName + " " + findUser?.lastName,
-              deviceCode,
-            });
+          return res.status(200).json({
+            success: true,
+            token,
+            auid: findUser.dataValues.id,
+            role: findUser.dataValues.role,
+            name: findUser?.firstName + " " + findUser?.lastName,
+            deviceCode,
+          });
         } else {
           return res
             .status(200)
@@ -350,14 +340,12 @@ export default {
             const userManager = await db.user.findOne({
               where: { id: user.dataValues.user_manager },
             });
-            return res
-              .status(200)
-              .json({
-                success: true,
-                data: user,
-                dataManager: userManager,
-                ok: true,
-              });
+            return res.status(200).json({
+              success: true,
+              data: user,
+              dataManager: userManager,
+              ok: true,
+            });
           }
           return res
             .status(200)
@@ -399,33 +387,39 @@ export default {
         where: {
           user_manager: uid,
         },
+        include: {
+          model: db.user_manager_product, // Include thông tin của người quản lý (user manager) từ cùng bảng User
+          // as: "userManager",
+          attributes: ["user_manager", "product_id"], // Chỉ lấy các thuộc tính id và name của người quản lý
+        },
       });
       res.json({ success: true, data: users });
     } catch (error) {
-      res
+      console.log(error);
+      return res
         .status(500)
         .json({ success: false, error: "Có lỗi từ phía máy chủ" });
     }
   },
   async updateEmployeeOfLeader(req, res) {
     try {
-      
       const { list, owner, productId } = req.body;
-      const users = await db.user_manager_product.destroy({
+      await db.user_manager_product.destroy({
         where: {
-          user_owner: owner,
-          product_id: productId
+          user_owner: parseInt(owner),
+          product_id: productId,
         },
       });
-      console.log(list)
-      const listBulk= list?.map(item=> ({product_id: productId, user_owner: owner, user_manager: item}))
-      await db.user_manager_product?.bulkCreate(listBulk)
+      const listBulk = list?.map((item) => ({
+        product_id: productId,
+        user_owner: parseInt(owner),
+        user_manager: item,
+      }));
+      await db.user_manager_product?.bulkCreate(listBulk);
       res.json({ success: true, data: [], ok: true });
     } catch (error) {
-      console.log(error)
-      res
-        .status(500)
-        .json({ success: false, error: "Có lỗi từ phía máy chủ" });
+      console.log(error);
+      res.status(500).json({ success: false, error: "Có lỗi từ phía máy chủ" });
     }
   },
   async verifyMail(req, res) {

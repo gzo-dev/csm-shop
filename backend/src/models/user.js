@@ -36,6 +36,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: "user_manager",
       as: "userManager", // Tên alias cho mối quan hệ
     });
+    models.user.hasMany(models.user_manager_product, {
+      foreignKey: "user_manager",
+      // as: "userManager",
+    });
   };
   return user;
 };

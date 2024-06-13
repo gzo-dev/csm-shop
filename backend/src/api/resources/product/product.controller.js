@@ -194,7 +194,7 @@ export default {
             [Op.substring]: moment(searchText, "DD-MM-YYYY HH:mm:ss"),
           },
         },
-        { "$user.firstName$": { [Op.substring]: searchText } },
+        // { "$user.firstName$": { [Op.substring]: searchText } },
       ],
     };
     if (id == 13) {
@@ -217,7 +217,6 @@ export default {
       }
 
       if (square) {
-        console.log(square);
         switch (parseInt(square)) {
           case 1:
             whereConditions.square = { [Op.between]: [0, 20] };
@@ -288,11 +287,19 @@ export default {
       // Thực hiện truy vấn dữ liệu với Sequelize
       const { count, rows: filteredList } = await db.product.findAndCountAll({
         where: whereConditions,
+        order: [["createdAt","DESC"]],
         include: [
+          {
+            model: db.user_manager_product,
+            // attributes: ["id", "firstName", "lastName"],
+            required: false,
+          },
           {
             model: db.user,
             attributes: ["id", "firstName", "lastName"],
+            required: false,
           },
+         
         ],
         limit: pageSize,
         offset: (page - 1) * pageSize,
@@ -315,34 +322,6 @@ export default {
     } catch (error) {
       console.error("Error searching products:", error);
       res.status(500).json({ success: false, error: "Internal Server Error" });
-    }
-  },
-  async index(req, res, next) {
-    try {
-      const { supplierId, categoryId, subCategoryId } = req.query;
-      db.product
-        .findAll({
-          order: [["createdAt", "DESC"]],
-          include: [
-            {
-              model: db.user,
-              attributes: ["id", "firstName", "lastName"],
-            },
-          ],
-          where: {
-            supplierId: supplierId,
-            categoryId: categoryId,
-            subCategoryId: subCategoryId,
-          },
-        })
-        .then((product) => {
-          res.status(200).json({ success: true, product });
-        })
-        .catch(function (err) {
-          next(err);
-        });
-    } catch (err) {
-      throw new RequestError("Error");
     }
   },
 
@@ -517,7 +496,7 @@ export default {
       // Thực hiện truy vấn dữ liệu với Sequelize
       const { count, rows: filteredList } = await db.product.findAndCountAll({
         where: whereConditions,
-        order: [["DESC"]],
+        order: [["createdAt","DESC"]],
         include: [
           {
             model: db.user,
@@ -559,7 +538,7 @@ export default {
       // Thực hiện truy vấn dữ liệu với Sequelize
       const { count, rows: filteredList } = await db.product.findAndCountAll({
         where: whereConditions,
-        order: [["DESC"]],
+        order: [["createdAt", "DESC"]],
         include: [
           {
             model: db.user,
@@ -748,7 +727,7 @@ export default {
       // Thực hiện truy vấn dữ liệu với Sequelize
       const { count, rows: filteredList } = await db.product.findAndCountAll({
         where: whereConditions,
-        order: [["DESC"]],
+        order: [["createdAt","DESC"]],
         include: [
           {
             model: db.user,
@@ -915,7 +894,7 @@ export default {
 
       const { count, rows: productList } = await db.product.findAndCountAll({
         where: whereConditions,
-        order: [["createdAt", "DESC"]],
+        order: [["createdAt","DESC"]],
         include: [
           {
             model: db.user,
