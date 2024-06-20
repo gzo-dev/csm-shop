@@ -40,6 +40,10 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: "user_manager",
       // as: "userManager",
     });
+    models.user.hasMany(models.product, {
+      foreignKey: "user_manager",
+      // as: "userManager",
+    });
   };
   return user;
 };

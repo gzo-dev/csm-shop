@@ -1,5 +1,5 @@
 import { db } from "../../../models";
-const { Op, Sequelize } = require("sequelize");
+const { Op, Sequelize, where } = require("sequelize");
 import moment from "moment";
 // import { queue } from '../../../kue';
 export default {
@@ -100,12 +100,17 @@ export default {
           rent: rent ? rent : 0,
         })
         .then((product) => {
-          JSON.parse(image)?.map((item) =>
+          JSON.parse(image)?.map(async (item) => {
             db.productphoto.create({
               imgUrl: item?.path,
               productId: product.dataValues.id,
-            })
-          );
+            });
+            await db.user_manager_product.create({
+              user_owner: user_manager,
+              user_manager: user_manager,
+              product_id: product.dataValues.id
+            }) 
+          }); 
           if (newaddimage) {
             JSON.parse(newaddimage)?.map((item) =>
               db.productphoto.create({
@@ -121,6 +126,7 @@ export default {
               amount: item?.amount,
             })
           );
+
           res
             .status(200)
             .json({ success: true, msg: "Successfully inserted product" });
@@ -287,7 +293,7 @@ export default {
       // Thực hiện truy vấn dữ liệu với Sequelize
       const { count, rows: filteredList } = await db.product.findAndCountAll({
         where: whereConditions,
-        order: [["createdAt", "DESC"]],
+        order: [["id", "DESC"]],
         include: [
           {
             model: db.user_manager_product,
@@ -526,14 +532,13 @@ export default {
     }
   },
   async getProductListByCategoryClientWeb(req, res, next) {
-    
     try {
       const { categoryId, subCategoryId, page = 1, pageSize = 12 } = req.query;
-  
+
       const currentPage = parseInt(page);
       const size = parseInt(pageSize);
-  
-      const whereConditions = {}; 
+
+      const whereConditions = {};
       if (categoryId) whereConditions.categoryId = categoryId;
       if (subCategoryId) whereConditions.subCategoryId = subCategoryId;
       // Đếm số lượng bản ghi
@@ -797,6 +802,7 @@ export default {
         pageSize = 10,
         page,
         reset,
+        searchText,
       } = req.query;
       if (typeRoom == 0) {
         typeRoom = undefined;
@@ -822,6 +828,25 @@ export default {
       let whereConditions = {
         categoryId: id,
         subCategoryId: subid,
+        [Op.or]: [
+          { product_id: { [Op.substring]: searchText } },
+          { name: { [Op.substring]: searchText } },
+          { address: { [Op.substring]: searchText } },
+          { wardText: { [Op.substring]: searchText } },
+          { districtText: { [Op.substring]: searchText } },
+          { provinceText: { [Op.substring]: searchText } },
+          { price: { [Op.substring]: searchText } },
+          {
+            updatedAt: {
+              [Op.substring]: moment(searchText, "DD-MM-YYYY HH:mm:ss"),
+            },
+          },
+          {
+            createdAt: {
+              [Op.substring]: moment(searchText, "DD-MM-YYYY HH:mm:ss"),
+            },
+          },
+        ],
       };
       if (id == 13) {
         if (typeRoom) {
@@ -913,7 +938,7 @@ export default {
 
       const { count, rows: productList } = await db.product.findAndCountAll({
         where: whereConditions,
-        order: [["createdAt", "DESC"]],
+        order: [["id", "DESC"]],
         include: [
           {
             model: db.user,
@@ -1036,6 +1061,21 @@ export default {
         });
     } catch (err) {
       throw new RequestError("Error");
+    }
+  },
+  async getProductUserManage(req, res, next) {
+    try {
+      const {uid }= req.query
+      const rows = await db.user_manager_product.findAll({
+        where: {
+          user_manager: uid
+        }
+      })
+      console.log(rows)
+      return res.status(200).json({data: rows, ok: true})
+    } catch (error) {
+      console.log(error)
+      return res.status(500).json({ok: false})
     }
   },
 

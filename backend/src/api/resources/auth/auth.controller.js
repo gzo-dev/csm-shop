@@ -67,7 +67,6 @@ export default {
       user_manager,
     } = req.body;
     var passwordHash = md5(password);
-    console.log(passwordHash);
     var token = generateOtp();
     var otp = verifyOtp(token);
     db.user
@@ -387,11 +386,15 @@ export default {
         where: {
           user_manager: uid,
         },
-        include: {
+        include: [{
           model: db.user_manager_product, // Include thông tin của người quản lý (user manager) từ cùng bảng User
           // as: "userManager",
           attributes: ["user_manager", "product_id"], // Chỉ lấy các thuộc tính id và name của người quản lý
-        },
+        }, {
+          model: db.product, // Include thông tin của người quản lý (user manager) từ cùng bảng User
+          // as: "userManager",
+          // attributes: ["user_manager", "product_id"], // Chỉ lấy các thuộc tính id và name của người quản lý
+        }],
       });
       res.json({ success: true, data: users });
     } catch (error) {
@@ -406,13 +409,13 @@ export default {
       const { list, owner, productId } = req.body;
       await db.user_manager_product.destroy({
         where: {
-          user_owner: parseInt(owner),
+          // user_manager: parseInt(owner),
           product_id: productId,
         },
       });
       const listBulk = list?.map((item) => ({
         product_id: productId,
-        user_owner: parseInt(owner),
+        user_owner: item,
         user_manager: item,
       }));
       await db.user_manager_product?.bulkCreate(listBulk);

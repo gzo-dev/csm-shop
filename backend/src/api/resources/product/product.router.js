@@ -19,9 +19,10 @@ productRouter.route('/update').post( upload.single('photo'), compressAndConvertT
 // productRouter.route('/getAllproduct').get( productController.index);
 productRouter.route('/getAllproductList').get( productController.getAllProductList);
 productRouter.route('/c/s').get( productController.getAllProductCategory);
-productRouter.route('/getProductByCategory').get( productController.getProductListByCategory);
 productRouter.route('/filter').get( productController.getProductListByFilter);
+productRouter.route('/getProductByCategory').get( productController.getProductListByCategory);
 productRouter.route('/getProductById').get( productController.getProductListById);
+productRouter.route('/user/manage').get( productController.getProductUserManage);
 productRouter.route('/getWebProductById').get( productController.getWebProductListById);
 productRouter.route('/product-offer').post( productController.addProductOffer);
 productRouter.route('/getAllProductOffer').get( productController.getProductOffer);
