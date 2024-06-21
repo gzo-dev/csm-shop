@@ -143,7 +143,7 @@ export default {
 
   async getAllProductCategory(req, res, next) {
     let {
-      searchText,
+      searchText= "",
       id,
       subid,
       page = 1,
@@ -594,7 +594,7 @@ export default {
   },
   async getProductListByCategory(req, res, next) {
     let {
-      searchText,
+      searchText= "",
       id,
       subid,
       page = 1,
@@ -802,7 +802,8 @@ export default {
         pageSize = 10,
         page,
         reset,
-        searchText,
+        searchText = "",
+        // rent
       } = req.query;
       if (typeRoom == 0) {
         typeRoom = undefined;
@@ -853,13 +854,13 @@ export default {
           whereConditions.typeRoom = typeRoom;
         }
 
-        if (rent !== undefined && rent.toString().length > 0) {
+        if (rent !== undefined) {
           switch (parseInt(rent)) {
-            case 0:
-              whereConditions.rent = { [Op.or]: [0, false] };
+            case 0: 
+              whereConditions.rent = 0;
               break;
             case 1:
-              whereConditions.rent = { [Op.or]: [1, true] };
+              whereConditions.rent = 1;
               break;
             case 2:
               whereConditions.rent = 2;
@@ -914,7 +915,8 @@ export default {
         if (ward) {
           whereConditions.ward = ward;
         }
-      } else if (id == 12) {
+      } 
+      else if (id == 12) {
         if (typeRoom) {
           whereConditions.typeRoom = typeRoom;
         }
@@ -935,9 +937,10 @@ export default {
           whereConditions.ward = ward;
         }
       }
-
+      // console.log(whereConditions)
       const { count, rows: productList } = await db.product.findAndCountAll({
         where: whereConditions,
+        
         order: [["id", "DESC"]],
         include: [
           {
@@ -1071,7 +1074,7 @@ export default {
           user_manager: uid
         }
       })
-      console.log(rows)
+      // console.log(rows)
       return res.status(200).json({data: rows, ok: true})
     } catch (error) {
       console.log(error)
@@ -1182,7 +1185,7 @@ export default {
           }
         })
         .then((list) => {
-          console.log(JSON.stringify(list));
+          // console.log(JSON.stringify(list));
           res.status(200).json({ success: true, data: list });
         });
     } catch (err) {
