@@ -156,7 +156,6 @@ export default {
       district,
       ward,
       star,
-      reset,
     } = req.query;
     if (typeRoom == 0) {
       typeRoom = undefined;
@@ -801,7 +800,6 @@ export default {
         star,
         pageSize = 10,
         page,
-        reset,
         searchText = "",
         // rent
       } = req.query;
@@ -843,10 +841,11 @@ export default {
             },
           },
           {
-            createdAt: {
+            createdAt: {  
               [Op.substring]: moment(searchText, "DD-MM-YYYY HH:mm:ss"),
             },
           },
+          { "$user.firstName$": { [Op.substring]: searchText } },
         ],
       };
       if (id == 13) {
@@ -940,13 +939,12 @@ export default {
       // console.log(whereConditions)
       const { count, rows: productList } = await db.product.findAndCountAll({
         where: whereConditions,
-        
         order: [["id", "DESC"]],
         include: [
           {
             model: db.user,
             attributes: ["id", "firstName", "lastName"],
-            required: false,
+            required: true,
           },
           {
             model: db.user_manager_product,
