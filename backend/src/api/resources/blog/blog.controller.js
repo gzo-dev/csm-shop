@@ -77,7 +77,13 @@ export default {
   },
 
   async getListBlog(req, res) {
+    const type = req.query?.type;
+    const whereCondition = {};
+    if (type) {
+      whereCondition.type = type;
+  }
     const blogList = await db.blog.findAll({
+      where: whereCondition,
       order: [["createdAt", "DESC"]],
       attributes: { exclude: ["content"] },
     });
@@ -158,7 +164,14 @@ export default {
     return res.status(200).json({ ok: true });
   },
   async getListBlogAdmin(req, res) {
+    const type= req.query?.type
+    const whereCondition = {};
+    if (type) {
+        whereCondition.type = type;
+    }
+
     const blogList = await db.blog.findAll({
+      where: whereCondition,
       order: [["createdAt", "DESC"]],
       attributes: { exclude: ["content"] },
       include: [

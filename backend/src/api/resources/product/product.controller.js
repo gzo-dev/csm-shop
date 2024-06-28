@@ -108,9 +108,9 @@ export default {
             await db.user_manager_product.create({
               user_owner: user_manager,
               user_manager: user_manager,
-              product_id: product.dataValues.id
-            }) 
-          }); 
+              product_id: product.dataValues.id,
+            });
+          });
           if (newaddimage) {
             JSON.parse(newaddimage)?.map((item) =>
               db.productphoto.create({
@@ -143,7 +143,7 @@ export default {
 
   async getAllProductCategory(req, res, next) {
     let {
-      searchText= "",
+      searchText = "",
       id,
       subid,
       page = 1,
@@ -358,6 +358,8 @@ export default {
   },
 
   async update(req, res, next) {
+    // const {user }
+    const { uid } = req.user;
     try {
       const {
         productId,
@@ -402,8 +404,13 @@ export default {
       } = req.body;
       db.product
         .findOne({ where: { id: productId } })
-        .then((product) => {
+        .then(async (product) => {
           if (product) {
+            await db.history_edit_product.create({
+              product_id: productId,
+              user_id: uid,
+              time_updated: new Date().toString(),
+            });
             return db.product.update(
               {
                 categoryId: categoryId ? categoryId : product.categoryId,
@@ -593,7 +600,7 @@ export default {
   },
   async getProductListByCategory(req, res, next) {
     let {
-      searchText= "",
+      searchText = "",
       id,
       subid,
       page = 1,
@@ -803,6 +810,7 @@ export default {
         searchText = "",
         // rent
       } = req.query;
+
       if (typeRoom == 0) {
         typeRoom = undefined;
       }
@@ -825,8 +833,8 @@ export default {
         ward = undefined;
       }
       let whereConditions = {
-        categoryId: id,
-        subCategoryId: subid,
+        categoryId: parseInt(id),
+        subCategoryId: parseInt(subid),
         [Op.or]: [
           { product_id: { [Op.substring]: searchText } },
           { name: { [Op.substring]: searchText } },
@@ -841,11 +849,11 @@ export default {
             },
           },
           {
-            createdAt: {  
+            createdAt: {
               [Op.substring]: moment(searchText, "DD-MM-YYYY HH:mm:ss"),
             },
           },
-          { "$user.firstName$": { [Op.substring]: searchText } },
+          // { "$user.firstName$": { [Op.substring]: searchText } },
         ],
       };
       if (id == 13) {
@@ -855,7 +863,7 @@ export default {
 
         if (rent !== undefined) {
           switch (parseInt(rent)) {
-            case 0: 
+            case 0:
               whereConditions.rent = 0;
               break;
             case 1:
@@ -936,7 +944,7 @@ export default {
           whereConditions.ward = ward;
         }
       }
-      // console.log(whereConditions)
+      
       const { count, rows: productList } = await db.product.findAndCountAll({
         where: whereConditions,
         order: [["id", "DESC"]],
@@ -944,7 +952,13 @@ export default {
           {
             model: db.user,
             attributes: ["id", "firstName", "lastName"],
-            required: true,
+            required: false,
+            where: {
+                [Op.or]: [
+                    { firstName: { [Op.substring]: searchText } },
+                    { '$user.firstName$': { [Op.is]: null } }, // Để đảm bảo rằng cả bản ghi không có user cũng được trả về
+                ],
+            }
           },
           {
             model: db.user_manager_product,
@@ -1066,17 +1080,17 @@ export default {
   },
   async getProductUserManage(req, res, next) {
     try {
-      const {uid }= req.query
+      const { uid } = req.query;
       const rows = await db.user_manager_product.findAll({
         where: {
-          user_manager: uid
-        }
-      })
+          user_manager: uid,
+        },
+      });
       // console.log(rows)
-      return res.status(200).json({data: rows, ok: true})
+      return res.status(200).json({ data: rows, ok: true });
     } catch (error) {
-      console.log(error)
-      return res.status(500).json({ok: false})
+      console.log(error);
+      return res.status(500).json({ ok: false });
     }
   },
 
@@ -1502,6 +1516,31 @@ export default {
     } catch (err) {
       next(err);
       res.status(500).json({ success: false, msg: err });
+    }
+  },
+  async getHistoryEditProduct(req, res, next) {
+    try {
+      const { product_id } = req.query;
+      const rows = await db.history_edit_product.findAll({
+        where: {
+          product_id,
+        },
+        order: [["time_updated", "DESC"]],
+        include: [
+          {
+            model: db.user,
+            required: false,
+          },
+          {
+            model: db.product,
+            required: false,
+          },
+        ],
+      });
+      return res.status(200).json({ data: rows, ok: true });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ ok: false });
     }
   },
 };

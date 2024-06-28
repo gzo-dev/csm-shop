@@ -108,6 +108,7 @@ export default {
       });
   },
   async getAllUserList(req, res, next) {
+    
     db.user
       .findAll({
         where: { hidden: 0 },
@@ -264,12 +265,10 @@ export default {
         findUser?.device2?.length <= 0
       ) {
         const device1Code = generateRandomString(10);
-        console.log(device1Code);
         const data = await db.user.update(
           { device1: device1Code },
           { where: { phone: email, password: md5(password) } }
         );
-        console.log(data);
         const token = JWT.sign(
           { uid: findUser.dataValues.id, id: findUser.dataValues.id },
           process.env.JWT_SECRET,
@@ -294,7 +293,7 @@ export default {
           where: { phone: email, password: md5(password), device2: deviceCode },
         });
         const token = JWT.sign(
-          { uid: findUser.dataValues.id, id: findUser.dataValues.id },
+          { uid: findUser.dataValues.id, id: findUser.dataValues.id, role: findUser.dataValues?.role },
           process.env.JWT_SECRET,
           { expiresIn: 24 * 60 * 60 }
         );

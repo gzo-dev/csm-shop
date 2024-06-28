@@ -60,6 +60,8 @@ export default {
   },
   async updateTour(req, res) {
     try {
+      const { uid } = req.user;
+
       await db.tour.update(
         { ...req.body, tour_id: req.body.tour_id },
         {
@@ -68,6 +70,11 @@ export default {
           },
         }
       );
+      await db.history_edit_tour.create({
+        tour_id: req.body.id,
+        user_id: uid,
+        time_updated: new Date().toString(),
+      });
       return res.status(200).json({ ok: true });
     } catch (error) {
       console.log(error);
@@ -75,8 +82,27 @@ export default {
     }
   },
   async getListTour(req, res) {
+    const type = req.query?.type;
+    const { province, ward, district } = req.query;
+
+    // Tạo đối tượng where condition, nếu có type thì thêm vào
+    const whereCondition = {};
+    if (type) {
+      whereCondition.type = type;
+    }
+    if (province) {
+      whereCondition.destination = province;
+    }
+    // if (district) {
+    //   whereCondition.district= district
+    // }
+    // if (ward) {
+    //   whereCondition.ward= ward
+    // }
+
     const tourList = await db.tour.findAll({
       order: [["createdAt", "DESC"]],
+      where: whereCondition,
       attributes: {
         exclude: ["content"], // Thay 'field1', 'field2' bằng các trường bạn muốn loại bỏ
       },
@@ -122,16 +148,16 @@ export default {
   },
   async getTourDetailClient(req, res) {
     try {
-        const tourList = await db.tour.findOne({
-          where: {
-            id: req.query.id,
-          },
-        });
-        return res.status(200).json({ ok: true, data: [tourList] });
-      } catch (error) {
-        console.log(error);
-        return res.status(500).json({ ok: false });
-      }
+      const tourList = await db.tour.findOne({
+        where: {
+          id: req.query.id,
+        },
+      });
+      return res.status(200).json({ ok: true, data: [tourList] });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ ok: false });
+    }
   },
   async deleteTour(req, res) {
     const { id } = req.body;
@@ -141,5 +167,26 @@ export default {
       },
     });
     return res.status(200).json({ ok: true });
+  },
+  async getHistoryEditProduct(req, res, next) {
+    try {
+      const { tour_id } = req.query;
+      const rows = await db.history_edit_tour.findAll({
+        where: {
+          tour_id: tour_id
+        },
+        order: [["time_updated", "DESC"]],
+        include: [
+          {
+            model: db.user,
+            required: false,
+          },
+        ],
+      });
+      return res.status(200).json({ data: rows, ok: true });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ ok: false });
+    }
   },
 };

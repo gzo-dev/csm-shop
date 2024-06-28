@@ -22,7 +22,8 @@ module.exports = (sequelize, DataTypes) => {
     children_price: DataTypes.INTEGER,
     agent_price: DataTypes.INTEGER,
     car: DataTypes.STRING,
-    timeText: DataTypes.STRING
+    timeText: DataTypes.STRING,
+    user_created: DataTypes.INTEGER
   }, {});
   return tour;
 };

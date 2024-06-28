@@ -3,6 +3,7 @@ import productController from './product.controller';
 // import { sanitize } from '../../../middleware/sanitizer';
 // import { jwtStrategy } from '../../../middleware/strategy';
 import upload, { compressAndConvertToJpg, compressAndConvertToJpgSingle } from '../../../awsbucket';
+import authenticateJWT from '../../../middleware/verify_token';
 
 
 export const productRouter = express.Router();
@@ -14,8 +15,8 @@ productRouter.route("/s/h").get(productController.getProductSuggestHotel)
 productRouter.route("/s/a").get(productController.getProductSuggestApartment)
 productRouter.route("/sg").get(productController.getProductSuggest2)
 productRouter.route("/photo").get(productController.getPhotoProduct)
-productRouter.route('/add').post(upload.single('photo'), compressAndConvertToJpgSingle, productController.addProduct);
-productRouter.route('/update').post( upload.single('photo'), compressAndConvertToJpgSingle, productController.update);
+productRouter.route('/add').post(upload.single('photo'), compressAndConvertToJpgSingle, authenticateJWT, productController.addProduct);
+productRouter.route('/update').post( upload.single('photo'), compressAndConvertToJpgSingle, authenticateJWT, productController.update);
 // productRouter.route('/getAllproduct').get( productController.index);
 productRouter.route('/getAllproductList').get( productController.getAllProductList);
 productRouter.route('/c/s').get( productController.getAllProductCategory);
@@ -51,7 +52,7 @@ productRouter.route('/search_product').post( productController.searchProductBySu
 //aws image delete
 productRouter.route('/aws/delete/photo').post( productController.awsProductPhotoDelete);
 
-
+productRouter.route("/history/edit").get(authenticateJWT, productController.getHistoryEditProduct)
 
 
 

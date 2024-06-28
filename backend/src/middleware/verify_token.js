@@ -7,7 +7,7 @@ function authenticateJWT(req, res, next) {
       return res.status(401).json({ message: 'Missing or invalid token. Authentication failed.' });
     }
   
-    const token = authHeader.substring(7); // Loại bỏ tiền tố 'Bearer ' để chỉ lấy token
+    const token = authHeader.substring(7); 
   
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
       if (err) {
