@@ -11,7 +11,7 @@ import {
   ListItem,
   ListItemText,
   Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 import { Link } from "react-router-dom";
 import { getCookie } from "../../../../../function";
 import get_list_employee_of_leader from "../../../../../api/get_list_employee_of_leader";
@@ -89,6 +89,7 @@ function ManageEmployeeProduct(props) {
   return (
     <div style={{ marginLeft: 12, display: "flex" }}>
       <Link
+        title="Xem lịch sử chỉnh sửa sản phẩm"
         to={{
           pathname: `/admin`,
         }}

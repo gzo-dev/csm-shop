@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { GetUserLogin } from "../../components/services";
 import { NotificationManager } from "react-notifications";
 import Register from "../register";
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 import { useHistory } from "react-router-dom";
 
 const emailRegex = RegExp(

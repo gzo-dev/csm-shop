@@ -58,7 +58,7 @@ const Apis = {
   GetUploadProductImage: `${API_URL}/api/product/upload-img`,
   GetDeleteProduct: `${API_URL}/api/product/delete`,
   GetProductById: `${API_URL}/api/product/getProductById`,
-  GetProductPhotoDeleteById: `${API_URL}/api/product/aws/delete/photo`,
+  // GetProductPhotoDeleteById: `${API_URL}/api/product/aws/delete/photo`,
 
 
   //order detail

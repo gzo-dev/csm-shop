@@ -22,7 +22,11 @@ const getUserLogin = async (data) => {
 
 const getUserRegister = async (data) => {
     try {
-        let result = await api.post(Apis.GetUserRegsiter, data);
+        let result = await api.post(Apis.GetUserRegsiter, data, {
+            headers: {
+                "Authorization": "Bearer " + getCookie("token")
+            }
+        });
         if (result.data.error) {
             NotificationManager.error(result.data.error);
             return null;
@@ -81,17 +85,17 @@ const getDeleteUserList = async (id) => {
 const authenticate = (user, next) => {
     if (typeof window !== "undefined") {
         if(user.success=== false && user.third !== true) {
-            
+            next()
         }
         else if (user.third === true) {
             alert("Bạn không thể đăng nhập trên thiết bị này")
         }
         else if (user.deviceCode) {
             localStorage.setItem("deviceCode", user.deviceCode)
-            setCookie('token', user.token, 30);
-            setCookie('role', user.role, 30);
-            setCookie("auid", user.auid, 30)
-            setCookie("name", user.name, 30)
+            setCookie('token', user.token, 1440);
+            setCookie('role', user.role, 1440);
+            setCookie("auid", user.auid, 1440)
+            setCookie("name", user.name, 1440)
         }
         else {
             alert("Bạn không thể đăng nhập trên thiết bị này")

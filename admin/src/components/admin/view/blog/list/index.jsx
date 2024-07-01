@@ -8,6 +8,7 @@ import moment from "moment"
 import {Link } from "react-router-dom"
 import { useParams } from "react-router-dom";
 import Pagination from "@material-ui/lab/Pagination";
+import { getCookie } from "../../../../../function";
 
 const List = ({ history }) => {
   const [getList, setGetList] = useState([]);
@@ -19,7 +20,7 @@ const List = ({ history }) => {
 
   const getData = async () => {
     try {
-      const list = await apiGetListBlog();
+      const list = await apiGetListBlog({type: id});
       setGetList(list.data.filter(item=> item.type== id));
     } catch (error) {
       console.error("Error fetching location:", error);

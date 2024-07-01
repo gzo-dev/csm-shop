@@ -16,19 +16,20 @@ import SelectBox3 from "../../../../../util/SelectBox3";
 import { useParams } from "react-router-dom";
 import Pagination from "@material-ui/lab/Pagination";
 import useQuery from "../../../../../util/useQuery";
+import HistoryEditTour from "./HistoryEditTour";
 
 const List = ({ history }) => {
   const { id } = useParams();
-  const query= useQuery()
+  const query = useQuery();
   const [originList, setOriginList] = useState([]);
   const [getList, setGetList] = useState([]);
   const [provinceDetail, setProvinceDetail] = useState([]);
   const [listWard, setListWard] = useState([]);
   const [ward, setWard] = useState();
-  const [typeRoom, setTypeRoom] = useState();
-  const [square, setSquare] = useState();
-  const [price, setPrice] = useState();
-  const [star, setStar] = useState();
+  // const [typeRoom, setTypeRoom] = useState();
+  // const [square, setSquare] = useState();
+  // const [price, setPrice] = useState();
+  // const [star, setStar] = useState();
   const [listProvince, setListProvince] = useState([]);
   const [province, setProvince] = useState();
   const [district, setDistrict] = useState();
@@ -39,33 +40,28 @@ const List = ({ history }) => {
   const currentItems = getList.slice(indexOfFirstItem, indexOfLastItem);
   const handlePageChange = (event, value) => {
     // setCurrentPage(value);
-    history.push("/admin/t/"+ id + "/list?page="+ value)
+    history.push("/admin/t/" + id + "/list?page=" + value);
   };
-  useEffect(()=> {
-    if(parseInt(query.get("page")) >= 1) {
-      setCurrentPage(parseInt(query.get("page")))
+  useEffect(() => {
+    if (parseInt(query.get("page")) >= 1) {
+      setCurrentPage(parseInt(query.get("page")));
+    } else {
+      setCurrentPage(1);
     }
-    else {
-      setCurrentPage(1)
-    }
-  }, [query.get("page"), currentPage])
+  }, [query.get("page"), currentPage]);
   const handleBack = () => {
     history.goBack();
   };
 
-
   const getData = async () => {
     try {
-      const list = await apiGetListTour();
+      const list = await apiGetListTour({ type: id });
       setOriginList(list.data.filter((item) => item.type == id));
       setGetList(list.data.filter((item) => item.type == id));
     } catch (error) {
       console.error("Error fetching location:", error);
     }
   };
-
-  
-  
 
   const handlDeleteById = async (id) => {
     try {
@@ -114,22 +110,6 @@ const List = ({ history }) => {
 
   return (
     <div className="container-fluid">
-      {/* <div className="row">
-        <div className="col-lg-5 col-md-9 col-lg-6">
-          <h2 className="mt-30 page-title">Tours</h2>
-        </div>
-        <div className="col-lg-5 col-md-3 col-lg-6 back-btn">
-          <Button variant="contained" onClick={handleBack}>
-            <i className="fas fa-arrow-left" /> Back
-          </Button>
-        </div>
-      </div> */}
-      {/* <ol className="breadcrumb mb-30">
-        <li className="breadcrumb-item">
-          <a href="index.html">Dashboard</a>
-        </li>
-        <li className="breadcrumb-item active">Tours</li>
-      </ol> */}
       <div className="w-100 d-flex justify-content-between">
         <div className="d-flex align-items-center" style={{ gap: 20 }}>
           <Link
@@ -167,11 +147,14 @@ const List = ({ history }) => {
           </a>
           <a
             href="/admin/product/create"
-            onClick={(e) => {
+            onClick={async (e) => {
               e.preventDefault();
-              setGetList(
-                originList.filter((item) => item.departure == province)
-              );
+              const list = await apiGetListTour({ type: id, province, district, ward });
+              setGetList(list?.data)
+              history.push("/admin/t/" + id + "/list?page=" + 1);
+              // setGetList(
+              //   originList.filter((item) => item.departure == province)
+              // );
             }}
             className="add-btn hover-btn"
             style={{
@@ -231,17 +214,26 @@ const List = ({ history }) => {
                     marginBottom: 12,
                   }}
                 >
-                  <SelectBox3
-                    size={"small"}
+                  <select
+                    className="custom-select-p"
                     value={province}
-                    setValue={setProvince}
-                    label={"Tỉnh / Thành phố"}
-                    list={listProvince?.map((item) => ({
-                      ...item,
-                      value: item.province_id,
-                      label: item.province_name,
-                    }))}
-                  />
+                    onChange={(e) => setProvince(e.target.value)}
+                  >
+                    <option selected disabled value={-1}>
+                      Tỉnh / Thành phố
+                    </option>
+                    {listProvince
+                      ?.map((item) => ({
+                        ...item,
+                        value: item.province_id,
+                        label: item.province_name,
+                      }))
+                      ?.map((item, key) => (
+                        <option key={key} value={item.value}>
+                          {item.label}
+                        </option>
+                      ))}
+                  </select>
                 </div>
                 <div
                   style={{
@@ -253,17 +245,26 @@ const List = ({ history }) => {
                     marginBottom: 12,
                   }}
                 >
-                  <SelectBox3
-                    size={"small"}
+                  <select
+                    className="custom-select-p"
                     value={district}
-                    setValue={setDistrict}
-                    label={"Quận / Huyện"}
-                    list={provinceDetail?.map((el) => ({
-                      ...el,
-                      value: el.district_id,
-                      label: el.district_name,
-                    }))}
-                  />
+                    onChange={(e) => setDistrict(e.target.value)}
+                  >
+                    <option selected disabled value={-1}>
+                      Quận / Huyện
+                    </option>
+                    {provinceDetail
+                      ?.map((el) => ({
+                        ...el,
+                        value: el.district_id,
+                        label: el.district_name,
+                      }))
+                      ?.map((item, key) => (
+                        <option key={key} value={item.value}>
+                          {item.label}
+                        </option>
+                      ))}
+                  </select>
                 </div>
                 <div
                   style={{
@@ -275,17 +276,26 @@ const List = ({ history }) => {
                     marginBottom: 12,
                   }}
                 >
-                  <SelectBox3
-                    size={"small"}
+                  <select
+                    className="custom-select-p"
                     value={ward}
-                    setValue={setWard}
-                    label={"Xã / Phường"}
-                    list={listWard?.map((el) => ({
-                      ...el,
-                      value: el.ward_id,
-                      label: el.ward_name,
-                    }))}
-                  />
+                    onChange={(e) => setWard(e.target.value)}
+                  >
+                    <option selected disabled value={-1}>
+                      Xã / Phường
+                    </option>
+                    {listWard
+                      ?.map((el) => ({
+                        ...el,
+                        value: el.ward_id,
+                        label: el.ward_name,
+                      }))
+                      ?.map((item, key) => (
+                        <option key={key} value={item.value}>
+                          {item.label}
+                        </option>
+                      ))}
+                  </select>
                 </div>
               </div>
             </div>
@@ -342,6 +352,7 @@ const List = ({ history }) => {
                           >
                             <i className="fas fa-trash-alt" />
                           </Typography>
+                          <HistoryEditTour {...row} />
                         </td>
                       </tr>
                     ))}

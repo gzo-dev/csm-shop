@@ -7,21 +7,21 @@ import React, {
   useCallback,
 } from "react";
 import {
-  Box,
+  // Box,
   Button,
-  FormControl,
+  // FormControl,
   FormControlLabel,
-  InputLabel,
-  MenuItem,
-  Select,
+  // InputLabel,
+  // MenuItem,
+  // Select,
   Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 import { GetCategoryDetails, GetProductDetails } from "../../../../services";
 import { Link } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import swal from "sweetalert";
 import numberWithCommas from "../../../../../util/number_thousand_separator";
-import axios from "axios";
+// import axios from "axios";
 import * as XLSX from "xlsx";
 import {
   apiGetChildCategory,
@@ -31,7 +31,7 @@ import {
 } from "../../../../../api";
 import { getCookie } from "../../../../../function";
 import { useParams } from "react-router-dom";
-import SelectBox3 from "../../../../../util/SelectBox3";
+// import SelectBox3 from "../../../../../util/SelectBox3";
 import {
   listBedRoom,
   listPrice,
@@ -40,7 +40,7 @@ import {
   listStatusRoom,
 } from "../../../../../data/data";
 import moment from "moment";
-import Checkbox from "@material-ui/core/Checkbox";
+import Checkbox from "@mui/material/Checkbox";
 import Pagination from "@material-ui/lab/Pagination";
 import delete_bulk_product from "../../../../../api/delete_bulk_product";
 import { AppContext } from "../../../../../App";
@@ -48,14 +48,20 @@ import { useHistory } from "react-router-dom";
 import useQuery from "../../../../../util/useQuery";
 import { CLIENT_URL } from "../../../../../config1";
 import getAllProductListCategory from "../../../../../api/get_list_product_category";
-import search_product from "../../../../../api/searchProduct";
+// import search_product from "../../../../../api/searchProduct";
 import search_product_filter from "../../../../../api/searchProductFilter";
 import _, { debounce } from "lodash";
 import MangeEmployeeProduct from "./MangeEmployeeProduct";
+import get_list_employee_of_leader from "../../../../../api/get_list_employee_of_leader";
+import get_list_product_user_manage from "../../../../../api/get_list_product_user_manage";
+import { FaHistory } from "react-icons/fa";
+import HistoryEditProduct from "./HistoryEditProduct";
 
 const List = () => {
   const { id, subid } = useParams();
+  const uid = getCookie("auid");
   // const
+  const [listEmployee, setEmployee] = useState([]);
   const query = useQuery();
   const history = useHistory();
   const { user } = useContext(AppContext);
@@ -88,6 +94,7 @@ const List = () => {
   const [listCategory, setListCategory] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const [listProductUserManage, setListProductUserManage] = useState([]);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = getList;
@@ -111,6 +118,22 @@ const List = () => {
   };
 
   useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      if (window.performance.navigation.type === 1) {
+        localStorage.removeItem("data_temp_filter");
+      }
+    };
+
+    // Add event listener for beforeunload
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    // Clean up event listener on component unmount
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
+  useEffect(() => {
     if (parseInt(query.get("page")) >= 1) {
       setCurrentPage(parseInt(query.get("page")));
     } else {
@@ -120,16 +143,16 @@ const List = () => {
 
   const handleSearchFilter = async () => {
     const dataTemp = {
-      typeRoom,
-      rent,
-      square,
-      price,
+      typeRoom: parseInt(typeRoom),
+      rent: parseInt(rent),
+      square: parseInt(square),
+      price: parseInt(price),
+      star: parseInt(star),
       province,
       district,
       ward,
-      star,
     };
-    // localStorage.setItem("data_temp_filter", JSON.stringify(dataTemp));
+    localStorage.setItem("data_temp_filter", JSON.stringify(dataTemp));
     const result = await search_product_filter({
       id,
       subid,
@@ -142,6 +165,30 @@ const List = () => {
       ward,
       star,
       page: currentPage,
+      searchText,
+    });
+    setGetList(result.data);
+    setTotalPage(result.pagination.totalPages);
+    if (parseInt(result?.pagination?.totalPages) < parseInt(currentPage)) {
+      history.push(
+        "/admin/p/" +
+          id +
+          "/" +
+          subid +
+          "/list?page=" +
+          1 +
+          "&search=" +
+          searchText
+      );
+    }
+  };
+
+  const resetSearchFilter = async () => {
+    const result = await search_product_filter({
+      id,
+      subid,
+      page: currentPage,
+      searchText,
     });
     setGetList(result.data);
     setTotalPage(result.pagination.totalPages);
@@ -167,9 +214,11 @@ const List = () => {
 
   const getProductList = async (data) => {
     setIsLoaded(false);
+    const dataTempFilter = JSON.parse(localStorage.getItem("data_temp_filter"));
     let list = await getAllProductListCategory({
       id,
       subid,
+      ...dataTempFilter,
       typeRoom,
       rent,
       square,
@@ -210,23 +259,61 @@ const List = () => {
       subid,
       ...dataTempFilter,
       page: currentPage,
+      searchText: searchText
+        ? searchText
+        : new URLSearchParams(location.search).get("search") || "",
     });
     setGetList(result.data);
     setTotalPage(result.pagination.totalPages);
   };
 
+  // useEffect(() => {
+  //   getProductList();
+  // }, [
+  //   id,
+  //   subid,
+  //   currentPage,
+  //   new URLSearchParams(window.location.search).get("search"),
+  // ]);
+
   useEffect(() => {
-    getProductList();
+    const dataTempFilter = JSON.parse(localStorage.getItem("data_temp_filter"));
+    if (dataTempFilter) {
+      if (dataTempFilter?.typeRoom) {
+        setTypeRoom(dataTempFilter.typeRoom || undefined);
+      }
+      if (dataTempFilter?.rent) {
+        setRent(dataTempFilter.rent || undefined);
+      }
+      if (dataTempFilter?.square) {
+        setSquare(dataTempFilter.square || undefined);
+      }
+      if (dataTempFilter?.price) {
+        setPrice(dataTempFilter.price || undefined);
+      }
+      if (dataTempFilter?.province) {
+        setProvince(dataTempFilter.province) || undefined;
+      }
+      if (dataTempFilter?.ward) {
+        setWard(dataTempFilter.ward || undefined);
+      }
+      if (dataTempFilter?.district) {
+        setDistrict(dataTempFilter.district || undefined);
+      }
+      if (dataTempFilter?.star) {
+        setStar(dataTempFilter.star || undefined);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    getProductFilterList();
   }, [
     id,
     subid,
     currentPage,
     new URLSearchParams(window.location.search).get("search"),
   ]);
-
-  useEffect(() => {
-    getProductFilterList();
-  }, []);
 
   useEffect(() => {
     getListCategory();
@@ -262,23 +349,25 @@ const List = () => {
   }, [selectCategory, selectSubCategory]);
 
   const handleSearchInputChange = async (value) => {
+    const dataTempFilter = JSON.parse(localStorage.getItem("data_temp_filter"));
     if (value.length <= 0 || !value) {
-      let list = await search_product({
+      const result = await search_product_filter({
         id,
         subid,
+        ...dataTempFilter,
         page: currentPage,
-        search: value,
+        searchText: "",
       });
-      const data = list.data;
-      setGetList(data);
-      setTotalPage(list.pagination.totalPages);
+      setGetList(result.data);
+      setTotalPage(result.pagination.totalPages);
       return;
     }
-    const result = await search_product({
-      searchText: value,
+    const result = await search_product_filter({
       id,
       subid,
-      search: value,
+      ...dataTempFilter,
+      page: currentPage,
+      searchText: value,
     });
     setGetList(result.data);
     setTotalPage(result.pagination.totalPages);
@@ -286,7 +375,7 @@ const List = () => {
   };
 
   const debouncedSearch = useCallback(
-    debounce(handleSearchInputChange, 1500),
+    debounce(handleSearchInputChange, 1000),
     []
   );
 
@@ -301,7 +390,7 @@ const List = () => {
   const handlDeleteById = async (id) => {
     swal({
       title: "Bạn có chắc?",
-      text: "You want to delete Category from the List",
+      text: "Bạn có chắc muốn xoá sản phẩm này không ?",
       icon: "warning",
       buttons: true,
       dangerMode: true,
@@ -343,11 +432,11 @@ const List = () => {
     XLSX.writeFile(workbook, "product.xlsx");
   };
 
-  const refreshProduct = () => {
-    setGetList(originList);
-    setSelectCategory();
-    setSelectSubCategory();
-  };
+  // const refreshProduct = () => {
+  //   setGetList(originList);
+  //   setSelectCategory();
+  //   setSelectSubCategory();
+  // };
 
   const getprovince = async (code) => {
     const response = await apiGetProvince(code);
@@ -369,20 +458,6 @@ const List = () => {
       setListProvince(result);
     })();
   }, []);
-
-  // useEffect(() => {
-  //   const dataTempFilter = JSON.parse(localStorage.getItem("data_temp_filter"));
-  //   if (dataTempFilter) {
-  //     setTypeRoom(dataTempFilter.typeRoom || undefined);
-  //     setRent(dataTempFilter.rent || undefined);
-  //     setSquare(dataTempFilter.square || undefined);
-  //     setPrice(dataTempFilter.price || undefined);
-  //     setProvince(dataTempFilter.province) || undefined;
-  //     setWard(dataTempFilter.ward || undefined);
-  //     setDistrict(dataTempFilter.district || undefined);
-  //     setStar(dataTempFilter.star || undefined);
-  //   }
-  // }, []);
 
   const bulkDelete = async () => {
     try {
@@ -470,30 +545,57 @@ const List = () => {
       return true;
     }
     if (row.user) {
+      // nếu người dùng là quản lý và cái uid người dùng hiện tại là cái chủ của sản phẩm thì cho phép coi
       if (role === "leader" && auid == row.user.id) {
         return true;
-      } 
-      else if (role === "employee") {
-        // console.log(_.some(row.user_manager_products, {user_manager: parseInt(auid)}))
-        if(_.some(row.user_manager_products, {user_manager: parseInt(auid)})=== true) {
-          return true;
-        }
-        // else {
-        //   return false
-        // }
-        return false
-        console.log(row.user_manager_products)
-      } 
-      else if (role === "leader" && auid != row.user.id) {
+      }
+      // nếu người dùng là quản lý và nếu nhân viên của người quản lý đó quản lý cái sản phẩm này thì cho phép coi
+      // row.user.id là cái id của người dùng mà sở hữu cái product này nghĩa là chủ của cái product này
+      else if (
+        role === "leader" &&
+        _.some(listEmployee, { id: parseInt(row?.user?.id) }) === true
+      ) {
+        return true;
+      }
+      // else if(role === "employee" ) {
+
+      // }
+      // nếu người dùng là nhân viên và cái uid người dùng hiện tại là cái chủ của sản phẩm thì cho phép coi
+      // else if (role === "employee" && auid == row.user.id) {
+      // console.log(_.some(row.user_manager_products, {user_manager: parseInt(auid)}))
+      // if(_.some(row.user_manager_products, {user_manager: parseInt(auid)})=== true) {
+      // return true;
+      // }
+      // else {
+      //   return false
+      // }
+      // return false
+      // console.log(row.user_manager_products)
+      // }
+      // auid
+      else if (
+        role === "employee" &&
+        _.some(listProductUserManage, {
+          user_manager: parseInt(uid),
+          product_id: parseInt(row.id),
+        }) === true
+      ) {
+        return true;
+      } else if (
+        role === "employee" &&
+        _.some(listProductUserManage, {
+          user_manager: parseInt(uid),
+          product_id: parseInt(row.id),
+        }) !== true
+      ) {
         return false;
-      } 
-      else if (role === "employee" && user.user_manager != row.user.id) {
+      } else if (role === "leader" && auid != row.user.id) {
         return false;
-      } 
-      else if (role === "parttime") {
+      } else if (role === "employee" && user.user_manager != row.user.id) {
         return false;
-      } 
-      else {
+      } else if (role === "parttime") {
+        return false;
+      } else {
         return true;
       }
     } else {
@@ -503,6 +605,11 @@ const List = () => {
 
   const checkIsManagerProduct = (row) => {
     if (role === "leader" && auid == row?.user?.id) {
+      return true;
+    } else if (
+      role === "leader" &&
+      _.some(listEmployee, { id: parseInt(row?.user?.id) }) === true
+    ) {
       return true;
     } else {
       return false;
@@ -535,6 +642,31 @@ const List = () => {
   const handleMouseOut = () => {
     setIsMouseDown(false);
   };
+
+  useEffect(() => {
+    (async () => {
+      try {
+        // lấy ra danh sách nhân viên của người quản lý
+        const result = await get_list_employee_of_leader({ uid });
+        // console.log(result)
+        setEmployee(result?.data);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, [uid]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        // lấy ra danh sách nhân viên của người quản lý
+        const result = await get_list_product_user_manage({ uid });
+        setListProductUserManage(result?.data);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, [uid]);
 
   return (
     <div className="container-fluid">
@@ -585,7 +717,8 @@ const List = () => {
                 setDistrict(-1);
                 setWard(-1);
                 localStorage.removeItem("data_temp_filter");
-                getProductList();
+                await resetSearchFilter();
+                // getProductList();
               }}
               className="add-btn hover-btn"
               style={{
@@ -593,16 +726,16 @@ const List = () => {
                 borderRadius: 80,
                 width: "auto",
                 whiteSpace: "nowrap",
-                alignSelf: "end", 
+                alignSelf: "end",
               }}
             >
               Đặt lại bộ lọc
             </a>
             <a
               href={`/admin/p/${id}/${subid}/edit`}
-              onClick={(e) => {
+              onClick={async (e) => {
                 e.preventDefault();
-                handleSearchFilter();
+                await handleSearchFilter();
               }}
               className="add-btn hover-btn"
               style={{
@@ -1132,7 +1265,7 @@ const List = () => {
                         </th>
                         <th style={{ whiteSpace: "nowrap" }}>Thời gian tạo</th>
 
-                        <th style={{ whiteSpace: "nowrap" }}>Người quản lý</th>
+                        <th style={{ whiteSpace: "nowrap" }}>Người tạo</th>
                         {/* <th style={{ whiteSpace: "nowrap" }}>SĐT liên hệ</th> */}
                         <th style={{ whiteSpace: "nowrap" }}>SĐT chủ nhà</th>
                         <th style={{ whiteSpace: "nowrap" }}>Địa chỉ chủ</th>
@@ -1276,6 +1409,7 @@ const List = () => {
                               {checkPermissionActionP(row) === true && (
                                 <Fragment>
                                   <Link
+                                    title="Sửa sản phẩm"
                                     to={{
                                       pathname: `/admin/p/${id}/${subid}/edit`,
                                       state: {
@@ -1292,11 +1426,15 @@ const List = () => {
                                     </Typography>
                                   </Link>
                                   <Typography
+                                    title="Xoá sản phẩm"
                                     className="delete-btn"
                                     onClick={() => handlDeleteById(row.id)}
+                                    style={{marginRight: 10}}
+
                                   >
                                     <i className="fas fa-trash-alt" />
                                   </Typography>
+                                  <HistoryEditProduct {...row} />
                                 </Fragment>
                               )}
                               {checkIsManagerProduct(row) === true && (
@@ -1450,9 +1588,11 @@ const List = () => {
                                   <Typography
                                     className="delete-btn"
                                     onClick={() => handlDeleteById(row.id)}
+                                    style={{marginRight: 10}}
                                   >
                                     <i className="fas fa-trash-alt" />
                                   </Typography>
+                                  <HistoryEditProduct {...row} />
                                 </Fragment>
                               )}
                             </td>
@@ -1581,9 +1721,11 @@ const List = () => {
                               <Typography
                                 className="delete-btn"
                                 onClick={() => handlDeleteById(row.id)}
+                                style={{marginRight: 10}}
                               >
                                 <i className="fas fa-trash-alt" />
                               </Typography>
+                              <HistoryEditProduct {...row} />
                             </td>
                           </tr>
                         ))}
@@ -1676,9 +1818,11 @@ const List = () => {
                               <Typography
                                 className="delete-btn"
                                 onClick={() => handlDeleteById(row.id)}
+                                style={{marginRight: 10}}
                               >
                                 <i className="fas fa-trash-alt" />
                               </Typography>
+                              <HistoryEditProduct {...row} />
                             </td>
                           </tr>
                         ))}

@@ -21,6 +21,7 @@ function generateRandomDigits() {
 // Sử dụng hàm để sinh ra 10 chữ số ngẫu nhiên
 
 const Create = (props) => {
+  const token= getCookie("token")
   const history= useHistory()
   const { id, subid } = useParams();
   const roomId = generateRandomDigits();
@@ -45,7 +46,7 @@ const Create = (props) => {
       <iframe
         style={{width: "100%", height: "700px"}}
         title=""
-        src={`${EDIT_URL}/add-blog/${id}/${getCookie("auid")}/${roomId}`}
+        src={`${EDIT_URL}/add-blog/${id}/${getCookie("auid")}/${roomId}?token=${token}`}
       />
     </div>
   );

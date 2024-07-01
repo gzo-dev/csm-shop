@@ -182,13 +182,13 @@ const View = ({ history }) => {
       return "Admin";
     }
     if (row.role == "employee") {
-      return `${row.firstName} - ${
-        row.userManager && row.userManager.firstName
+      return `${row.firstName} | ${
+        row.userManager ? row.userManager.firstName : "Chưa thiết lập người quản lý"
       }`;
     }
     if (row.role == "parttime") {
       return `${row.firstName}`;
-    } else return role;
+    } else return row?.firstName;
   };
 
   return (

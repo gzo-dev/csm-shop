@@ -244,6 +244,7 @@ const Create = ({ history }) => {
                 value={userManager}
                 onChange={handleChange}
               >
+                <option value="" selected disabled hidden>Chọn người quản lý</option>
                 {listLeader.map((item, key) => (
                   <option value={item.id} key={key}>
                     {item.firstName}

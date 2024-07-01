@@ -1,5 +1,6 @@
 import axios from "axios"
 import { API_URL } from "../config1"
+import { getCookie } from "../function"
 
 const getListProvince = async () => {
   try {
@@ -145,7 +146,13 @@ export const apiGetListTour= async (data)=> {
   try {
     const res= await axios({
       url: API_URL + "/api/v1/tour/manage",
-      method: "get"
+      params: {
+        ...data
+      },
+      method: "get",
+      headers: {
+        "Authorization": "Bearer " + getCookie("token")
+      }
     })
     const result= await res.data
     return result
@@ -159,7 +166,13 @@ export const apiGetListBlog= async (data)=> {
   try {
     const res= await axios({
       url: API_URL + "/api/v1/blog/admin",
-      method: "get"
+      method: "get",
+      params: {
+        ...data
+      },
+      headers: {
+        "Authorization": "Bearer "+ getCookie("token")
+      }
     })
     const result= await res.data
     return result

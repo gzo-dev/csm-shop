@@ -1,4 +1,4 @@
-import { Box, FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
+import { Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import * as React from 'react';
 
 export default function SelectBox3(props) {

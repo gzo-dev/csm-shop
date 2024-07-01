@@ -19,12 +19,16 @@ const Edit = (props) => {
     (async ()=> {
       const result= await get_list_leader()
       setListLeader(result.data)
+      // setUserManager(result?.data?.user_manager?.id)
     })()
   }, []) 
 
   const handleChange = (e) => {
     console.log(e.target.value)
     setUserData({ ...userData, [e.target.name]: e.target.value });
+    if(e.target.name=== "user_manager") {
+      setUserManager(e.target.value)
+    }
   };
 
   const handleBack = () => {
@@ -116,6 +120,7 @@ const Edit = (props) => {
     note,
     user_id,
     avatar,
+    user_manager
   } = userData;
 
   return (
@@ -244,10 +249,10 @@ const Edit = (props) => {
               <select
                 className="form-control"
                 name="user_manager"
-                value={userManager}
+                value={user_manager?.id}
                 onChange={handleChange}
               >
-                <option value="" selected disabled hidden>Chọn người quản lý</option>
+                <option value="" disabled hidden>Chọn người quản lý</option>
                {
                 listLeader.map((item, key)=> 
                   <option value={item.id} key={key}>{item.firstName}</option>

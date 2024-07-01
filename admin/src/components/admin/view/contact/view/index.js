@@ -22,6 +22,7 @@ import ViewReply from "./view_replied_contact";
 import ViewContentReply from "./ViewContentReply";
 import { useParams } from "react-router-dom";
 import Pagination from "@material-ui/lab/Pagination";
+import get_list_contact from "../../../../../api/get_list_contact";
 
 const View = () => {
   const { id } = useParams();
@@ -60,11 +61,7 @@ const View = () => {
   };
 
   const getContact = async () => {
-    const res = await Axios({
-      url: API_URL + "/api/contact",
-      method: "get",
-    });
-    const result = await res.data;
+    const result= await get_list_contact({type: id})
     let list = result.data;
     list = list.filter((item) => item.type == id);
     if (list) {

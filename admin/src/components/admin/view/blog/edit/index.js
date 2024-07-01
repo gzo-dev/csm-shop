@@ -3,6 +3,7 @@ import { AppContext } from "../../../../../App";
 import { useHistory } from "react-router-dom";
 import { SocketContext } from "../../../../../SocketContainer/SocketContainer";
 import { EDIT_URL } from "../../../../../config1";
+import { getCookie } from "../../../../../function";
 
 function generateRandomDigits() {
   let result = ""; // Chuỗi kết quả sẽ chứa các chữ số ngẫu nhiên
@@ -19,6 +20,7 @@ function generateRandomDigits() {
 // Sử dụng hàm để sinh ra 10 chữ số ngẫu nhiên
 
 const Edit = (props) => {
+  const token= getCookie("token")
   const history= useHistory()
   const self = props.location.state.row;
   const roomId = generateRandomDigits();
@@ -43,7 +45,7 @@ const Edit = (props) => {
       <iframe
         style={{width: "100%", height: "700px"}}
         title=""
-        src={`${EDIT_URL}/edit-blog/${self.type}/${self.id}/${roomId}`}
+        src={`${EDIT_URL}/edit-blog/${self.type}/${self.id}/${roomId}?token=${token}`}
       />
     </div>
   );

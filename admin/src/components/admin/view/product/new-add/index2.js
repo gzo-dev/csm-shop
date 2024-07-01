@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 import MainCategorylist from "../../../../common/category/main-category";
 import { GetCategoryDetails } from "../../../../services";
 import SubCategorylist from "../../../../common/category/sub-category";
@@ -12,7 +12,7 @@ import swal from "sweetalert";
 import { toast } from "react-toastify";
 import { Fragment } from "react";
 // import {AiFillCloseCircle } from "react-icons"
-import TextField from "@material-ui/core/TextField";
+import TextField from "@mui/material/TextField";
 import AddSize from "./add_size";
 
 const NewProduct = () => {
