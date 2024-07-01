@@ -27,7 +27,7 @@ productRouter.route('/user/manage').get( productController.getProductUserManage)
 productRouter.route('/getWebProductById').get( productController.getWebProductListById);
 productRouter.route('/product-offer').post( productController.addProductOffer);
 productRouter.route('/getAllProductOffer').get( productController.getProductOffer);
-productRouter.route('/delete').delete( productController.productDelete);
+productRouter.route('/delete').delete(authenticateJWT, productController.productDelete);
 productRouter.route("/d/bulk").post(productController.productDeleteBulk)
 productRouter.route('/deleteOfferById/:id').get( productController.productOfferDelete);
 productRouter.route('/upload-img').post(upload.array('file', 10), compressAndConvertToJpg, productController.multiplePhotoUpload);

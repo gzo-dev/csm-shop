@@ -111,7 +111,8 @@ export default {
     
     db.user
       .findAll({
-        where: { hidden: 0 },
+        where: { hidden: 0, is_deleted: false },
+        order: [["createdAt", "asc"]], 
         include: {
           model: db.user, // Include thông tin của người quản lý (user manager) từ cùng bảng User
           as: "userManager", // Alias cho mối quan hệ
@@ -210,9 +211,6 @@ export default {
   // },
   async login(req, res, next) {
     const { email, password, deviceCode } = req.body;
-    // var date = new Date();
-    // console.log(password)
-    // console.log(bcrypt.hashSync(password))
     const findUser = await db.user.findOne({
       where: { phone: email, password: md5(password) },
     });
@@ -237,6 +235,7 @@ export default {
           role: findUser.dataValues.role,
           name: findUser?.firstName,
           deviceCode: device1Code,
+          require2fa: true
         });
       } else if (
         findUser?.device2?.length <= 0 &&
@@ -259,6 +258,7 @@ export default {
           role: findUser.dataValues.role,
           name: findUser?.firstName + " " + findUser?.lastName,
           deviceCode: device2Code,
+          require2fa: true
         });
       } else if (
         findUser?.device1?.length <= 0 &&
@@ -281,6 +281,7 @@ export default {
           role: findUser.dataValues.role,
           name: findUser?.firstName + " " + findUser?.lastName,
           deviceCode: device1Code,
+          require2fa: true
         });
       } else if (
         findUser?.device2?.length > 0 &&
@@ -306,15 +307,16 @@ export default {
             role: findUser.dataValues.role,
             name: findUser?.firstName + " " + findUser?.lastName,
             deviceCode,
+            require2fa: true
           });
         } else {
           return res
             .status(200)
-            .json({ success: false, login: false, third: true });
+            .json({ success: false, login: false, third: true, require2fa: true });
         }
       }
     } else {
-      return res.status(200).json({ success: false });
+      return res.status(200).json({ success: false, require2fa: true });
     }
   },
   async findUser(req, res, next) {
@@ -363,7 +365,7 @@ export default {
       .then((data) => {
         if (data) {
           return db.user
-            .destroy({ where: { id: req.body.id } })
+            .update({is_deleted: true}, { where: { id: req.body.id } })
             .then((r) => [r, data]);
         }
         throw new RequestError("User is not found", 409);
@@ -386,13 +388,11 @@ export default {
           user_manager: uid,
         },
         include: [{
-          model: db.user_manager_product, // Include thông tin của người quản lý (user manager) từ cùng bảng User
+          model: db.user_manager_product, 
           // as: "userManager",
-          attributes: ["user_manager", "product_id"], // Chỉ lấy các thuộc tính id và name của người quản lý
+          attributes: ["user_manager", "product_id"], 
         }, {
-          model: db.product, // Include thông tin của người quản lý (user manager) từ cùng bảng User
-          // as: "userManager",
-          // attributes: ["user_manager", "product_id"], // Chỉ lấy các thuộc tính id và name của người quản lý
+          model: db.product,
         }],
       });
       res.json({ success: true, data: users });

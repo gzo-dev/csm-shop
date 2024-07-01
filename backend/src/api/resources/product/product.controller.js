@@ -18,6 +18,7 @@ export default {
   },
   async addProduct(req, res, next) {
     try {
+      const {uid }= req.user
       const {
         categoryId,
         subCategoryId,
@@ -93,7 +94,7 @@ export default {
           endow: endow ? endow : 0,
           rating: rating ? rating : 0,
           note: note ? note : "",
-          user_manager: user_manager ? user_manager : "",
+          user_manager: uid,
           author_phone: author_phone ? author_phone : "",
           address: address ? address : "",
           product_id: product_id ? product_id : "",
@@ -953,12 +954,6 @@ export default {
             model: db.user,
             attributes: ["id", "firstName", "lastName"],
             required: false,
-            where: {
-                [Op.or]: [
-                    { firstName: { [Op.substring]: searchText } },
-                    { '$user.firstName$': { [Op.is]: null } }, // Để đảm bảo rằng cả bản ghi không có user cũng được trả về
-                ],
-            }
           },
           {
             model: db.user_manager_product,

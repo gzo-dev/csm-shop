@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       user_id: DataTypes.STRING,
       status: DataTypes.INTEGER,
       hidden: DataTypes.INTEGER,
+      is_deleted: DataTypes.BOOLEAN,
       user_manager: {
         type: DataTypes.INTEGER,
         allowNull: true,

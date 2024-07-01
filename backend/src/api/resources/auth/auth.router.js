@@ -6,7 +6,7 @@ import authenticateJWT from '../../../middleware/verify_token';
 // import { validateBody, schemas } from '../../../middleware/validator';
 
 export const authRouter = express.Router();
-authRouter.route('/register').post(authController.addUser);
+authRouter.route('/register').post(authenticateJWT, authController.addUser);
 authRouter.route('/user/getAllUserList').get(authenticateJWT, authController.getAllUserList);
 authRouter.route('/user/leader').get(authController.getAllLeader);
 authRouter.route('/user/update').post(authController.userUpdate);
