@@ -340,7 +340,7 @@ export default {
     }
   },
   async findUser(req, res, next) {
-    if (req.user?.require2fa === true) {
+    if (req?.user?.require2fa !== false) {
       return res.status(200).json({ ok: false, success: false });
     }
     db.user
