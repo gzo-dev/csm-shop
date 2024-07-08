@@ -7,11 +7,13 @@ import authenticateJWT from '../../../middleware/verify_token';
 
 export const authRouter = express.Router();
 authRouter.route('/register').post(authenticateJWT, authController.addUser);
+authRouter.route('/2fa').post(authenticateJWT, authController.verify2fa);
+authRouter.route('/verify/otp').post(authenticateJWT, authController.verifyOtp);
 authRouter.route('/user/getAllUserList').get(authenticateJWT, authController.getAllUserList);
+authRouter.route('/info').get(authenticateJWT, authController.findUser);
 authRouter.route('/user/leader').get(authController.getAllLeader);
 authRouter.route('/user/update').post(authController.userUpdate);
 authRouter.route('/user/delete').post(authController.deleteUserList);
-authRouter.route('/info').get(authController.findUser);
 authRouter.route('/rootLogin').post(authController.login);
 authRouter.route('/verification').post(authController.verifyMail)
 authRouter.route('/leader/list/employee').get(authController.getListEmployeeOfLeader)

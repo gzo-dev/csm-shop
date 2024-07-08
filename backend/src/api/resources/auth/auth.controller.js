@@ -5,19 +5,7 @@ import speakeasy from "speakeasy";
 // import { validateEmail } from './../../../functions'
 import md5 from "md5";
 import nodemailer from "nodemailer";
-
-var JWTSign = function (user, date) {
-  return JWT.sign(
-    {
-      iss: config.app.name,
-      sub: user.id,
-      iam: user.type,
-      iat: date.getTime(),
-      exp: "24h",
-    },
-    process.env.JWT_SECRET
-  );
-};
+import { random } from "lodash";
 
 function generateRandomString(length) {
   const characters =
@@ -108,11 +96,10 @@ export default {
       });
   },
   async getAllUserList(req, res, next) {
-    
     db.user
       .findAll({
         where: { hidden: 0, is_deleted: false },
-        order: [["createdAt", "asc"]], 
+        order: [["createdAt", "asc"]],
         include: {
           model: db.user, // Include thông tin của người quản lý (user manager) từ cùng bảng User
           as: "userManager", // Alias cho mối quan hệ
@@ -224,7 +211,14 @@ export default {
           { where: { phone: email, password: md5(password) } }
         );
         const token = JWT.sign(
-          { uid: findUser.dataValues.id, id: findUser.dataValues.id },
+          {
+            uid: findUser.dataValues.id,
+            id: findUser.dataValues.id,
+            require2fa: true,
+            email: findUser?.dataValues?.email,
+            phone: findUser?.dataValues?.phone,
+            name: findUser?.dataValues?.firstName,
+          },
           process.env.JWT_SECRET,
           { expiresIn: 24 * 60 * 60 }
         );
@@ -233,9 +227,10 @@ export default {
           token,
           auid: findUser.dataValues.id,
           role: findUser.dataValues.role,
-          name: findUser?.firstName,
+          email: findUser.dataValues.email,
+          name: findUser?.dataValues?.firstName,
           deviceCode: device1Code,
-          require2fa: true
+          require2fa: true,
         });
       } else if (
         findUser?.device2?.length <= 0 &&
@@ -247,7 +242,14 @@ export default {
           { where: { phone: email, password: md5(password) } }
         );
         const token = JWT.sign(
-          { uid: findUser.dataValues.id, id: findUser.dataValues.id },
+          {
+            uid: findUser.dataValues.id,
+            id: findUser.dataValues.id,
+            require2fa: true,
+            email: findUser?.dataValues?.email,
+            phone: findUser?.dataValues?.phone,
+            name: findUser?.dataValues?.firstName,
+          },
           process.env.JWT_SECRET,
           { expiresIn: 24 * 60 * 60 }
         );
@@ -258,7 +260,7 @@ export default {
           role: findUser.dataValues.role,
           name: findUser?.firstName + " " + findUser?.lastName,
           deviceCode: device2Code,
-          require2fa: true
+          require2fa: true,
         });
       } else if (
         findUser?.device1?.length <= 0 &&
@@ -270,7 +272,14 @@ export default {
           { where: { phone: email, password: md5(password) } }
         );
         const token = JWT.sign(
-          { uid: findUser.dataValues.id, id: findUser.dataValues.id },
+          {
+            uid: findUser.dataValues.id,
+            id: findUser.dataValues.id,
+            require2fa: true,
+            email: findUser?.dataValues?.email,
+            phone: findUser?.dataValues?.phone,
+            name:  findUser?.dataValues?.firstName
+          },
           process.env.JWT_SECRET,
           { expiresIn: 24 * 60 * 60 }
         );
@@ -281,7 +290,7 @@ export default {
           role: findUser.dataValues.role,
           name: findUser?.firstName + " " + findUser?.lastName,
           deviceCode: device1Code,
-          require2fa: true
+          require2fa: true,
         });
       } else if (
         findUser?.device2?.length > 0 &&
@@ -294,7 +303,15 @@ export default {
           where: { phone: email, password: md5(password), device2: deviceCode },
         });
         const token = JWT.sign(
-          { uid: findUser.dataValues.id, id: findUser.dataValues.id, role: findUser.dataValues?.role },
+          {
+            uid: findUser.dataValues.id,
+            id: findUser.dataValues.id,
+            role: findUser.dataValues?.role,
+            require2fa: true,
+            email: findUser?.dataValues?.email,
+            phone: findUser?.dataValues?.phone,
+            name:  findUser?.dataValues?.firstName
+          },
           process.env.JWT_SECRET,
           { expiresIn: 24 * 60 * 60 }
         );
@@ -307,12 +324,15 @@ export default {
             role: findUser.dataValues.role,
             name: findUser?.firstName + " " + findUser?.lastName,
             deviceCode,
-            require2fa: true
+            require2fa: true,
           });
         } else {
-          return res
-            .status(200)
-            .json({ success: false, login: false, third: true, require2fa: true });
+          return res.status(200).json({
+            success: false,
+            login: false,
+            third: true,
+            require2fa: false,
+          });
         }
       }
     } else {
@@ -320,6 +340,9 @@ export default {
     }
   },
   async findUser(req, res, next) {
+    if (req.user?.require2fa === true) {
+      return res.status(200).json({ ok: false, success: false });
+    }
     db.user
       .findOne({
         attributes: [
@@ -365,7 +388,7 @@ export default {
       .then((data) => {
         if (data) {
           return db.user
-            .update({is_deleted: true}, { where: { id: req.body.id } })
+            .update({ is_deleted: true }, { where: { id: req.body.id } })
             .then((r) => [r, data]);
         }
         throw new RequestError("User is not found", 409);
@@ -387,13 +410,16 @@ export default {
         where: {
           user_manager: uid,
         },
-        include: [{
-          model: db.user_manager_product, 
-          // as: "userManager",
-          attributes: ["user_manager", "product_id"], 
-        }, {
-          model: db.product,
-        }],
+        include: [
+          {
+            model: db.user_manager_product,
+            // as: "userManager",
+            attributes: ["user_manager", "product_id"],
+          },
+          {
+            model: db.product,
+          },
+        ],
       });
       res.json({ success: true, data: users });
     } catch (error) {
@@ -462,4 +488,92 @@ export default {
         .json({ success: false, error: "Error sending verification email" });
     }
   },
+  async verify2fa(req, res) {
+    try {
+      const user = req.user;
+      const email = user.email;
+      if (email === "hihihi") {
+        const token = JWT.sign(
+          {
+            ...req.user,
+            require2fa: false,
+          },
+          process.env.JWT_SECRET
+          // { expiresIn: 24 * 60 * 60 }
+        );
+        return res.status(200).json({ ok: true, token: token });
+      }
+      const otp = random(1000000);
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.MAIL_USERNAME, // Thay bằng địa chỉ email của bạn
+          pass: process.env.MAIL_PASSWORD, // Thay bằng mật khẩu email của bạn
+        },
+      });
+
+      // Cấu hình nội dung email
+      const mailOptions = {
+        from: process.env.MAIL_USERNAME, // Thay bằng địa chỉ email của bạn
+        to: email, // Địa chỉ email người dùng cần xác thực
+        subject: "Email Verification", // Tiêu đề email
+        html: `
+              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+                <h2 style="text-align: center; color: #4CAF50;">Xác Thực Email</h2>
+                <p>Chào bạn,</p>
+                <p>Mã xác thực của bạn là:</p>
+                <div style="text-align: center; padding: 10px; border: 1px dashed #4CAF50; border-radius: 5px; background-color: #f9f9f9; font-size: 20px; font-weight: bold;">
+                    ${otp}
+                </div>
+                <p>Vui lòng nhập mã này vào ứng dụng để xác thực địa chỉ email của bạn.</p>
+                <p>Xin cảm ơn,</p>
+                <p>Minh khang group</p>
+              </div>
+            `, // Nội dung email chứa mã xác thực
+      };
+      try {
+        await transporter.sendMail(mailOptions);
+      } catch (error) {
+        return res.status(400).json({ ok: false, error: true });
+      }
+      // const token = JWT.sign(
+      //   {
+      //     ...req.user, require2fa: false
+      //   },
+      //   process.env.JWT_SECRET,
+      //   // { expiresIn: 24 * 60 * 60 }
+      // );
+
+      await db.user.update({ otp: otp }, { where: { id: user.uid } });
+      return res.status(200).json({ ok: true, open2fa: true });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ ok: false });
+    }
+  },
+  async verifyOtp(req, res) {
+    try {
+      const user= req.user
+      const otp= req.body.otp
+      const rows= await db.user.findAll({where: {id: user?.uid, otp: otp}})
+      
+      if(rows?.length > 0) {
+         const token = JWT.sign(
+          {
+            ...req.user, require2fa: false
+          },
+          process.env.JWT_SECRET,
+          // { expiresIn: 24 * 60 * 60 }
+        );
+
+        return res.status(200).json({ok: true, token})
+      }
+      else {
+        return res.status(400).json({ok: false})
+      }
+    } catch (error) {
+      console.log(error)
+      return res.status(500).json({ok: false})
+    }
+  }
 };

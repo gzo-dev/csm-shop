@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
           key: "id",
         },
       },
+      otp: DataTypes.STRING
     },
     {}
   );
