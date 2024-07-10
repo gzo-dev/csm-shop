@@ -3012,6 +3012,11 @@ express-handlebars@^3.0.0:
     object.assign "^4.1.0"
     promise "^8.0.2"
 
+express-rate-limit@^7.3.1:
+  version "7.3.1"
+  resolved "https://registry.yarnpkg.com/express-rate-limit/-/express-rate-limit-7.3.1.tgz#c0887ba746cdd358d17b8ab63d6eba1bae0f670b"
+  integrity sha512-BbaryvkY4wEgDqLgD18/NSy2lDO2jTuT9Y8c1Mpx0X63Yz0sYd5zN6KPe7UvpuSVvV33T6RaE1o1IVZQjHMYgw==
+
 express-sanitizer@^1.0.5:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/express-sanitizer/-/express-sanitizer-1.0.6.tgz#b43ad9697f700cb59775f1ab3a1800a95313a928"

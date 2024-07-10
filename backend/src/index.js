@@ -10,6 +10,7 @@ import path from "path";
 import cors from "cors";
 import http from "http";
 import { Server } from "socket.io";
+import { rateLimit } from 'express-rate-limit'
 global.appRoot = path.resolve(__dirname);
 
 const PORT = config.app.port;
@@ -18,6 +19,16 @@ const server = http.createServer(app);
 // Khởi tạo Socket.IO server và chạy trên cùng một HTTP server
 const io = new Server(server);
 /*cors handling*/
+const limiter = rateLimit({
+	windowMs: 1 * 60 * 1000,
+	limit: 100, 
+	standardHeaders: 'draft-7', 
+	legacyHeaders: false, 
+  message: "Bạn đã gửi quá nhiều yêu cầu, Vui lòng thử lại sau vài phút"
+})
+
+app.use(limiter)
+
 app.use(
   cors({
     origin: true,

@@ -1,6 +1,7 @@
 import express from 'express';
 import authController from './auth.controller';
 import authenticateJWT from '../../../middleware/verify_token';
+import recaptchaMiddleware from '../../../middleware/recaptcha';
 // import { localStrategy , jwtStrategy} from '../../../middleware/strategy';
 // import { sanitize } from '../../../middleware/sanitizer';
 // import { validateBody, schemas } from '../../../middleware/validator';
@@ -14,7 +15,7 @@ authRouter.route('/info').get(authenticateJWT, authController.findUser);
 authRouter.route('/user/leader').get(authController.getAllLeader);
 authRouter.route('/user/update').post(authController.userUpdate);
 authRouter.route('/user/delete').post(authController.deleteUserList);
-authRouter.route('/rootLogin').post(authController.login);
+authRouter.route('/rootLogin').post(recaptchaMiddleware, authController.login);
 authRouter.route('/verification').post(authController.verifyMail)
 authRouter.route('/leader/list/employee').get(authController.getListEmployeeOfLeader)
 authRouter.route('/leader/list/employee').put(authController.updateEmployeeOfLeader)

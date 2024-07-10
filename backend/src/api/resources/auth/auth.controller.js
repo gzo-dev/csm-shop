@@ -197,6 +197,7 @@ export default {
   //     return res.status(200).json({ success: true ,token, role: req.user.role});
   // },
   async login(req, res, next) {
+    
     const { email, password, deviceCode } = req.body;
     const findUser = await db.user.findOne({
       where: { phone: email, password: md5(password) },
@@ -501,7 +502,7 @@ export default {
           process.env.JWT_SECRET
           // { expiresIn: 24 * 60 * 60 }
         );
-        return res.status(200).json({ ok: true, token: token });
+        return res.status(200).json({ ok: true, token: token, require2: false });
       }
       const otp = random(1000000);
       const transporter = nodemailer.createTransport({

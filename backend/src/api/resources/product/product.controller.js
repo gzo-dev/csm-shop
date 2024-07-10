@@ -18,7 +18,7 @@ export default {
   },
   async addProduct(req, res, next) {
     try {
-      const {uid }= req.user
+      const { uid } = req.user;
       const {
         categoryId,
         subCategoryId,
@@ -60,6 +60,7 @@ export default {
         product_id,
         rent,
       } = req.body;
+
       db.product
         .create({
           categoryId: categoryId,
@@ -100,18 +101,23 @@ export default {
           product_id: product_id ? product_id : "",
           rent: rent ? rent : 0,
         })
-        .then((product) => {
+        .then(async (product) => {
+          try {
+            await db.user_manager_product.create({
+              user_owner: uid,
+              user_manager: uid,
+              product_id: product.dataValues.id,
+            });
+          } catch (error) {
+            console.log(error);
+          }
           JSON.parse(image)?.map(async (item) => {
             db.productphoto.create({
               imgUrl: item?.path,
               productId: product.dataValues.id,
             });
-            await db.user_manager_product.create({
-              user_owner: user_manager,
-              user_manager: user_manager,
-              product_id: product.dataValues.id,
-            });
           });
+
           if (newaddimage) {
             JSON.parse(newaddimage)?.map((item) =>
               db.productphoto.create({
@@ -923,8 +929,7 @@ export default {
         if (ward) {
           whereConditions.ward = ward;
         }
-      } 
-      else if (id == 12) {
+      } else if (id == 12) {
         if (typeRoom) {
           whereConditions.typeRoom = typeRoom;
         }
@@ -945,7 +950,7 @@ export default {
           whereConditions.ward = ward;
         }
       }
-      
+
       const { count, rows: productList } = await db.product.findAndCountAll({
         where: whereConditions,
         order: [["id", "DESC"]],
@@ -959,6 +964,14 @@ export default {
             model: db.user_manager_product,
             // attributes: ["id", "firstName", "lastName"],
             required: false,
+            include: [
+              {
+                model: db.user,
+                attributes: ["id", "firstName", "lastName"],
+                required: false,
+                as: "userManager",
+              },
+            ],
           },
         ],
         attributes: { exclude: ["desc"] },
@@ -977,7 +990,7 @@ export default {
         },
       });
     } catch (err) {
-      console.log(err);
+      console.log(err)
       throw new RequestError("Error");
     }
   },
