@@ -1,3 +1,3 @@
-export const API_URL= "http://localhost:4001"
-export const EDIT_URL= "http://localhost:3001"
+export const API_URL= "https://api.minhkhanggroup.vn"
+export const EDIT_URL= "https://edit.minhkhanggroup.vn"
 export const CLIENT_URL= "https://minhkhanggroup.vn"    

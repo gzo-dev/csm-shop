@@ -836,8 +836,8 @@ const NewProduct = (props) => {
                   )}
                 </div>
                 <div className="row mt-4">
-                  {id == 13 && (
-                    {/* <div className="col-lg-4 col-md-4">
+                  {/* {id == 13 && (
+                    <div className="col-lg-4 col-md-4">
                       <div className="form-group">
                         <label className="form-label">Người quản lý</label>
                         <select
@@ -854,10 +854,10 @@ const NewProduct = (props) => {
                           ))}
                         </select>
                       </div>
-                    </div> */}
-                  )}
+                    </div>
+                  )} */}
                   {id == 13 && (
-                    <div className="col-lg-4 col-md-4" style={{}}>
+                    <div className="col-lg-4 col-md-4">
                       <div className="form-group">
                         <label className="form-label">Tình trạng</label>
                         <select

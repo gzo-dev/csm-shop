@@ -92,10 +92,10 @@ const authenticate = (user, next) => {
         }
         else if (user.deviceCode) {
             localStorage.setItem("deviceCode", user.deviceCode)
-            setCookie('token', user.token, 1440);
-            setCookie('role', user.role, 1440);
-            setCookie("auid", user.auid, 1440)
-            setCookie("name", user.name, 1440)
+            setCookie('token', user.token, 14400);
+            setCookie('role', user.role, 14400);
+            setCookie("auid", user.auid, 14400)
+            setCookie("name", user.name, 14400)
         }
         else {
             alert("Bạn không thể đăng nhập trên thiết bị này")
@@ -109,8 +109,8 @@ const logout = (next) => {
         eraseCookie('role');
         eraseCookie('XSRF-token');
         eraseCookie("auid")
-        window.location.reload();
-        // window.location.href="/auth/login";
+        // window.location.reload();
+        window.location.href="/auth/login";
         // next();
     }
 };

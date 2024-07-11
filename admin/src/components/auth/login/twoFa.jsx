@@ -7,27 +7,53 @@ import {
   Button,
   TextField,
   Box,
+  Typography,
 } from "@mui/material";
 import OtpInput from "react-otp-input";
+import verify_otp from "../../../api/verify_otp";
+import { setCookie } from "../../../function";
 
-const TwoFactorAuthDialog = ({ open, handleClose }) => {
+const TwoFactorAuthDialog = ({ open, handleClose, token }) => {
   const [otp, setOtp] = useState("");
 
   const handleChangeOtp = (otp) => {
     setOtp(otp);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    try {
+      const result= await verify_otp({otp})
+      if(result?.ok=== true) {
+        swal("Thông báo", "Đăng nhập thành công. Nhấn ok để tiếp tục", "success")
+        .then(()=> {
+          setCookie("token", result?.token)
+          window.location.href= window.location.origin
+        })
+      }
+    } catch (error) {
+      if(error?.response?.status=== 400) {
+        swal("Thông báo", "Mã xác thực không chính xác", "error")
+      }
+      else if(error?.response?.status=== 500) {
+        swal("Thông báo", "Có lỗi ở server", "error")
+      }
+    }
     // Handle the OTP submission logic here
     console.log("Submitted OTP:", otp);
-    handleClose();
+    onClose();
   };
+
+  const onClose= ()=> {
+    handleClose()
+    setOtp("")
+  }
   
 
   return (
-    <Dialog open={open} onClose={handleClose}>
+    <Dialog open={open} onClose={onClose}>
       <DialogTitle>Xác thực email</DialogTitle>
       <DialogContent>
+        <Typography mt={1} mb={1} variant="body1">Một mã 6 chữ số vừa được gửi đến email của bạn, Vui lòng xác thực mã vào ô dưới đây để tiếp tục  đăng nhập</Typography>
         <Box display="flex" justifyContent="center" mb={2}>
           <OtpInput
             value={otp}
@@ -66,14 +92,13 @@ const TwoFactorAuthDialog = ({ open, handleClose }) => {
             )}
           />
         </Box>
-        <TextField fullWidth label="Backup Code (if any)" variant="outlined" />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="primary">
-          Cancel
+        <Button onClick={onClose} color="primary">
+          Đóng
         </Button>
         <Button onClick={handleSubmit} color="primary" variant="contained">
-          Submit
+          Gửi
         </Button>
       </DialogActions>
     </Dialog>

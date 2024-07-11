@@ -7,22 +7,28 @@ import LogoImage from "../../../assets/logo.png";
 import { MdOutlinePhone } from "react-icons/md";
 import { CiLock } from "react-icons/ci";
 import TwoFactorAuthDialog from "./twoFa";
+import verify_email from "../../../api/verify_email";
+import swal from "sweetalert";
+import { eraseCookie, getCookie, setCookie } from "../../../function";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const Signin = () => {
   const deviceCode = localStorage.getItem("deviceCode")
     ? localStorage.getItem("deviceCode")
     : "";
   const [email, setEmail] = useState("");
-  const [open2fa, setOpen2fa]= useState(false)
+  const [open2fa, setOpen2fa] = useState(false);
   const [password, setPassword] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  const [token, setToken] = useState("");
+  const [recaptchaToken, setRecaptchaToken] = useState("");
   const [redirectToReferrer, setRedirectToReferrer] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const handleClose2fa= ()=> {
-    setOpen2fa(false)
-  }
+
+  const handleClose2fa = () => {
+    eraseCookie("token");
+    setOpen2fa(false);
+  };
 
   useEffect(() => {
     const rememberedEmail = localStorage.getItem("rememberedEmail");
@@ -49,36 +55,57 @@ const Signin = () => {
   const handleSubmit = async (event) => {
     try {
       event.preventDefault();
+      if (!recaptchaToken) {
+        swal("Thông báo", "Vui lòng xác nhận reCAPTCHA", "error");
+        return;
+      }
       setIsLoaded(true);
-      let data = { email: email, password: password, deviceCode };
+      let data = {
+        email: email,
+        password: password,
+        deviceCode,
+        recaptchaToken
+      };
       let user = await GetUserLogin.getUserLogin(data);
       if (user) {
         if (rememberMe) {
           localStorage.setItem("rememberedEmail", email);
           localStorage.setItem("rememberedPassword", password);
         }
-        GetUserLogin.authenticate(user, () => {
-            setRedirectToReferrer(true);
-          if(user?.require2fa=== true) {
-            setOpen2fa(true)
+        GetUserLogin.authenticate(user, async () => {
+          if (user?.third === true) {
+            // swal("Thông báo", "Tài khoản hoặc mật khẩu không chính xác", "error")
+          } else if (user?.success === false) {
+            swal("Thông báo", "Tài khoản hoặc mật khẩu không chính xác", "error");
+          } else if (user?.require2fa === true) {
+            try {
+              const data = await verify_email();
+              setOpen2fa(true);
+              // setCookie('token', data?.token, 14400)
+              // setToken(user?.token)
+            } catch (error) {
+              if (error?.response?.status === 400) {
+                swal("Thông báo", "Email người nhận không tồn tại, Bạn  hãy thử lại", "error");
+                eraseCookie("token");
+              } else if (error?.response?.status === 500) {
+                swal("Thông báo", "Có lỗi ở phía server", "error");
+                eraseCookie("token");
+              }
+            }
           }
           setIsLoaded(false);
-            window.location.reload();
         });
       } else {
         setIsLoaded(false);
-        NotificationManager.error(
-          "Please! Check Username & Password",
-          "Input Field"
-        );
+        NotificationManager.error("Có lỗi xảy ra", "");
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  if (redirectToReferrer || localStorage.getItem("token")) {
-    return <Redirect to={"/admin"} />;
+  if (getCookie("token") && open2fa === false) {
+    return (window.location.href = window.location.origin + "/admin");
   }
 
   return (
@@ -118,7 +145,6 @@ const Signin = () => {
                     <div className="card-body">
                       <form>
                         <div className="form-group position-relative">
-                          {/* <label className="form-label" htmlFor="inputEmailAddress">Số điện thoại</label> */}
                           <MdOutlinePhone
                             className="position-absolute"
                             style={{
@@ -141,7 +167,6 @@ const Signin = () => {
                           />
                         </div>
                         <div className="form-group position-relative">
-                          {/* <label className="form-label" htmlFor="inputPassword">Password*</label> */}
                           <CiLock
                             className="position-absolute"
                             style={{
@@ -177,6 +202,10 @@ const Signin = () => {
                             </label>
                           </div>
                         </div>
+                        <ReCAPTCHA
+                          sitekey="6Lfmy0EoAAAAAE28NJHvWGKeQ4-Y1Po9Fon9836k"
+                          onChange={(token) => setRecaptchaToken(token)}
+                        />
                         <div
                           className="form-group d-flex align-items-center justify-content-between mt-4 mb-0"
                           onClick={handleSubmit}
@@ -192,7 +221,7 @@ const Signin = () => {
           </main>
         </div>
       </div>
-      {/* <TwoFactorAuthDialog open={open2fa} handleClose={handleClose2fa} /> */}
+      <TwoFactorAuthDialog open={open2fa} handleClose={handleClose2fa} token={token} />
     </div>
   );
 };

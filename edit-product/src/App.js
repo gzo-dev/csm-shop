@@ -28,7 +28,6 @@ const App = () => {
           <Route path="/add-tour/:id/:roomId" element={<NewTour />} />
           <Route path="/add-blog/:id/:uid/:roomId" element={<NewBlog />} />
           <Route path="/loading" element={<LoadingScreen />} />
-
         </Routes>
       </BrowserRouter>
     </SocketContainer>

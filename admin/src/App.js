@@ -4,7 +4,7 @@ import Auth from "./components/auth";
 import NoMatch from "./components/nomatch";
 import { Switch, Route, BrowserRouter, Redirect } from "react-router-dom";
 // import PrivateRoute from './components/auth/PrivateRoute';
-import { getCookie, setCookie } from "./function";
+import { eraseCookie, getCookie, setCookie } from "./function";
 import { NotificationContainer } from "react-notifications";
 import "react-notifications/lib/notifications.css";
 import get_info_user from "./api/get_info_user";
@@ -37,6 +37,10 @@ const App = () => {
           setDataUser(result.data);
           setDataUserManager(result.dataManager);
           setCookie("role", result.data.role, 30);
+        }
+        else {
+          eraseCookie("token")
+          window.location.href= window.location.origin + "/auth/login"
         }
       } catch (error) {
         setAuth(false);

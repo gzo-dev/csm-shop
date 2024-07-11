@@ -493,13 +493,35 @@ const List = () => {
         return row.author_phone ? row.author_phone : "Chưa thiết lập";
       } else if (role === "employee" && user.user_manager == row.user.id) {
         return row.author_phone ? row.author_phone : "Chưa thiết lập";
-      } else if (role === "leader" && auid != row.user.id) {
+      } else if (
+        role === "leader" &&
+        _.some(listEmployee, { id: parseInt(row?.user?.id) })
+      ) {
+        return row.author_phone ? row.author_phone : "Chưa thiết lập";
+      } else if (role === "employee" &&
+        _.some(listProductUserManage, {
+          user_manager: parseInt(uid),
+          product_id: parseInt(row.id),
+        }) === true) {
+        return row.author_phone ? row.author_phone : "Chưa thiết lập";
+      } 
+       else if (
+        role === "employee" &&
+        _.some(listProductUserManage, {
+          user_manager: parseInt(uid),
+          product_id: parseInt(row.id),
+        }) !== true
+      ) {
+        return "Đã ẩn";
+      } 
+      else if (role === "leader" && auid != row.user.id) {
         return "Đã ẩn";
       } else if (role === "employee" && user.user_manager != row.user.id) {
         return "Đã ẩn";
       } else if (role === "parttime") {
         return "Đã ẩn";
-      } else {
+      }  
+      else {
         return row.author_phone ? row.author_phone : "Chưa thiết lập";
       }
     } else {
@@ -581,7 +603,8 @@ const List = () => {
         }) === true
       ) {
         return true;
-      } else if (
+      }
+       else if (
         role === "employee" &&
         _.some(listProductUserManage, {
           user_manager: parseInt(uid),
@@ -589,13 +612,15 @@ const List = () => {
         }) !== true
       ) {
         return false;
-      } else if (role === "leader" && auid != row.user.id) {
+      } 
+      else if (role === "leader" && auid != row.user.id) {
         return false;
       } else if (role === "employee" && user.user_manager != row.user.id) {
         return false;
       } else if (role === "parttime") {
         return false;
-      } else {
+      } 
+      else {
         return true;
       }
     } else {
@@ -1265,7 +1290,12 @@ const List = () => {
                         </th>
                         <th style={{ whiteSpace: "nowrap" }}>Thời gian tạo</th>
 
-                        <th style={{ whiteSpace: "nowrap" }}>Người tạo</th>
+                        <th style={{ whiteSpace: "nowrap" }}>
+                          Người tạo sản phẩm
+                        </th>
+                        <th style={{ whiteSpace: "nowrap" }}>
+                          Người quản lý sản phẩm
+                        </th>
                         {/* <th style={{ whiteSpace: "nowrap" }}>SĐT liên hệ</th> */}
                         <th style={{ whiteSpace: "nowrap" }}>SĐT chủ nhà</th>
                         <th style={{ whiteSpace: "nowrap" }}>Địa chỉ chủ</th>
@@ -1367,6 +1397,21 @@ const List = () => {
                             <td>
                               {row.user ? row.user.firstName : "Chưa thiết lập"}
                             </td>
+                            <td>
+                              {row?.user_manager_products && row?.user_manager_products?.length > 0 &&
+                                row?.user_manager_products?.map((item, key) => (
+                                  <span key={key}>
+                                    {item?.userManager?.firstName +
+                                      (key <
+                                      row?.user_manager_products?.length - 1
+                                        ? "|"
+                                        : "")}
+                                  </span>
+                                ))}
+                                {row?.user_manager_products && row?.user_manager_products?.length <= 0 &&
+                                  <>{row.user ? row.user.firstName : "Chưa thiết lập"}</>
+                                }
+                            </td>
                             <td>{renderAuthorPhone(row)}</td>
                             <td>
                               {row.address +
@@ -1429,8 +1474,7 @@ const List = () => {
                                     title="Xoá sản phẩm"
                                     className="delete-btn"
                                     onClick={() => handlDeleteById(row.id)}
-                                    style={{marginRight: 10}}
-
+                                    style={{ marginRight: 10 }}
                                   >
                                     <i className="fas fa-trash-alt" />
                                   </Typography>
@@ -1588,7 +1632,7 @@ const List = () => {
                                   <Typography
                                     className="delete-btn"
                                     onClick={() => handlDeleteById(row.id)}
-                                    style={{marginRight: 10}}
+                                    style={{ marginRight: 10 }}
                                   >
                                     <i className="fas fa-trash-alt" />
                                   </Typography>
@@ -1721,7 +1765,7 @@ const List = () => {
                               <Typography
                                 className="delete-btn"
                                 onClick={() => handlDeleteById(row.id)}
-                                style={{marginRight: 10}}
+                                style={{ marginRight: 10 }}
                               >
                                 <i className="fas fa-trash-alt" />
                               </Typography>
@@ -1818,7 +1862,7 @@ const List = () => {
                               <Typography
                                 className="delete-btn"
                                 onClick={() => handlDeleteById(row.id)}
-                                style={{marginRight: 10}}
+                                style={{ marginRight: 10 }}
                               >
                                 <i className="fas fa-trash-alt" />
                               </Typography>
