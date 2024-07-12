@@ -219,6 +219,7 @@ export default {
             email: findUser?.dataValues?.email,
             phone: findUser?.dataValues?.phone,
             name: findUser?.dataValues?.firstName,
+            role: findUser?.dataValues?.role
           },
           process.env.JWT_SECRET,
           { expiresIn: 24 * 60 * 60 }
@@ -250,6 +251,7 @@ export default {
             email: findUser?.dataValues?.email,
             phone: findUser?.dataValues?.phone,
             name: findUser?.dataValues?.firstName,
+            role: findUser?.dataValues?.role
           },
           process.env.JWT_SECRET,
           { expiresIn: 24 * 60 * 60 }
@@ -279,7 +281,8 @@ export default {
             require2fa: true,
             email: findUser?.dataValues?.email,
             phone: findUser?.dataValues?.phone,
-            name:  findUser?.dataValues?.firstName
+            name:  findUser?.dataValues?.firstName,
+            role: findUser?.dataValues?.role
           },
           process.env.JWT_SECRET,
           { expiresIn: 24 * 60 * 60 }
@@ -311,7 +314,8 @@ export default {
             require2fa: true,
             email: findUser?.dataValues?.email,
             phone: findUser?.dataValues?.phone,
-            name:  findUser?.dataValues?.firstName
+            name:  findUser?.dataValues?.firstName,
+            role: findUser?.dataValues?.role
           },
           process.env.JWT_SECRET,
           { expiresIn: 24 * 60 * 60 }
@@ -406,11 +410,29 @@ export default {
   async getListEmployeeOfLeader(req, res) {
     try {
       // Nhận email từ request body
+      const user= req.user
       const { uid } = req.query;
+      if(user?.role=== "ceo") {
+        const users = await db.user.findAll({
+          attributes: ["role", "user_id", "id", "firstName"],
+          include: [
+            {
+              model: db.user_manager_product,
+              // as: "userManager",
+              attributes: ["user_manager", "product_id"],
+            },
+            {
+              model: db.product,
+            },
+          ],
+        });
+        return res.json({ success: true, data: users });
+      }
       const users = await db.user.findAll({
         where: {
           user_manager: uid,
         },
+        attributes: ["role", "user_id", "id", "firstName"],
         include: [
           {
             model: db.user_manager_product,
