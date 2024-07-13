@@ -56,6 +56,7 @@ import get_list_employee_of_leader from "../../../../../api/get_list_employee_of
 import get_list_product_user_manage from "../../../../../api/get_list_product_user_manage";
 import { FaHistory } from "react-icons/fa";
 import HistoryEditProduct from "./HistoryEditProduct";
+import get_list_product_manage_by_user from "../../../../../api/get_list_product_manage_by_user";
 
 const List = () => {
   const { id, subid } = useParams();
@@ -95,8 +96,12 @@ const List = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [listProductUserManage, setListProductUserManage] = useState([]);
+  const [listUserHasManageProduct, setListUserHasManageProduct]= useState([])
+  const [selectedUserHasManageProduct, setSelectedUserHasManageProduct]= useState()
+  const [change1, setChange1]= useState(false)
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const [change, setChange]= useState(false)
   const currentItems = getList;
   const role = getCookie("role");
   const auid = getCookie("auid");
@@ -166,6 +171,7 @@ const List = () => {
       star,
       page: currentPage,
       searchText,
+      userId: selectedUserHasManageProduct,
     });
     setGetList(result.data);
     setTotalPage(result.pagination.totalPages);
@@ -313,6 +319,7 @@ const List = () => {
     subid,
     currentPage,
     new URLSearchParams(window.location.search).get("search"),
+    change
   ]);
 
   useEffect(() => {
@@ -629,6 +636,9 @@ const List = () => {
   };
 
   const checkIsManagerProduct = (row) => {
+    if (role === "ceo") {
+      return true;
+    } 
     if (role === "leader" && auid == row?.user?.id) {
       return true;
     } else if (
@@ -692,6 +702,33 @@ const List = () => {
       }
     })();
   }, [uid]);
+
+  useEffect(()=> {
+    (async ()=> {
+      try {
+        const result= await get_list_product_manage_by_user()
+        const groupedData = result?.data.reduce((acc, item) => {
+          const userId = item.userManager.id;
+          
+          if (!acc[userId]) {
+            acc[userId] = {
+              userId: item.userManager.id,
+              firstName: item.userManager.firstName,
+              lastName: item.userManager.lastName,
+              address: item.userManager.address,
+              email: item.userManager.email,
+            };
+          }
+          return acc;
+        }, {});
+        
+        const result1 = Object.values(groupedData)
+        setListUserHasManageProduct(result1)
+      } catch (error) {
+        console.log(error)
+      }
+    })()
+  }, [change1])
 
   return (
     <div className="container-fluid">
@@ -1139,6 +1176,31 @@ const List = () => {
                       ))}
                     </select>
                   </div>
+                  <div
+                    style={{
+                      width: "100%",
+                      borderRadius: 10,
+                      border: "1px solid #e7e7e7",
+                      background: "#fff",
+                      padding: 5,
+                      marginBottom: 12,
+                    }}
+                  >
+                    <select
+                      className="custom-select-p"
+                      value={selectedUserHasManageProduct}
+                      onChange={(e) => setSelectedUserHasManageProduct(e.target.value)}
+                    >
+                      <option selected disabled value={-1}>
+                        Lọc theo người quản lý sp
+                      </option>
+                      {listUserHasManageProduct?.map((item, key) => (
+                        <option key={key} value={item.userId}>
+                          {item.firstName}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1483,7 +1545,7 @@ const List = () => {
                               )}
                               {checkIsManagerProduct(row) === true && (
                                 <>
-                                  <MangeEmployeeProduct {...row} />
+                                  <MangeEmployeeProduct {...row} setChange={setChange} setChange1={setChange1} />
                                 </>
                               )}
                             </td>
@@ -1543,11 +1605,21 @@ const List = () => {
                             <td>
                               {row.user ? row.user.firstName : "Chưa thiết lập"}
                             </td>
-                            {/* <td >
-                              {row.phoneNumber
-                                ? row.phoneNumber
-                                : "Chưa thiết lập"}
-                            </td> */}
+                            <td>
+                              {row?.user_manager_products && row?.user_manager_products?.length > 0 &&
+                                row?.user_manager_products?.map((item, key) => (
+                                  <span key={key}>
+                                    {item?.userManager?.firstName +
+                                      (key <
+                                      row?.user_manager_products?.length - 1
+                                        ? "|"
+                                        : "")}
+                                  </span>
+                                ))}
+                                {row?.user_manager_products && row?.user_manager_products?.length <= 0 &&
+                                  <>{row.user ? row.user.firstName : "Chưa thiết lập"}</>
+                                }
+                            </td>
                             <td>{renderAuthorPhone(row)}</td>
                             <td>
                               {row.address +
@@ -1569,30 +1641,6 @@ const List = () => {
                               )}
                             </td>
                             <td>{renderAuthorNote(row)}</td>
-                            {/* <td >{row.brand}</td> */}
-                            {/* <td >{row.unitSize}</td> */}
-                            {/* <td >VND{numberWithCommas(row.buyerPrice)}</td> */}
-                            {/* <td >
-                              VND
-                              {numberWithCommas(
-                                Math.ceil(
-                                  (row.price *
-                                    (100 - parseInt(row.discountPer || 0))) /
-                                    100
-                                )
-                              )}
-                            </td> */}
-                            {/* <td >
-                              {row.status === "active" ? (
-                                <span className="badge-item badge-status-success">
-                                  {row.status}
-                                </span>
-                              ) : (
-                                <span className="badge-item badge-status">
-                                  {row.status}
-                                </span>
-                              )}
-                            </td> */}
                             <td>
                               {row.rent == 1 && (
                                 <span className="badge-item badge-status-success">
@@ -1614,6 +1662,7 @@ const List = () => {
                               {checkPermissionActionP(row) === true && (
                                 <Fragment>
                                   <Link
+                                    title="Sửa sản phẩm"
                                     to={{
                                       pathname: `/admin/p/${id}/${subid}/edit`,
                                       state: {
@@ -1630,6 +1679,7 @@ const List = () => {
                                     </Typography>
                                   </Link>
                                   <Typography
+                                    title="Xoá sản phẩm"
                                     className="delete-btn"
                                     onClick={() => handlDeleteById(row.id)}
                                     style={{ marginRight: 10 }}
@@ -1638,6 +1688,11 @@ const List = () => {
                                   </Typography>
                                   <HistoryEditProduct {...row} />
                                 </Fragment>
+                              )}
+                              {checkIsManagerProduct(row) === true && (
+                                <>
+                                  <MangeEmployeeProduct {...row} setChange={setChange} setChange1={setChange1} />
+                                </>
                               )}
                             </td>
                           </tr>
