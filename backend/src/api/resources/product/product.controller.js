@@ -815,6 +815,7 @@ export default {
         pageSize = 10,
         page,
         searchText = "",
+        userId
         // rent
       } = req.query;
 
@@ -950,8 +951,16 @@ export default {
           whereConditions.ward = ward;
         }
       }
-
-      const { count, rows: productList } = await db.product.findAndCountAll({
+      const subWhere= {}
+      const filter= {}
+      if(userId) {
+        subWhere.id= userId
+        filter.boolean= true
+      }
+      else {
+        filter.boolean= false
+      }
+      let { count, rows: productList } = await db.product.findAndCountAll({
         where: whereConditions,
         order: [["id", "DESC"]],
         include: [
@@ -962,14 +971,14 @@ export default {
           },
           {
             model: db.user_manager_product,
-            // attributes: ["id", "firstName", "lastName"],
-            required: false,
+            required: filter.boolean,
             include: [
               {
                 model: db.user,
                 attributes: ["id", "firstName", "lastName"],
                 required: false,
-                as: "userManager",
+                as: "userManager", 
+                where: subWhere,
               },
             ],
           },
@@ -978,6 +987,10 @@ export default {
         limit: pageSize,
         offset: (page - 1) * pageSize,
       });
+      if(userId) {
+        productList= productList?.filter(item=> item?.user_manager_products?.filter(item2=> item2?.userManager?.id== userId)?.length > 0)
+        count= productList.length
+      }
       const totalPages = Math.ceil(count / pageSize);
       return res.status(200).json({
         success: true,
@@ -991,7 +1004,8 @@ export default {
       });
     } catch (err) {
       console.log(err)
-      throw new RequestError("Error");
+      // throw new RequestError("Error");
+      return res.status(500).json({ok: false})
     }
   },
   async getProductSuggestHotel(req, res, next) {
@@ -1551,4 +1565,27 @@ export default {
       return res.status(500).json({ ok: false });
     }
   },
+  async getProductManageByUser(req, res, next) {
+    try {
+      const rows = await db.user_manager_product.findAll({
+        order: [["createdAt", "DESC"]],
+        include: [
+          {
+            model: db.user,
+            required: true,
+            as: "userManager"
+          },
+          {
+            model: db.product,
+            required: true,
+            as: "product"
+          },
+        ],
+      });
+      return res.status(200).json({ data: rows, ok: true });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ ok: false });
+    }
+  }
 };

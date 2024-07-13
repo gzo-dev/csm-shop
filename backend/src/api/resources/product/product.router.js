@@ -53,11 +53,4 @@ productRouter.route('/search_product').post( productController.searchProductBySu
 productRouter.route('/aws/delete/photo').post( productController.awsProductPhotoDelete);
 
 productRouter.route("/history/edit").get(authenticateJWT, productController.getHistoryEditProduct)
-
-
-
-
-
-
-
-
+productRouter.route("/manage/by/user").get(authenticateJWT, productController.getProductManageByUser)
