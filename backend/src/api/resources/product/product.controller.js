@@ -989,7 +989,7 @@ export default {
       });
       if(userId) {
         productList= productList?.filter(item=> item?.user_manager_products?.filter(item2=> item2?.userManager?.id== userId)?.length > 0)
-        count= productList.length
+        // count= productList.length
       }
       const totalPages = Math.ceil(count / pageSize);
       return res.status(200).json({
