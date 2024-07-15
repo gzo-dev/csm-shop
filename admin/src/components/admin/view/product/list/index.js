@@ -7,10 +7,13 @@ import React, {
   useCallback,
 } from "react";
 import {
+  Box,
   // Box,
   Button,
   // FormControl,
   FormControlLabel,
+  IconButton,
+  Stack,
   // InputLabel,
   // MenuItem,
   // Select,
@@ -57,6 +60,8 @@ import get_list_product_user_manage from "../../../../../api/get_list_product_us
 import { FaHistory } from "react-icons/fa";
 import HistoryEditProduct from "./HistoryEditProduct";
 import get_list_product_manage_by_user from "../../../../../api/get_list_product_manage_by_user";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 const List = () => {
   const { id, subid } = useParams();
@@ -96,12 +101,14 @@ const List = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [listProductUserManage, setListProductUserManage] = useState([]);
-  const [listUserHasManageProduct, setListUserHasManageProduct]= useState([])
-  const [selectedUserHasManageProduct, setSelectedUserHasManageProduct]= useState()
-  const [change1, setChange1]= useState(false)
+  const [listUserHasManageProduct, setListUserHasManageProduct] = useState([]);
+  const [selectedUserHasManageProduct, setSelectedUserHasManageProduct] =
+    useState();
+  const [change1, setChange1] = useState(false);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const [change, setChange]= useState(false)
+  const [change, setChange] = useState(false);
+  const [filterManager, setFilterManager] = useState();
   const currentItems = getList;
   const role = getCookie("role");
   const auid = getCookie("auid");
@@ -117,6 +124,36 @@ const List = () => {
         subid +
         "/list?page=" +
         value +
+        "&search=" +
+        searchText
+    );
+  };
+
+  const handlePrevClick = () => {
+    const searchText =
+      new URLSearchParams(window.location.search).get("search") || "";
+    history.push(
+      "/admin/p/" +
+        id +
+        "/" +
+        subid +
+        "/list?page=" +
+        (parseInt(currentPage) - parseInt(1)) +
+        "&search=" +
+        searchText
+    );
+  };
+
+  const handleNextClick = () => {
+    const searchText =
+      new URLSearchParams(window.location.search).get("search") || "";
+    history.push(
+      "/admin/p/" +
+        id +
+        "/" +
+        subid +
+        "/list?page=" +
+        (parseInt(currentPage) + parseInt(1)) +
         "&search=" +
         searchText
     );
@@ -156,6 +193,7 @@ const List = () => {
       province,
       district,
       ward,
+      userId: selectedUserHasManageProduct,
     };
     localStorage.setItem("data_temp_filter", JSON.stringify(dataTemp));
     const result = await search_product_filter({
@@ -173,6 +211,7 @@ const List = () => {
       searchText,
       userId: selectedUserHasManageProduct,
     });
+    setFilterManager(result?.filterManager);
     setGetList(result.data);
     setTotalPage(result.pagination.totalPages);
     if (parseInt(result?.pagination?.totalPages) < parseInt(currentPage)) {
@@ -196,6 +235,7 @@ const List = () => {
       page: currentPage,
       searchText,
     });
+    setFilterManager(result?.filterManager);
     setGetList(result.data);
     setTotalPage(result.pagination.totalPages);
   };
@@ -269,6 +309,8 @@ const List = () => {
         ? searchText
         : new URLSearchParams(location.search).get("search") || "",
     });
+
+    setFilterManager(result?.filterManager);
     setGetList(result.data);
     setTotalPage(result.pagination.totalPages);
   };
@@ -309,6 +351,11 @@ const List = () => {
       if (dataTempFilter?.star) {
         setStar(dataTempFilter.star || undefined);
       }
+      if (dataTempFilter?.selectedUserHasManageProduct) {
+        setSelectedUserHasManageProduct(
+          dataTempFilter.selectedUserHasManageProduct || undefined
+        );
+      }
     }
   }, []);
 
@@ -319,7 +366,7 @@ const List = () => {
     subid,
     currentPage,
     new URLSearchParams(window.location.search).get("search"),
-    change
+    change,
   ]);
 
   useEffect(() => {
@@ -505,14 +552,15 @@ const List = () => {
         _.some(listEmployee, { id: parseInt(row?.user?.id) })
       ) {
         return row.author_phone ? row.author_phone : "Chưa thiết lập";
-      } else if (role === "employee" &&
+      } else if (
+        role === "employee" &&
         _.some(listProductUserManage, {
           user_manager: parseInt(uid),
           product_id: parseInt(row.id),
-        }) === true) {
+        }) === true
+      ) {
         return row.author_phone ? row.author_phone : "Chưa thiết lập";
-      } 
-       else if (
+      } else if (
         role === "employee" &&
         _.some(listProductUserManage, {
           user_manager: parseInt(uid),
@@ -520,15 +568,13 @@ const List = () => {
         }) !== true
       ) {
         return "Đã ẩn";
-      } 
-      else if (role === "leader" && auid != row.user.id) {
+      } else if (role === "leader" && auid != row.user.id) {
         return "Đã ẩn";
       } else if (role === "employee" && user.user_manager != row.user.id) {
         return "Đã ẩn";
       } else if (role === "parttime") {
         return "Đã ẩn";
-      }  
-      else {
+      } else {
         return row.author_phone ? row.author_phone : "Chưa thiết lập";
       }
     } else {
@@ -610,8 +656,7 @@ const List = () => {
         }) === true
       ) {
         return true;
-      }
-       else if (
+      } else if (
         role === "employee" &&
         _.some(listProductUserManage, {
           user_manager: parseInt(uid),
@@ -619,15 +664,13 @@ const List = () => {
         }) !== true
       ) {
         return false;
-      } 
-      else if (role === "leader" && auid != row.user.id) {
+      } else if (role === "leader" && auid != row.user.id) {
         return false;
       } else if (role === "employee" && user.user_manager != row.user.id) {
         return false;
       } else if (role === "parttime") {
         return false;
-      } 
-      else {
+      } else {
         return true;
       }
     } else {
@@ -638,7 +681,7 @@ const List = () => {
   const checkIsManagerProduct = (row) => {
     if (role === "ceo") {
       return true;
-    } 
+    }
     if (role === "leader" && auid == row?.user?.id) {
       return true;
     } else if (
@@ -703,32 +746,32 @@ const List = () => {
     })();
   }, [uid]);
 
-  useEffect(()=> {
-    (async ()=> {
+  useEffect(() => {
+    (async () => {
       try {
-        const result= await get_list_product_manage_by_user()
+        const result = await get_list_product_manage_by_user();
         const groupedData = result?.data.reduce((acc, item) => {
-          const userId = item.userManager.id;
-          
+          const userId = item.managerUser.id;
+
           if (!acc[userId]) {
             acc[userId] = {
-              userId: item.userManager.id,
-              firstName: item.userManager.firstName,
-              lastName: item.userManager.lastName,
-              address: item.userManager.address,
-              email: item.userManager.email,
+              userId: item.managerUser.id,
+              firstName: item.managerUser.firstName,
+              lastName: item.managerUser.lastName,
+              address: item.managerUser.address,
+              email: item.managerUser.email,
             };
           }
           return acc;
         }, {});
-        
-        const result1 = Object.values(groupedData)
-        setListUserHasManageProduct(result1)
+
+        const result1 = Object.values(groupedData);
+        setListUserHasManageProduct(result1);
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
-    })()
-  }, [change1])
+    })();
+  }, [change1]);
 
   return (
     <div className="container-fluid">
@@ -778,6 +821,9 @@ const List = () => {
                 setProvince(-1);
                 setDistrict(-1);
                 setWard(-1);
+                setFilterManager(false);
+                setCurrentPage(1);
+                setSelectedUserHasManageProduct(-1)
                 localStorage.removeItem("data_temp_filter");
                 await resetSearchFilter();
                 // getProductList();
@@ -1189,7 +1235,9 @@ const List = () => {
                     <select
                       className="custom-select-p"
                       value={selectedUserHasManageProduct}
-                      onChange={(e) => setSelectedUserHasManageProduct(e.target.value)}
+                      onChange={(e) =>
+                        setSelectedUserHasManageProduct(e.target.value)
+                      }
                     >
                       <option selected disabled value={-1}>
                         Lọc theo người quản lý sp
@@ -1460,19 +1508,25 @@ const List = () => {
                               {row.user ? row.user.firstName : "Chưa thiết lập"}
                             </td>
                             <td>
-                              {row?.user_manager_products && row?.user_manager_products?.length > 0 &&
+                              {row?.user_manager_products &&
+                                row?.user_manager_products?.length > 0 &&
                                 row?.user_manager_products?.map((item, key) => (
                                   <span key={key}>
-                                    {item?.userManager?.firstName +
+                                    {item?.managerUser?.firstName +
                                       (key <
                                       row?.user_manager_products?.length - 1
                                         ? "|"
                                         : "")}
                                   </span>
                                 ))}
-                                {row?.user_manager_products && row?.user_manager_products?.length <= 0 &&
-                                  <>{row.user ? row.user.firstName : "Chưa thiết lập"}</>
-                                }
+                              {row?.user_manager_products &&
+                                row?.user_manager_products?.length <= 0 && (
+                                  <>
+                                    {row.user
+                                      ? row.user.firstName
+                                      : "Chưa thiết lập"}
+                                  </>
+                                )}
                             </td>
                             <td>{renderAuthorPhone(row)}</td>
                             <td>
@@ -1545,7 +1599,11 @@ const List = () => {
                               )}
                               {checkIsManagerProduct(row) === true && (
                                 <>
-                                  <MangeEmployeeProduct {...row} setChange={setChange} setChange1={setChange1} />
+                                  <MangeEmployeeProduct
+                                    {...row}
+                                    setChange={setChange}
+                                    setChange1={setChange1}
+                                  />
                                 </>
                               )}
                             </td>
@@ -1606,19 +1664,25 @@ const List = () => {
                               {row.user ? row.user.firstName : "Chưa thiết lập"}
                             </td>
                             <td>
-                              {row?.user_manager_products && row?.user_manager_products?.length > 0 &&
+                              {row?.user_manager_products &&
+                                row?.user_manager_products?.length > 0 &&
                                 row?.user_manager_products?.map((item, key) => (
                                   <span key={key}>
-                                    {item?.userManager?.firstName +
+                                    {item?.managerUser?.firstName +
                                       (key <
                                       row?.user_manager_products?.length - 1
                                         ? "|"
                                         : "")}
                                   </span>
                                 ))}
-                                {row?.user_manager_products && row?.user_manager_products?.length <= 0 &&
-                                  <>{row.user ? row.user.firstName : "Chưa thiết lập"}</>
-                                }
+                              {row?.user_manager_products &&
+                                row?.user_manager_products?.length <= 0 && (
+                                  <>
+                                    {row.user
+                                      ? row.user.firstName
+                                      : "Chưa thiết lập"}
+                                  </>
+                                )}
                             </td>
                             <td>{renderAuthorPhone(row)}</td>
                             <td>
@@ -1691,7 +1755,11 @@ const List = () => {
                               )}
                               {checkIsManagerProduct(row) === true && (
                                 <>
-                                  <MangeEmployeeProduct {...row} setChange={setChange} setChange1={setChange1} />
+                                  <MangeEmployeeProduct
+                                    {...row}
+                                    setChange={setChange}
+                                    setChange1={setChange1}
+                                  />
                                 </>
                               )}
                             </td>
@@ -1927,17 +1995,61 @@ const List = () => {
                         ))}
                     </tbody>
                   )}
+                  {id== 13 && filterManager === true && getList?.length <= 0 && (
+                    <tbody>
+                      <tr>
+                        <td colSpan={14} style={{textAlign: "center", fontSize: 24, fontWeight: 600}}>Đã hết dữ liệu</td>
+                      </tr>
+                    </tbody>
+                  )}
                 </table>
               </div>
             </div>
           </div>
           <div className="d-flex w-100 flex-row-reverse">
-            <Pagination
-              count={totalPage}
-              page={currentPage}
-              onChange={handlePageChange}
-              color="primary"
-            />
+            {filterManager === false && (
+              <Pagination
+                count={totalPage}
+                page={currentPage}
+                onChange={handlePageChange}
+                color="primary"
+              />
+            )}
+            {filterManager === true && (
+              <Stack direction="row" spacing={2} justifyContent="center">
+                <IconButton
+                  onClick={handlePrevClick}
+                  disabled={currentPage === 1}
+                >
+                  <ArrowBackIosIcon />
+                </IconButton>
+                <Box
+                  display={"flex"}
+                  justifyContent={"center"}
+                  alignItems={"center"}
+                  variant={"contained"}
+                  sx={{
+                    borderRadius: "50%",
+                    width: 40,
+                    height: 40,
+                    maxWidth: 40,
+                    minHeight: 40,
+                    maxHeight: 40,
+                    padding: "6px",
+                    backgroundColor: "#2e89ff",
+                    color: "#fff",
+                  }}
+                >
+                  {currentPage}
+                </Box>
+                <IconButton
+                  onClick={handleNextClick}
+                  disabled={getList?.length <= 0}
+                >
+                  <ArrowForwardIosIcon />
+                </IconButton>
+              </Stack>
+            )}
           </div>
         </div>
       </div>

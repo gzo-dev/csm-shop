@@ -1571,16 +1571,19 @@ export default {
     try {
       const rows = await db.user_manager_product.findAll({
         order: [["createdAt", "DESC"]],
+        attributes: ["product_id", "user_manager", "user_owner"],
         include: [
           {
             model: db.user,
             required: true,
-            as: "managerUser"
+            as: "managerUser",
+            attributes: ["id", "firstName", "lastName", "address", "email"]
           },
           {
             model: db.product,
             required: true,
-            as: "product"
+            as: "product",
+            attributes: ["id"]
           },
         ],
       });
