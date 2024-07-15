@@ -418,7 +418,7 @@ export default {
           include: [
             {
               model: db.user_manager_product,
-              // as: "userManager",
+              as: "managerUser",
               attributes: ["user_manager", "product_id"],
             },
             {

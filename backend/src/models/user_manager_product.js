@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       user_manager: {
         type: DataTypes.INTEGER,
-        allowNull: true,
+        allowNull: false,
         references: {
           model: "Users",
           key: "id",
@@ -31,11 +31,9 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
   user_manager_product.associate = function (models) {
-    // associations can be defined here
-    // models.user.hasOne(models.SubCategory, { foreignKey: 'subCategoryId' });
     models.user_manager_product.belongsTo(models.user, {
       foreignKey: "user_manager",
-      as: "userManager", // Tên alias cho mối quan hệ
+      as: "managerUser", // Tên alias cho mối quan hệ
     });
     models.user_manager_product.belongsTo(models.user, {
       foreignKey: "user_owner",
@@ -43,8 +41,8 @@ module.exports = (sequelize, DataTypes) => {
     });
     models.user_manager_product.belongsTo(models.product, {
       foreignKey: "product_id",
-      as: "product", // Tên alias cho mối quan hệ
     });
   };
+
   return user_manager_product;
 };

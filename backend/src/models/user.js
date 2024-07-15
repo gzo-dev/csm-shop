@@ -32,20 +32,18 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
   user.associate = function (models) {
-    // associations can be defined here
-    // models.user.hasOne(models.SubCategory, { foreignKey: 'subCategoryId' });
     models.user.belongsTo(models.user, {
       foreignKey: "user_manager",
       as: "userManager", // Tên alias cho mối quan hệ
     });
     models.user.hasMany(models.user_manager_product, {
       foreignKey: "user_manager",
-      // as: "userManager",
+      as: "managerUser",
     });
     models.user.hasMany(models.product, {
       foreignKey: "user_manager",
-      // as: "userManager",
     });
   };
+
   return user;
 };
