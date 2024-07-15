@@ -432,11 +432,11 @@ export default {
         where: {
           user_manager: uid,
         },
-        attributes: ["role", "user_id", "id", "firstName"],
+        attributes: ["role", "user_id", "id", "firstName", "email", "phone"],
         include: [
           {
             model: db.user_manager_product,
-            // as: "userManager",
+            as: "managerUser",
             attributes: ["user_manager", "product_id"],
           },
           {
@@ -470,7 +470,7 @@ export default {
       res.json({ success: true, data: [], ok: true });
     } catch (error) {
       console.log(error);
-      res.status(500).json({ success: false, error: "Có lỗi từ phía máy chủ" });
+      res.status(500).json({ success: false, error: "Có lỗi từ phía máy chủ", error });
     }
   },
   async verifyMail(req, res) {

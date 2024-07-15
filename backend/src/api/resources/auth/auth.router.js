@@ -18,6 +18,7 @@ authRouter.route('/user/delete').post(authController.deleteUserList);
 authRouter.route('/rootLogin').post(recaptchaMiddleware, authController.login);
 authRouter.route('/verification').post(authController.verifyMail)
 authRouter.route('/leader/list/employee').get(authenticateJWT, authController.getListEmployeeOfLeader)
+authRouter.route('/filter/leader/list/employee').get(authenticateJWT, authController.getListEmployeeOfLeader)
 authRouter.route('/leader/list/employee').put(authController.updateEmployeeOfLeader)
 
 
