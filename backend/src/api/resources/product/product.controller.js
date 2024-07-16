@@ -59,6 +59,7 @@ export default {
         address,
         product_id,
         rent,
+        meta_description
       } = req.body;
 
       db.product
@@ -100,6 +101,7 @@ export default {
           address: address ? address : "",
           product_id: product_id ? product_id : "",
           rent: rent ? rent : 0,
+          meta_description
         })
         .then(async (product) => {
           try {
@@ -408,6 +410,7 @@ export default {
         provinceText,
         districtText,
         wardText,
+        meta_description
       } = req.body;
       db.product
         .findOne({ where: { id: productId } })
@@ -459,6 +462,7 @@ export default {
                 provinceText: provinceText ? provinceText : "",
                 districtText: districtText ? districtText : "",
                 wardText: wardText ? wardText : "",
+                meta_description
               },
               { where: { id: productId } }
             );

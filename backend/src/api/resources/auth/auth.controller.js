@@ -423,6 +423,7 @@ export default {
             },
             {
               model: db.product,
+              attributes: ["name", "id"],
             },
           ],
         });
