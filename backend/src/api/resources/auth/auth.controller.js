@@ -8,8 +8,8 @@ import nodemailer from "nodemailer";
 import { random } from "lodash";
 import fs from "fs";
 const { google } = require("googleapis");
-const puppeteer = require("puppeteer");
-const readline = require("readline");
+// const puppeteer = require("puppeteer");
+// const readline = require("readline");
 
 function generateRandomString(length) {
   const characters =
