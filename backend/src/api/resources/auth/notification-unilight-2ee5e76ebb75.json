@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "notification-unilight",
+  "private_key_id": "2ee5e76ebb75735606f1fa3df03dd80eaffba106",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCqgl+2CFAbCLgb\n1b6CF35wMHR61x9UWcT685mk64pZQh02JgyOMmnC0tbLgNw+vuaJIQNZTa9zrtF+\nHJ6hS5dVYMCmRPx4qgMEoS1gABDjC02bK8+Xoj+n1NkRyJnkjZiJmnh/LjbGgdYd\nwaeMV5mQIbCt9NhOn/43DXZLqf0WF8TplWmTtotRan8VCMvxJB83yk0MTJUQ7onS\nu1gkA+jl9YN3Py9jq7nnQx7ld0YeJiQkqilbu9KSte+uTO1a+tFiOY2GE3welieH\nKZGdnaJjAx+NaGb/aC2kEjlPfgvf4+udtoIt0z3//SBTvQ3f8eDVfWxGkhvXNUZa\nPy0ZmW7xAgMBAAECggEAELbI9QoP+CZwDa9AU0MRGz3Utsa00bFSOs57bPKRB22q\nRi8pCem5+xjTaPPPvLxv0r9dGayHNCeaoR18rnW/duVBQ5f9lUJtG0+rwZfs3KS0\nZ2KLB30mQ9uWD6ucHw62OVh4BiRPxqbeVODK/Y0H7SkwRxngkXLjgFGeGydybjwE\n37JJSL0AAqYE+QHU8kKzQUhX9spiMYJ9T5r0Kxnz6X7iHdk0Rx9VpmE1F0nMmegD\nN+wdPmKIn1+zRWLxvWcbDfwDWn0CHf8PssPe8oTeLqoMUjQOx/a78r3PzPz/S4hO\n3k1cXDf26UsEq7PySOiRxBwjht4Swv/Zjoax6MVERQKBgQDVH4/zyJTszoit8B4j\nYkw6e9JWMarymzLI2tXuS1B8no+3RD+7dVCREw8SzTpY3135mw998qciosespoSV\ndqm8s5WiCiz/yjBG8JU8cZeq3U4jGxj30fXc3rUoV6T335+lgkXEuz0KZ0VPAkbc\n0G/+Qijg7W12uPz6TLtMD1zVowKBgQDM0BJxncV/YQhsEb+6BCp06OcbLOHphgEr\npCVvud5dMq8k0aAOeDv3b2PlPumCtTap0Z9fhoOw8/2N4UFyxr0eM9yiyWy61k6+\ntxkCsTcOpUQ0hTtJfsIrSSGCgcAnLej0guVibLMy3ncSaUZjjjG0i9/O6p34FNjN\nzZpOCoxqWwKBgQCcGNb1xmcVnxxK0cExR3DvsPtY+F3t/bBPnsDsHSuhav12TL2l\nToKpD12N9tUSfN+2z1SkehLicnlvQjN/yX7+4EXrfiqBWxTLELEtqUFd+2OcoN9D\nu/upP1FOcAs7JgYnUmhJdJ57vTHtcYx3dQ9iGhEY1a3ENC/OIF9akTH8owKBgDXW\nP/LjoQWRsRAPPlGcRLjEe/NVwfCLjAU3uat7tSrUZtuLysHi8whgnGanOeRk1ACh\nnH4Usssx56WC35xXB2FICqgzwEQAj2RsZsOhZ7KO2LXhi6sPCeUs7QUMLEFgPQsA\n2WEc56Hofm41hA4pU4F8/xC59Vo/yJmYgQYgmbZfAoGBAK+KNjBMmlVbfnMnEzHx\nsPXad6eN+EYeuK5LDqQytLBJHLpNvlJ2EaWoYI6ppJnqa/53OIAopVkgxVDJE4ad\nq5a4iCI5OxnK/e2k4rtOmfnEdhZB7L0di3NxdbXoco7mf5wOgmzC0DEdmMzzRzty\nWgce0I9C5PiSbsGaSBhBzWrR\n-----END PRIVATE KEY-----\n",
+  "client_email": "giangvippro1@notification-unilight.iam.gserviceaccount.com",
+  "client_id": "100219925298537158720",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/giangvippro1%40notification-unilight.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

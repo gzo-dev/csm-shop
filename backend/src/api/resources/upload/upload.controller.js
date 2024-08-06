@@ -19,7 +19,7 @@ export default {
 
       // Nén ảnh với chất lượng 70% và dung lượng tối đa 100kb
       const compressedImageBuffer = await sharp(imageBuffer)
-        .webp({ quality: 65, force: true })
+        .webp({ quality: 85, force: true })
         .resize({ fit: "inside", width: 1280 })
         .toBuffer();
 
@@ -30,7 +30,7 @@ export default {
       const imageUrl = `${req.protocol}://${req.get("host")}/x_image_blog/${
         req.file.filename
       }`;
-      res.json({ imageUrl: imageUrl });
+      res.json({ imageUrl: imageUrl, file_path: imageUrl });
     } catch (error) {
       console.error("Error compressing image:", error);
       return res.status(500).send("Error compressing image.");

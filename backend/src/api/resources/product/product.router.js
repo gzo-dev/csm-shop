@@ -4,6 +4,10 @@ import productController from './product.controller';
 // import { jwtStrategy } from '../../../middleware/strategy';
 import upload, { compressAndConvertToJpg, compressAndConvertToJpgSingle } from '../../../awsbucket';
 import authenticateJWT from '../../../middleware/verify_token';
+import waterController from '../watermark/water.controller';
+import convertWebPToJpeg from '../../../middleware/convertWebPtoJpg';
+import { addWatermarkMiddleware } from '../../../middleware/coverImgToWatermark';
+import { addWatermarkMiddlewareMultiple } from '../../../middleware/coverImgToWatermarkMultiple';
 
 
 export const productRouter = express.Router();
@@ -15,7 +19,7 @@ productRouter.route("/s/h").get(productController.getProductSuggestHotel)
 productRouter.route("/s/a").get(productController.getProductSuggestApartment)
 productRouter.route("/sg").get(productController.getProductSuggest2)
 productRouter.route("/photo").get(productController.getPhotoProduct)
-productRouter.route('/add').post(upload.single('photo'), compressAndConvertToJpgSingle, authenticateJWT, productController.addProduct);
+productRouter.route('/add').post(upload.single('photo'), convertWebPToJpeg, addWatermarkMiddleware, compressAndConvertToJpgSingle, authenticateJWT, productController.addProduct);
 productRouter.route('/update').post( upload.single('photo'), compressAndConvertToJpgSingle, authenticateJWT, productController.update);
 // productRouter.route('/getAllproduct').get( productController.index);
 productRouter.route('/getAllproductList').get( productController.getAllProductList);
@@ -30,7 +34,7 @@ productRouter.route('/getAllProductOffer').get( productController.getProductOffe
 productRouter.route('/delete').delete(authenticateJWT, productController.productDelete);
 productRouter.route("/d/bulk").post(productController.productDeleteBulk)
 productRouter.route('/deleteOfferById/:id').get( productController.productOfferDelete);
-productRouter.route('/upload-img').post(upload.array('file', 10), compressAndConvertToJpg, productController.multiplePhotoUpload);
+productRouter.route('/upload-img').post(upload.array('file', 10), addWatermarkMiddlewareMultiple, compressAndConvertToJpg, productController.multiplePhotoUpload);
 productRouter.route('/getAllPhoto').get( productController.getAllPhoto);
 productRouter.route('/slider-photo/delete').delete( productController.deleteSliderPhoto);
 productRouter.route("/size").get(productController.getSizeProduct)

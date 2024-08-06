@@ -115,7 +115,7 @@ export default {
           }
           JSON.parse(image)?.map(async (item) => {
             db.productphoto.create({
-              imgUrl: item?.path,
+              imgUrl: req.protocol + "://" + req.get("host") + "/" + item?.path?.replace(".watermark/", ""),
               productId: product.dataValues.id,
             });
           });
@@ -138,7 +138,7 @@ export default {
 
           res
             .status(200)
-            .json({ success: true, msg: "Successfully inserted product" });
+            .json({ success: true, msg: "Successfully inserted product", d: product });
         })
         .catch(function (err) {
           console.log(err);
@@ -822,11 +822,17 @@ export default {
         userId
         // rent
       } = req.query;
-
+      let sort
+      if(square === "asc" || square=== "desc") {
+        sort= square
+      }
+      if(userId == -1) {
+        userId= undefined
+      }
       if (typeRoom == 0) {
         typeRoom = undefined;
       }
-      if (square == 0) {
+      if (square == 0 || square== "asc" || square== "desc") {
         square = undefined;
       }
       if (price == 0) {
@@ -844,6 +850,7 @@ export default {
       if (ward == -1) {
         ward = undefined;
       }
+      
       let whereConditions = {
         categoryId: parseInt(id),
         subCategoryId: parseInt(subid),
@@ -964,9 +971,18 @@ export default {
       else {
         filter.boolean= false
       }
+
+      let order
+      if(sort) {
+        order= [["square", sort]]
+      }
+      else {
+        order= [["id", "desc"]]
+      }
+      console.log(order)
         let { count, rows: productList } = await db.product.findAndCountAll({
           where: whereConditions,
-          order: [["id", "DESC"]],
+          order: order,
           include: [
             {
               model: db.user,
@@ -1000,7 +1016,7 @@ export default {
       return res.status(200).json({
         success: true,
         data: productList,
-        filterManager: userId ? true : false,
+        filterManager: (userId && userId != -1) ? true : false,
         pagination: {
           currentPage: parseInt(page),
           pageSize: parseInt(pageSize),
@@ -1281,12 +1297,13 @@ export default {
   async multiplePhotoUpload(req, res, next) {
     let attachmentEntries = [];
     var productId = req.body.productId;
+    console.log("req.files", req.files)
     for (var i = 0; i < req.files.length; i++) {
       attachmentEntries.push({
         productId: productId,
         name: req.files[i].filename,
         mime: req.files[i].mimetype,
-        imgUrl: req.files[i].path,
+        imgUrl: req.protocol + "://" + req.get("host") + "/" + req.files[i].path?.replace(".watermark/", ""),
       });
     }
 
@@ -1307,7 +1324,7 @@ export default {
         }
       })
       .then((r) => {
-        res.status(200).json({ success: true, data: req.files, ok: true });
+        res.status(200).json({ success: true, data: req.files.map(item=> ({...item, path: item?.path?.replace("./watermark/", "")})), ok: true });
       })
       .catch(function (error) {
         console.log(error);

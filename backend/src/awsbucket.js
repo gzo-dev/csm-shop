@@ -23,7 +23,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Middleware để nén ảnh và chuyển đổi sang JPG
-function compressAndConvertToJpg(req, res, next) {
+async function compressAndConvertToJpg(req, res, next) {
   if (!req.files || req.files.length === 0) {
     // Kiểm tra nếu không có tệp tin nào được tải lên
     return next();
@@ -37,8 +37,6 @@ function compressAndConvertToJpg(req, res, next) {
   // Lặp qua mỗi tệp tin trong mảng req.files
   for (let i = 0; i < req.files.length; i++) {
     const filePath = req.files[i].path;
-    console.log(req.files[i]);
-
     // Tạo tên tệp tin mới
     const fileName =
       Date.now() + "-" + Math.round(Math.random() * 1e9) + ".jpg";
@@ -52,7 +50,7 @@ function compressAndConvertToJpg(req, res, next) {
 
       // Sử dụng Sharp để nén ảnh và chuyển đổi sang định dạng JPG
       sharp(data)
-        .jpeg({ quality: 80 }) // Thiết lập chất lượng JPEG
+        .png({ quality: 90 }) // Thiết lập chất lượng JPEG
         .toFile(path.join("upload_avatar_product", fileName), (err, info) => {
           if (err) {
             return next(err);

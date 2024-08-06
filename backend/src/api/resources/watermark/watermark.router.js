@@ -1,5 +1,6 @@
 import express from "express"
 import waterController from "./water.controller";
+import convertWebPToJpeg from "../../../middleware/convertWebPtoJpg";
 const multer = require('multer');
 
 export const watermakRouter = express.Router();
@@ -14,4 +15,4 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-watermakRouter.route("/").post(upload.single("file"), waterController.addWaterMark)
+watermakRouter.route("/").post(upload.single("file"), convertWebPToJpeg , waterController.addWaterMark)
