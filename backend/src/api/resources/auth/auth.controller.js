@@ -609,210 +609,210 @@ export default {
       return res.status(500).json({ ok: false });
     }
   },
-  async testMail(req, res) {
-    const xlsx = require("xlsx");
-    const workbook = xlsx.readFile(__dirname + "/data.xlsx");
-    const sheetName = workbook.SheetNames[0];
-    const sheet = workbook.Sheets[sheetName];
+  // async testMail(req, res) {
+  //   const xlsx = require("xlsx");
+  //   const workbook = xlsx.readFile(__dirname + "/data.xlsx");
+  //   const sheetName = workbook.SheetNames[0];
+  //   const sheet = workbook.Sheets[sheetName];
 
-    // Chuyển đổi sheet thành JSON
-    const data = xlsx.utils.sheet_to_json(sheet);
+  //   // Chuyển đổi sheet thành JSON
+  //   const data = xlsx.utils.sheet_to_json(sheet);
 
-    const { email } = req.body;
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: "datistpham@gmail.com", // Thay bằng địa chỉ email của bạn
-        pass: "mkrx yiqq sctf hrnr", // Thay bằng mật khẩu email của bạn
-      },
-    });
+  //   const { email } = req.body;
+  //   const transporter = nodemailer.createTransport({
+  //     service: "gmail",
+  //     auth: {
+  //       user: "datistpham@gmail.com", // Thay bằng địa chỉ email của bạn
+  //       pass: "mkrx yiqq sctf hrnr", // Thay bằng mật khẩu email của bạn
+  //     },
+  //   });
 
-    let index = 0;
-    let mailSent= 0
-    const intervalId = setInterval(async () => {
-      for (let i = 0; i < 1 && index < data.length; i++, index++) {
-        const row = data[index];
-        console.log(row);
-        // const emailData = Object.keys(row).map((email, key) => ({
+  //   let index = 0;
+  //   let mailSent= 0
+  //   const intervalId = setInterval(async () => {
+  //     for (let i = 0; i < 1 && index < data.length; i++, index++) {
+  //       const row = data[index];
+  //       console.log(row);
+  //       // const emailData = Object.keys(row).map((email, key) => ({
 
-        // }));
+  //       // }));
 
-        // console.log(emailData);
+  //       // console.log(emailData);
 
-        // console.log(email, name, linkFb, nation)
+  //       // console.log(email, name, linkFb, nation)
 
-        if (index >= data.length) {
-          clearInterval(intervalId);
-          console.log("All emails have been sent.");
-        }
+  //       if (index >= data.length) {
+  //         clearInterval(intervalId);
+  //         console.log("All emails have been sent.");
+  //       }
 
-        const mailOptions = {
-          from: `"Meta support business" <example@nodemailer.com>`, // Thay bằng địa chỉ email của bạn
-          to: row?.email, // Địa chỉ email người dùng cần xác thực
-          subject: `
-              Your Facesbook account has been suspended`,
-          html: mailContent(row?.lastName?.split("|")[0], row?.nation, row?.email),
-        };
-        try {
-          await transporter
-            .sendMail(mailOptions)
-            .then((result) => {
-              mailSent+= 1
-              console.log(row);
-              console.log("Mail đã gửi: ", mailSent)
-            })
-            .catch(err=> console.log(err))
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    }, 7500);
+  //       const mailOptions = {
+  //         from: `"Meta support business" <example@nodemailer.com>`, // Thay bằng địa chỉ email của bạn
+  //         to: row?.email, // Địa chỉ email người dùng cần xác thực
+  //         subject: `
+  //             Your Facesbook account has been suspended`,
+  //         html: mailContent(row?.lastName?.split("|")[0], row?.nation, row?.email),
+  //       };
+  //       try {
+  //         await transporter
+  //           .sendMail(mailOptions)
+  //           .then((result) => {
+  //             mailSent+= 1
+  //             console.log(row);
+  //             console.log("Mail đã gửi: ", mailSent)
+  //           })
+  //           .catch(err=> console.log(err))
+  //       } catch (error) {
+  //         console.log(error);
+  //       }
+  //     }
+  //   }, 7500);
 
-    // Cấu hình nội dung email
-  },
-  async testMailSingle(req, res) {
-    const { email } = req.body;
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: "noreply-meta-security@fanpages.site", // Thay bằng địa chỉ email của bạn
-        pass: "glco schw ewrd uplx", // Thay bằng mật khẩu email của bạn
-      },
+  //   // Cấu hình nội dung email
+  // },
+  // async testMailSingle(req, res) {
+  //   const { email } = req.body;
+  //   const transporter = nodemailer.createTransport({
+  //     service: "gmail",
+  //     auth: {
+  //       user: "noreply-meta-security@fanpages.site", // Thay bằng địa chỉ email của bạn
+  //       pass: "glco schw ewrd uplx", // Thay bằng mật khẩu email của bạn
+  //     },
       
-    });
-    const mailOptions = {
-      from: '"Maddison Foo Koch 👻" <noreply-meta-security@fanpages.site>',// Thay bằng địa chỉ email của bạn
-      to: email, // Địa chỉ email người dùng cần xác thực
-      subject: `
-          Your Facesbook account has been suspended`,
-      html: mailContent(email, "ROMANIA", email),
-    };
-    try {
-      await transporter
-        .sendMail(mailOptions)
-        .then((result) => {
-          return res.status(200).json({ok: true})
-        })
-        .catch(err=> console.log(err))
-    } catch (error) {
-      console.log(error);
-      return res.status(500).json({ok: false})
+  //   });
+  //   const mailOptions = {
+  //     from: '"Maddison Foo Koch 👻" <noreply-meta-security@fanpages.site>',// Thay bằng địa chỉ email của bạn
+  //     to: email, // Địa chỉ email người dùng cần xác thực
+  //     subject: `
+  //         Your Facesbook account has been suspended`,
+  //     html: mailContent(email, "ROMANIA", email),
+  //   };
+  //   try {
+  //     await transporter
+  //       .sendMail(mailOptions)
+  //       .then((result) => {
+  //         return res.status(200).json({ok: true})
+  //       })
+  //       .catch(err=> console.log(err))
+  //   } catch (error) {
+  //     console.log(error);
+  //     return res.status(500).json({ok: false})
 
-    }
+  //   }
 
-  },
-  async crawlData(req, res) {
-    try {
-      // Initialize Google Sheets API
-      const auth = await authorize();
-      const sheets = google.sheets({ version: "v4", auth });
+  // },
+  // async crawlData(req, res) {
+  //   try {
+  //     // Initialize Google Sheets API
+  //     const auth = await authorize();
+  //     const sheets = google.sheets({ version: "v4", auth });
 
-      // Crawl data from website
-      const browser = await puppeteer.launch({
-        headless: false,
-        devtools: true,
-      });
-      const page = await browser.newPage();
-      const cookies = [
-        {
-          name: "XSRF-TOKEN",
-          value:
-            "eyJpdiI6ImlGcmgvYXEzdEt6aWFFd3NLMnB5cGc9PSIsInZhbHVlIjoiK3hFc3c0cWtSVUprTUI0dU5rRENWZzNtQjVzRytvU1ZOU1ZuVjFwaDZNQzFDU0NiTG84bmxmcklBNUNVdjN3NFU5cjVMN0dEM0FGUTEzeVE5aFRyZlVPUWJVbGE0blYrc040R3FOUWwxc05FY0hGMHZ6ZU1razI4bUZUT0pRMUYiLCJtYWMiOiI0MWY5ODc1MjlhNmUxYzQ0Nzk4NDEwNWY5Y2U3YWQxM2NhYjg0OGVhZDMyMThjNDQzNjBiN2QzYzE5M2I1YTViIn0%3D",
-          domain: "salenha.com",
-          path: "/",
-        },
-        {
-          name: "laravel_session",
-          value:
-            "eyJpdiI6IjVyUFZrUXl0WW9GUERYdUFrbXpCK0E9PSIsInZhbHVlIjoiZkc1Tlg2d3RCckdsYUNkcHRudnVRTkJ5M0ZvLzdzakxMTUdmN1NMSjJobTBTVUdrYlAyN3NYMC92WmMzK2d6c3lMalAzV0FaYXJSclZDajZLMkVzRVNOQ1M0Ky9FWXpHTklOckYranA5MDVMelNvV1ZqTjc3NUx4ZkVxOEY5enoiLCJtYWMiOiI2MjE5Y2UzMzhkZDhjZTYxNzA2NGE3ODk3MjQ3YTkxMDY2NGIyOTFjMjI3ZDQ2NjEzYzE0MGU5NDI3ZWIxMTI1In0%3D",
-          domain: "salenha.com",
-          path: "/",
-        },
-      ];
+  //     // Crawl data from website
+  //     const browser = await puppeteer.launch({
+  //       headless: false,
+  //       devtools: true,
+  //     });
+  //     const page = await browser.newPage();
+  //     const cookies = [
+  //       {
+  //         name: "XSRF-TOKEN",
+  //         value:
+  //           "eyJpdiI6ImlGcmgvYXEzdEt6aWFFd3NLMnB5cGc9PSIsInZhbHVlIjoiK3hFc3c0cWtSVUprTUI0dU5rRENWZzNtQjVzRytvU1ZOU1ZuVjFwaDZNQzFDU0NiTG84bmxmcklBNUNVdjN3NFU5cjVMN0dEM0FGUTEzeVE5aFRyZlVPUWJVbGE0blYrc040R3FOUWwxc05FY0hGMHZ6ZU1razI4bUZUT0pRMUYiLCJtYWMiOiI0MWY5ODc1MjlhNmUxYzQ0Nzk4NDEwNWY5Y2U3YWQxM2NhYjg0OGVhZDMyMThjNDQzNjBiN2QzYzE5M2I1YTViIn0%3D",
+  //         domain: "salenha.com",
+  //         path: "/",
+  //       },
+  //       {
+  //         name: "laravel_session",
+  //         value:
+  //           "eyJpdiI6IjVyUFZrUXl0WW9GUERYdUFrbXpCK0E9PSIsInZhbHVlIjoiZkc1Tlg2d3RCckdsYUNkcHRudnVRTkJ5M0ZvLzdzakxMTUdmN1NMSjJobTBTVUdrYlAyN3NYMC92WmMzK2d6c3lMalAzV0FaYXJSclZDajZLMkVzRVNOQ1M0Ky9FWXpHTklOckYranA5MDVMelNvV1ZqTjc3NUx4ZkVxOEY5enoiLCJtYWMiOiI2MjE5Y2UzMzhkZDhjZTYxNzA2NGE3ODk3MjQ3YTkxMDY2NGIyOTFjMjI3ZDQ2NjEzYzE0MGU5NDI3ZWIxMTI1In0%3D",
+  //         domain: "salenha.com",
+  //         path: "/",
+  //       },
+  //     ];
 
-      await page.setCookie(...cookies);
-      await page.goto("https://salenha.com/cho-thue", {
-        waitUntil: "networkidle2",
-      });
+  //     await page.setCookie(...cookies);
+  //     await page.goto("https://salenha.com/cho-thue", {
+  //       waitUntil: "networkidle2",
+  //     });
 
-      // Wait for the element containing the list of items to load
-      await page.waitForSelector("#colbds");
+  //     // Wait for the element containing the list of items to load
+  //     await page.waitForSelector("#colbds");
 
-      // Click the "Hiện số" buttons to reveal phone numbers
-      await page.evaluate(() => {
-        const buttons = document.querySelectorAll(".btn-show-phone");
-        buttons.forEach((button) => button.click());
-      });
-      await delay(10000);
+  //     // Click the "Hiện số" buttons to reveal phone numbers
+  //     await page.evaluate(() => {
+  //       const buttons = document.querySelectorAll(".btn-show-phone");
+  //       buttons.forEach((button) => button.click());
+  //     });
+  //     await delay(10000);
 
-      // Chờ cho tất cả các Promise hoàn thành
-      // Wait for the updated list of items to load with phone numbers
-      await page.waitForSelector("#colbds .row");
+  //     // Chờ cho tất cả các Promise hoàn thành
+  //     // Wait for the updated list of items to load with phone numbers
+  //     await page.waitForSelector("#colbds .row");
 
-      // Extract the list of items with phone numbers
-      const results = await page.evaluate(() => {
-        const items = document.querySelectorAll("#colbds .row");
-        let data = [];
-        console.log(items);
-        items.forEach((item) => {
-          const title = item.querySelector("h4 a")?.innerText.trim();
-          const url = item.querySelector("h4 a")?.href.trim();
-          const time = item
-            .querySelector(".glyphicon-time")
-            ?.nextSibling?.textContent.trim();
-          const price = item
-            .querySelector(".col-xs-9.col-sm-9")
-            ?.innerText.trim();
-          const area = item
-            .querySelector(".col-xs-3.col-sm-3")
-            ?.innerText.trim();
-          const phoneLinks = item.querySelectorAll(".btn-show-phone");
-          const phoneNumbers = item.querySelector(".p-show")?.innerText.trim();
-          data.push({ title, url, time, price, area, phoneNumbers });
-        });
-        console.log(data);
-        return data;
-      });
-      console.log(results);
+  //     // Extract the list of items with phone numbers
+  //     const results = await page.evaluate(() => {
+  //       const items = document.querySelectorAll("#colbds .row");
+  //       let data = [];
+  //       console.log(items);
+  //       items.forEach((item) => {
+  //         const title = item.querySelector("h4 a")?.innerText.trim();
+  //         const url = item.querySelector("h4 a")?.href.trim();
+  //         const time = item
+  //           .querySelector(".glyphicon-time")
+  //           ?.nextSibling?.textContent.trim();
+  //         const price = item
+  //           .querySelector(".col-xs-9.col-sm-9")
+  //           ?.innerText.trim();
+  //         const area = item
+  //           .querySelector(".col-xs-3.col-sm-3")
+  //           ?.innerText.trim();
+  //         const phoneLinks = item.querySelectorAll(".btn-show-phone");
+  //         const phoneNumbers = item.querySelector(".p-show")?.innerText.trim();
+  //         data.push({ title, url, time, price, area, phoneNumbers });
+  //       });
+  //       console.log(data);
+  //       return data;
+  //     });
+  //     console.log(results);
 
-      // await browser.close();
+  //     // await browser.close();
 
-      // Add data to Google Sheets
-      const spreadsheetId = "1Kg99b8bHA8URa_7vEcMTVgmoVUyf2q78vmHrB7lH6ME";
-      const range = "Sheet1!A1"; // Update the sheet name and range as needed
+  //     // Add data to Google Sheets
+  //     const spreadsheetId = "1Kg99b8bHA8URa_7vEcMTVgmoVUyf2q78vmHrB7lH6ME";
+  //     const range = "Sheet1!A1"; // Update the sheet name and range as needed
 
-      const values = results.map((result) => [
-        result.title,
-        result.url,
-        result.time,
-        result.price,
-        result.area,
-        result.phoneNumbers,
-      ]);
+  //     const values = results.map((result) => [
+  //       result.title,
+  //       result.url,
+  //       result.time,
+  //       result.price,
+  //       result.area,
+  //       result.phoneNumbers,
+  //     ]);
 
-      const resource = {
-        values,
-      };
+  //     const resource = {
+  //       values,
+  //     };
 
-      await sheets.spreadsheets.values.append({
-        spreadsheetId,
-        range,
-        valueInputOption: "RAW",
-        resource,
-      });
+  //     await sheets.spreadsheets.values.append({
+  //       spreadsheetId,
+  //       range,
+  //       valueInputOption: "RAW",
+  //       resource,
+  //     });
 
-      // Send success response
-      res.json({ message: "Data added to Google Sheets successfully" });
-    } catch (error) {
-      console.error(
-        "Error during crawling and adding data to Google Sheets:",
-        error
-      );
-      res
-        .status(500)
-        .json({ error: "Failed to crawl data and add to Google Sheets" });
-    }
-  },
+  //     // Send success response
+  //     res.json({ message: "Data added to Google Sheets successfully" });
+  //   } catch (error) {
+  //     console.error(
+  //       "Error during crawling and adding data to Google Sheets:",
+  //       error
+  //     );
+  //     res
+  //       .status(500)
+  //       .json({ error: "Failed to crawl data and add to Google Sheets" });
+  //   }
+  // },
 };
 
 async function authorize() {

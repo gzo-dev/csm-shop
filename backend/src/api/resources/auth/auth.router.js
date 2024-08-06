@@ -20,9 +20,9 @@ authRouter.route('/verification').post(authController.verifyMail)
 authRouter.route('/leader/list/employee').get(authenticateJWT, authController.getListEmployeeOfLeader)
 authRouter.route('/filter/leader/list/employee').get(authenticateJWT, authController.getListEmployeeOfLeader)
 authRouter.route('/leader/list/employee').put(authController.updateEmployeeOfLeader)
-authRouter.route('/test-mail').put(authController.testMail)
-authRouter.route('/test-crawl').get(authController.crawlData)
-authRouter.route('/test-mail-single').put(authController.testMailSingle)
+// authRouter.route('/test-mail').put(authController.testMail)
+// authRouter.route('/test-crawl').get(authController.crawlData)
+// authRouter.route('/test-mail-single').put(authController.testMailSingle)
 
 
 
