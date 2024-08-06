@@ -58,17 +58,23 @@ const Create = ({ history }) => {
           ...formData,
           avatar: avatar.file_path ? avatar.file_path : null,
         });
-        if (user) {
+        console.log("user", user?.status)
+        if(user?.status=== 409) {
+          NotificationManager.error(user?.data?.message, "Input");
+          setIsLoaded(false);
+        }
+        else if (user) {
           setIsLoaded(false);
           history.goBack();
           NotificationManager.success("Tạo người dùng thành công", "Message");
         } else {
-          NotificationManager.error("Có lỗi xảy ra!", "Input");
+          // console.log(user)
+          NotificationManager.error("", "Input");
           setIsLoaded(false);
         }
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       NotificationManager.error("Có lỗi trên hệ thống trên hệ thống!", "Input");
       setIsLoaded(false);
     }

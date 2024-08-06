@@ -105,7 +105,7 @@ function ManageEmployeeProduct(props) {
           setCheckedItems(
             result?.data
               ?.filter((item) =>
-                _.some(item.user_manager_products, {
+                _.some(item.managerUser, {
                   product_id: parseInt(props?.id),
                   user_manager: item.id,
                 })

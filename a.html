@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Swiper Example</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/swiper/swiper-bundle.min.css"
+    />
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        overflow: hidden;
+      }
+      .swiper-container {
+        width: 1000px;
+        height: 300px;
+      }
+      .swiper-wrapper {
+        display: flex;
+      }
+      .swiper-slide {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+        background: #ccc;
+        /* Thêm margin nếu cần để kiểm soát khoảng cách */
+        /* margin: 0 10px; */
+      }
+	  .swiper-slide{
+		/* margin-right: 120px !important; */
+}
+    </style>
+  </head>
+  <body>
+    <div class="swiper-container">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">Slide 1</div>
+        <div class="swiper-slide">Slide 2</div>
+        <div class="swiper-slide">Slide 3</div>
+        <div class="swiper-slide">Slide 4</div>
+        <div class="swiper-slide">Slide 5</div>
+        <div class="swiper-slide">Slide 6</div>
+        <div class="swiper-slide">Slide 7</div>
+        <div class="swiper-slide">Slide 8</div>
+        <div class="swiper-slide">Slide 9</div>
+      </div>
+      <!-- Add Pagination -->
+      <div class="swiper-pagination"></div>
+      <!-- Add Navigation -->
+      <div class="swiper-button-next"></div>
+      <div class="swiper-button-prev"></div>
+    </div>
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+      // Initialize Swiper
+      var swiper = new Swiper(".swiper-container", {
+        loop: true,
+        grabCursor: true,
+        centeredSlides: true,
+        slidesPerView: 3,
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+        },
+		effect: "creative",
+        creativeEffect: {
+          perspective: true,
+          limitProgress: 3,
+          prev: {
+            translate: ["-170%", "-50%", -100],
+            origin: "bottom",
+          },
+          next: {
+            translate: ["170%", "-50%", -100],
+            origin: "bottom",
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

@@ -20,8 +20,8 @@ import { apiEditTicket } from "../api";
 import get_detail_ticket from "../api/get_detail_ticket";
 
 const EditTicket = () => {
-  const [searchParams]= useSearchParams()
-  const token= searchParams.get("token")
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
   const { socket } = useContext(SocketContext);
   const { uid, roomId, id } = useParams();
   const [self, setSelf] = useState();
@@ -56,7 +56,7 @@ const EditTicket = () => {
   // eslint-disable-next-line
   const [previewImage, setPreviewImage] = useState([]);
   const [listProvince, setListProvince] = useState([]);
-
+  const [metaDescription, setMetaDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -133,6 +133,9 @@ const EditTicket = () => {
     if (name === "bonus") {
       setBonus(value);
     }
+    if (name === "meta_description") {
+      setMetaDescription(value);
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -181,12 +184,13 @@ const EditTicket = () => {
           buffe,
           car,
           bonus,
+          meta_description: metaDescription
         };
         // eslint-disable-next-line
         const result = await apiEditTicket({ ...data });
         setLoading(false);
         swal("Thông báo", "Cập nhật thành công", "success").then(() => {
-            socket.emit("back_to_web", { to: "http://localhost:3000", roomId });
+          socket.emit("back_to_web", { to: "http://localhost:3000", roomId });
         });
       } else {
         const data = {
@@ -215,13 +219,13 @@ const EditTicket = () => {
           buffe,
           car,
           bonus,
+          meta_description: metaDescription
         };
         const result = await apiEditTicket({ ...data });
-        swal("Thông báo", "Cập nhật thành công", "success")
-        .then(() => {
-            socket.emit("back_to_web", { to: "http://localhost:3000", roomId });
-          });
-        setLoading(false)
+        swal("Thông báo", "Cập nhật thành công", "success").then(() => {
+          socket.emit("back_to_web", { to: "http://localhost:3000", roomId });
+        });
+        setLoading(false);
       }
     } catch (error) {
       setLoading(false);
@@ -285,6 +289,7 @@ const EditTicket = () => {
     setWardText(self?.wardText);
     setBuffe(self?.buffe);
     setWard(self?.ward);
+    setMetaDescription(self?.meta_description)
   }, [self]);
 
   return (
@@ -295,6 +300,23 @@ const EditTicket = () => {
             <div className="card-body-table">
               <div className="news-content-right pd-20">
                 {/* Done */}
+                <div className="row mt-4">
+                  <div className="col-lg-4 col-md-4">
+                    <div className="form-group">
+                      <label className="form-label">
+                        Mô tả thẻ meta description
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Mô tả meta description"
+                        name="meta_description"
+                        value={metaDescription}
+                        onChange={(e) => handleChange(e)}
+                      />
+                    </div>
+                  </div>
+                </div>
                 {parseInt(id) < 4 && (
                   <Fragment>
                     <div className="row mt-4">

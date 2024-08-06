@@ -33,8 +33,7 @@ const getUserRegister = async (data) => {
         }
         return result.data;
     } catch (error) {
-        console.log(error);
-        return null;
+        return error?.response;
     }
 };
 

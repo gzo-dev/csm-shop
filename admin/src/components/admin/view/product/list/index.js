@@ -542,43 +542,30 @@ const List = () => {
     ) {
       return row.author_phone ? row.author_phone : "Chưa thiết lập";
     }
-    if (row.user) {
-      if (role === "leader" && auid == row.user.id) {
-        return row.author_phone ? row.author_phone : "Chưa thiết lập";
-      } else if (role === "employee" && user.user_manager == row.user.id) {
-        return row.author_phone ? row.author_phone : "Chưa thiết lập";
-      } else if (
-        role === "leader" &&
-        _.some(listEmployee, { id: parseInt(row?.user?.id) })
-      ) {
-        return row.author_phone ? row.author_phone : "Chưa thiết lập";
-      } else if (
-        role === "employee" &&
-        _.some(listProductUserManage, {
-          user_manager: parseInt(uid),
-          product_id: parseInt(row.id),
-        }) === true
-      ) {
-        return row.author_phone ? row.author_phone : "Chưa thiết lập";
-      } else if (
-        role === "employee" &&
-        _.some(listProductUserManage, {
-          user_manager: parseInt(uid),
-          product_id: parseInt(row.id),
-        }) !== true
-      ) {
+    else if(role=== "leader") {
+      if( _.some(listEmployee, item1 => {
+        return _.some(row?.user_manager_products, item2 => item1.id == item2.managerUser.id);
+    })) {
+      return row.author_phone ? row.author_phone : "Chưa thiết lập";
+    }
+    else if(_.some(row?.user_manager_products, item => item.managerUser.id == uid)) {
+      return row.author_phone ? row.author_phone : "Chưa thiết lập";
+    }
+    
+      else {
         return "Đã ẩn";
-      } else if (role === "leader" && auid != row.user.id) {
-        return "Đã ẩn";
-      } else if (role === "employee" && user.user_manager != row.user.id) {
-        return "Đã ẩn";
-      } else if (role === "parttime") {
-        return "Đã ẩn";
-      } else {
+      }
+    } 
+    else if(role=== "employee") {
+      if(_.some(row?.user_manager_products, item => item.managerUser.id == uid)) {
         return row.author_phone ? row.author_phone : "Chưa thiết lập";
       }
-    } else {
-      return row.author_phone ? row.author_phone : "Chưa thiết lập";
+      else {
+        return "Đã ẩn";
+      }
+    }
+    else {
+      return "Đã ẩn";
     }
   };
 
@@ -619,78 +606,52 @@ const List = () => {
     ) {
       return true;
     }
-    if (row.user) {
-      // nếu người dùng là quản lý và cái uid người dùng hiện tại là cái chủ của sản phẩm thì cho phép coi
-      if (role === "leader" && auid == row.user.id) {
-        return true;
+    else if(role=== "leader") {
+      if( _.some(listEmployee, item1 => {
+        return _.some(row?.user_manager_products, item2 => item1.id == item2.managerUser.id);
+    })) {
+      return true
+    }
+    else if(_.some(row?.user_manager_products, item => item.managerUser.id == uid)) {
+      return true
+    }
+    
+      else {
+        return false
       }
-      // nếu người dùng là quản lý và nếu nhân viên của người quản lý đó quản lý cái sản phẩm này thì cho phép coi
-      // row.user.id là cái id của người dùng mà sở hữu cái product này nghĩa là chủ của cái product này
-      else if (
-        role === "leader" &&
-        _.some(listEmployee, { id: parseInt(row?.user?.id) }) === true
-      ) {
-        return true;
+    } 
+    else if(role=== "employee") {
+      if(_.some(row?.user_manager_products, item => item.managerUser.id == uid)) {
+        return true
       }
-      // else if(role === "employee" ) {
-
-      // }
-      // nếu người dùng là nhân viên và cái uid người dùng hiện tại là cái chủ của sản phẩm thì cho phép coi
-      // else if (role === "employee" && auid == row.user.id) {
-      // console.log(_.some(row.user_manager_products, {user_manager: parseInt(auid)}))
-      // if(_.some(row.user_manager_products, {user_manager: parseInt(auid)})=== true) {
-      // return true;
-      // }
-      // else {
-      //   return false
-      // }
-      // return false
-      // console.log(row.user_manager_products)
-      // }
-      // auid
-      else if (
-        role === "employee" &&
-        _.some(listProductUserManage, {
-          user_manager: parseInt(uid),
-          product_id: parseInt(row.id),
-        }) === true
-      ) {
-        return true;
-      } else if (
-        role === "employee" &&
-        _.some(listProductUserManage, {
-          user_manager: parseInt(uid),
-          product_id: parseInt(row.id),
-        }) !== true
-      ) {
-        return false;
-      } else if (role === "leader" && auid != row.user.id) {
-        return false;
-      } else if (role === "employee" && user.user_manager != row.user.id) {
-        return false;
-      } else if (role === "parttime") {
-        return false;
-      } else {
-        return true;
+      else {
+        return false
       }
-    } else {
-      return true;
+    }
+    else {
+      return false
     }
   };
 
   const checkIsManagerProduct = (row) => {
-    if (role === "ceo") {
+    if (role === "ceo" || role=== "admin" || role=== "manager") {
       return true;
     }
-    if (role === "leader" && auid == row?.user?.id) {
-      return true;
-    } else if (
-      role === "leader" &&
-      _.some(listEmployee, { id: parseInt(row?.user?.id) }) === true
-    ) {
-      return true;
-    } else {
-      return false;
+    if (role === "leader") {
+      if( _.some(listEmployee, item1 => {
+        return _.some(row?.user_manager_products, item2 => item1.id == item2.managerUser.id);
+    })) {
+        return true
+      }
+      else if(_.some(row?.user_manager_products, item => item.managerUser.id == uid)) {
+      return true
+    }
+      else {
+        return false
+      }
+    }
+    else {
+      return false
     }
   };
 
@@ -823,7 +784,7 @@ const List = () => {
                 setWard(-1);
                 setFilterManager(false);
                 setCurrentPage(1);
-                setSelectedUserHasManageProduct(-1)
+                setSelectedUserHasManageProduct(-1);
                 localStorage.removeItem("data_temp_filter");
                 await resetSearchFilter();
                 // getProductList();
@@ -939,7 +900,7 @@ const List = () => {
                           Chọn hạng phòng
                         </option>
                         {listBedRoom
-                          .filter((item) => parseInt(item.value) <= 11)
+                          .filter((item) => parseInt(item.value) <= 11 || parseInt(item.value) === 19)
                           ?.map((item, key) => (
                             <option key={key} value={item.value}>
                               {item.label}
@@ -968,7 +929,7 @@ const List = () => {
                           Chọn hạng phòng
                         </option>
                         {listBedRoom
-                          .filter((item) => parseInt(item.value) > 11)
+                          .filter((item) => parseInt(item.value) > 11 && parseInt(item.value) !== 19)
                           ?.map((item, key) => (
                             <option key={key} value={item.value}>
                               {item.label}
@@ -1002,6 +963,8 @@ const List = () => {
                             {item.label} m<sub>2</sub>
                           </option>
                         ))}
+                        <option value="asc">Tăng dần</option>
+                        <option value="desc">Giảm dần</option>
                       </select>
                     </div>
                   )}
@@ -1522,9 +1485,7 @@ const List = () => {
                               {row?.user_manager_products &&
                                 row?.user_manager_products?.length <= 0 && (
                                   <>
-                                    {row.user
-                                      ? row.user.firstName
-                                      : "Chưa thiết lập"}
+                                    {"Chưa thiết lập"}
                                   </>
                                 )}
                             </td>
@@ -1678,9 +1639,7 @@ const List = () => {
                               {row?.user_manager_products &&
                                 row?.user_manager_products?.length <= 0 && (
                                   <>
-                                    {row.user
-                                      ? row.user.firstName
-                                      : "Chưa thiết lập"}
+                                    {"Chưa thiết lập"}
                                   </>
                                 )}
                             </td>
@@ -1995,13 +1954,24 @@ const List = () => {
                         ))}
                     </tbody>
                   )}
-                  {id== 13 && filterManager === true && getList?.length <= 0 && (
-                    <tbody>
-                      <tr>
-                        <td colSpan={14} style={{textAlign: "center", fontSize: 24, fontWeight: 600}}>Đã hết dữ liệu</td>
-                      </tr>
-                    </tbody>
-                  )}
+                  {id == 13 &&
+                    filterManager === true &&
+                    getList?.length <= 0 && (
+                      <tbody>
+                        <tr>
+                          <td
+                            colSpan={14}
+                            style={{
+                              textAlign: "center",
+                              fontSize: 24,
+                              fontWeight: 600,
+                            }}
+                          >
+                            Đã hết dữ liệu
+                          </td>
+                        </tr>
+                      </tbody>
+                    )}
                 </table>
               </div>
             </div>

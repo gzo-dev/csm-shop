@@ -23,6 +23,7 @@ import upload_product_image from "../api/upload_product_image";
 import get_all_user_list from "../api/get_all_user_list";
 import add_new_product from "../api/add_product";
 import { SocketContext } from "../SocketContainer/SocketContainer";
+import TestTable from "../component/TestTable";
 
 const NewProduct = (props) => {
   const { socket } = useContext(SocketContext);
@@ -81,6 +82,7 @@ const NewProduct = (props) => {
   const [author_phone, setAuthorPhone] = useState();
   const [rent, setRent] = useState();
   const [endow, setEndow] = useState();
+  const [metaDescription, setMetaDescription]= useState("")
 
   const getCustomer = async () => {
     let list = await get_all_user_list({}, token);
@@ -186,7 +188,9 @@ const NewProduct = (props) => {
       case "rent":
         setRent(value);
         break;
-
+      case "meta_description":
+        setMetaDescription(value)
+        break
       default:
         break;
     }
@@ -249,7 +253,7 @@ const NewProduct = (props) => {
       formData.append("product_id", productId);
       formData.append("note", note);
       formData.append("rent", rent);
-  
+      formData.append("meta_description", metaDescription)
       // const config = {
       //   headers: {
       //     "content-type": "multipart/form-data",
@@ -309,7 +313,7 @@ const NewProduct = (props) => {
 
   const uploadImageToServer = async (imageObject) => {
     try {
-      if (parseInt(id) === 12) {
+      if (parseInt(id) === 13) {
         const { image } = imageObject;
         const formData = new FormData();
         formData.append("file", image);
@@ -326,7 +330,8 @@ const NewProduct = (props) => {
           imageUrl,
         };
       }
-      if (parseInt(id) === 13) {
+      // ks thi k watermark
+      if (parseInt(id) === 12) {
         const { image } = imageObject;
         const formData = new FormData();
         formData.append("file", image);
@@ -369,7 +374,8 @@ const NewProduct = (props) => {
     //   },
     // };
     const imgList = await uploadImages(newAddImage);
-    formData.append("newaddimage", JSON.stringify(imgList));
+    console.log("img list", imgList)
+    // formData.append("newaddimage", JSON.stringify(imgList));
     let list = await upload_product_image(formData);
     if (list) {
       setIsLoaded(false);
@@ -400,6 +406,22 @@ const NewProduct = (props) => {
             <div className="card-body-table">
               <div className="news-content-right pd-20">
                 <div className="row mt-4">
+                  <div className="col-lg-4 col-md-4">
+                    <div className="form-group">
+                      <label className="form-label">Mô tả thẻ meta description</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Mô tả meta description"
+                        name="meta_description"
+                        value={metaDescription}
+                        onChange={(e) => handleChange(e)}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="row mt-4">
+                
                   <div className="col-lg-4 col-md-4">
                     <div className="form-group">
                       <label className="form-label">Tên sản phẩm</label>
@@ -823,6 +845,7 @@ const NewProduct = (props) => {
                           <option value={9}>Chung cư cao cấp</option>
                           <option value={10}>Penhouse</option>
                           <option value={11}>Studio</option>
+                          <option value={19}>Phòng khách sạn</option>
                           {/* <option value={12}>Deluxe</option>
                           <option value={13}>Suite Double</option>
                           <option value={14}>Classic Double</option>
@@ -1044,6 +1067,7 @@ const NewProduct = (props) => {
                         handleContentChange={handleContentChange}
                         placeholder="insert text here..."
                       />
+                      <TestTable />
                     </div>
                   </div>
                 </div>

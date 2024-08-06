@@ -39,6 +39,7 @@ const EditTour = (props) => {
   const [car, setCar] = useState(self?.car);
   const [timeText, setTimeText] = useState(self?.timeText);
   const [loading, setLoading] = useState(false);
+  const [metaDescription, setMetaDescription] = useState("");
   const history = useNavigate();
   // const [photo, setPhoto]= useState()
 
@@ -72,6 +73,7 @@ const EditTour = (props) => {
     setDesc(self?.desc);
     setChildrenPrice(self?.children_price);
     setAgentPrice(self?.agent_price);
+    setMetaDescription(self?.meta_description);
   }, [self]);
 
   const handleChange = (e) => {
@@ -85,6 +87,9 @@ const EditTour = (props) => {
     if (name === "tour_id") setTourId(value);
     if (name === "car") setCar(value);
     if (name === "timeText") setTimeText(value);
+    if (name === "meta_description") {
+      setMetaDescription(value);
+    }
   };
 
   const handleSubmit = async (event) => {
@@ -127,6 +132,7 @@ const EditTour = (props) => {
           kindof,
           car,
           timeText,
+          meta_description: metaDescription,
         };
         const result = await apiEditTour({ ...data }, token);
         setLoading(false);
@@ -155,6 +161,7 @@ const EditTour = (props) => {
           kindof,
           car,
           timeText,
+          meta_description: metaDescription,
         };
         const result = await apiEditTour({ ...data }, token);
         swal("Thông báo", "Cập nhật thành công", "success").then(() => {
@@ -236,6 +243,23 @@ const EditTour = (props) => {
           <div className="card card-static-2 mb-30">
             <div className="card-body-table">
               <div className="news-content-right pd-20">
+                <div className="row mt-4">
+                  <div className="col-lg-4 col-md-4">
+                    <div className="form-group">
+                      <label className="form-label">
+                        Mô tả thẻ meta description
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Mô tả meta description"
+                        name="meta_description"
+                        value={metaDescription}
+                        onChange={(e) => handleChange(e)}
+                      />
+                    </div>
+                  </div>
+                </div>
                 <div className="row mt-4">
                   <div className="col-lg-4 col-md-4">
                     <div className="form-group">

@@ -134,6 +134,7 @@ export const listBedRoom = [
   { value: 16, label: "Ocean Penthouse" },
   { value: 17, label: "Grand Suites" },
   { value: 18, label: "Superior" },
+  { value: 19, label: "Phòng khách sạn" },
 ];
 
 

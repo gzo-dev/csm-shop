@@ -38,6 +38,7 @@ const NewBlog = () => {
   const [discountPer, setDiscountPer] = useState(0);
   const [previewImage, setPreviewImage] = useState([]);
   const [listProvince, setListProvince] = useState([]);
+  const [metaDescription, setMetaDescription] = useState("");
   // const [author, setAuthor] = useState("");
   const [desc, setDesc] = useState();
 
@@ -47,6 +48,9 @@ const NewBlog = () => {
     if (name === "status") setStatus(value);
     if (name === "price") setPrice(value);
     if (name === "discountPer") setDiscountPer(value);
+    if (name === "meta_description") {
+      setMetaDescription(value);
+    }
   };
 
   useEffect(() => {
@@ -82,6 +86,7 @@ const NewBlog = () => {
         type,
         image: imageUrl.file_path,
         user_author: uid,
+        meta_description: metaDescription,
         // author: getCookie("name"),
       };
       const result = await apiCreateBlog({ ...data }, token);
@@ -144,6 +149,23 @@ const NewBlog = () => {
             </div> */}
             <div className="card-body-table">
               <div className="news-content-right pd-20">
+              <div className="row mt-4">
+                  <div className="col-lg-4 col-md-4">
+                    <div className="form-group">
+                      <label className="form-label">
+                        Mô tả thẻ meta description
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Mô tả meta description"
+                        name="meta_description"
+                        value={metaDescription}
+                        onChange={(e) => handleChange(e)}
+                      />
+                    </div>
+                  </div>
+                </div>
                 <div className="row mt-4">
                   <div className="col-lg-4 col-md-4">
                     <div className="form-group">

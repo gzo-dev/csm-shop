@@ -1,4 +1,10 @@
-import React, { useState, useEffect, Fragment, useContext } from "react";
+import React, {
+  useState,
+  useEffect,
+  Fragment,
+  useContext,
+  useCallback,
+} from "react";
 import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 import swal from "sweetalert";
@@ -12,8 +18,8 @@ import RichTextEditor from "../component/RichTextEditor";
 import { SocketContext } from "../SocketContainer/SocketContainer";
 
 const NewTicket = () => {
-  const [searchParams]= useSearchParams()
-  const token= searchParams.get("token")
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
   const { socket } = useContext(SocketContext);
 
   const { id, roomId } = useParams();
@@ -52,6 +58,7 @@ const NewTicket = () => {
   const [provinceDetail, setProvinceDetail] = useState([]);
   const [ward, setWard] = useState();
   const [buffe, setBuffe] = useState();
+  const [metaDescription, setMetaDescription] = useState("");
   // const [photo, setPhoto]= useState()
   const getprovince = async (code) => {
     const response = await apiGetProvince(code);
@@ -70,17 +77,19 @@ const NewTicket = () => {
 
   const [user, setUser] = useState();
   const [listUser, setListUser] = useState([]);
-  const getCustomer = async () => {
-    let list = await get_all_user_list({}, token);
-    if (list) {
-      var tdata = list.data;
-      setListUser(tdata);
-    }
-  };
+  const getCustomer = useCallback(async () => {
+    try {
+      let list = await get_all_user_list({}, token);
+      if (list) {
+        var tdata = list.data;
+        setListUser(tdata);
+      }
+    } catch (error) {}
+  }, [token]);
 
   useEffect(() => {
     getCustomer();
-  }, []);
+  }, [getCustomer]);
 
   const handleBack = () => {
     // Logic to handle going back
@@ -112,6 +121,9 @@ const NewTicket = () => {
     }
     if (name === "desc") {
       setDesc(value);
+    }
+    if (name === "meta_description") {
+      setMetaDescription(value);
     }
   };
 
@@ -164,6 +176,7 @@ const NewTicket = () => {
         wardText,
         buffe,
         car,
+        meta_description: metaDescription,
       };
       const result = await apiCreateTicket({ ...data });
       setLoading(false);
@@ -242,6 +255,23 @@ const NewTicket = () => {
             <div className="card-body-table">
               <div className="news-content-right pd-20">
                 {/* Done */}
+                <div className="row mt-4">
+                  <div className="col-lg-4 col-md-4">
+                    <div className="form-group">
+                      <label className="form-label">
+                        Mô tả thẻ meta description
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Mô tả meta description"
+                        name="meta_description"
+                        value={metaDescription}
+                        onChange={(e) => handleChange(e)}
+                      />
+                    </div>
+                  </div>
+                </div>
                 {parseInt(id) < 4 && (
                   <Fragment>
                     <div className="row mt-4">
@@ -328,11 +358,7 @@ const NewTicket = () => {
                       {/*  */}
                       <div className="col-lg-4 col-md-4">
                         <div className="form-group">
-                          <label
-                            className="form-label"
-                          >
-                            Danh mục
-                          </label>
+                          <label className="form-label">Danh mục</label>
                           <Box sx={{ width: "100%" }}>
                             <FormControl fullWidth>
                               <Select
@@ -725,14 +751,9 @@ const NewTicket = () => {
                       {/*  */}
                       <div className="col-lg-4 col-md-4">
                         <div className="form-group">
-                          <label
-                            className="form-label"
-                          >
-                            Danh mục
-                          </label>
+                          <label className="form-label">Danh mục</label>
                           <Box sx={{ width: "100%" }}>
                             <FormControl fullWidth>
-                        
                               <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
@@ -763,14 +784,9 @@ const NewTicket = () => {
                     <div className="row mt-4">
                       <div className="col-lg-4 col-md-4">
                         <div className="form-group">
-                          <label
-                            className="form-label"
-                          >
-                            Tỉnh / Thành phố
-                          </label>
+                          <label className="form-label">Tỉnh / Thành phố</label>
                           <Box sx={{ width: "100%" }}>
                             <FormControl fullWidth>
-                          
                               <Select
                                 style={{ height: 32 }}
                                 labelId="demo-simple-select-label"

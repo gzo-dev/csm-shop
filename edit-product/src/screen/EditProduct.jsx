@@ -29,6 +29,7 @@ const EditProduct = (props) => {
   const token= searchParams.get("token")
   const { socket } = useContext(SocketContext);
   const params= useParams()
+
   const { id, subid, roomId, uid, search, page } = useParams();
   const [searchT, setSearchT]= useState()
   // const self = props.location.state.row;
@@ -41,6 +42,7 @@ const EditProduct = (props) => {
   const [size, setSize] = useState([]);
   const [image, setImage] = useState();
 
+  const [metaDescription, setMetaDescription]= useState("")
   const [productId, setProductId] = useState();
   const [name, setName] = useState();
   const [slug, setSlug] = useState();
@@ -117,6 +119,7 @@ const EditProduct = (props) => {
 
   useEffect(() => {
     // Cập nhật các state dựa trên giá trị mới của `self`
+    setMetaDescription(self?.meta_description)
     setProductId(self?.product_id);
     setName(self?.name);
     setSlug(self?.slug);
@@ -218,6 +221,9 @@ const EditProduct = (props) => {
       case "product_id":
         setProductId(value);
         break;
+      case "meta_description":
+        setMetaDescription(value)
+        break
       default:
         break;
     }
@@ -237,7 +243,7 @@ const EditProduct = (props) => {
   //   setToggle(!toggle);
   // };
   const handleUploadGzo = async () => {
-    if(parseInt(id)=== 12 ) {
+    if(parseInt(id)=== 13 ) {
       const formData = new FormData();
       formData.append("file", image);
       setLoading(true);
@@ -249,11 +255,12 @@ const EditProduct = (props) => {
       const imageUrl = await res.data;
       return imageUrl;
     }
-    else if(parseInt(id)=== 13) {
+    // ks thi khong can watermark
+    else if(parseInt(id)=== 12) {
       const formData = new FormData();
       formData.append("file", image);
       setLoading(true);
-      const res = await Axios.post("https://api.gzomedia.net/upload.php", formData, {
+      const res = await Axios.post(API_URL + "/api/v1/upload/file", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -308,7 +315,7 @@ const EditProduct = (props) => {
     formData.append("author_phone", author_phone);
     formData.append("address", address);
     formData.append("product_id", productId);
-
+    formData.append("meta_description", metaDescription)
     swal({
       title: "Bạn có chắc?",
       text: "Bạn có chắc muốn cập nhật sản phẩm này ?",
@@ -381,13 +388,14 @@ const EditProduct = (props) => {
   // };
   const uploadImageToServer = async (imageObject) => {
     try {
-      if (parseInt(id) === 13) {
+      // ks khong can watermark
+      if (parseInt(id) === 12) {
         const { image } = imageObject;
         const formData = new FormData();
         formData.append("file", image);
         const response = await Axios.post(
           // `https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloud_name}/image/upload`,
-          `https://api.gzomedia.net/upload.php`,
+          API_URL + "/api/v1/upload/file",
           formData
         );
 
@@ -398,7 +406,7 @@ const EditProduct = (props) => {
           imageUrl,
         };
       }
-      if (parseInt(id) === 12) {
+      if (parseInt(id) === 13) {
         const { image } = imageObject;
         const formData = new FormData();
         formData.append("file", image);
@@ -479,6 +487,21 @@ const EditProduct = (props) => {
             {loading ? <Loader /> : ""}
               <div className="news-content-right pd-20">
                 <div className="row mt-4">
+                  <div className="row mt-4">
+                    <div className="col-lg-4 col-md-4">
+                      <div className="form-group">
+                        <label className="form-label">Mô tả thẻ meta description</label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Mô tả meta description"
+                          name="meta_description"
+                          value={metaDescription}
+                          onChange={(e) => handleChange(e)}
+                        />
+                      </div>
+                    </div>
+                  </div>
                   <div className="col-lg-4 col-md-4">
                     <div className="form-group">
                       <label className="form-label">Tên sản phẩm</label>
@@ -904,6 +927,7 @@ const EditProduct = (props) => {
                           <option value={9}>Chung cư cao cấp</option>
                           <option value={10}>Penhouse</option>
                           <option value={11}>Studio</option>
+                          <option value={19}>Phòng khách sạn</option>
                           {/* <option value={12}>Deluxe</option>
                           <option value={13}>Suite Double</option>
                           <option value={14}>Classic Double</option>

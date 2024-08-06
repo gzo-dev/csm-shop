@@ -6,6 +6,54 @@ import { API_URL } from "../config";
 import "quill-image-uploader/dist/quill.imageUploader.min.css";
 import _ from "lodash";
 import OutsideClickHandler from "react-outside-click-handler";
+
+const BlockEmbed = Quill.import("blots/block/embed");
+
+class TableBlot extends BlockEmbed {
+  static create(value) {
+    const node = super.create();
+    node.setAttribute("contenteditable", false);
+    return node;
+  }
+
+  static value(node) {
+    return node.innerHTML;
+  }
+}
+TableBlot.blotName = "table";
+TableBlot.tagName = "table";
+
+class TableRowBlot extends BlockEmbed {
+  static create(value) {
+    const node = super.create();
+    node.setAttribute("contenteditable", false);
+    return node;
+  }
+
+  static value(node) {
+    return node.innerHTML;
+  }
+}
+TableRowBlot.blotName = "tr";
+TableRowBlot.tagName = "tr";
+
+class TableCellBlot extends BlockEmbed {
+  static create(value) {
+    const node = super.create();
+    node.setAttribute("contenteditable", true);
+    return node;
+  }
+
+  static value(node) {
+    return node.innerHTML;
+  }
+}
+TableCellBlot.blotName = "td";
+TableCellBlot.tagName = "td";
+
+Quill.register(TableBlot);
+Quill.register(TableRowBlot);
+Quill.register(TableCellBlot);
 Quill.register("modules/imageUploader", ImageUploader);
 
 const Font = ReactQuill.Quill.import("formats/font");
@@ -14,6 +62,24 @@ ReactQuill.Quill.register(Font, true);
 
 const RichTextEditor = ({ content, placeholder, handleContentChange }) => {
   const editorRef = useRef();
+  const insertTable = () => {
+    const quill = editorRef.current.getEditor();
+    const table = quill.getModule("table");
+    const range = quill.getSelection();
+
+    quill.insertEmbed(range.index, "table", true, "user");
+    quill.insertEmbed(range.index + 1, "tr", true, "user");
+    quill.insertEmbed(range.index + 2, "td", true, "user");
+    quill.insertEmbed(range.index + 3, "td", true, "user");
+    quill.insertEmbed(range.index + 4, "tr", true, "user");
+    quill.insertEmbed(range.index + 5, "td", true, "user");
+    quill.insertEmbed(range.index + 6, "td", true, "user");
+  };
+
+  useEffect(() => {
+    const toolbar = editorRef.current.getEditor().getModule('toolbar');
+    toolbar.addHandler('table', insertTable);
+  }, []);
 
   return (
     <OutsideClickHandler
@@ -21,21 +87,40 @@ const RichTextEditor = ({ content, placeholder, handleContentChange }) => {
         handleContentChange(editorRef.current.state.value);
       }}
     >
-      <ReactQuill
-        ref={editorRef}
-        theme="snow"
-        // onChange={handleChange}
-        value={content || ""}
-        placeholder={placeholder}
-        modules={RichTextEditor.modules}
-        formats={RichTextEditor.formats}
-        onFocus={() => {
-          console.log(editorRef.current.state.value);
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+          if (e.target.tagName === "IMG") {
+            console.log(e.target.tagName);
+            console.log(e.target.src);
+            const newAltText = prompt(
+              "Nhập alt text cho hình ảnh của bạn:",
+              e.target.alt || ""
+            );
+            // const quillEditor = editorRef.current.getEditor()
+            const image = e.target;
+            console.log(image);
+            image.setAttribute("alt", newAltText || "");
+          }
         }}
-        // onBlur={()=> {
-        //   console.log(editorState)
-        // }}
-      />
+      >
+        <ReactQuill
+          ref={editorRef}
+          theme="snow"
+          // onChange={handleChange}
+          value={content || ""}
+          placeholder={placeholder}
+          modules={RichTextEditor.modules}
+          formats={RichTextEditor.formats}
+          onFocus={() => {
+            console.log(editorRef.current.state.value);
+          }}
+
+          // onBlur={()=> {
+          //   console.log(editorState)
+          // }}
+        />
+      </div>
     </OutsideClickHandler>
   );
 };
@@ -60,8 +145,10 @@ RichTextEditor.modules = {
       [{ indent: "-1" }, { indent: "+1" }],
       [{ direction: "rtl" }],
       ["clean"],
+      ["table"], // Add table button
     ],
   },
+
   imageUploader: {
     upload: (file) => {
       return new Promise((resolve, reject) => {
@@ -108,6 +195,9 @@ RichTextEditor.formats = [
   "underline",
   "video",
   "bold",
+  "table",
+  "tr",
+  "td",
 ];
 
 RichTextEditor.propTypes = {

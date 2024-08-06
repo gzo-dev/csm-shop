@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import { SocketContext } from "../../../../../SocketContainer/SocketContainer";
 import { useParams } from "react-router-dom";
 import { EDIT_URL } from "../../../../../config1";
+import { getCookie } from "../../../../../function";
 
 function generateRandomDigits() {
   let result = ""; // Chuỗi kết quả sẽ chứa các chữ số ngẫu nhiên
@@ -21,6 +22,7 @@ function generateRandomDigits() {
 
 const Create = (props) => {
   const history= useHistory()
+  const token= getCookie("token")
   const { id, subid } = useParams();
   const roomId = generateRandomDigits();
   const { socket } = useContext(SocketContext);
@@ -44,7 +46,7 @@ const Create = (props) => {
       <iframe
         style={{width: "100%", height: "700px"}}
         title=""
-        src={`${EDIT_URL}/add-ticket/${id}/${roomId}`}
+        src={`${EDIT_URL}/add-ticket/${id}/${roomId}?token=${token}`}
       />
     </div>
   );

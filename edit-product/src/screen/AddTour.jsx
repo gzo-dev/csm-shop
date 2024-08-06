@@ -1,11 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import {
-  Box,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-} from "@mui/material";
+import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import swal from "sweetalert";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -17,7 +11,7 @@ import { SocketContext } from "../SocketContainer/SocketContainer";
 
 const NewTour = () => {
   const { socket } = useContext(SocketContext);
-    
+
   const { id, roomId } = useParams();
   const history = useNavigate();
   const [loading, setLoading] = useState();
@@ -39,10 +33,11 @@ const NewTour = () => {
   const [listProvince, setListProvince] = useState([]);
   const [childrenPrice, setChildrenPrice] = useState();
   const [agentPrice, setAgentPrice] = useState();
-  const [car, setCar]= useState()
-  const [timeText, setTimeText]= useState()
+  const [car, setCar] = useState();
+  const [timeText, setTimeText] = useState();
   const [desc, setDesc] = useState();
-  const [tourId, setTourId]= useState()
+  const [tourId, setTourId] = useState();
+  const [metaDescription, setMetaDescription] = useState("");
   // const [photo, setPhoto]= useState()
 
   const handleBack = () => {
@@ -59,21 +54,37 @@ const NewTour = () => {
     if (name === "agent_price") setAgentPrice(value);
     if (name === "car") setCar(value);
     if (name === "timeText") setTimeText(value);
-    if(name === "tour_id") {
-      setTourId(value)
+    if (name === "tour_id") {
+      setTourId(value);
+    }
+    if (name === "meta_description") {
+      setMetaDescription(value);
     }
     // if (name === "discountPer") setDiscountPer(value)
   };
 
   const handleSubmit = async (event) => {
     try {
-      if(name.trim().length <= 0 || tourId.trim().length <= 0 || departure.trim().length <= 0 || destination.trim().length <= 0 || desc.trim().length <= 0 || price.length <= 0 || childrenPrice.length <= 0 || agentPrice.length <= 0) {
-        swal("Thông báo ", "Vui lòng nhập đầy đủ thông tin để tiếp tục", "error")
-        return
+      if (
+        name.trim().length <= 0 ||
+        tourId.trim().length <= 0 ||
+        departure.trim().length <= 0 ||
+        destination.trim().length <= 0 ||
+        desc.trim().length <= 0 ||
+        price.length <= 0 ||
+        childrenPrice.length <= 0 ||
+        agentPrice.length <= 0
+      ) {
+        swal(
+          "Thông báo ",
+          "Vui lòng nhập đầy đủ thông tin để tiếp tục",
+          "error"
+        );
+        return;
       }
-      if(!image) {
-        swal("Thông báo ", "Vui lòng chọn ảnh đại diện tour", "error")
-        return
+      if (!image) {
+        swal("Thông báo ", "Vui lòng chọn ảnh đại diện tour", "error");
+        return;
       }
       event.preventDefault();
       var formData = new FormData();
@@ -107,10 +118,11 @@ const NewTour = () => {
         image: imageUrl.file_path,
         kindof,
         tour_id: tourId,
-        car, timeText
-
+        car,
+        timeText,
+        meta_description: metaDescription,
       };
-      console.log(data)
+      console.log(data);
       const result = await apiCreateTour({ ...data });
       setLoading(false);
       swal("Thông báo", "Thêm thành công", "success").then(() =>
@@ -174,6 +186,23 @@ const NewTour = () => {
           <div className="card card-static-2 mb-30">
             <div className="card-body-table">
               <div className="news-content-right pd-20">
+                <div className="row mt-4">
+                  <div className="col-lg-4 col-md-4">
+                    <div className="form-group">
+                      <label className="form-label">
+                        Mô tả thẻ meta description
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Mô tả meta description"
+                        name="meta_description"
+                        value={metaDescription}
+                        onChange={(e) => handleChange(e)}
+                      />
+                    </div>
+                  </div>
+                </div>
                 <div className="row mt-4">
                   <div className="col-lg-4 col-md-4">
                     <div className="form-group">

@@ -8,8 +8,8 @@ import RichTextEditor from "../component/RichTextEditor";
 import get_detail_blog from "../api/get_detail_blog";
 
 const EditBlog = (props) => {
-  const [searchParams]= useSearchParams()
-  const token= searchParams.get("token")
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
   const { socket } = useContext(SocketContext);
   const { id, uid, roomId } = useParams();
   const [changeImage, setChangeImage] = useState(false);
@@ -27,8 +27,9 @@ const EditBlog = (props) => {
   const [discountPer, setDiscountPer] = useState();
   // const [previewImage, setPreviewImage] = useState([]);
   const [listProvince, setListProvince] = useState([]);
+  const [metaDescription, setMetaDescription] = useState("");
   // const [photo, setPhoto]= useState()
-  
+
   const handleBack = () => {
     // Logic to handle going back
   };
@@ -39,66 +40,74 @@ const EditBlog = (props) => {
     if (name === "status") setStatus(value);
     if (name === "price") setPrice(value);
     if (name === "discountPer") setDiscountPer(value);
+    if (name === "meta_description") {
+      setMetaDescription(value);
+    }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       if (changeImage) {
-      var formData = new FormData();
-      formData.append("file", image);
-      const res = await Axios.post(
-        "https://api.gzomedia.net/upload.php",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      const imageUrl = await res.data;
-      // console.log(imageUrl)
-      const data = {
-        id: uid,
-        name,
-        status,
-        price,
-        discountPer,
-        desc,
-        content,
-        type,
-        image: imageUrl.file_path,
-        photo: imageUrl.file_path,
-      };
-      const result = await apiEditBlog({ ...data }, token);
-      swal("Thông báo", "Cập nhật thành công", "success").then(() =>
-        // history.goBack()
-        {
+        var formData = new FormData();
+        formData.append("file", image);
+        const res = await Axios.post(
+          "https://api.gzomedia.net/upload.php",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        const imageUrl = await res.data;
+        // console.log(imageUrl)
+        const data = {
+          id: uid,
+          name,
+          status,
+          price,
+          discountPer,
+          desc,
+          content,
+          type,
+          image: imageUrl.file_path,
+          photo: imageUrl.file_path,
+          meta_description: metaDescription,
+        };
+        const result = await apiEditBlog({ ...data }, token);
+        swal("Thông báo", "Cập nhật thành công", "success").then(() =>
+          // history.goBack()
+          {
+            socket.emit("back_to_web", { to: "http://localhost:3000", roomId });
+          }
+        );
+        console.log(result);
+      } else {
+        const data = {
+          id: self.id,
+          name,
+          status,
+          price,
+          discountPer,
+          desc,
+          content,
+          type,
+          image: self.photo,
+          photo: self.photo,
+          meta_description: metaDescription,
+        };
+        const result = await apiEditBlog({ ...data }, token);
+        swal("Thông báo", "Cập nhật thành công", "success").then(() => {
           socket.emit("back_to_web", { to: "http://localhost:3000", roomId });
-        }
-      );
-      console.log(result);
-    } else {
-      const data = {
-        id: self.id,
-        name,
-        status,
-        price,
-        discountPer,
-        desc,
-        content,
-        type,
-        image: self.photo,
-        photo: self.photo,
-      };
-      const result = await apiEditBlog({ ...data }, token);
-      swal("Thông báo", "Cập nhật thành công", "success").then(() => {
-        socket.emit("back_to_web", { to: "http://localhost:3000", roomId });
-      });
-      console.log(result);
-    }
+        });
+        console.log(result);
+      }
     } catch (error) {
-      swal("Thông báo", "Mã token đã hết hạn, bạn vui lòng đăng nhập lại để lấy token mới")
+      swal(
+        "Thông báo",
+        "Mã token đã hết hạn, bạn vui lòng đăng nhập lại để lấy token mới"
+      );
     }
   };
 
@@ -163,6 +172,7 @@ const EditBlog = (props) => {
     setPrice(self?.price);
     setDesc(self?.desc);
     setDiscountPer(self?.discountPer);
+    setMetaDescription(self?.meta_description)
   }, [self]);
 
   return (
@@ -172,6 +182,23 @@ const EditBlog = (props) => {
           <div className="card card-static-2 mb-30">
             <div className="card-body-table">
               <div className="news-content-right pd-20">
+                <div className="row mt-4">
+                  <div className="col-lg-4 col-md-4">
+                    <div className="form-group">
+                      <label className="form-label">
+                        Mô tả thẻ meta description
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Mô tả meta description"
+                        name="meta_description"
+                        value={metaDescription}
+                        onChange={(e) => handleChange(e)}
+                      />
+                    </div>
+                  </div>
+                </div>
                 <div className="row mt-4">
                   <div className="col-lg-4 col-md-4">
                     <div className="form-group">
