@@ -4,7 +4,7 @@ import { v4 } from "uuid";
 import sharp from "sharp";
 import fs from "fs";
 
-const serverHost = `http://localhost:4001`;
+const serverHost = `https://api.minhkhanggroup.vn`;
 const logoPath = path.join(__dirname, "..", "/logo.png");
 const outputFilename = path.join(__dirname, "../../", "watermark");
 
