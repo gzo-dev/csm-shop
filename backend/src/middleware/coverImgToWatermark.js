@@ -10,12 +10,15 @@ const outputFilename = path.join(__dirname, "../../", "watermark");
 
 // Middleware để thêm watermark vào ảnh
 export const addWatermarkMiddleware = async (req, res, next) => {
+  console.log("req", req)
   try {
+    if(req.body.categoryId== 12) {
+      next()
+    }
     if(!req.file) {
       next()
     }
     const uploadedImage = path.join(__dirname, "../../", req.file.path);
-    console.log("uploadedImage", uploadedImage)
     // Đọc ảnh gốc và logo bằng Jimp
     const [image, logo] = await Promise.all([
       Jimp.read(uploadedImage),

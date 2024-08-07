@@ -22,51 +22,48 @@ const storage = multer.diskStorage({
 // Thiết lập middleware upload
 const upload = multer({ storage: storage });
 
+
 // Middleware để nén ảnh và chuyển đổi sang JPG
 async function compressAndConvertToJpg(req, res, next) {
   if (!req.files || req.files.length === 0) {
     // Kiểm tra nếu không có tệp tin nào được tải lên
-    return next();
+    return next(); // Thêm return để ngăn chặn việc thực hiện mã sau đó
   }
 
-  const processedFiles = [];
+  try {
+    const processedFiles = [];
 
-  // Khai báo một biến đếm để theo dõi số lượng tệp tin đã xử lý
-  let processedCount = 0;
-
-  // Lặp qua mỗi tệp tin trong mảng req.files
-  for (let i = 0; i < req.files.length; i++) {
-    const filePath = req.files[i].path;
-    // Tạo tên tệp tin mới
-    const fileName =
-      Date.now() + "-" + Math.round(Math.random() * 1e9) + ".jpg";
-
-    // Đọc nội dung của tệp tin từ đường dẫn
-    fs.readFile(filePath, (err, data) => {
-      if (err) {
-        // Xử lý lỗi khi không thể đọc tệp tin
-        return next(err);
-      }
+    // Lặp qua mỗi tệp tin trong mảng req.files
+    for (let i = 0; i < req.files.length; i++) {
+      const filePath = req.files[i].path;
+      // Tạo tên tệp tin mới
+      const fileName = Date.now() + "-" + Math.round(Math.random() * 1e9) + ".jpg";
+      const outputFilePath = path.join("upload_avatar_product", fileName);
 
       // Sử dụng Sharp để nén ảnh và chuyển đổi sang định dạng JPG
-      sharp(data)
-        .png({ quality: 90 }) // Thiết lập chất lượng JPEG
-        .toFile(path.join("upload_avatar_product", fileName), (err, info) => {
-          if (err) {
-            return next(err);
-          }
-          // Tăng biến đếm
-          processedCount++;
-          // Kiểm tra xem đã xử lý hết tất cả các tệp tin chưa, nếu đã xử lý hết thì gọi hàm next
-          if (processedCount === req.files.length) {
-            req.files[i].filename = fileName;
-            req.files[i].path = fileName;
-            next();
-          }
-        });
-    });
+      await sharp(filePath)
+        .jpeg({ quality: 90 }) // Thiết lập chất lượng JPEG
+        .toFile(outputFilePath);
+
+      // Cập nhật thông tin tệp tin đã xử lý
+      processedFiles.push({
+        ...req.files[i],
+        filename: fileName,
+        path: outputFilePath,
+      });
+    }
+
+    // Cập nhật req.files với thông tin các tệp tin đã được xử lý
+    req.files = processedFiles;
+
+    // Tiếp tục xử lý request
+    next();
+  } catch (err) {
+    console.error("Error processing images:", err);
+    next(err); // Gọi next với lỗi nếu có lỗi xảy ra
   }
 }
+
 
 function compressAndConvertToJpgSingle(req, res, next) {
   if (!req.file) {

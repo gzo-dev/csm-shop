@@ -10,11 +10,16 @@ const outputFilename = path.join(__dirname, "../../", "watermark");
 
 // Middleware để thêm watermark vào các ảnh
 export const addWatermarkMiddlewareMultiple = async (req, res, next) => {
-  if (!req.files || req.files.length === 0) {
-    return res.status(400).send({ error: "No files uploaded." });
-  }
 
   try {
+    // console.log(req.body)
+    if(req.body.categoryId== 12) {
+      next()
+    }
+    else if (!req.files || req.files.length === 0) {
+      req.files= []
+      next()
+    }
     // Lưu trữ các đường dẫn ảnh đã xử lý
     const processedFiles = [];
 
