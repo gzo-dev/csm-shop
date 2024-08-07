@@ -3,13 +3,14 @@ import path from "path";
 import { v4 } from "uuid";
 import sharp from "sharp"; // Import thư viện Sharp
 import fs from "fs";
-const serverHost = `https://api.minhkhanggroup.vn`;
+const serverHost = `http://localhost:4001`;
 const logoPath = path.join(__dirname, "../../..", "/logo.png");
 const outputFilename = path.join(__dirname, "../../../../", "watermark");
 
 export default {
   async addWaterMark(req, res) {
     const uploadedImage = path.join(__dirname, "../../../../", req.file.path);
+    // console.log("uploadedImage", uploadedImage)
     try {
       // Đọc ảnh gốc và logo bằng Jimp
       const [image, logo] = await Promise.all([
@@ -69,6 +70,7 @@ export default {
         .resize({fit: "inside", width: 720})
         .toFile(finalOutputImagePath);
       fs.unlinkSync(outputImagePath);
+      fs.unlinkSync(uploadedImage)
       // Trả về đường dẫn ảnh đã xử lý
       return res.status(200).send({ file_path: `${serverHost}/${uuid}.jpg` });
     } catch (error) {

@@ -21,7 +21,7 @@ const io = new Server(server);
 /*cors handling*/
 const limiter = rateLimit({
 	windowMs: 1 * 60 * 1000,
-	limit: 100, 
+	limit: 100000, 
 	standardHeaders: 'draft-7', 
 	legacyHeaders: false, 
   message: "Bạn đã gửi quá nhiều yêu cầu, Vui lòng thử lại sau vài phút"
