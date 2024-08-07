@@ -8,6 +8,7 @@ import waterController from '../watermark/water.controller';
 import convertWebPToJpeg from '../../../middleware/convertWebPtoJpg';
 import { addWatermarkMiddleware } from '../../../middleware/coverImgToWatermark';
 import { addWatermarkMiddlewareMultiple } from '../../../middleware/coverImgToWatermarkMultiple';
+import checkFileExist from '../../../middleware/checkFileExist';
 
 
 export const productRouter = express.Router();
@@ -34,7 +35,7 @@ productRouter.route('/getAllProductOffer').get( productController.getProductOffe
 productRouter.route('/delete').delete(authenticateJWT, productController.productDelete);
 productRouter.route("/d/bulk").post(productController.productDeleteBulk)
 productRouter.route('/deleteOfferById/:id').get( productController.productOfferDelete);
-productRouter.route('/upload-img').post(upload.array('file', 10), addWatermarkMiddlewareMultiple, compressAndConvertToJpg, productController.multiplePhotoUpload);
+productRouter.route('/upload-img').post(upload.array('file', 10), checkFileExist, addWatermarkMiddlewareMultiple, compressAndConvertToJpg, productController.multiplePhotoUpload);
 productRouter.route('/getAllPhoto').get( productController.getAllPhoto);
 productRouter.route('/slider-photo/delete').delete( productController.deleteSliderPhoto);
 productRouter.route("/size").get(productController.getSizeProduct)

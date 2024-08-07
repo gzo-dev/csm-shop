@@ -17,7 +17,7 @@ export const addWatermarkMiddlewareMultiple = async (req, res, next) => {
       next()
     }
     else if (!req.files || req.files.length === 0) {
-      req.files= []
+      // req.files= []
       next()
     }
     // Lưu trữ các đường dẫn ảnh đã xử lý

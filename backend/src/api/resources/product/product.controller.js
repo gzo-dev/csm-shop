@@ -1324,11 +1324,11 @@ export default {
         }
       })
       .then((r) => {
-        res.status(200).json({ success: true, data: req.files.map(item=> ({...item, path: item?.path?.replace("./watermark/", "")})), ok: true });
+        return res.status(200).json({ success: true, data: req.files.map(item=> ({...item, path: item?.path?.replace("./watermark/", "")})), ok: true });
       })
       .catch(function (error) {
         console.log(error);
-        res.status(500).json({ errors: ["Error insert photo"] });
+        return res.status(500).json({ errors: ["Error insert photo"] });
       });
   },
 

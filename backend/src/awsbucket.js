@@ -27,7 +27,7 @@ const upload = multer({ storage: storage });
 async function compressAndConvertToJpg(req, res, next) {
   if (!req.files || req.files.length === 0) {
     // Kiểm tra nếu không có tệp tin nào được tải lên
-    return next(); // Thêm return để ngăn chặn việc thực hiện mã sau đó
+    next(); // Thêm return để ngăn chặn việc thực hiện mã sau đó
   }
 
   try {
