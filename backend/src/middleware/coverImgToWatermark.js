@@ -79,7 +79,7 @@ export const addWatermarkMiddleware = async (req, res, next) => {
     const finalOutputImagePath = path.join(outputFilename, `${uuid}.jpg`);
 
     await sharp(outputImagePath)
-      .jpeg({ quality: 95 })
+      .jpeg({ quality: 100 })
       .resize({ fit: "inside", width: 720 })
       .toFile(finalOutputImagePath);
 
@@ -118,7 +118,7 @@ async function addTextToImage(
     // Tạo lớp văn bản mới với màu sắc tùy chỉnh
     const textLayer = Buffer.from(
       `<svg xmlns="http://www.w3.org/2000/svg" width="${imageWidth}" height="${imageHeight}">
-          <text x="0" y="${y}" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="60" fill="${textColor}" font-weight="bold" opacity="0.15">
+          <text x="0" y="${y}" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="60" fill="${textColor}" font-weight="900" opacity="0.15">
               ${text}
           </text>
       </svg>

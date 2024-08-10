@@ -1,11 +1,12 @@
 import sharp from 'sharp';
 import fs from 'fs';
 import path from 'path';
+import { v4 } from 'uuid';
 
 const convertToPng = (req, res, next) => {
     if (req.file) {
         const originalPath = req.file.path;
-        const pngPath = path.join('uploads', path.basename(originalPath, path.extname(originalPath)) + '.png');
+        const pngPath = path.join('uploads', path.basename(v4(), path.extname(originalPath)) + '.png');
 
         sharp(originalPath)
             .toFormat('png')

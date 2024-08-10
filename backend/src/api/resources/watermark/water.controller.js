@@ -102,7 +102,7 @@ async function addTextToImage(
     // Tạo lớp văn bản mới với màu sắc tùy chỉnh
     const textLayer = Buffer.from(
       `<svg xmlns="http://www.w3.org/2000/svg" width="${imageWidth}" height="${imageHeight}">
-          <text x="0" y="${y}" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="60" fill="${textColor}" font-weight="bold" opacity="0.15">
+          <text x="0" y="${y}" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="60" fill="${textColor}" font-weight="900" opacity="0.15">
               ${text}
           </text>
       </svg>
