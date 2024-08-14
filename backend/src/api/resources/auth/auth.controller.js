@@ -418,7 +418,8 @@ export default {
       if (user?.role === "ceo") {
         const users = await db.user.findAll({
           where: {
-            is_deleted: 0
+            is_deleted: 0,
+            hidden: 0
           },
           attributes: ["role", "user_id", "id", "firstName"],
           include: [
