@@ -417,6 +417,9 @@ export default {
       const { uid } = req.query;
       if (user?.role === "ceo") {
         const users = await db.user.findAll({
+          where: {
+            is_deleted: 0
+          },
           attributes: ["role", "user_id", "id", "firstName"],
           include: [
             {
