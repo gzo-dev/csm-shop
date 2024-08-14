@@ -1621,10 +1621,10 @@ export default {
             required: true,
             as: "managerUser",
             attributes: ["id", "firstName", "lastName", "address", "email"],
-            // where: {
-            //   is_deleted: 0,
-            //   hidden: 0
-            // },
+            where: {
+              is_deleted: 0,
+              hidden: 0
+            },
           },
           {
             model: db.product,
