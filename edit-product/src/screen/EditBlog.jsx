@@ -30,9 +30,9 @@ const EditBlog = (props) => {
   const [metaDescription, setMetaDescription] = useState("");
   // const [photo, setPhoto]= useState()
 
-  const handleBack = () => {
-    // Logic to handle going back
-  };
+  // const handleBack = () => {
+  //   // Logic to handle going back
+  // };
 
   const handleChange = (e) => {
     const { name, value } = e.target;

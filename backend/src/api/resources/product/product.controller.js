@@ -59,7 +59,7 @@ export default {
         address,
         product_id,
         rent,
-        meta_description
+        meta_description,
       } = req.body;
 
       db.product
@@ -101,7 +101,7 @@ export default {
           address: address ? address : "",
           product_id: product_id ? product_id : "",
           rent: rent ? rent : 0,
-          meta_description
+          meta_description,
         })
         .then(async (product) => {
           try {
@@ -115,7 +115,12 @@ export default {
           }
           JSON.parse(image)?.map(async (item) => {
             db.productphoto.create({
-              imgUrl: req.protocol + "://" + req.get("host") + "/" + item?.path?.replace(".watermark/", ""),
+              imgUrl:
+                req.protocol +
+                "://" +
+                req.get("host") +
+                "/" +
+                item?.path?.replace(".watermark/", ""),
               productId: product.dataValues.id,
             });
           });
@@ -138,7 +143,11 @@ export default {
 
           res
             .status(200)
-            .json({ success: true, msg: "Successfully inserted product", d: product });
+            .json({
+              success: true,
+              msg: "Successfully inserted product",
+              d: product,
+            });
         })
         .catch(function (err) {
           console.log(err);
@@ -410,7 +419,7 @@ export default {
         provinceText,
         districtText,
         wardText,
-        meta_description
+        meta_description,
       } = req.body;
       db.product
         .findOne({ where: { id: productId } })
@@ -462,7 +471,7 @@ export default {
                 provinceText: provinceText ? provinceText : "",
                 districtText: districtText ? districtText : "",
                 wardText: wardText ? wardText : "",
-                meta_description
+                meta_description,
               },
               { where: { id: productId } }
             );
@@ -819,20 +828,20 @@ export default {
         pageSize = 10,
         page,
         searchText = "",
-        userId
+        userId,
         // rent
       } = req.query;
-      let sort
-      if(square === "asc" || square=== "desc") {
-        sort= square
+      let sort;
+      if (square === "asc" || square === "desc") {
+        sort = square;
       }
-      if(userId == -1) {
-        userId= undefined
+      if (userId == -1) {
+        userId = undefined;
       }
       if (typeRoom == 0) {
         typeRoom = undefined;
       }
-      if (square == 0 || square== "asc" || square== "desc") {
+      if (square == 0 || square == "asc" || square == "desc") {
         square = undefined;
       }
       if (price == 0) {
@@ -850,7 +859,7 @@ export default {
       if (ward == -1) {
         ward = undefined;
       }
-      
+
       let whereConditions = {
         categoryId: parseInt(id),
         subCategoryId: parseInt(subid),
@@ -962,52 +971,50 @@ export default {
           whereConditions.ward = ward;
         }
       }
-      const subWhere= {}
-      const filter= {}
-      if(userId) {
-        subWhere.id= userId
-        filter.boolean= true
-      }
-      else {
-        filter.boolean= false
+      const subWhere = {};
+      const filter = {};
+      if (userId) {
+        subWhere.id = userId;
+        filter.boolean = true;
+      } else {
+        filter.boolean = false;
       }
 
-      let order
-      if(sort) {
-        order= [["square", sort]]
+      let order;
+      if (sort) {
+        order = [["square", sort]];
+      } else {
+        order = [["id", "desc"]];
       }
-      else {
-        order= [["id", "desc"]]
-      }
-      console.log(order)
-        let { count, rows: productList } = await db.product.findAndCountAll({
-          where: whereConditions,
-          order: order,
-          include: [
-            {
-              model: db.user,
-              attributes: ["id", "firstName", "lastName"],
-              required: false,
-            },
-            {
-              model: db.user_manager_product,
-              required: false,
-              include: [
-                {
-                  model: db.user,
-                  attributes: ["id", "firstName", "lastName"],
-                  required: filter.boolean,
-                  as: "managerUser", 
-                  where: subWhere,
-                },
-              ],
-            },
-          ],
-          attributes: { exclude: ["desc"] },
-          limit: pageSize,
-          offset: (page - 1) * pageSize,
-        });
-        // console.log(productList)
+      console.log(order);
+      let { count, rows: productList } = await db.product.findAndCountAll({
+        where: whereConditions,
+        order: order,
+        include: [
+          {
+            model: db.user,
+            attributes: ["id", "firstName", "lastName"],
+            required: false,
+          },
+          {
+            model: db.user_manager_product,
+            required: false,
+            include: [
+              {
+                model: db.user,
+                attributes: ["id", "firstName", "lastName"],
+                required: filter.boolean,
+                as: "managerUser",
+                where: subWhere,
+              },
+            ],
+          },
+        ],
+        attributes: { exclude: ["desc"] },
+        limit: pageSize,
+        offset: (page - 1) * pageSize,
+      });
+      // console.log(productList)
       // if(userId) {
       //   productList= productList?.filter(item=> item?.user_manager_products?.filter(item2=> item2?.userManager?.id== userId)?.length > 0)
       //   // count= productList.length
@@ -1016,7 +1023,7 @@ export default {
       return res.status(200).json({
         success: true,
         data: productList,
-        filterManager: (userId && userId != -1) ? true : false,
+        filterManager: userId && userId != -1 ? true : false,
         pagination: {
           currentPage: parseInt(page),
           pageSize: parseInt(pageSize),
@@ -1025,9 +1032,9 @@ export default {
         },
       });
     } catch (err) {
-      console.log(err)
+      console.log(err);
       // throw new RequestError("Error");
-      return res.status(500).json({ok: false})
+      return res.status(500).json({ ok: false });
     }
   },
   async getProductSuggestHotel(req, res, next) {
@@ -1297,13 +1304,18 @@ export default {
   async multiplePhotoUpload(req, res, next) {
     let attachmentEntries = [];
     var productId = req.body.productId;
-    console.log("req.files", req.files)
+    console.log("req.files", req.files);
     for (var i = 0; i < req.files.length; i++) {
       attachmentEntries.push({
         productId: productId,
         name: req.files[i].filename,
         mime: req.files[i].mimetype,
-        imgUrl: req.protocol + "://" + req.get("host") + "/" + req.files[i].path?.replace(".watermark/", ""),
+        imgUrl:
+          req.protocol +
+          "://" +
+          req.get("host") +
+          "/" +
+          req.files[i].path?.replace(".watermark/", ""),
       });
     }
 
@@ -1324,7 +1336,16 @@ export default {
         }
       })
       .then((r) => {
-        return res.status(200).json({ success: true, data: req.files.map(item=> ({...item, path: item?.path?.replace("./watermark/", "")})), ok: true });
+        return res
+          .status(200)
+          .json({
+            success: true,
+            data: req.files.map((item) => ({
+              ...item,
+              path: item?.path?.replace("./watermark/", ""),
+            })),
+            ok: true,
+          });
       })
       .catch(function (error) {
         console.log(error);
@@ -1591,6 +1612,7 @@ export default {
   async getProductManageByUser(req, res, next) {
     try {
       const rows = await db.user_manager_product.findAll({
+        where: {},
         order: [["createdAt", "DESC"]],
         attributes: ["product_id", "user_manager", "user_owner"],
         include: [
@@ -1598,13 +1620,16 @@ export default {
             model: db.user,
             required: true,
             as: "managerUser",
-            attributes: ["id", "firstName", "lastName", "address", "email"]
+            attributes: ["id", "firstName", "lastName", "address", "email"],
+            where: {
+              is_deleted: 0,
+            },
           },
           {
             model: db.product,
             required: true,
             as: "product",
-            attributes: ["id"]
+            attributes: ["id"],
           },
         ],
       });
@@ -1613,5 +1638,5 @@ export default {
       console.log(error);
       return res.status(500).json({ ok: false });
     }
-  }
+  },
 };

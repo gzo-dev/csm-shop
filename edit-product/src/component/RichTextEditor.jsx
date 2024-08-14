@@ -84,7 +84,7 @@ const RichTextEditor = ({ content, placeholder, handleContentChange }) => {
   return (
     <OutsideClickHandler
       onOutsideClick={() => {
-        handleContentChange(editorRef.current.state.value);
+        handleContentChange(content);
       }}
     >
       <div
@@ -107,7 +107,7 @@ const RichTextEditor = ({ content, placeholder, handleContentChange }) => {
         <ReactQuill
           ref={editorRef}
           theme="snow"
-          // onChange={handleChange}
+          onChange={handleContentChange}
           value={content || ""}
           placeholder={placeholder}
           modules={RichTextEditor.modules}

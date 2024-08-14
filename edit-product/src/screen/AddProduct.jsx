@@ -336,7 +336,7 @@ const NewProduct = (props) => {
         const formData = new FormData();
         formData.append("file", image);
         const response = await Axios.post(
-          `https://api.gzomedia.net/upload.php`,
+          API_URL + "/api/v1/upload/file",
           formData
         );
 
@@ -365,6 +365,7 @@ const NewProduct = (props) => {
     setIsLoaded(true);
     const formData = new FormData();
     formData.append("productId", "-1");
+    formData.append("categoryId", id)
     for (const file of files) {
       formData.append("file", file);
     }
@@ -937,6 +938,7 @@ const NewProduct = (props) => {
                                   }}
                                 >
                                   <img
+                                    alt={"Can't open"}
                                     src={item.preview}
                                     style={{
                                       width: "100%",

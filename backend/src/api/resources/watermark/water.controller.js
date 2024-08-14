@@ -66,7 +66,7 @@ export default {
       );
       const finalOutputImagePath = path.join(outputFilename, `${uuid}.jpg`);
       await sharp(outputImagePath)
-        .jpeg({ quality: 70 })
+        .jpeg({ quality: 100 })
         .resize({fit: "inside", width: 720})
         .toFile(finalOutputImagePath);
       fs.unlinkSync(outputImagePath);

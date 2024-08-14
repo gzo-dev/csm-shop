@@ -4,7 +4,7 @@ import {
   Button,
   FormControl,
   Grid,
-  InputLabel,
+  // InputLabel,
   MenuItem,
   Select,
 } from "@mui/material";
@@ -85,6 +85,43 @@ const EditProduct = (props) => {
   const [districtText, setDistrictText] = useState();
   const [wardText, setWardText] = useState();
   const [provinceDetail, setProvinceDetail] = useState([]);
+
+  const downloadImage = async (url, filename) => {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Error downloading image:', error);
+    }
+  };
+
+  const downloadAvatar= async (url)=> {
+    try {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.setAttribute('download', v4());
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Error downloading image:', error);
+    }
+  }
+
+
+  const downloadAllImages = () => {
+    images.forEach((item, index) => {
+      downloadImage(item.imgUrl, `image-${index + 1}.jpg`);
+    });
+  };
 
   useEffect(()=> {
     if(params?.search) {
@@ -988,6 +1025,7 @@ const EditProduct = (props) => {
                         {photoTemp.length > 0 ? (
                           <Fragment>
                             <img
+                              
                               alt=""
                               src={photoTemp}
                               className={"mr-3 mb-3"}
@@ -1011,6 +1049,7 @@ const EditProduct = (props) => {
                           </Fragment>
                         ) : (
                           <img
+                            onClick={()=> downloadAvatar(photo)}
                             alt=""
                             src={photo}
                             className={"mr-3 mb-3"}
@@ -1036,6 +1075,9 @@ const EditProduct = (props) => {
                   <div className="col-lg-6 col-md-6">
                     <div className="form-group w-100 mt-3">
                       <label className="form-label">Ảnh sản phẩm*</label>
+                      <Box >
+                        <Button onClick={downloadAllImages} variant="contained">Download all</Button>
+                      </Box>
                       <br />
                       <div className={""}>
                         <Grid container spacing={2}>
@@ -1050,6 +1092,7 @@ const EditProduct = (props) => {
                                   }}
                                 >
                                   <img
+                                    alt={"Can't open"}
                                     key={key}
                                     src={item.imgUrl}
                                     style={{
