@@ -10,6 +10,7 @@ export default {
       .findAll({
         where: {
           productId,
+          is_draft: false,
         },
       })
       .then((product) => {
@@ -60,6 +61,7 @@ export default {
         product_id,
         rent,
         meta_description,
+        is_draft
       } = req.body;
 
       db.product
@@ -102,6 +104,7 @@ export default {
           product_id: product_id ? product_id : "",
           rent: rent ? rent : 0,
           meta_description,
+          is_draft: is_draft,
         })
         .then(async (product) => {
           try {
@@ -351,6 +354,9 @@ export default {
     try {
       db.product
         .findAll({
+          where: {
+            // is_draft: false,
+          },
           order: [["createdAt", "DESC"]],
           include: [
             {
@@ -574,7 +580,7 @@ export default {
 
       // Lấy danh sách bản ghi với phân trang
       const filteredList = await db.product.findAll({
-        where: whereConditions,
+        where: {...whereConditions, is_draft: false,},
         order: [["createdAt", "DESC"]],
         include: [
           {
@@ -829,6 +835,7 @@ export default {
         page,
         searchText = "",
         userId,
+        isFrom
         // rent
       } = req.query;
       let sort;
@@ -863,6 +870,7 @@ export default {
       if (ward == -1) {
         ward = undefined;
       }
+
 
       let whereConditions = {
         categoryId: parseInt(id),
@@ -920,6 +928,19 @@ export default {
             case 3:
               whereConditions.square = { [Op.gte]: 40 };
               break;
+            // apply for client wed
+            case 4: 
+              whereConditions.square = { [Op.lte]: 50 };
+              break
+            case 5: 
+              whereConditions.square = {  [Op.between]: [50, 70] };
+              break
+            case 6: 
+              whereConditions.square = { [Op.between]: [70, 100] };
+              break
+            case 7: 
+              whereConditions.square = { [Op.gte]: 100 };
+              break
           }
         }
 
@@ -975,6 +996,10 @@ export default {
           whereConditions.ward = ward;
         }
       }
+      if(isFrom=== "client") {
+        whereConditions.is_draft= false
+      }
+      
       const subWhere = {};
       const filter = {};
       if (userId) {
@@ -994,7 +1019,6 @@ export default {
       else {
         order = [["id", "desc"]];
       }
-      console.log(order);
       let { count, rows: productList } = await db.product.findAndCountAll({
         where: whereConditions,
         order: order,
@@ -1019,8 +1043,8 @@ export default {
           },
         ],
         attributes: { exclude: ["desc"] },
-        limit: pageSize,
-        offset: (page - 1) * pageSize,
+        limit: parseInt(pageSize),
+        offset: (page - 1) * parseInt(pageSize),
       });
       // console.log(productList)
       // if(userId) {
@@ -1052,6 +1076,7 @@ export default {
           order: [["createdAt", "DESC"]],
           where: {
             categoryId: 12,
+            is_draft: false,
             // subCategoryId: req.query.subCategoryId,
           },
           include: [{ model: db.productphoto, attributes: ["id", "imgUrl"] }],
@@ -1075,6 +1100,7 @@ export default {
           order: [["createdAt", "DESC"]],
           where: {
             categoryId: 13,
+            is_draft: false,
             // subCategoryId: req.query.subCategoryId,
           },
           include: [{ model: db.productphoto, attributes: ["id", "imgUrl"] }],
@@ -1098,6 +1124,7 @@ export default {
           order: [["createdAt", "DESC"]],
           where: {
             endow: 1,
+            is_draft: false,
           },
           // include: [{ model: db.productphoto, attributes: ["id", "imgUrl"] }],
           attributes: { exclude: ["desc"] },
@@ -1120,6 +1147,17 @@ export default {
           where: { id: req.query.id },
           include: [
             { model: db.productphoto, attributes: ["id", "imgUrl"] },
+            {
+              model: db.user_manager_product,
+              required: false,
+              include: [
+                {
+                  model: db.user,
+                  attributes: ["id", "firstName", "lastName"],
+                  as: "managerUser",
+                },
+              ],
+            },
             {
               model: db.user,
               attributes: ["id", "firstName", "lastName"],

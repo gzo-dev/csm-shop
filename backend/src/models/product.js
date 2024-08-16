@@ -54,6 +54,10 @@ module.exports = (sequelize, DataTypes) => {
     meta_description: {
       type: DataTypes.TEXT,
       allowNull: false
+    },
+    is_draft: {
+      type: DataTypes.BOOLEAN,
+      default: false
     }
   }, {});
 
