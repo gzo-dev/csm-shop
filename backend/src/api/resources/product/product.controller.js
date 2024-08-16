@@ -832,8 +832,12 @@ export default {
         // rent
       } = req.query;
       let sort;
+      let sortPrice
       if (square === "asc" || square === "desc") {
         sort = square;
+      }
+      if (price=== "asc" || price=== "desc") {
+        sortPrice= price
       }
       if (userId == -1) {
         userId = undefined;
@@ -844,7 +848,7 @@ export default {
       if (square == 0 || square == "asc" || square == "desc") {
         square = undefined;
       }
-      if (price == 0) {
+      if (price == 0 || price == "asc" || price == "desc") {
         price = undefined;
       }
       if (rent == -1) {
@@ -980,10 +984,14 @@ export default {
         filter.boolean = false;
       }
 
-      let order;
+      let order= [];
       if (sort) {
-        order = [["square", sort]];
-      } else {
+        order.push(["square", sort]);
+      }
+      if (sortPrice) {
+        order.push(["price", sortPrice])
+      }
+      else {
         order = [["id", "desc"]];
       }
       console.log(order);
