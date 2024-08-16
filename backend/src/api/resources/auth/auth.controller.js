@@ -613,6 +613,15 @@ export default {
       return res.status(500).json({ ok: false });
     }
   },
+  async resetDevice(req, res) {
+    try {
+      const userId= req.body.id
+      await db.user.update({device1: "", device2: ""}, {where: {id: userId}})
+      return res.status(200).json({ok: true, data: {}})
+    } catch (error) {
+      return res.status(500).json({ok: false, message: "Unknown"})
+    }
+  }
   // async testMail(req, res) {
   //   const xlsx = require("xlsx");
   //   const workbook = xlsx.readFile(__dirname + "/data.xlsx");
