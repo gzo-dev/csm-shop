@@ -97,10 +97,13 @@ export default {
   },
   async getListBlogCategory(req, res) {
     try {
+      const {isFrom }= req.query
+      const whereConditions= {type: req.query.type}
+      if(isFrom== "client") {
+        whereConditions.is_draft= false
+      }
       const blogList = await db.blog.findAll({
-        where: {
-          type: req.query.type,
-        },
+        where: whereConditions,
         attributes: { exclude: ["content"] },
       });
       return res.status(200).json({ ok: true, data: blogList });
@@ -164,10 +167,16 @@ export default {
     return res.status(200).json({ ok: true });
   },
   async getListBlogAdmin(req, res) {
-    const type= req.query?.type
+    const {type, is_draft}= req.query
     const whereCondition = {};
     if (type) {
         whereCondition.type = type;
+    }
+    if(is_draft== 0) {
+      whereCondition.is_draft= false
+    }
+    if(is_draft== 1) {
+      whereCondition.is_draft= true
     }
 
     const blogList = await db.blog.findAll({

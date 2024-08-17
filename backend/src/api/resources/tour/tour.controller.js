@@ -83,7 +83,7 @@ export default {
   },
   async getListTour(req, res) {
     const type = req.query?.type;
-    const { province, ward, district } = req.query;
+    const { province, ward, district, is_draft, isFrom } = req.query;
 
     // Tạo đối tượng where condition, nếu có type thì thêm vào
     const whereCondition = {};
@@ -92,6 +92,16 @@ export default {
     }
     if (province) {
       whereCondition.destination = province;
+    }
+    if(is_draft== 0) {
+      whereCondition.is_draft= false
+    }
+    if(is_draft== 1) {
+      whereCondition.is_draft= true
+    }
+    const whereConditions= {}
+    if(isFrom== "client") {
+      whereConditions.is_draft= false
     }
     // if (district) {
     //   whereCondition.district= district
@@ -111,6 +121,7 @@ export default {
   },
   async getListSuggestTour(req, res) {
     const tourList = await db.tour.findAll({
+      is_draft: false,
       limit: 4,
       order: [["createdAt", "DESC"]],
       attributes: {
@@ -121,10 +132,13 @@ export default {
   },
   async getListTourCategory(req, res) {
     try {
+      const {isFrom }= req.query
+      const whereConditions= {type: req.query.type,}
+      if(isFrom== "client") {
+        whereConditions.is_draft= false
+      }
       const tourList = await db.tour.findAll({
-        where: {
-          type: req.query.type,
-        },
+        where: whereConditions,
         order: [["createdAt", "DESC"]],
       });
       return res.status(200).json({ ok: true, data: tourList });

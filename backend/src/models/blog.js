@@ -11,7 +11,11 @@ module.exports = (sequelize, DataTypes) => {
     content: DataTypes.TEXT,
     price: DataTypes.INTEGER,
     author: DataTypes.STRING, 
-    user_author: DataTypes.INTEGER
+    user_author: DataTypes.INTEGER,
+    is_draft: {
+      type: DataTypes.BOOLEAN,
+      default: false
+    }
   }, {});
   blog.associate = function(models) {
     // associations can be defined here

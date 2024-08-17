@@ -426,6 +426,7 @@ export default {
         districtText,
         wardText,
         meta_description,
+        is_draft
       } = req.body;
       db.product
         .findOne({ where: { id: productId } })
@@ -478,6 +479,7 @@ export default {
                 districtText: districtText ? districtText : "",
                 wardText: wardText ? wardText : "",
                 meta_description,
+                is_draft
               },
               { where: { id: productId } }
             );
@@ -835,7 +837,8 @@ export default {
         page,
         searchText = "",
         userId,
-        isFrom
+        isFrom,
+        is_draft
         // rent
       } = req.query;
       let sort;
@@ -851,6 +854,9 @@ export default {
       }
       if (typeRoom == 0) {
         typeRoom = undefined;
+      }
+      if (is_draft== -1 || !is_draft) {
+        is_draft= undefined
       }
       if (square == 0 || square == "asc" || square == "desc") {
         square = undefined;
@@ -999,6 +1005,14 @@ export default {
       if(isFrom=== "client") {
         whereConditions.is_draft= false
       }
+      console.log("is_draft", is_draft)
+      if(is_draft== 0) {
+        whereConditions.is_draft= false
+      }
+      if(is_draft== 1) {
+        whereConditions.is_draft= true
+      }
+      console.log(whereConditions)
       
       const subWhere = {};
       const filter = {};
@@ -1020,7 +1034,7 @@ export default {
         order = [["id", "desc"]];
       }
       let { count, rows: productList } = await db.product.findAndCountAll({
-        where: whereConditions,
+        where: {...whereConditions},
         order: order,
         include: [
           {

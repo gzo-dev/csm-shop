@@ -24,7 +24,11 @@ module.exports = (sequelize, DataTypes) => {
     car: DataTypes.STRING,
     timeText: DataTypes.STRING,
     user_created: DataTypes.INTEGER,
-    meta_description: DataTypes.TEXT
+    meta_description: DataTypes.TEXT,
+    is_draft: {
+      type: DataTypes.BOOLEAN,
+      default: false
+    }
   }, {});
   return tour;
 };

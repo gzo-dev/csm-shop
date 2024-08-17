@@ -75,7 +75,13 @@ export default {
     }
   },
   async getListTicket(req, res) {
+    const {isFrom }= req.query
+    const whereConditions= {}
+    if(isFrom== "client") {
+      whereConditions.is_draft= false
+    }
     const ticketList = await db.ticket.findAll({
+      where: whereConditions,
       order: [["createdAt", "DESC"]],
       attributes: { exclude: ["content"] },
     });

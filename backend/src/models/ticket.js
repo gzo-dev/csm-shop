@@ -29,7 +29,11 @@ module.exports = (sequelize, DataTypes) => {
     districtText: DataTypes.STRING,
     wardText: DataTypes.STRING, 
     bonus: DataTypes.STRING,
-    meta_description: DataTypes.TEXT
+    meta_description: DataTypes.TEXT,
+    is_draft: {
+      type: DataTypes.BOOLEAN,
+      default: false
+    }
   }, {});
   return ticket;
 };
