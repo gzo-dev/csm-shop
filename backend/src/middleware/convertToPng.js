@@ -15,15 +15,18 @@ const convertToPng = (req, res, next) => {
                     return next(err);
                 }
                 // Xóa tệp gốc nếu cần
-                fs.unlink(originalPath, (err) => {
-                    if (err) {
-                        return next(err);
-                    }
-                    // Cập nhật req.file để sử dụng ảnh PNG
-                    req.file.path = pngPath;
-                    req.file.filename = path.basename(pngPath);
-                    next();
-                });
+                // fs.unlinkSync(originalPath, (err) => {
+                //     if (err) {
+                //         return next(err);
+                //     }
+                //     // Cập nhật req.file để sử dụng ảnh PNG
+                //     req.file.path = pngPath;
+                //     req.file.filename = path.basename(pngPath);
+                //     next();
+                // });
+                req.file.path = pngPath;
+                req.file.filename = path.basename(pngPath);
+                next();
             });
     } else {
         next();

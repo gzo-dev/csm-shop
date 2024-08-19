@@ -70,7 +70,7 @@ export default {
         .resize({fit: "inside", width: 720})
         .toFile(finalOutputImagePath);
       fs.unlinkSync(outputImagePath);
-      fs.unlinkSync(uploadedImage)
+      // fs.unlink(uploadedImage)
       // Trả về đường dẫn ảnh đã xử lý
       return res.status(200).send({ file_path: `${serverHost}/${uuid}.jpg` });
     } catch (error) {
