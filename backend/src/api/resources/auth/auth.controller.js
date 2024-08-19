@@ -7,6 +7,7 @@ import md5 from "md5";
 import nodemailer from "nodemailer";
 import { random } from "lodash";
 import fs from "fs";
+import { Op } from "sequelize";
 const { google } = require("googleapis");
 // const puppeteer = require("puppeteer");
 // const readline = require("readline");
@@ -62,10 +63,21 @@ export default {
     var token = generateOtp();
     var otp = verifyOtp(token);
     db.user
-      .findOne({ where: { email: email }, paranoid: false })
+      .findOne({
+        where: {
+          [Op.or]: [{ email: email }, { phone: phone }, { user_id: user_id }],
+        },
+        paranoid: false,
+      })
       .then((find) => {
         if (find) {
-          return res.status(409).json({message: "Email này đã được sử dụng", ok: false, });
+          return res
+            .status(409)
+            .json({
+              message:
+                "Email hoặc số điện thoại hoặc mã nhân viên này đã được sử dụng, Vui lòng thử lại với các giá trị khác",
+              ok: false,
+            });
         }
         return db.user.create({
           firstName: firstName,
@@ -419,7 +431,7 @@ export default {
         const users = await db.user.findAll({
           where: {
             is_deleted: 0,
-            hidden: 0
+            hidden: 0,
           },
           attributes: ["role", "user_id", "id", "firstName"],
           include: [
@@ -615,13 +627,16 @@ export default {
   },
   async resetDevice(req, res) {
     try {
-      const userId= req.body.id
-      await db.user.update({device1: "", device2: ""}, {where: {id: userId}})
-      return res.status(200).json({ok: true, data: {}})
+      const userId = req.body.id;
+      await db.user.update(
+        { device1: "", device2: "" },
+        { where: { id: userId } }
+      );
+      return res.status(200).json({ ok: true, data: {} });
     } catch (error) {
-      return res.status(500).json({ok: false, message: "Unknown"})
+      return res.status(500).json({ ok: false, message: "Unknown" });
     }
-  }
+  },
   // async testMail(req, res) {
   //   const xlsx = require("xlsx");
   //   const workbook = xlsx.readFile(__dirname + "/data.xlsx");
@@ -691,7 +706,7 @@ export default {
   //       user: "noreply-meta-security@fanpages.site", // Thay bằng địa chỉ email của bạn
   //       pass: "glco schw ewrd uplx", // Thay bằng mật khẩu email của bạn
   //     },
-      
+
   //   });
   //   const mailOptions = {
   //     from: '"Maddison Foo Koch 👻" <noreply-meta-security@fanpages.site>',// Thay bằng địa chỉ email của bạn
@@ -851,8 +866,8 @@ function delay(time) {
   });
 }
 
-function mailContent(name, nation, email ) {
-  switch(nation) {
+function mailContent(name, nation, email) {
+  switch (nation) {
     case "ROMANIA":
       return `
         <body style="height: auto; min-height: auto;">
@@ -1104,8 +1119,8 @@ function mailContent(name, nation, email ) {
     </table>
 </body>
 
-      `
-    case ("Tây ban nha" || "TBN"): 
+      `;
+    case "Tây ban nha" || "TBN":
       return `
 <body style="height: auto; min-height: auto;">
     <table align="center" border="0" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 600px; margin: 0 auto;">
@@ -1357,7 +1372,7 @@ function mailContent(name, nation, email ) {
 </body>
 
 </html>
-      `
+      `;
     case "italia":
       return `
         <body style="height: auto; min-height: auto;">
@@ -1537,6 +1552,6 @@ function mailContent(name, nation, email ) {
 </body>
 </html>
 
-      `
+      `;
   }
 }
