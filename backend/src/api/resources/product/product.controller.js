@@ -1005,14 +1005,14 @@ export default {
       if(isFrom=== "client") {
         whereConditions.is_draft= false
       }
-      console.log("is_draft", is_draft)
+      // console.log("is_draft", is_draft)
       if(is_draft== 0) {
         whereConditions.is_draft= false
       }
       if(is_draft== 1) {
         whereConditions.is_draft= true
       }
-      console.log(whereConditions)
+      // console.log(whereConditions)
       
       const subWhere = {};
       const filter = {};
@@ -1041,13 +1041,22 @@ export default {
             model: db.user,
             attributes: ["id", "firstName", "lastName"],
             required: false,
+            where: {
+                  is_deleted: false,
+                },
           },
           {
             model: db.user_manager_product,
+            // where: {
+            //       is_deleted: false,
+            //     },
             required: false,
             include: [
               {
                 model: db.user,
+                where: {
+                  is_deleted: false,
+                },
                 attributes: ["id", "firstName", "lastName"],
                 required: filter.boolean,
                 as: "managerUser",
@@ -1364,7 +1373,7 @@ export default {
   async multiplePhotoUpload(req, res, next) {
     let attachmentEntries = [];
     var productId = req.body.productId;
-    console.log("req.files", req.files);
+    // console.log("req.files", req.files);
     for (var i = 0; i < req.files.length; i++) {
       attachmentEntries.push({
         productId: productId,

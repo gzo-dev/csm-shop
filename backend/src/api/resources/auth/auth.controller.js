@@ -65,7 +65,8 @@ export default {
     db.user
       .findOne({
         where: {
-          [Op.or]: [{ email: email }, { phone: phone }, { user_id: user_id }],
+          is_deleted: false,
+          [Op.or]: [{ phone: phone }, { user_id: user_id }],
         },
         paranoid: false,
       })
@@ -75,7 +76,7 @@ export default {
             .status(409)
             .json({
               message:
-                "Email hoặc số điện thoại hoặc mã nhân viên này đã được sử dụng, Vui lòng thử lại với các giá trị khác",
+                "Số điện thoại hoặc mã nhân viên này đã được sử dụng, Vui lòng thử lại với các giá trị khác",
               ok: false,
             });
         }
@@ -215,7 +216,7 @@ export default {
   async login(req, res, next) {
     const { email, password, deviceCode } = req.body;
     const findUser = await db.user.findOne({
-      where: { phone: email, password: md5(password) },
+      where: { phone: email, password: md5(password), is_deleted: false},
     });
     if (findUser?.verify === null) {
       return res.status(200).json({ success: false });
@@ -316,10 +317,10 @@ export default {
         findUser?.device1?.length > 0
       ) {
         const findUserdevice1 = await db.user.findOne({
-          where: { phone: email, password: md5(password), device1: deviceCode },
+          where: { phone: email, password: md5(password), device1: deviceCode, is_deleted: false },
         });
         const findUserdevice2 = await db.user.findOne({
-          where: { phone: email, password: md5(password), device2: deviceCode },
+          where: { phone: email, password: md5(password), device2: deviceCode, is_deleted: false  },
         });
         const token = JWT.sign(
           {
