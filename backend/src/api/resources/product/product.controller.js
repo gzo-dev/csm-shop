@@ -838,7 +838,11 @@ export default {
         searchText = "",
         userId,
         isFrom,
-        is_draft
+        is_draft,
+        minPrice, 
+        maxPrice,
+        minSquare,
+        maxSquare
         // rent
       } = req.query;
       let sort;
@@ -918,6 +922,14 @@ export default {
             case 2:
               whereConditions.rent = 2;
               break;
+          }
+        }
+        if(isFrom== "client") {
+          if(minPrice && maxPrice) {
+            whereConditions.price= { [Op.between]: [parseInt(minPrice), parseInt(maxPrice)]}
+          }
+          if(minSquare && maxSquare) {
+            whereConditions.square= { [Op.between] : [parseInt(minSquare), parseInt(maxSquare)]}
           }
         }
 
