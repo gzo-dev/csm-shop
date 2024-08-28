@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { GetLocationDetails } from "../../../../services";
-import { Typography, Button } from "@material-ui/core";
+import { Typography, Button, Box } from "@material-ui/core";
 import swal from "sweetalert";
 import {
   apiDeleteTicket,
@@ -109,6 +109,17 @@ const List = ({ history }) => {
     }
   }, [query.get("page"), currentPage])
 
+  const handleSearchFilter= async (is_draft)=> {
+    const list = await apiGetListTour({
+      type: id,
+      province,
+      district,
+      ward,
+      is_draft
+    });
+    setGetList(list?.data);
+  }
+
   return (
     <div className="container-fluid">
       <div className="w-100 d-flex justify-content-between">
@@ -126,6 +137,28 @@ const List = ({ history }) => {
           >
             Thêm vé
           </Link>
+          <div
+            className="d-flex align-items-center"
+            style={{ marginLeft: 4, marginRight: 4, alignSelf: "end" }}
+          >
+            <Box sx={{ }}>
+              <form>
+                <div>
+                  <label style={{ fontSize: 14 }}>Lọc dạng bài viết</label>
+                </div>
+                <select
+                  onChange={(e) => handleSearchFilter(e.target.value)}
+                  style={{ height: 40, borderRadius: 8 }}
+                >
+                  <option value={"-1"} selected>
+                    Tất cả
+                  </option>
+                  <option value={"0"}>Publish</option>
+                  <option value={"1"}>Bản nháp</option>
+                </select>
+              </form>
+            </Box>
+          </div>
         </div>
         <div className="d-flex align-items-center" style={{ gap: 20 }}>
           <a
@@ -310,7 +343,7 @@ const List = ({ history }) => {
                       <Fragment>
                         {currentItems?.map((row, index) => (
                           <tr key={index}>
-                            <td>{row.ticket_id}</td>
+                            <td>{row.ticket_id}{row?.is_draft && <strong style={{color: "#2e89ff"}}>- Bản nháp</strong>}</td>
                             <td>{row.name}</td>
                             <td>{row.departureText || ""}</td>
                             <td>{row.destinationText || ""}</td>
@@ -346,7 +379,7 @@ const List = ({ history }) => {
                       <Fragment>
                         {currentItems?.map((row, index) => (
                           <tr key={index}>
-                            <td>{row.ticket_id}</td>
+                            <td>{row.ticket_id}{row?.is_draft && <strong style={{color: "#2e89ff"}}>- Bản nháp</strong>}</td>
                             <td>{row.name}</td>
                             <td>{row.provinceText || ""}</td>
                             {/* <td>{row.destinationText || ""}</td> */}

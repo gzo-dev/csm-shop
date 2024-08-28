@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { GetLocationDetails } from "../../../../services";
-import { Typography, Button } from "@material-ui/core";
+import { Typography, Button, Box } from "@material-ui/core";
 import Edit from "../../tours/edit";
 import swal from "sweetalert";
 import { apiDeleteBlog, apiDeleteTour, apiGetListBlog } from "../../../../../api";
@@ -117,6 +117,16 @@ const List = ({ history }) => {
     getData();
   }, []);
 
+  const handleSearchFilter= async (is_draft)=> {
+    try {
+      const list = await apiGetListBlog({type: id, is_draft});
+      setGetList(list.data.filter(item=> item.type== id));
+    } catch (error) {
+      console.error("Error fetching location:", error);
+    }
+  }
+
+
   return (
     <div className="container-fluid">
       {/* <div className="row">
@@ -140,6 +150,28 @@ const List = ({ history }) => {
           <Link to={"/admin/b/"+ id +"/create"} className="add-btn hover-btn" style={{borderRadius: 15, backgroundColor: "#F37335"}}>
             Thêm mới
           </Link>
+          <div
+            className="d-flex align-items-center mt-1"
+            style={{ marginLeft: 4, marginRight: 4, alignSelf: "end" }}
+          >
+            <Box sx={{ }}>
+              <form>
+                <div>
+                  <label style={{ fontSize: 14 }}>Lọc dạng bài viết</label>
+                </div>
+                <select
+                  onChange={(e) => handleSearchFilter(e.target.value)}
+                  style={{ height: 40, borderRadius: 8 }}
+                >
+                  <option value={"-1"} selected>
+                    Tất cả
+                  </option>
+                  <option value={"0"}>Publish</option>
+                  <option value={"1"}>Bản nháp</option>
+                </select>
+              </form>
+            </Box>
+          </div>
         </div>
         <div className="col-lg-12 col-md-12">
           <div className="card card-static-2 mt-30 mb-30">
@@ -164,7 +196,7 @@ const List = ({ history }) => {
                   <tbody>
                     {currentItems.map((row, index) => (
                       <tr key={index}>
-                        <td>{row.id}</td>
+                        <td>{row.id}{row?.is_draft && <strong style={{color: "#2e89ff"}}>- Bản nháp</strong>}</td>
                         <td>{row.name}</td>
                         {/* <td>
                           {renderTypeBlog(row.type)}

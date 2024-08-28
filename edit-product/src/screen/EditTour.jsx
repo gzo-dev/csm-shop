@@ -92,7 +92,7 @@ const EditTour = (props) => {
     }
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event, is_draft) => {
     try {
       event.preventDefault();
       setLoading(true);
@@ -134,7 +134,14 @@ const EditTour = (props) => {
           timeText,
           meta_description: metaDescription,
         };
-        const result = await apiEditTour({ ...data }, token);
+        let isDraft
+        if(is_draft== -1) {
+          isDraft= self.is_draft
+        }
+        else {
+          isDraft= is_draft
+        }
+        const result = await apiEditTour({ ...data, is_draft: isDraft }, token);
         setLoading(false);
         // socket.emit("back_to_web", {to: "http://localhost:3000", roomId})
         swal("Thông báo", "Cập nhật thành công", "success").then(() => {
@@ -163,7 +170,14 @@ const EditTour = (props) => {
           timeText,
           meta_description: metaDescription,
         };
-        const result = await apiEditTour({ ...data }, token);
+        let isDraft
+        if(is_draft== -1) {
+          isDraft= self.is_draft
+        }
+        else {
+          isDraft= is_draft
+        }
+        const result = await apiEditTour({ ...data, is_draft: isDraft }, token);
         swal("Thông báo", "Cập nhật thành công", "success").then(() => {
           socket.emit("back_to_web", { to: "http://localhost:3000", roomId });
         });
@@ -553,11 +567,29 @@ const EditTour = (props) => {
                       className="save-btn hover-btn"
                       type="submit"
                       onClick={async (e) => {
-                        handleSubmit(e);
+                        handleSubmit(e, -1);
                       }}
                     >
                       Sửa
                     </button>
+                    {self?.is_draft && 
+                      <button
+                        className="save-btn hover-btn"
+                        type="submit"
+                        onClick={(e)=> handleSubmit(e, false)}
+                      >
+                        Đăng bài
+                      </button>
+                    }
+                    {!self?.is_draft && 
+                      <button
+                        className="save-btn hover-btn"
+                        type="submit"
+                        onClick={(e)=> handleSubmit(e, true)}
+                      >
+                        Lưu bài viết dưới dạng bản nháp
+                      </button>
+                    }
                   </div>
                 </div>
               </div>

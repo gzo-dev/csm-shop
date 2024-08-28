@@ -36,7 +36,7 @@ const App = () => {
           setAuth(true);
           setDataUser(result.data);
           setDataUserManager(result.dataManager);
-          setCookie("role", result.data.role, 30);
+          setCookie("role", result.data.role, 14400);
         }
         else {
           eraseCookie("token")

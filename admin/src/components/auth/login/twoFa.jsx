@@ -26,7 +26,7 @@ const TwoFactorAuthDialog = ({ open, handleClose, token }) => {
       if(result?.ok=== true) {
         swal("Thông báo", "Đăng nhập thành công. Nhấn ok để tiếp tục", "success")
         .then(()=> {
-          setCookie("token", result?.token)
+          setCookie("token", result?.token, 144000)
           window.location.href= window.location.origin
         })
       }

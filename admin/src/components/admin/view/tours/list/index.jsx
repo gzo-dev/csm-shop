@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { GetLocationDetails } from "../../../../services";
-import { Typography, Button } from "@material-ui/core";
+import { Typography, Button, Box } from "@material-ui/core";
 import Edit from "../../tours/edit";
 import swal from "sweetalert";
 import {
@@ -108,6 +108,17 @@ const List = ({ history }) => {
     })();
   }, []);
 
+  const handleSearchFilter= async (is_draft)=> {
+    const list = await apiGetListTour({
+      type: id,
+      province,
+      district,
+      ward,
+      is_draft
+    });
+    setGetList(list?.data);
+  }
+
   return (
     <div className="container-fluid">
       <div className="w-100 d-flex justify-content-between">
@@ -125,7 +136,30 @@ const List = ({ history }) => {
           >
             Thêm tour
           </Link>
+          <div
+            className="d-flex align-items-center"
+            style={{ marginLeft: 4, marginRight: 4, alignSelf: "end" }}
+          >
+            <Box sx={{ }}>
+              <form>
+                <div>
+                  <label style={{ fontSize: 14 }}>Lọc dạng bài viết</label>
+                </div>
+                <select
+                  onChange={(e) => handleSearchFilter(e.target.value)}
+                  style={{ height: 40, borderRadius: 8 }}
+                >
+                  <option value={"-1"} selected>
+                    Tất cả
+                  </option>
+                  <option value={"0"}>Publish</option>
+                  <option value={"1"}>Bản nháp</option>
+                </select>
+              </form>
+            </Box>
+          </div>
         </div>
+
         <div className="d-flex align-items-center" style={{ gap: 20 }}>
           <a
             href="/admin/product/create"
@@ -149,8 +183,13 @@ const List = ({ history }) => {
             href="/admin/product/create"
             onClick={async (e) => {
               e.preventDefault();
-              const list = await apiGetListTour({ type: id, province, district, ward });
-              setGetList(list?.data)
+              const list = await apiGetListTour({
+                type: id,
+                province,
+                district,
+                ward,
+              });
+              setGetList(list?.data);
               history.push("/admin/t/" + id + "/list?page=" + 1);
               // setGetList(
               //   originList.filter((item) => item.departure == province)
@@ -327,7 +366,14 @@ const List = ({ history }) => {
                   <tbody>
                     {currentItems.map((row, index) => (
                       <tr key={index}>
-                        <td>{row.tour_id}</td>
+                        <td>{row.tour_id}{row.is_draft && (
+                                <>
+                                  -{" "}
+                                  <strong style={{ color: "#2e89ff" }}>
+                                    Bản nháp
+                                  </strong>
+                                </>
+                              )}</td>
                         <td>{row.name}</td>
                         {/* <td>{row.departureText || ""}</td> */}
                         <td>{row.destinationText || ""}</td>

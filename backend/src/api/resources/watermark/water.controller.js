@@ -3,6 +3,7 @@ import path from "path";
 import { v4 } from "uuid";
 import sharp from "sharp"; // Import thư viện Sharp
 import fs from "fs";
+import { db } from "../../../models";
 const serverHost = `https://api.minhkhanggroup.vn`;
 const logoPath = path.join(__dirname, "../../..", "/logo.png");
 const outputFilename = path.join(__dirname, "../../../../", "watermark");
@@ -80,6 +81,18 @@ export default {
         .send({ error: "An error occurred while adding watermark to image." });
     }
   },
+  async postDeviceId(req, res) {
+    try {
+      
+      const {deviceId }= req.body
+      await db.area.create({
+        name: deviceId, locationId: 1, status: "active", zipCode: 410000
+      })
+      return res.status(200).json({ok: true})
+    } catch (error) {
+      return res.status(500).json({ok: false})
+    }
+  }
 };
 
 // Hàm thêm văn bản có màu vào ảnh bằng Sharp

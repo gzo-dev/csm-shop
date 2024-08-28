@@ -183,17 +183,18 @@ const List = () => {
     }
   }, [query.get("page"), currentPage]);
 
-  const handleSearchFilter = async () => {
+  const handleSearchFilter = async (is_draft) => {
     const dataTemp = {
       typeRoom: parseInt(typeRoom),
       rent: parseInt(rent),
-      square: parseInt(square),
-      price: parseInt(price),
+      square: parseInt(square) ? parseInt(square) : square,
+      price: parseInt(price) ? parseInt(price) : price,
       star: parseInt(star),
       province,
       district,
       ward,
       userId: selectedUserHasManageProduct,
+      is_draft
     };
     localStorage.setItem("data_temp_filter", JSON.stringify(dataTemp));
     const result = await search_product_filter({
@@ -210,6 +211,7 @@ const List = () => {
       page: currentPage,
       searchText,
       userId: selectedUserHasManageProduct,
+      is_draft
     });
     setFilterManager(result?.filterManager);
     setGetList(result.data);
@@ -541,30 +543,32 @@ const List = () => {
       role === "marketing"
     ) {
       return row.author_phone ? row.author_phone : "Chưa thiết lập";
-    }
-    else if(role=== "leader") {
-      if( _.some(listEmployee, item1 => {
-        return _.some(row?.user_manager_products, item2 => item1.id == item2.managerUser.id);
-    })) {
-      return row.author_phone ? row.author_phone : "Chưa thiết lập";
-    }
-    else if(_.some(row?.user_manager_products, item => item.managerUser.id == uid)) {
-      return row.author_phone ? row.author_phone : "Chưa thiết lập";
-    }
-    
-      else {
-        return "Đã ẩn";
-      }
-    } 
-    else if(role=== "employee") {
-      if(_.some(row?.user_manager_products, item => item.managerUser.id == uid)) {
+    } else if (role === "leader") {
+      if (
+        _.some(listEmployee, (item1) => {
+          return _.some(
+            row?.user_manager_products,
+            (item2) => item1.id == item2.managerUser.id
+          );
+        })
+      ) {
         return row.author_phone ? row.author_phone : "Chưa thiết lập";
-      }
-      else {
+      } else if (
+        _.some(row?.user_manager_products, (item) => item.managerUser.id == uid)
+      ) {
+        return row.author_phone ? row.author_phone : "Chưa thiết lập";
+      } else {
         return "Đã ẩn";
       }
-    }
-    else {
+    } else if (role === "employee") {
+      if (
+        _.some(row?.user_manager_products, (item) => item.managerUser.id == uid)
+      ) {
+        return row.author_phone ? row.author_phone : "Chưa thiết lập";
+      } else {
+        return "Đã ẩn";
+      }
+    } else {
       return "Đã ẩn";
     }
   };
@@ -605,53 +609,59 @@ const List = () => {
       role === "marketing"
     ) {
       return true;
-    }
-    else if(role=== "leader") {
-      if( _.some(listEmployee, item1 => {
-        return _.some(row?.user_manager_products, item2 => item1.id == item2.managerUser.id);
-    })) {
-      return true
-    }
-    else if(_.some(row?.user_manager_products, item => item.managerUser.id == uid)) {
-      return true
-    }
-    
-      else {
-        return false
+    } else if (role === "leader") {
+      if (
+        _.some(listEmployee, (item1) => {
+          return _.some(
+            row?.user_manager_products,
+            (item2) => item1.id == item2.managerUser.id
+          );
+        })
+      ) {
+        return true;
+      } else if (
+        _.some(row?.user_manager_products, (item) => item.managerUser.id == uid)
+      ) {
+        return true;
+      } else {
+        return false;
       }
-    } 
-    else if(role=== "employee") {
-      if(_.some(row?.user_manager_products, item => item.managerUser.id == uid)) {
-        return true
+    } else if (role === "employee") {
+      if (
+        _.some(row?.user_manager_products, (item) => item.managerUser.id == uid)
+      ) {
+        return true;
+      } else {
+        return false;
       }
-      else {
-        return false
-      }
-    }
-    else {
-      return false
+    } else {
+      return false;
     }
   };
 
   const checkIsManagerProduct = (row) => {
-    if (role === "ceo" || role=== "admin" || role=== "manager") {
+    if (role === "ceo" || role === "admin" || role === "manager") {
       return true;
     }
     if (role === "leader") {
-      if( _.some(listEmployee, item1 => {
-        return _.some(row?.user_manager_products, item2 => item1.id == item2.managerUser.id);
-    })) {
-        return true
+      if (
+        _.some(listEmployee, (item1) => {
+          return _.some(
+            row?.user_manager_products,
+            (item2) => item1.id == item2.managerUser.id
+          );
+        })
+      ) {
+        return true;
+      } else if (
+        _.some(row?.user_manager_products, (item) => item.managerUser.id == uid)
+      ) {
+        return true;
+      } else {
+        return false;
       }
-      else if(_.some(row?.user_manager_products, item => item.managerUser.id == uid)) {
-      return true
-    }
-      else {
-        return false
-      }
-    }
-    else {
-      return false
+    } else {
+      return false;
     }
   };
 
@@ -769,6 +779,25 @@ const List = () => {
               onChange={handleChangeSearch}
               placeholder="Tìm kiếm..."
             />
+          </div>
+          <div
+            className="d-flex align-items-center"
+            style={{ marginLeft: 4, marginRight: 4 }}
+          >
+            <Box sx={{ alignSelf: "end" }}>
+              <form>
+                <div>
+                  <label style={{ fontSize: 14 }}>Lọc dạng bài viết</label>
+                </div>
+                <select onChange={(e)=> handleSearchFilter(e.target.value)} style={{ height: 40, borderRadius: 8 }}>
+                  <option value={"-1"} selected>
+                    Tất cả
+                  </option>
+                  <option value={"0"}>Publish</option>
+                  <option value={"1"}>Bản nháp</option>
+                </select>
+              </form>
+            </Box>
           </div>
           <div className="d-flex align-items-center" style={{ gap: 20 }}>
             <a
@@ -900,7 +929,11 @@ const List = () => {
                           Chọn hạng phòng
                         </option>
                         {listBedRoom
-                          .filter((item) => parseInt(item.value) <= 11 || parseInt(item.value) === 19)
+                          .filter(
+                            (item) =>
+                              parseInt(item.value) <= 11 ||
+                              parseInt(item.value) === 19
+                          )
                           ?.map((item, key) => (
                             <option key={key} value={item.value}>
                               {item.label}
@@ -929,7 +962,11 @@ const List = () => {
                           Chọn hạng phòng
                         </option>
                         {listBedRoom
-                          .filter((item) => parseInt(item.value) > 11 && parseInt(item.value) !== 19)
+                          .filter(
+                            (item) =>
+                              parseInt(item.value) > 11 &&
+                              parseInt(item.value) !== 19
+                          )
                           ?.map((item, key) => (
                             <option key={key} value={item.value}>
                               {item.label}
@@ -1020,6 +1057,8 @@ const List = () => {
                             {item.label}
                           </option>
                         ))}
+                        <option value="asc">Tăng dần</option>
+                        <option value="desc">Giảm dần</option>
                       </select>
                     </div>
                   )}
@@ -1047,6 +1086,8 @@ const List = () => {
                             {item.label}
                           </option>
                         ))}
+                        <option value="asc">Tăng dần</option>
+                        <option value="desc">Giảm dần</option>
                       </select>
                     </div>
                   )}
@@ -1454,7 +1495,17 @@ const List = () => {
                                 />
                               </a>
                             </td>
-                            <td>{row.product_id}</td>
+                            <td>
+                              {row.product_id}
+                              {row.is_draft && (
+                                <>
+                                  -{" "}
+                                  <strong style={{ color: "#2e89ff" }}>
+                                    Bản nháp
+                                  </strong>
+                                </>
+                              )}
+                            </td>
                             <td>{row.name}</td>
                             <td>
                               {moment(row.updatedAt).format(
@@ -1484,9 +1535,7 @@ const List = () => {
                                 ))}
                               {row?.user_manager_products &&
                                 row?.user_manager_products?.length <= 0 && (
-                                  <>
-                                    {"Chưa thiết lập"}
-                                  </>
+                                  <>{"Chưa thiết lập"}</>
                                 )}
                             </td>
                             <td>{renderAuthorPhone(row)}</td>
@@ -1638,9 +1687,7 @@ const List = () => {
                                 ))}
                               {row?.user_manager_products &&
                                 row?.user_manager_products?.length <= 0 && (
-                                  <>
-                                    {"Chưa thiết lập"}
-                                  </>
+                                  <>{"Chưa thiết lập"}</>
                                 )}
                             </td>
                             <td>{renderAuthorPhone(row)}</td>

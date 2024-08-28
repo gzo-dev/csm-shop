@@ -209,7 +209,7 @@ const NewProduct = (props) => {
   //   setToggle(!toggle);
   // };
 
-  const handleSubmit = async (event, listImage) => {
+  const handleSubmit = async (event, listImage, is_draft= false) => {
     event.preventDefault();
     try {
       
@@ -254,6 +254,7 @@ const NewProduct = (props) => {
       formData.append("note", note);
       formData.append("rent", rent);
       formData.append("meta_description", metaDescription)
+      formData.append("is_draft", is_draft)
       // const config = {
       //   headers: {
       //     "content-type": "multipart/form-data",
@@ -1089,6 +1090,17 @@ const NewProduct = (props) => {
                       }}
                     >
                       Thêm
+                    </button>
+                    <button
+                      className="save-btn hover-btn"
+                      style={{ backgroundColor: "rgb(243, 115, 53)" }}
+                      type="submit"
+                      onClick={async (e) => {
+                        const result = await handleSubmitMoreImage(e);
+                        handleSubmit(e, result.data, true);
+                      }}
+                    >
+                      Lưu dưới dạng bản nháp
                     </button>
                   </div>
                 </div>

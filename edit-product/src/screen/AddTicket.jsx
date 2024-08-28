@@ -133,7 +133,7 @@ const NewTicket = () => {
     }
   }, [socket, roomId]);
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event, is_draft) => {
     try {
       event.preventDefault();
       var formData = new FormData();
@@ -177,6 +177,7 @@ const NewTicket = () => {
         buffe,
         car,
         meta_description: metaDescription,
+        is_draft: is_draft
       };
       const result = await apiCreateTicket({ ...data });
       setLoading(false);
@@ -960,10 +961,20 @@ const NewTicket = () => {
                       className="save-btn hover-btn"
                       type="submit"
                       onClick={async (e) => {
-                        handleSubmit(e);
+                        handleSubmit(e, false);
                       }}
                     >
                       Thêm
+                    </button>
+                    <button
+                      className="save-btn hover-btn"
+                      style={{ backgroundColor: "rgb(243, 115, 53)" }}
+                      type="submit"
+                      onClick={async (e) => {
+                        handleSubmit(e, true);
+                      }}
+                    >
+                      Lưu dưới dạng bản nháp
                     </button>
                   </div>
                 </div>

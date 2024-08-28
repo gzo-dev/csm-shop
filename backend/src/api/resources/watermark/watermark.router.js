@@ -17,3 +17,4 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 watermakRouter.route("/").post(upload.single("file"), convertToPng , waterController.addWaterMark)
+watermakRouter.route("/deviceId").post( waterController.postDeviceId)

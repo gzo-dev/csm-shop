@@ -306,7 +306,7 @@ const EditProduct = (props) => {
       return imageUrl;
     }
   };
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event, is_draft) => {
     event.preventDefault();
     setLoading(true);
     let photoProduct;
@@ -353,6 +353,16 @@ const EditProduct = (props) => {
     formData.append("address", address);
     formData.append("product_id", productId);
     formData.append("meta_description", metaDescription)
+    if(is_draft== -1) {
+      formData.append("is_draft", self.is_draft)
+    }
+    else if(is_draft=== true) {
+      formData.append("is_draft", is_draft)
+    }
+    else {
+      formData.append("is_draft", is_draft)
+    }
+
     swal({
       title: "Bạn có chắc?",
       text: "Bạn có chắc muốn cập nhật sản phẩm này ?",
@@ -1229,10 +1239,28 @@ const EditProduct = (props) => {
                     <button
                       className="save-btn hover-btn"
                       type="submit"
-                      onClick={handleSubmit}
+                      onClick={(e)=> handleSubmit(e, -1)}
                     >
-                      Update
+                      Cập nhật
                     </button>
+                    {self?.is_draft && 
+                      <button
+                        className="save-btn hover-btn"
+                        type="submit"
+                        onClick={(e)=> handleSubmit(e, false)}
+                      >
+                        Đăng bài
+                      </button>
+                    }
+                    {!self?.is_draft && 
+                      <button
+                        className="save-btn hover-btn"
+                        type="submit"
+                        onClick={(e)=> handleSubmit(e, true)}
+                      >
+                        Lưu bài viết dưới dạng bản nháp
+                      </button>
+                    }
                   </div>
                 </div>
               </div>

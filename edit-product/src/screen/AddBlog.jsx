@@ -59,7 +59,7 @@ const NewBlog = () => {
     }
   }, [socket, roomId]);
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event, is_draft) => {
     try {
       event.preventDefault();
       var formData = new FormData();
@@ -87,6 +87,7 @@ const NewBlog = () => {
         image: imageUrl.file_path,
         user_author: uid,
         meta_description: metaDescription,
+        is_draft
         // author: getCookie("name"),
       };
       const result = await apiCreateBlog({ ...data }, token);
@@ -229,10 +230,20 @@ const NewBlog = () => {
                       className="save-btn hover-btn"
                       type="submit"
                       onClick={async (e) => {
-                        handleSubmit(e);
+                        handleSubmit(e, false);
                       }}
                     >
                       Thêm
+                    </button>
+                    <button
+                      className="save-btn hover-btn"
+                      style={{ backgroundColor: "rgb(243, 115, 53)" }}
+                      type="submit"
+                      onClick={async (e) => {
+                        handleSubmit(e, true);
+                      }}
+                    >
+                      Lưu dưới dạng bản nháp
                     </button>
                   </div>
                 </div>

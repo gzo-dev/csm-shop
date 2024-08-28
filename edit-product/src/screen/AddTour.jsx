@@ -63,7 +63,7 @@ const NewTour = () => {
     // if (name === "discountPer") setDiscountPer(value)
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event, is_draft) => {
     try {
       if (
         name.trim().length <= 0 ||
@@ -121,6 +121,7 @@ const NewTour = () => {
         car,
         timeText,
         meta_description: metaDescription,
+        is_draft
       };
       console.log(data);
       const result = await apiCreateTour({ ...data });
@@ -496,10 +497,20 @@ const NewTour = () => {
                       className="save-btn hover-btn"
                       type="submit"
                       onClick={async (e) => {
-                        handleSubmit(e);
+                        handleSubmit(e, false);
                       }}
                     >
                       Thêm
+                    </button>
+                    <button
+                      className="save-btn hover-btn"
+                      style={{ backgroundColor: "rgb(243, 115, 53)" }}
+                      type="submit"
+                      onClick={async (e) => {
+                        handleSubmit(e, true);
+                      }}
+                    >
+                      Lưu dưới dạng bản nháp
                     </button>
                   </div>
                 </div>
