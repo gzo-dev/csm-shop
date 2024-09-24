@@ -22,35 +22,40 @@ app.get("*", async (req, res) => {
     // Dữ liệu động từ server, có thể lấy từ DB hoặc API khác
     if (req.originalUrl.includes("/product")) {
       console.log(req.originalUrl.toString().split("/")[2])
-      const response = await axios({
-        url: "https://api.minhkhanggroup.vn/api/v1/product/serverside/d?id=" + req.originalUrl.split("/")[1].split("-").at(-1),
-        method: "get",
-        timeout: 3000,
-      });
-      const result = await response?.data?.data;
-      const metaTags = {
-        title: result?.name, // Dữ liệu động từ server
-        description: result?.meta_description,
-        image: result?.photo,
-        url: req.protocol + "://" + req.get("host") + req.originalUrl,
-      };
-
-      const dynamicMetaTags = `
-      <title>${metaTags.title}</title>
-      <meta property="og:image" content="${metaTags.image?.replace("http:", "https:")}">
-      <meta property="og:url" content="${metaTags.url?.replace("http:", "https:")}">
-      <meta property="og:description" content="${metaTags.description}">
-    `;
-
-      const modifiedData = data.replace(
-        "</head>",
-        `
-        ${dynamicMetaTags}
-      </head>`
-      );
-
-      // Gửi trang HTML với các thẻ meta đã được thêm động
-      return res.send(modifiedData);
+      try {
+        const response = await axios({
+          url: "https://api.minhkhanggroup.vn/api/v1/product/serverside/d?id=" + req.originalUrl.split("/").at(-1).split("-").at(-1),
+          method: "get",
+          timeout: 3000,
+        });
+        const result = await response?.data?.data;
+        const metaTags = {
+          title: result?.name, // Dữ liệu động từ server
+          description: result?.meta_description,
+          image: result?.photo,
+          url: req.protocol + "://" + req.get("host") + req.originalUrl,
+        };
+  
+        const dynamicMetaTags = `
+        <title>${metaTags.title}</title>
+        <meta property="og:image" content="${metaTags.image?.replace("http:", "https:")}">
+        <meta property="og:url" content="${metaTags.url?.replace("http:", "https:")}">
+        <meta property="og:description" content="${metaTags.description}">
+      `;
+  
+        const modifiedData = data.replace(
+          "</head>",
+          `
+          ${dynamicMetaTags}
+        </head>`
+        );
+  
+        // Gửi trang HTML với các thẻ meta đã được thêm động
+        return res.send(modifiedData);
+        
+      } catch (error) {
+        return res.send(data);
+      }
     }
     else {
       return res.send(data);
