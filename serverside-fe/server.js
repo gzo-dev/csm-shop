@@ -20,11 +20,11 @@ app.get("*", async (req, res) => {
     }
 
     // Dữ liệu động từ server, có thể lấy từ DB hoặc API khác
-    if (req.originalUrl.includes("/product")) {
-      console.log(req.originalUrl.toString().split("/")[2])
+    if (req.path.includes("/product")) {
+      console.log(req.path.split("/").at(-1).split("-").at(-1))
       try {
         const response = await axios({
-          url: "https://api.minhkhanggroup.vn/api/v1/product/serverside/d?id=" + req.originalUrl.split("/").at(-1).split("-").at(-1),
+          url: "https://api.minhkhanggroup.vn/api/v1/product/serverside/d?id=" + req.path.split("/").at(-1).split("-").at(-1),
           method: "get",
           timeout: 3000,
         });
