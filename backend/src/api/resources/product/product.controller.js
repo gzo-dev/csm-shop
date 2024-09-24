@@ -1210,6 +1210,23 @@ export default {
       throw new RequestError("Error");
     }
   },
+  async getProductListByIdMeta(req, res, next) {
+    try {
+      db.product
+        .findOne({
+          where: { id: req.query.id },
+          attributes: ["photo", "name", "meta_description"]
+        })
+        .then((p) => {
+          res.status(200).json({ success: true, data: p });
+        })
+        .catch(function (err) {
+          next(err);
+        });
+    } catch (err) {
+      throw new RequestError("Error");
+    }
+  },
   async getProductUserManage(req, res, next) {
     try {
       const { uid } = req.query;

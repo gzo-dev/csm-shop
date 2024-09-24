@@ -1,0 +1,13 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.7.7",
+    "express": "^4.21.0",
+    "playwright": "^1.47.1",
+    "puppeteer": "^23.3.1",
+    "rendertron": "^3.1.0"
+  }
+}

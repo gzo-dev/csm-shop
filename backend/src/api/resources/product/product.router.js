@@ -59,3 +59,5 @@ productRouter.route('/aws/delete/photo').post( productController.awsProductPhoto
 
 productRouter.route("/history/edit").get(authenticateJWT, productController.getHistoryEditProduct)
 productRouter.route("/manage/by/user").get(authenticateJWT, productController.getProductManageByUser)
+
+productRouter.route("/serverside/d").get(productController.getProductListByIdMeta)

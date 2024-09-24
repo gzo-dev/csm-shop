@@ -1,0 +1,11 @@
+# Chuyển hướng các yêu cầu từ bot đến script PHP hoặc Node.js
+RewriteEngine On
+
+# Kiểm tra nếu request đến từ bot
+RewriteCond %{HTTP_USER_AGENT} ^.*(facebookexternalhit|twitterbot|bingbot|googlebot).*$ [NC]
+RewriteRule .* prerender.php [L]
+
+# Chuyển hướng tất cả các yêu cầu khác đến trang index.html (SPA React)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]
