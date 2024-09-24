@@ -21,6 +21,7 @@ app.get("*", async (req, res) => {
 
     // Dữ liệu động từ server, có thể lấy từ DB hoặc API khác
     if (req.originalUrl.includes("/product")) {
+      console.log(req.originalUrl)
       const response = await axios({
         url: "https://api.minhkhanggroup.vn/api/v1/product/serverside/d?id=" + req.originalUrl?.split("/")?.[2]?.split("-").at(-1),
         method: "get",
