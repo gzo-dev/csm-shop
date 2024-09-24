@@ -36,8 +36,8 @@ app.get("*", async (req, res) => {
 
       const dynamicMetaTags = `
       <title>${metaTags.title}</title>
-      <meta property="og:image" content="${metaTags.image}">
-      <meta property="og:url" content="${metaTags.url}">
+      <meta property="og:image" content="${metaTags.image?.replace("http:", "https:")}">
+      <meta property="og:url" content="${metaTags.url?.replace("http:", "https:")}">
       <meta property="og:description" content="${metaTags.description}">
     `;
 
@@ -58,7 +58,7 @@ app.get("*", async (req, res) => {
 });
 
 // Lắng nghe trên port 3001 hoặc bất kỳ port nào bạn chọn
-const PORT = process.env.PORT || 3001;
+const PORT = 3025;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
