@@ -23,7 +23,7 @@ app.get("*", async (req, res) => {
     if (req.originalUrl.includes("/product")) {
       console.log(req.originalUrl)
       const response = await axios({
-        url: "https://api.minhkhanggroup.vn/api/v1/product/serverside/d?id=" + req.originalUrl?.split("/")?.[2]?.split("-").at(-1),
+        url: "https://api.minhkhanggroup.vn/api/v1/product/serverside/d?id=" + req.originalUrl.split("/")[2].split("-").at(-1),
         method: "get",
         timeout: 3000,
       });
