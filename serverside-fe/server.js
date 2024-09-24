@@ -54,7 +54,7 @@ app.get("*", async (req, res) => {
         return res.send(modifiedData);
         
       } catch (error) {
-        return res.send(data);
+        // return res.send(data);
       }
     }
     else {
