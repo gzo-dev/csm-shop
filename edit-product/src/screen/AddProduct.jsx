@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 import _ from "lodash";
 import Axios from "axios";
 import { v4 } from "uuid";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { apiGetProvince, apiGetWard } from "../api";
 import { API_URL } from "../config";
 import Loader from "../component/Loader";
@@ -26,9 +26,11 @@ import { SocketContext } from "../SocketContainer/SocketContainer";
 import TestTable from "../component/TestTable";
 
 const NewProduct = (props) => {
+  const navigate = useNavigate();
+  const [dataPreview, setDataPreview] = useState();
   const { socket } = useContext(SocketContext);
-  const [searchParams]= useSearchParams()
-  const token= searchParams.get("token")
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
   const { id, subid, roomId } = useParams();
   const [productId, setProductId] = useState();
   const [files, setFiles] = useState([]);
@@ -82,7 +84,7 @@ const NewProduct = (props) => {
   const [author_phone, setAuthorPhone] = useState();
   const [rent, setRent] = useState();
   const [endow, setEndow] = useState();
-  const [metaDescription, setMetaDescription]= useState("")
+  const [metaDescription, setMetaDescription] = useState("");
 
   const getCustomer = async () => {
     let list = await get_all_user_list({}, token);
@@ -189,8 +191,8 @@ const NewProduct = (props) => {
         setRent(value);
         break;
       case "meta_description":
-        setMetaDescription(value)
-        break
+        setMetaDescription(value);
+        break;
       default:
         break;
     }
@@ -209,10 +211,9 @@ const NewProduct = (props) => {
   //   setToggle(!toggle);
   // };
 
-  const handleSubmit = async (event, listImage, is_draft= false) => {
+  const handleSubmit = async (event, listImage, is_draft = false) => {
     event.preventDefault();
     try {
-      
       setIsLoaded(true);
       const formData = new FormData();
       formData.append("categoryId", selectedCategory);
@@ -253,14 +254,14 @@ const NewProduct = (props) => {
       formData.append("product_id", productId);
       formData.append("note", note);
       formData.append("rent", rent);
-      formData.append("meta_description", metaDescription)
-      formData.append("is_draft", is_draft)
+      formData.append("meta_description", metaDescription);
+      formData.append("is_draft", is_draft);
       // const config = {
       //   headers: {
       //     "content-type": "multipart/form-data",
       //   },
       // };
-  
+      setDataPreview(formData);
       swal({
         title: "Bạn có chắc?",
         text: "Bạn có muốn tạo sản phẩm này không",
@@ -270,9 +271,9 @@ const NewProduct = (props) => {
       })
         .then(async (success) => {
           if (success === null) {
-              setIsLoaded(false);
-              return null;
-            }
+            setIsLoaded(false);
+            return null;
+          }
           if (success) {
             const imgList = await uploadImages(newAddImage);
             formData.append("newaddimage", JSON.stringify(imgList));
@@ -296,8 +297,11 @@ const NewProduct = (props) => {
           NotificationManager.error("Please! Check input field", "Input Field")
         );
     } catch (error) {
-      setIsLoaded(false)
-      swal("Thông báo", "Mã token đã hết hạn, bạn vui lòng đăng nhập lại để lấy token mới")
+      setIsLoaded(false);
+      swal(
+        "Thông báo",
+        "Mã token đã hết hạn, bạn vui lòng đăng nhập lại để lấy token mới"
+      );
     }
   };
 
@@ -366,7 +370,7 @@ const NewProduct = (props) => {
     setIsLoaded(true);
     const formData = new FormData();
     formData.append("productId", "-1");
-    formData.append("categoryId", id)
+    formData.append("categoryId", id);
     for (const file of files) {
       formData.append("file", file);
     }
@@ -376,7 +380,7 @@ const NewProduct = (props) => {
     //   },
     // };
     const imgList = await uploadImages(newAddImage);
-    console.log("img list", imgList)
+    console.log("img list", imgList);
     // formData.append("newaddimage", JSON.stringify(imgList));
     let list = await upload_product_image(formData);
     if (list) {
@@ -410,7 +414,9 @@ const NewProduct = (props) => {
                 <div className="row mt-4">
                   <div className="col-lg-4 col-md-4">
                     <div className="form-group">
-                      <label className="form-label">Mô tả thẻ meta description</label>
+                      <label className="form-label">
+                        Mô tả thẻ meta description
+                      </label>
                       <input
                         type="text"
                         className="form-control"
@@ -423,7 +429,6 @@ const NewProduct = (props) => {
                   </div>
                 </div>
                 <div className="row mt-4">
-                
                   <div className="col-lg-4 col-md-4">
                     <div className="form-group">
                       <label className="form-label">Tên sản phẩm</label>
@@ -836,7 +841,9 @@ const NewProduct = (props) => {
                           value={typeRoom ? typeRoom : -1}
                           onChange={(e) => setTypeRoom(e.target.value)}
                         >
-                          <option value={-1} selected disabled>Chọn loại phòng</option>
+                          <option value={-1} selected disabled>
+                            Chọn loại phòng
+                          </option>
 
                           <option value={1}>1 phòng ngủ</option>
                           <option value={2}>2 phòng ngủ</option>
@@ -1102,6 +1109,51 @@ const NewProduct = (props) => {
                     >
                       Lưu dưới dạng bản nháp
                     </button>
+                    {/* <button
+                      className="save-btn hover-btn"
+                      style={{ backgroundColor: "rgb(243, 115, 53)" }}
+                      type="submit"
+                      onClick={async (e) => {
+                        navigate("/product/preview", {
+                          state: {
+                            name,
+                            slug,
+                            brand,
+                            status,
+                            unit,
+                            content,
+                            sortDesc,
+                            image,
+                            buyerPrice,
+                            price,
+                            discountPer,
+                            discount,
+                            total,
+                            grandTotal,
+                            previewImage,
+                            province,
+                            district,
+                            ward,
+                            phoneNumber,
+                            provinceText,
+                            districtText,
+                            wardText,
+                            typeRoom,
+                            interior,
+                            square,
+                            rating,
+                            author_phone,
+                            address,
+                            productId,
+                            note,
+                            rent,
+                            metaDescription,
+                          },
+                        });
+                      }}
+                    >
+                      Xem trước
+                    </button> */}
                   </div>
                 </div>
               </div>

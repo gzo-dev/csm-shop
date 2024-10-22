@@ -104,7 +104,7 @@ export default {
       }
       const blogList = await db.blog.findAll({
         where: whereConditions,
-        attributes: { exclude: ["content"] },
+        attributes: isFrom === "client" ? undefined : { exclude: ["content"] },
       });
       return res.status(200).json({ ok: true, data: blogList });
     } catch (error) {

@@ -11,6 +11,7 @@ import NewTour from './screen/AddTour'
 import NewBlog from './screen/AddBlog'
 import { API_URL } from './config'
 import LoadingScreen from './screen/LoadingScreen'
+import ProductPreview from './screen/ProductPreview'
 
 const App = () => {
   return (
@@ -27,6 +28,9 @@ const App = () => {
           <Route path="/add-ticket/:id/:roomId" element={<NewTicket />} />
           <Route path="/add-tour/:id/:roomId" element={<NewTour />} />
           <Route path="/add-blog/:id/:uid/:roomId" element={<NewBlog />} />
+
+          <Route path="/product/preview" element={<ProductPreview />} />
+
           <Route path="/loading" element={<LoadingScreen />} />
         </Routes>
       </BrowserRouter>
