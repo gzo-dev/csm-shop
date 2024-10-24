@@ -21,10 +21,10 @@ app.get("*", async (req, res) => {
 
     // Dữ liệu động từ server, có thể lấy từ DB hoặc API khác
     if (req.path.includes("/product")) {
-      // console.log(req.path.split("/").at(-1).split("-").at(-1))
+      // console.log(req.path.split("/").slice(-1)[0].split("-").slice(-1)[0])
       try {
         const response = await axios({
-          url: "https://api.minhkhanggroup.vn/api/v1/product/serverside/d?id=" + req.path.split("/").at(-1).split("-").at(-1),
+          url: "https://api.minhkhanggroup.vn/api/v1/product/serverside/d?id=" + req.path.split("/").slice(-1)[0].split("-").slice(-1)[0],
           method: "get",
           timeout: 3000,
         });
@@ -59,10 +59,10 @@ app.get("*", async (req, res) => {
       }
     }
     if (req.path.includes("/ticket")) {
-      // console.log(req.path.split("/").at(-1).split("-").at(-1))
+      // console.log(req.path.split("/").slice(-1)[0].split("-").slice(-1)[0])
       try {
         const response = await axios({
-          url: "https://api.minhkhanggroup.vn/api/v1/ticket/serverside/d?id=" + req.path.split("/").at(-1).split("-").at(-1),
+          url: "https://api.minhkhanggroup.vn/api/v1/ticket/serverside/d?id=" + req.path.split("/").slice(-1)[0].split("-").slice(-1)[0],
           method: "get",
           timeout: 3000,
         });
@@ -96,11 +96,11 @@ app.get("*", async (req, res) => {
         // return res.send(data);
       }
     }
-    if (req.path.includes("/tour")) {
-      // console.log(req.path.split("/").at(-1).split("-").at(-1))
+    if (req.path.includes("/tour/")) {
+      // console.log(req.path.split("/").slice(-1)[0].split("-").slice(-1)[0])
       try {
         const response = await axios({
-          url: "https://api.minhkhanggroup.vn/api/v1/tour/serverside/d?id=" + req.path.split("/").at(-1).split("-").at(-1),
+          url: "https://api.minhkhanggroup.vn/api/v1/tour/serverside/d?id=" + req.path.split("/").slice(-1)[0].split("-").slice(-1)[0],
           method: "get",
           timeout: 3000,
         });
@@ -135,10 +135,10 @@ app.get("*", async (req, res) => {
       }
     }
     if (req.path.includes("/blog")) {
-      // console.log(req.path.split("/").at(-1).split("-").at(-1))
+      // console.log(req.path.split("/").slice(-1)[0].split("-").slice(-1)[0])
       try {
         const response = await axios({
-          url: "https://api.minhkhanggroup.vn/api/v1/blog/serverside/d?id=" + req.path.split("/").at(-1).split("-").at(-1),
+          url: "https://api.minhkhanggroup.vn/api/v1/blog/serverside/d?id=" + req.path.split("/").slice(-1)[0].split("-").slice(-1)[0],
           method: "get",
           timeout: 3000,
         });
