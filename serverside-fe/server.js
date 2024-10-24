@@ -21,7 +21,7 @@ app.get("*", async (req, res) => {
 
     // Dữ liệu động từ server, có thể lấy từ DB hoặc API khác
     if (req.path.includes("/product")) {
-      console.log(req.path.split("/").at(-1).split("-").at(-1))
+      // console.log(req.path.split("/").at(-1).split("-").at(-1))
       try {
         const response = await axios({
           url: "https://api.minhkhanggroup.vn/api/v1/product/serverside/d?id=" + req.path.split("/").at(-1).split("-").at(-1),
@@ -50,10 +50,125 @@ app.get("*", async (req, res) => {
         </head>`
         );
   
-        // Gửi trang HTML với các thẻ meta đã được thêm động
         return res.send(modifiedData);
         
       } catch (error) {
+        console.log(error)
+        return res.send("Error")
+        // return res.send(data);
+      }
+    }
+    if (req.path.includes("/ticket")) {
+      // console.log(req.path.split("/").at(-1).split("-").at(-1))
+      try {
+        const response = await axios({
+          url: "https://api.minhkhanggroup.vn/api/v1/ticket/serverside/d?id=" + req.path.split("/").at(-1).split("-").at(-1),
+          method: "get",
+          timeout: 3000,
+        });
+        const result = await response?.data?.data;
+        const metaTags = {
+          title: result?.name, // Dữ liệu động từ server
+          description: result?.meta_description,
+          image: result?.photo,
+          url: req.protocol + "://" + req.get("host") + req.originalUrl,
+        };
+  
+        const dynamicMetaTags = `
+        <title>${metaTags.title}</title>
+        <meta property="og:image" content="${metaTags.image?.replace("http:", "https:")}">
+        <meta property="og:url" content="${metaTags.url?.replace("http:", "https:")}">
+        <meta property="og:description" content="${metaTags.description}">
+      `;
+  
+        const modifiedData = data.replace(
+          "</head>",
+          `
+          ${dynamicMetaTags}
+        </head>`
+        );
+  
+        return res.send(modifiedData);
+        
+      } catch (error) {
+        console.log(error)
+        return res.send("Error")
+        // return res.send(data);
+      }
+    }
+    if (req.path.includes("/tour")) {
+      // console.log(req.path.split("/").at(-1).split("-").at(-1))
+      try {
+        const response = await axios({
+          url: "https://api.minhkhanggroup.vn/api/v1/tour/serverside/d?id=" + req.path.split("/").at(-1).split("-").at(-1),
+          method: "get",
+          timeout: 3000,
+        });
+        const result = await response?.data?.data;
+        const metaTags = {
+          title: result?.name, // Dữ liệu động từ server
+          description: result?.meta_description,
+          image: result?.photo,
+          url: req.protocol + "://" + req.get("host") + req.originalUrl,
+        };
+  
+        const dynamicMetaTags = `
+        <title>${metaTags.title}</title>
+        <meta property="og:image" content="${metaTags.image?.replace("http:", "https:")}">
+        <meta property="og:url" content="${metaTags.url?.replace("http:", "https:")}">
+        <meta property="og:description" content="${metaTags.description}">
+      `;
+  
+        const modifiedData = data.replace(
+          "</head>",
+          `
+          ${dynamicMetaTags}
+        </head>`
+        );
+  
+        return res.send(modifiedData);
+        
+      } catch (error) {
+        console.log(error)
+        return res.send("Error")
+        // return res.send(data);
+      }
+    }
+    if (req.path.includes("/blog")) {
+      // console.log(req.path.split("/").at(-1).split("-").at(-1))
+      try {
+        const response = await axios({
+          url: "https://api.minhkhanggroup.vn/api/v1/blog/serverside/d?id=" + req.path.split("/").at(-1).split("-").at(-1),
+          method: "get",
+          timeout: 3000,
+        });
+        const result = await response?.data?.data;
+        const metaTags = {
+          title: result?.name, // Dữ liệu động từ server
+          description: result?.meta_description,
+          image: result?.photo,
+          url: req.protocol + "://" + req.get("host") + req.originalUrl,
+        };
+  
+        const dynamicMetaTags = `
+        <title>${metaTags.title}</title>
+        <meta property="og:image" content="${metaTags.image?.replace("http:", "https:")}">
+        <meta property="og:url" content="${metaTags.url?.replace("http:", "https:")}">
+        <meta property="og:description" content="${metaTags.description}">
+      `;
+  
+        const modifiedData = data.replace(
+          "</head>",
+          `
+          ${dynamicMetaTags}
+        </head>`
+        );
+  
+        return res.send(modifiedData);
+        
+      } catch (error) {
+        console.log(error)
+        return res.send("Error")
         // return res.send(data);
       }
     }

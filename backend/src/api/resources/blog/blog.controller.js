@@ -157,6 +157,27 @@ export default {
       return res.status(500).json({ ok: false });
     }
   },
+  async getBlogDetailServerside(req, res) {
+    try {
+      const blogList = await db.blog.findOne({
+        where: {
+          id: req.query.id,
+        },
+        include: [
+          {
+            model: db.user,
+            attributes: ["id", "firstName", "lastName"],
+            required: false,
+          },
+        ],
+        exclude: ["content"]
+      });
+      return res.status(200).json({ ok: true, data: blogList });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ ok: false });
+    }
+  },
   async deleteTour(req, res) {
     const { id } = req.body;
     db.blog.destroy({

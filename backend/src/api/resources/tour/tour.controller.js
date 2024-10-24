@@ -173,6 +173,22 @@ export default {
       return res.status(500).json({ ok: false });
     }
   },
+  async getTourDetailServerside(req, res) {
+    try {
+      const tourList = await db.tour.findOne({
+        where: {
+          id: req.query.id,
+        },
+        attributes: {
+          exclude: ["content"]
+        }
+      });
+      return res.status(200).json({ ok: true, data: [tourList] });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ ok: false });
+    }
+  },
   async deleteTour(req, res) {
     const { id } = req.body;
     db.tour.destroy({

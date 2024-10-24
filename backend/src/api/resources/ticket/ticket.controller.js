@@ -122,6 +122,22 @@ export default {
       return res.status(500).json({ ok: false });
     }
   },
+  async getTicketDetailServerside(req, res) {
+    try {
+      const ticketList = await db.ticket.findOne({
+        where: {
+          id: req.query.id,
+        },
+        attributes: {
+          exclude: ["content"]
+        }
+      });
+      return res.status(200).json({ ok: true, data: ticketList });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ ok: false });
+    }
+  },
   async deleteTicket(req, res) {
     const { id } = req.body;
     db.ticket.destroy({
