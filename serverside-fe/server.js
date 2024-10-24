@@ -41,6 +41,7 @@ app.get("*", async (req, res) => {
         <meta property="og:image" content="${metaTags.image?.replace("http:", "https:")}">
         <meta property="og:url" content="${metaTags.url?.replace("http:", "https:")}">
         <meta property="og:description" content="${metaTags.description}">
+        
       `;
   
         const modifiedData = data.replace(
