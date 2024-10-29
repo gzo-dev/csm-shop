@@ -39,7 +39,7 @@ export default {
   async changeHost(req, res) {
     try {
       // Kết nối đến cơ sở dữ liệu
-      const productPhotos = await db.tour.findAll();
+      const productPhotos = await db.blog.findAll();
       console.log(productPhotos.length);
       for (let productPhoto of productPhotos) {
         const oldPath = productPhoto.photo;
