@@ -103,7 +103,7 @@ export default {
           author_phone: author_phone ? author_phone : "",
           address: address ? address : "",
           product_id: product_id ? product_id : "",
-          rent: rent ? rent : 0,
+          rent: isNumber(rent) ? rent : 0,
           meta_description,
           is_draft: is_draft,
         })
