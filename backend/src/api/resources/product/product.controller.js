@@ -97,7 +97,7 @@ export default {
           typeRoom: typeRoom ? typeRoom : "",
           interior: interior ? interior : "",
           endow: endow ? endow : 0,
-          rating: rating ? rating : 0,
+          rating: isNumber(rating) ? rating : 0,
           note: note ? note : "",
           user_manager: uid,
           author_phone: author_phone ? author_phone : "",
