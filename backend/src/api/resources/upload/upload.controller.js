@@ -39,10 +39,10 @@ export default {
   async changeHost(req, res) {
     try {
       // Kết nối đến cơ sở dữ liệu
-      const productPhotos = await db.ticket.findAll();
+      const productPhotos = await db.productphoto.findAll();
       console.log(productPhotos.length);
       for (let productPhoto of productPhotos) {
-        const oldPath = productPhoto.photo;
+        const oldPath = productPhoto.imgUrl;
         if (oldPath) {
           // Thay thế miền cũ bằng miền mới
           const newPath = oldPath.replace(
@@ -51,7 +51,7 @@ export default {
           );
 
           // Cập nhật đường dẫn mới vào cơ sở dữ liệu
-          productPhoto.photo = newPath;
+          productPhoto.imgUrl = newPath;
           await productPhoto.save();
           console.log(
             `Đã cập nhật id ${productPhoto.id} từ ${oldPath} sang ${newPath}`
