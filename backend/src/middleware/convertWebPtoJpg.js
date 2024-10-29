@@ -11,8 +11,6 @@ const convertWebPToJpeg = async (req, res, next) => {
       return next();
     }
 
-    console.log("req.file.mimetype", req.file.mimetype);
-
     const file = req.file;
     const originalName = file.originalname;
     const filePath = file.path;
