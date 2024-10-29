@@ -23,6 +23,7 @@ export default {
     app.use(express.static(path.join(__dirname, "../", "upload_avatar_product")));
     app.use(express.static(path.join(__dirname, "../", "upload_avatar_product")));
     app.use("/upload_avatar_product", express.static(path.join(__dirname, "../", "upload_avatar_product")));
+    app.use("/oldfile", express.static(path.join(__dirname, "../", "upload_oldfile")));
 
     app.use('/x_image_blog' ,express.static(path.join(__dirname, "../", "x_image_blog")));
     app.use(logger(config.app.log, { stream: accessLogStream }));

@@ -46,8 +46,8 @@ export default {
         if (oldPath) {
           // Thay thế miền cũ bằng miền mới
           const newPath = oldPath.replace(
-            "trouytin.online:8443",
-            "api.minhkhanggroup.vn"
+            "https://api.gzomedia.net/uploads/",
+            "https://api.minhkhanggroup.vn/oldfile/"
           );
 
           // Cập nhật đường dẫn mới vào cơ sở dữ liệu
