@@ -1,3 +1,4 @@
+import { isNumber } from "lodash";
 import { db } from "../../../models";
 const { Op, Sequelize, where } = require("sequelize");
 import moment from "moment";
@@ -465,7 +466,7 @@ export default {
                 interior,
                 square: square ? square : 0,
                 endow: endow ? endow : 0,
-                rating: rating ? rating : 0,
+                rating: isNumber(rating) ? rating : 0,
                 note: note ? note : "",
                 user_manager: user_manager ? user_manager : "",
                 rent: rent ? rent : "",
