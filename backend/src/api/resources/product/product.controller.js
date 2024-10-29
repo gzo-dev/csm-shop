@@ -293,7 +293,7 @@ export default {
       }
 
       if (star) {
-        whereConditions.rating = star;
+        whereConditions.rating = star || 5;
       }
 
       if (province) {
@@ -765,7 +765,7 @@ export default {
       }
 
       if (star) {
-        whereConditions.rating = star;
+        whereConditions.rating = star || 5;
       }
 
       if (province) {
@@ -999,7 +999,7 @@ export default {
         }
 
         if (star) {
-          whereConditions.rating = star;
+          whereConditions.rating = star || 5;
         }
 
         if (province) {
