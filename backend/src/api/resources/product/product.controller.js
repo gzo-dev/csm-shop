@@ -1049,6 +1049,7 @@ export default {
       let { count, rows: productList } = await db.product.findAndCountAll({
         where: {...whereConditions},
         order: order,
+        
         include: [
           {
             model: db.user,
@@ -1077,6 +1078,7 @@ export default {
               },
             ],
           },
+          { model: db.productphoto, attributes: ["id", "imgUrl"] }
         ],
         attributes: { exclude: ["desc"] },
         limit: parseInt(pageSize),
